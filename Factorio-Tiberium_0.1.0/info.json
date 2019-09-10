@@ -1,0 +1,14 @@
+{
+    "name": "Factorio_Tiberium",
+    "version": "0.1.2",
+    "title": "Factorio Tiberium",
+    "author": "JamesFire",
+    "contact": "",
+    "homepage": "https://github.com/James-Fire/Factorio-Tiberium",
+    "factorio_version": "0.17",
+    "dependencies": [
+		"base >= 0.17",
+		"?bobmining >=0.17.0"
+	],
+    "description": "Origonaly by Zillo7 fixed by SAH4001, fixed again by Oktabyte. Now being taken on by JamesFire. Adds Tiberium - Harvest it to convert it to other ores."
+}
