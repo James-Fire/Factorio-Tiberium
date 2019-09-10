@@ -3,7 +3,7 @@ data:extend
    {
       type = "technology",
       name = "tiberium-processing-tech",
-      icon = "__Fixed_Tiberium_okta__/graphics/technology/tiberium-processing-tech.png",
+      icon = "__Factorio-Tiberium__/graphics/technology/tiberium-processing-tech.png",
 	  icon_size = 128,
       effects =
       {
@@ -59,7 +59,7 @@ data:extend
    {
       type = "technology",
       name = "advanced-tiberium-processing-tech",
-      icon = "__Fixed_Tiberium_okta__/graphics/technology/advanced-tiberium-processing-tech.png",
+      icon = "__Factorio-Tiberium__/graphics/technology/advanced-tiberium-processing-tech.png",
 	  icon_size = 128,
       effects =
       {
@@ -102,7 +102,7 @@ data:extend
    {
       type = "technology",
       name = "tiberium-control-network-tech",
-      icon = "__Fixed_Tiberium_okta__/graphics/technology/tiberium-control-network-tech.png",
+      icon = "__Factorio-Tiberium__/graphics/technology/tiberium-control-network-tech.png",
 	  icon_size = 128,
       effects =
       {
