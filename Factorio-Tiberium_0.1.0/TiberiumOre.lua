@@ -23,7 +23,7 @@ data:extend(
     type = "resource",
     name = "tiberium-ore",
 	category = "basic-solid-tiberium",
-    icon = "__Fixed_Tiberium_okta__/graphics/icons/tiberium-ore.png",
+    icon = "__Factorio-Tiberium__/graphics/icons/tiberium-ore.png",
     icon_size = 32,
     flags = {"placeable-neutral"},
     order="a-b-f",
@@ -43,14 +43,14 @@ data:extend(
     {
       sheet =
       {
-        filename = "__Fixed_Tiberium_okta__/graphics/entity/ores/tiberium-ore.png",
+        filename = "__Factorio-Tiberium__/graphics/entity/ores/tiberium-ore.png",
         priority = "extra-high",
         width = 64,
         height = 64,
         frame_count = 8,
         variation_count = 8,
         hr_version = {
-          filename = "__Fixed_Tiberium_okta__/graphics/entity/ores/hr-tiberium-ore.png",
+          filename = "__Factorio-Tiberium__/graphics/entity/ores/hr-tiberium-ore.png",
           priority = "extra-high",
           width = 128,
           height = 128,
@@ -64,7 +64,7 @@ data:extend(
     {
       sheet =
       {
-        filename = "__Fixed_Tiberium_okta__/graphics/entity/ores/tiberium-ore-glow.png",
+        filename = "__Factorio-Tiberium__/graphics/entity/ores/tiberium-ore-glow.png",
         priority = "extra-high",
         width = 64,
         height = 64,
@@ -73,7 +73,7 @@ data:extend(
         blend_mode = "additive",
         flags = {"light"},
         hr_version = {
-          filename = "__Fixed_Tiberium_okta__/graphics/entity/ores/hr-tiberium-ore-glow.png",
+          filename = "__Factorio-Tiberium__/graphics/entity/ores/hr-tiberium-ore-glow.png",
           priority = "extra-high",
           width = 128,
           height = 128,
@@ -96,7 +96,7 @@ data:extend(
     {
         type = "item",
         name = "tiberium-ore",
-        icon = "__Fixed_Tiberium_okta__/graphics/icons/tiberium-ore.png",
+        icon = "__Factorio-Tiberium__/graphics/icons/tiberium-ore.png",
 		icon_size = 32,
         flags = {},
         subgroup = "raw-resource",
