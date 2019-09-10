@@ -1,7 +1,7 @@
 local item = {
     type = "item",
     name = "tiberium-wall",
-    icon = "__Fixed_Tiberium_okta__/graphics/icons/tiberium-wall.png",
+    icon = "__Factorio-Tiberium__/graphics/icons/tiberium-wall.png",
     icon_size = 32,
     flags = {},
     subgroup = "defensive-structure",
@@ -13,7 +13,7 @@ local item = {
 local tiberiumWall = {
     type = "wall",
     name = "tiberium-wall",
-    icon = "__Fixed_Tiberium_okta__/graphics/icons/tiberium-wall.png",
+    icon = "__Factorio-Tiberium__/graphics/icons/tiberium-wall.png",
 	icon_size = 32,
     flags = {"placeable-neutral", "player-creation"},
     collision_box = {{-0.29, -0.29}, {0.29, 0.29}},
