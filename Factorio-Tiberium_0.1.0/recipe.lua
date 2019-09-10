@@ -43,7 +43,7 @@ end
           },
           flow_to_energy_ratio = 0.3,
           heat_capacity = "1KJ",
-          icon = "__Fixed_Tiberium_okta__/graphics/icons/fluid/liquid-tiberium.png",
+          icon = "__Factorio-Tiberium__/graphics/icons/fluid/liquid-tiberium.png",
 		  icon_size = 32,
           max_temperature = 1000,
           name = "liquid-tiberium",
@@ -66,7 +66,7 @@ end
           },
           flow_to_energy_ratio = 0.2,
           heat_capacity = "1KJ",
-          icon = "__Fixed_Tiberium_okta__/graphics/icons/fluid/tiberium-waste.png",
+          icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-waste.png",
 		  icon_size = 32,
           max_temperature = 1000,
           name = "tiberium-waste",
@@ -88,7 +88,7 @@ end
           },
           flow_to_energy_ratio = 0.5,
           heat_capacity = "1KJ",
-          icon = "__Fixed_Tiberium_okta__/graphics/icons/fluid/tiberium-sludge.png",
+          icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-sludge.png",
 		  icon_size = 32,
           max_temperature = 1000,
           name = "tiberium-sludge",
@@ -99,7 +99,7 @@ end
 		{
           type = "item",
           name = "tiberium-brick",
-          icon = "__Fixed_Tiberium_okta__/graphics/icons/tiberium-brick.png",
+          icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick.png",
 		  icon_size = 32,
           flags = {},
           subgroup = "intermediate-product",
@@ -127,7 +127,7 @@ data:extend(
       {type="fluid", name="tiberium-sludge", amount=8},
 	  {type="fluid", name="tiberium-waste", amount=1}
     },
-    icon = "__Fixed_Tiberium_okta__/graphics/icons/fluid/tiberium-sludge.png",
+    icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-sludge.png",
 	icon_size = 32,
     subgroup = "fluid-recipes",
     order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
@@ -148,7 +148,7 @@ data:extend(
     {
       {type="fluid", name="liquid-tiberium", amount=4}
     },
-    icon = "__Fixed_Tiberium_okta__/graphics/icons/fluid/liquid-tiberium.png",
+    icon = "__Factorio-Tiberium__/graphics/icons/fluid/liquid-tiberium.png",
     icon_size = 32,
     subgroup = "fluid-recipes",
     order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
@@ -168,7 +168,7 @@ data:extend(
     {
       {type="item", name="tiberium-brick", amount=1}
     },
-    icon = "__Fixed_Tiberium_okta__/graphics/icons/tiberium-brick.png",
+    icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick.png",
     icon_size = 32,
     subgroup = "fluid-recipes",
     order = "b[oil-processing]-h[advanced-oil-processing]"
@@ -188,7 +188,7 @@ data:extend(
     {
       {type="item", name="tiberium-brick", amount=3}
     },
-    icon = "__Fixed_Tiberium_okta__/graphics/icons/tiberium-brick.png",
+    icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick.png",
     icon_size = 32,
     subgroup = "fluid-recipes",
     order = "b[oil-processing]-h[advanced-oil-processing]"
