@@ -7,41 +7,17 @@ data:extend
 	  icon_size = 128,
       effects =
       {
-        {
+		{
             type = "unlock-recipe",
-            recipe = "tiberium-ore-processing"
-        },
-        {
-            type = "unlock-recipe",
-            recipe = "tiberium-brick-processing"
-        },
-        {
-            type = "unlock-recipe",
-            recipe = "tiberium-brick-to-iron-ore"
-        },
-        {
-            type = "unlock-recipe",
-            recipe = "tiberium-brick-to-copper-ore"
-        },
-        {
-            type = "unlock-recipe",
-            recipe = "tiberium-brick-to-coal"
-        },
-        {
-            type = "unlock-recipe",
-            recipe = "tiberium-brick-to-stone"
-        },
-        {
-            type = "unlock-recipe",
-            recipe = "tiberium-brick-to-crude-oil"
-        },
-        {
-            type = "unlock-recipe",
-            recipe = "tiberium-brick-to-water"
+            recipe = "tiberium-ore-centrifuging"
         },
         {
             type = "unlock-recipe",
             recipe = "tiberium-armor"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "centrifuge"
         }
       },
       prerequisites = {"oil-processing", "sulfur-processing"},
@@ -59,21 +35,13 @@ data:extend
    {
       type = "technology",
       name = "advanced-tiberium-processing-tech",
-      icon = "__Factorio-Tiberium__/graphics/technology/advanced-tiberium-processing-tech.png",
+      icon = "__base__/graphics/technology/oil-gathering.png",
 	  icon_size = 128,
       effects =
       {
         {
             type = "unlock-recipe",
-            recipe = "advanced-tiberium-ore-processing"
-        },
-        {
-            type = "unlock-recipe",
-            recipe = "advanced-tiberium-brick-processing"
-        },
-        {
-            type = "unlock-recipe",
-            recipe = "tiberium-brick-to-uranium-ore"
+            recipe = "tiberium-sludge-centrifuging"
         },
         {
             type = "unlock-recipe",
@@ -81,8 +49,8 @@ data:extend
         },
 		{
             type = "unlock-recipe",
-            recipe = "tiberium-plant"
-        }
+            recipe = "tib-pumpjack"
+        },
       },
 	  
 	  
@@ -101,15 +69,82 @@ data:extend
    },
    {
       type = "technology",
+      name = "tiberium-power-tech",
+      icon = "__Factorio-Tiberium__/graphics/technology/advanced-tiberium-processing-tech.png",
+	  icon_size = 128,
+      effects =
+      {
+        {
+            type = "unlock-recipe",
+            recipe = "advanced-tiberium-ore-processing"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-liquid-centrifuging"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-waste-recycling"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-plant"
+        }
+      },
+	  
+	  
+      prerequisites = {"advanced-tiberium-processing-tech"},
+      unit =
+      {
+        count = 200,
+        ingredients =
+        {
+          {"automation-science-pack", 1},
+          {"logistic-science-pack", 1},
+          {"chemical-science-pack", 2}
+        },
+        time = 10
+      }
+   },
+   {
+      type = "technology",
       name = "tiberium-control-network-tech",
       icon = "__Factorio-Tiberium__/graphics/technology/tiberium-control-network-tech.png",
 	  icon_size = 128,
       effects =
       {
-        --{
-        --    type = "unlock-recipe",
-        --    recipe = "advanced-tiberium-ore-processing"
-        --}
+		{
+            type = "unlock-recipe",
+            recipe = "advanced-tiberium-brick-processing"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-brick-to-iron-ore"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-brick-to-copper-ore"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-brick-to-coal"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-brick-to-stone"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-brick-to-crude-oil"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-brick-to-uranium-ore"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-brick-to-water"
+        },
         {
             type = "unlock-recipe",
             recipe = "tiberium-liquid-to-iron-ore"
@@ -143,7 +178,7 @@ data:extend
             recipe = "tiberium-network-node"
         },
       },
-      prerequisites = {"advanced-tiberium-processing-tech"},
+      prerequisites = {"tiberium-power-tech"},
       unit =
       {
         count = 150,
