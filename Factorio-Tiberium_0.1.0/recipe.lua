@@ -156,26 +156,6 @@ data:extend(
   
   {
     type = "recipe",
-    name = "tiberium-brick-processing",
-	category = "crafting-with-fluid",
-    energy_required = 0.1,
-	enabled = false,
-    ingredients =
-    {
-      {type="fluid", name="tiberium-sludge", amount=10}
-    },
-    results=
-    {
-      {type="item", name="tiberium-brick", amount=1}
-    },
-    icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick.png",
-    icon_size = 32,
-    subgroup = "fluid-recipes",
-    order = "b[oil-processing]-h[advanced-oil-processing]"
-  }, 
-  
-  {
-    type = "recipe",
     name = "advanced-tiberium-brick-processing",
 	category = "crafting-with-fluid",
     energy_required = 0.2,
@@ -337,7 +317,7 @@ data:extend(
 	enabled = false,
     ingredients =
     {
-      {type="fluid", name="liquid-tiberium", amount=6}
+      {type="fluid", name="liquid-tiberium", amount=3}
     },
     results=
     {
@@ -357,7 +337,7 @@ data:extend(
 	enabled = false,
     ingredients =
     {
-      {type="fluid", name="liquid-tiberium", amount=6}
+      {type="fluid", name="liquid-tiberium", amount=3}
     },
     results=
     {
@@ -376,7 +356,7 @@ data:extend(
 	enabled = false,
     ingredients =
     {
-      {type="fluid", name="liquid-tiberium", amount=12}
+      {type="fluid", name="liquid-tiberium", amount=6}
     },
     results=
     {
@@ -395,7 +375,7 @@ data:extend(
 	enabled = false,
     ingredients =
     {
-      {type="fluid", name="liquid-tiberium", amount=6}
+      {type="fluid", name="liquid-tiberium", amount=3}
     },
     results=
     {
@@ -414,7 +394,7 @@ data:extend(
 	enabled = false,
     ingredients =
     {
-      {type="fluid", name="liquid-tiberium", amount=60}
+      {type="fluid", name="liquid-tiberium", amount=30}
     },
     results=
     {
@@ -434,7 +414,7 @@ data:extend(
 	enabled = false,
     ingredients =
     {
-      {type="fluid", name="liquid-tiberium", amount=6}
+      {type="fluid", name="liquid-tiberium", amount=3}
     },
     results=
     {
@@ -463,5 +443,99 @@ data:extend(
     icon_size = 32,
     subgroup = "fluid-recipes",
     order = "b[oil-processing]-g[light-oil-processing]"
+  },
+
+  {
+    type = "recipe",
+    name = "tiberium-ore-centrifuging",
+    category = "centrifuging",
+    energy_required = 2,
+	enabled = false,
+    ingredients =
+    {
+	  {type="fluid", name="water", amount=100},
+      {type="item", name="tiberium-ore", amount=32}
+    },
+    results=
+    {
+      {type="item", name="iron-ore", amount=7},
+	  {type="item", name="copper-ore", amount=6},
+	  {type="item", name="coal", amount=4},
+	  {type="item", name="uranium-ore", amount=1},
+	  {type="item", name="stone", amount=1},
+	  {type="fluid", name="crude-oil", amount=10}
+    },
+    icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-sludge.png",
+	icon_size = 32,
+    subgroup = "fluid-recipes",
+    order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+  },
+  {
+    type = "recipe",
+    name = "tiberium-sludge-centrifuging",
+    category = "centrifuging",
+    energy_required = 2,
+	enabled = false,
+    ingredients =
+    {
+      {type="fluid", name="tiberium-sludge", amount=24}
+    },
+    results=
+    {
+      {type="item", name="iron-ore", amount=7},
+	  {type="item", name="copper-ore", amount=6},
+	  {type="item", name="coal", amount=4},
+	  {type="item", name="uranium-ore", amount=1},
+	  {type="item", name="stone", amount=1},
+	  {type="fluid", name="crude-oil", amount=10}
+    },
+    icon = "__Factorio-Tiberium__/graphics/icons/fluid/liquid-tiberium.png",
+    icon_size = 32,
+    subgroup = "fluid-recipes",
+    order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+  },
+    {
+    type = "recipe",
+    name = "tiberium-liquid-centrifuging",
+    category = "centrifuging",
+    energy_required = 2,
+	enabled = false,
+    ingredients =
+    {
+      {type="fluid", name="liquid-tiberium", amount=16}
+    },
+    results=
+    {
+      {type="item", name="iron-ore", amount=7},
+	  {type="item", name="copper-ore", amount=6},
+	  {type="item", name="coal", amount=4},
+	  {type="item", name="uranium-ore", amount=1},
+	  {type="item", name="stone", amount=1},
+	  {type="fluid", name="crude-oil", amount=10}
+    },
+    icon = "__Factorio-Tiberium__/graphics/icons/fluid/liquid-tiberium.png",
+    icon_size = 32,
+    subgroup = "fluid-recipes",
+    order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+  },
+  {
+    type = "recipe",
+    name = "tiberium-waste-recycling",
+    category = "chemistry",
+    energy_required = 2,
+	enabled = false,
+    ingredients =
+    {
+      {type="fluid", name="liquid-tiberium", amount=20},
+	  {type="fluid", name="tiberium-waste", amount=5}
+    },
+    results=
+    {
+	  {type="fluid", name="liquid-tiberium", amount=23}
+    },
+    icon = "__Factorio-Tiberium__/graphics/icons/fluid/liquid-tiberium.png",
+    icon_size = 32,
+    subgroup = "fluid-recipes",
+    order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
   },
 })
