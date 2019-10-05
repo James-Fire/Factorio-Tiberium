@@ -464,7 +464,7 @@ data:extend(
 	  {type="item", name="stone", amount=1},
 	  {type="fluid", name="crude-oil", amount=10}
     },
-    icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-sludge.png",
+    icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-ore.png",
 	icon_size = 32,
     subgroup = "fluid-recipes",
     order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
@@ -488,7 +488,7 @@ data:extend(
 	  {type="item", name="stone", amount=1},
 	  {type="fluid", name="crude-oil", amount=10}
     },
-    icon = "__Factorio-Tiberium__/graphics/icons/fluid/liquid-tiberium.png",
+    icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-sludge.png",
     icon_size = 32,
     subgroup = "fluid-recipes",
     order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
@@ -532,7 +532,7 @@ data:extend(
     {
 	  {type="fluid", name="liquid-tiberium", amount=23}
     },
-    icon = "__Factorio-Tiberium__/graphics/icons/fluid/liquid-tiberium.png",
+    icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-waste.png",
     icon_size = 32,
     subgroup = "fluid-recipes",
     order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
