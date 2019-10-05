@@ -2,7 +2,6 @@ TibProductivity = {}
 
 table.insert(TibProductivity, "tiberium-ore-processing")
 table.insert(TibProductivity, "advanced-tiberium-ore-processing")
-table.insert(TibProductivity, "tiberium-brick-processing")
 table.insert(TibProductivity, "advanced-tiberium-brick-processing")
 table.insert(TibProductivity, "tiberium-brick-to-iron-ore")
 table.insert(TibProductivity, "tiberium-brick-to-copper-ore")
