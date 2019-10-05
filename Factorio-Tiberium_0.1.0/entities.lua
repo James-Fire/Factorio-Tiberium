@@ -22,3 +22,5 @@ centrifuge.fluid_boxes =
 		secondary_draw_orders = { north = -1 }
 	},
 }
+
+data:extend({centrifuge,})
