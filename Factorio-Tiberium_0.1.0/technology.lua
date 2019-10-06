@@ -43,6 +43,10 @@ data:extend
             type = "unlock-recipe",
             recipe = "tiberium-sludge-centrifuging"
         },
+	{
+            type = "unlock-recipe",
+            recipe = "tiberium-ore-processing"
+        },
         {
             type = "unlock-recipe",
             recipe = "tiberium-wall"
