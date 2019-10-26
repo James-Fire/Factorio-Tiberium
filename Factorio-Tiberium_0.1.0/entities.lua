@@ -17,7 +17,7 @@ centrifuge.fluid_boxes =
 		pipe_picture = assembler2pipepictures(),
 		pipe_covers = pipecoverspictures(),
 		base_area = 10,
-		base_level = -1,
+		base_level = 1,
 		pipe_connections = {{ type="output", position = {0, 2} }},
 		secondary_draw_orders = { north = -1 }
 	},
