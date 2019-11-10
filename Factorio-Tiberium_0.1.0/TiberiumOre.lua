@@ -31,7 +31,7 @@ data:extend(
     {
       hardness = 0.05,
       mining_particle = "stone-particle",
-      mining_time = 0.05,
+      mining_time = 0.1,
       result = "tiberium-ore",
       --fluid_amount = 10,
       --required_fluid = "sulfuric-acid"
