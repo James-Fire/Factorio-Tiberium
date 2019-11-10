@@ -119,7 +119,7 @@ data:extend(
     ingredients =
     {
 	  {type="fluid", name="water", amount=100},
-      {type="item", name="tiberium-ore", amount=10}
+      {type="item", name="tiberium-ore", amount=5}
     },
     results=
     {
@@ -145,7 +145,7 @@ data:extend(
     },
     results=
     {
-      {type="fluid", name="liquid-tiberium", amount=4}
+      {type="fluid", name="liquid-tiberium", amount=8}
     },
     icon = "__Factorio-Tiberium__/graphics/icons/fluid/liquid-tiberium.png",
     icon_size = 32,
@@ -453,18 +453,18 @@ data:extend(
     ingredients =
     {
 	  {type="fluid", name="water", amount=100},
-      {type="item", name="tiberium-ore", amount=32}
+      {type="item", name="tiberium-ore", amount=16}
     },
     results=
     {
       {type="item", name="iron-ore", amount=7},
 	  {type="item", name="copper-ore", amount=6},
-	  {type="item", name="coal", amount=4},
+	  {type="item", name="coal", amount=3},
 	  {type="item", name="uranium-ore", amount=1},
 	  {type="item", name="stone", amount=1},
 	  {type="fluid", name="crude-oil", amount=10}
     },
-    icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-ore.png",
+    icon = "__Factorio-Tiberium__/graphics/icons/tiberium-ore.png",
 	icon_size = 32,
     subgroup = "fluid-recipes",
     order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
@@ -477,13 +477,13 @@ data:extend(
 	enabled = false,
     ingredients =
     {
-      {type="fluid", name="tiberium-sludge", amount=24}
+      {type="fluid", name="tiberium-sludge", amount=20}
     },
     results=
     {
       {type="item", name="iron-ore", amount=7},
 	  {type="item", name="copper-ore", amount=6},
-	  {type="item", name="coal", amount=4},
+	  {type="item", name="coal", amount=3},
 	  {type="item", name="uranium-ore", amount=1},
 	  {type="item", name="stone", amount=1},
 	  {type="fluid", name="crude-oil", amount=10}
@@ -507,7 +507,7 @@ data:extend(
     {
       {type="item", name="iron-ore", amount=7},
 	  {type="item", name="copper-ore", amount=6},
-	  {type="item", name="coal", amount=4},
+	  {type="item", name="coal", amount=3},
 	  {type="item", name="uranium-ore", amount=1},
 	  {type="item", name="stone", amount=1},
 	  {type="fluid", name="crude-oil", amount=10}
