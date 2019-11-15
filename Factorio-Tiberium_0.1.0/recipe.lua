@@ -2,21 +2,6 @@ TibProductivity = {}
 
 table.insert(TibProductivity, "tiberium-ore-processing")
 table.insert(TibProductivity, "advanced-tiberium-ore-processing")
-table.insert(TibProductivity, "advanced-tiberium-brick-processing")
-table.insert(TibProductivity, "tiberium-brick-to-iron-ore")
-table.insert(TibProductivity, "tiberium-brick-to-copper-ore")
-table.insert(TibProductivity, "tiberium-brick-to-coal")
-table.insert(TibProductivity, "tiberium-brick-to-stone")
-table.insert(TibProductivity, "tiberium-brick-to-uranium-ore")
-table.insert(TibProductivity, "tiberium-brick-to-crude-oil")
-table.insert(TibProductivity, "tiberium-brick-to-water")
-table.insert(TibProductivity, "tiberium-liquid-to-iron-ore")
-table.insert(TibProductivity, "tiberium-liquid-to-copper-ore")
-table.insert(TibProductivity, "tiberium-liquid-to-coal")
-table.insert(TibProductivity, "tiberium-liquid-to-stone")
-table.insert(TibProductivity, "tiberium-liquid-to-uranium-ore")
-table.insert(TibProductivity, "tiberium-liquid-to-crude-oil")
-table.insert(TibProductivity, "tiberium-liquid-to-water")
 
 for km, vm in pairs(data.raw.module) do
   if vm.effect.productivity and vm.limitation then
@@ -151,10 +136,10 @@ data:extend(
       energy_required = 0.2,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "liquid-tiberium", amount = 20}
+        {type = "fluid", name = "liquid-tiberium", amount = 3}
       },
       results = {
-        {type = "item", name = "tiberium-brick", amount = 3}
+        {type = "item", name = "tiberium-brick", amount = 1}
       },
       icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick.png",
       icon_size = 32,
@@ -171,7 +156,7 @@ data:extend(
         {type = "item", name = "tiberium-brick", amount = 1}
       },
       results = {
-        {type = "item", name = "iron-ore", amount = 1}
+        {type = "item", name = "iron-ore", amount = 2}
       },
       icon = "__base__/graphics/icons/iron-ore.png",
       icon_size = 32,
@@ -188,7 +173,7 @@ data:extend(
         {type = "item", name = "tiberium-brick", amount = 1}
       },
       results = {
-        {type = "item", name = "copper-ore", amount = 1}
+        {type = "item", name = "copper-ore", amount = 2}
       },
       icon = "__base__/graphics/icons/copper-ore.png",
       icon_size = 32,
@@ -205,7 +190,7 @@ data:extend(
         {type = "item", name = "tiberium-brick", amount = 2}
       },
       results = {
-        {type = "item", name = "coal", amount = 1}
+        {type = "item", name = "coal", amount = 2}
       },
       icon = "__base__/graphics/icons/coal.png",
       icon_size = 32,
@@ -222,7 +207,7 @@ data:extend(
         {type = "item", name = "tiberium-brick", amount = 1}
       },
       results = {
-        {type = "item", name = "stone", amount = 1}
+        {type = "item", name = "stone", amount = 2}
       },
       icon = "__base__/graphics/icons/stone.png",
       icon_size = 32,
@@ -239,7 +224,7 @@ data:extend(
         {type = "item", name = "tiberium-brick", amount = 10}
       },
       results = {
-        {type = "item", name = "uranium-ore", amount = 1}
+        {type = "item", name = "uranium-ore", amount = 2}
       },
       icon = "__base__/graphics/icons/uranium-ore.png",
       icon_size = 32,
@@ -256,7 +241,7 @@ data:extend(
         {type = "item", name = "tiberium-brick", amount = 1}
       },
       results = {
-        {type = "fluid", name = "crude-oil", amount = 10}
+        {type = "fluid", name = "crude-oil", amount = 20}
       },
       icon = "__base__/graphics/icons/fluid/crude-oil.png",
       icon_size = 32,
@@ -273,7 +258,7 @@ data:extend(
         {type = "item", name = "tiberium-brick", amount = 1}
       },
       results = {
-        {type = "fluid", name = "water", amount = 1000}
+        {type = "fluid", name = "water", amount = 2000}
       },
       icon = "__base__/graphics/icons/fluid/water.png",
       icon_size = 32,
@@ -290,7 +275,7 @@ data:extend(
         {type = "fluid", name = "liquid-tiberium", amount = 3}
       },
       results = {
-        {type = "item", name = "iron-ore", amount = 1}
+        {type = "item", name = "iron-ore", amount = 2}
       },
       icon = "__base__/graphics/icons/iron-ore.png",
       icon_size = 32,
@@ -307,7 +292,7 @@ data:extend(
         {type = "fluid", name = "liquid-tiberium", amount = 3}
       },
       results = {
-        {type = "item", name = "copper-ore", amount = 1}
+        {type = "item", name = "copper-ore", amount = 2}
       },
       icon = "__base__/graphics/icons/copper-ore.png",
       icon_size = 32,
@@ -321,10 +306,10 @@ data:extend(
       energy_required = 0.5,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "liquid-tiberium", amount = 6}
+        {type = "fluid", name = "liquid-tiberium", amount = 3}
       },
       results = {
-        {type = "item", name = "coal", amount = 1}
+        {type = "item", name = "coal", amount = 2}
       },
       icon = "__base__/graphics/icons/coal.png",
       icon_size = 32,
@@ -341,7 +326,7 @@ data:extend(
         {type = "fluid", name = "liquid-tiberium", amount = 3}
       },
       results = {
-        {type = "item", name = "stone", amount = 1}
+        {type = "item", name = "stone", amount = 2}
       },
       icon = "__base__/graphics/icons/stone.png",
       icon_size = 32,
@@ -358,7 +343,7 @@ data:extend(
         {type = "fluid", name = "liquid-tiberium", amount = 30}
       },
       results = {
-        {type = "item", name = "uranium-ore", amount = 1}
+        {type = "item", name = "uranium-ore", amount = 2}
       },
       icon = "__base__/graphics/icons/uranium-ore.png",
       icon_size = 32,
@@ -375,7 +360,7 @@ data:extend(
         {type = "fluid", name = "liquid-tiberium", amount = 3}
       },
       results = {
-        {type = "fluid", name = "crude-oil", amount = 10}
+        {type = "fluid", name = "crude-oil", amount = 20}
       },
       icon = "__base__/graphics/icons/fluid/crude-oil.png",
       icon_size = 32,
@@ -392,7 +377,7 @@ data:extend(
         {type = "fluid", name = "liquid-tiberium", amount = 6}
       },
       results = {
-        {type = "fluid", name = "water", amount = 1000}
+        {type = "fluid", name = "water", amount = 2000}
       },
       icon = "__base__/graphics/icons/fluid/water.png",
       icon_size = 32,
