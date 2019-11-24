@@ -1,0 +1,9 @@
+Changed recipe balancing. Uranium is no longer a product of basic ore centrifuging. Uranium tibeirum cost cut in half (5 liquid per ore).
+
+Fixed Tiberium brick to coal using 2 bricks, instead of 1.
+
+Localised various items.
+
+Fixed Node Harvester and Control Network being unlocked at the start *
+
+Made Growth Credit recipes. Added recipes to technologies.
