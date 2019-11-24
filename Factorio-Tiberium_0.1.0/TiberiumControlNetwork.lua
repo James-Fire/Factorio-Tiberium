@@ -21,6 +21,7 @@ tiberiumGrowthNodeEntity.mining_speed = 1
 tiberiumGrowthNodeEntity.energy_usage = "25000kW"
 tiberiumGrowthNodeEntity.resource_categories = {}
 tiberiumGrowthNodeEntity.minable.result = "tib-pumpjack"
+
 tiberiumGrowthNodeEntity.resource_searching_radius = 0.49
 table.insert(tiberiumGrowthNodeEntity.resource_categories, "advanced-solid-tiberium")
 
@@ -31,6 +32,7 @@ data:extend{tiberiumGrowthNodeItem, tiberiumGrowthNodeEntity,
 	normal =
 	{
 	  energy_required = 20,
+	  enabled = false,
 	  ingredients =
 	  {
 		{"advanced-circuit", 25},
@@ -42,11 +44,12 @@ data:extend{tiberiumGrowthNodeItem, tiberiumGrowthNodeEntity,
 	expensive =
 	{
 	  energy_required = 30,
+	  enabled = false,
 	  ingredients =
 	  {
-		{"electronic-circuit", 5},
-		{"iron-gear-wheel", 10},
-		{"iron-plate", 20}
+		{"advanced-circuit", 25},
+		{"iron-gear-wheel", 50},
+		{"iron-plate", 100}
 	  },
 	  result = "tib-pumpjack"
 	}
@@ -72,9 +75,11 @@ data:extend({tiberiumNetworkNodeItem,tiberiumNetworkNodeEntity,tibcat,
   {
     type = "recipe",
     name = "tiberium-network-node",
+	
     normal =
     {
       energy_required = 20,
+	  enabled = false,
       ingredients =
       {
         {"advanced-circuit", 25},
@@ -86,11 +91,12 @@ data:extend({tiberiumNetworkNodeItem,tiberiumNetworkNodeEntity,tibcat,
     expensive =
     {
       energy_required = 30,
+	  enabled = false,
       ingredients =
       {
-        {"electronic-circuit", 5},
-        {"iron-gear-wheel", 10},
-        {"iron-plate", 20}
+        {"advanced-circuit", 25},
+		{"iron-gear-wheel", 50},
+		{"iron-plate", 100}
       },
       result = "tiberium-network-node"
     }
