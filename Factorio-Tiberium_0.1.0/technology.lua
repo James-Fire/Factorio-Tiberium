@@ -55,6 +55,26 @@ data:extend
             type = "unlock-recipe",
             recipe = "tib-pumpjack"
         },
+		{
+            type = "unlock-recipe",
+            recipe = "iron-growth-credit"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "copper-growth-credit"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "coal-growth-credit"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "uranium-growth-credit"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "oil-growth-credit"
+        },
       },
 	  
 	  
@@ -180,6 +200,10 @@ data:extend
 		{
             type = "unlock-recipe",
             recipe = "tiberium-network-node"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "energy-growth-credit"
         },
       },
       prerequisites = {"tiberium-power-tech"},

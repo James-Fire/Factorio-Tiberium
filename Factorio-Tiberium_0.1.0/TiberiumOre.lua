@@ -1,6 +1,21 @@
 data:extend(
 {
 	{
+        type = "item",
+        name = "growth-credit",
+        icon = "__Factorio-Tiberium__/graphics/icons/tiberium-ore.png",
+		icon_size = 32,
+        flags = {},
+        subgroup = "raw-resource",
+        order = "a[tiberium-ore]",
+        stack_size = 200
+    },
+	}
+)
+
+data:extend(
+{
+	{
 		type = "autoplace-control",
 		name = "tibGrowthNode",
 		richness = true,

@@ -2,6 +2,12 @@ TibProductivity = {}
 
 table.insert(TibProductivity, "tiberium-ore-processing")
 table.insert(TibProductivity, "advanced-tiberium-ore-processing")
+table.insert(TibProductivity, "iron-growth-credit")
+table.insert(TibProductivity, "copper-growth-credit")
+table.insert(TibProductivity, "coal-growth-credit")
+table.insert(TibProductivity, "uranium-growth-credit")
+table.insert(TibProductivity, "oil-growth-credit")
+table.insert(TibProductivity, "energy-growth-credit")
 
 for km, vm in pairs(data.raw.module) do
   if vm.effect.productivity and vm.limitation then
@@ -187,7 +193,7 @@ data:extend(
       energy_required = 0.5,
       enabled = false,
       ingredients = {
-        {type = "item", name = "tiberium-brick", amount = 2}
+        {type = "item", name = "tiberium-brick", amount = 1}
       },
       results = {
         {type = "item", name = "coal", amount = 2}
@@ -221,10 +227,10 @@ data:extend(
       energy_required = 0.5,
       enabled = false,
       ingredients = {
-        {type = "item", name = "tiberium-brick", amount = 10}
+        {type = "item", name = "tiberium-brick", amount = 5}
       },
       results = {
-        {type = "item", name = "uranium-ore", amount = 2}
+        {type = "item", name = "uranium-ore", amount = 3}
       },
       icon = "__base__/graphics/icons/uranium-ore.png",
       icon_size = 32,
@@ -340,10 +346,10 @@ data:extend(
       energy_required = 0.5,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "liquid-tiberium", amount = 30}
+        {type = "fluid", name = "liquid-tiberium", amount = 15}
       },
       results = {
-        {type = "item", name = "uranium-ore", amount = 2}
+        {type = "item", name = "uranium-ore", amount = 3}
       },
       icon = "__base__/graphics/icons/uranium-ore.png",
       icon_size = 32,
@@ -398,7 +404,6 @@ data:extend(
         {type = "item", name = "iron-ore", amount = 7},
         {type = "item", name = "copper-ore", amount = 6},
         {type = "item", name = "coal", amount = 3},
-        {type = "item", name = "uranium-ore", amount = 1},
         {type = "item", name = "stone", amount = 1},
         {type = "fluid", name = "crude-oil", amount = 10}
       },
@@ -468,6 +473,107 @@ data:extend(
       icon_size = 32,
       subgroup = "fluid-recipes",
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
-    }
+    },
+	{
+      type = "recipe",
+      name = "iron-growth-credit",
+      category = "chemistry",
+      energy_required = 20,
+      enabled = false,
+      ingredients = {
+        {type = "item", name = "iron-ore", amount = 20}
+      },
+      results = {
+        {type = "item", name = "growth-credit", amount = 1},
+      },
+      icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-sludge.png",
+      icon_size = 32,
+      subgroup = "fluid-recipes",
+      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+    },
+	{
+      type = "recipe",
+      name = "copper-growth-credit",
+      category = "chemistry",
+      energy_required = 20,
+      enabled = false,
+      ingredients = {
+        {type = "item", name = "copper-ore", amount = 20}
+      },
+      results = {
+        {type = "item", name = "growth-credit", amount = 1},
+      },
+      icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-sludge.png",
+      icon_size = 32,
+      subgroup = "fluid-recipes",
+      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+    },
+	{
+      type = "recipe",
+      name = "coal-growth-credit",
+      category = "chemistry",
+      energy_required = 20,
+      enabled = false,
+      ingredients = {
+        {type = "item", name = "coal", amount = 15}
+      },
+      results = {
+        {type = "item", name = "growth-credit", amount = 1},
+      },
+      icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-sludge.png",
+      icon_size = 32,
+      subgroup = "fluid-recipes",
+      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+    },
+	{
+      type = "recipe",
+      name = "uranium-growth-credit",
+      category = "chemistry",
+      energy_required = 20,
+      enabled = false,
+      ingredients = {
+        {type = "item", name = "uranium-ore", amount = 10}
+      },
+      results = {
+        {type = "item", name = "growth-credit", amount = 1},
+      },
+      icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-sludge.png",
+      icon_size = 32,
+      subgroup = "fluid-recipes",
+      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+    },
+	{
+      type = "recipe",
+      name = "oil-growth-credit",
+      category = "chemistry",
+      energy_required = 20,
+      enabled = false,
+      ingredients = {
+        {type = "fluid", name = "crude-oil", amount = 50}
+      },
+      results = {
+        {type = "item", name = "growth-credit", amount = 1},
+      },
+      icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-sludge.png",
+      icon_size = 32,
+      subgroup = "fluid-recipes",
+      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+    },
+	{
+      type = "recipe",
+      name = "energy-growth-credit",
+      category = "chemistry",
+      energy_required = 200,
+      enabled = false,
+      ingredients = {
+      },
+      results = {
+        {type = "item", name = "growth-credit", amount = 1},
+      },
+      icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-sludge.png",
+      icon_size = 32,
+      subgroup = "fluid-recipes",
+      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+    },
   }
 )
