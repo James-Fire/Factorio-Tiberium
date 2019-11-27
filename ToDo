@@ -3,6 +3,7 @@ Priority 1: UPS with growth
 2:Fix the rest of the events
 -Damage, and the exclusions for it
 -Liquid tib in inventory on death spawns ore, leaves "acid" puddle
+-Change growth code to use node richness instead of distance from spawn.
 3: Fill in missing items
 -Basic Weaponry
 -Gate
