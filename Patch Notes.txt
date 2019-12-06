@@ -7,3 +7,10 @@ Localised various items.
 Fixed Node Harvester and Control Network being unlocked at the start *
 
 Made Growth Credit recipes. Added recipes to technologies.
+
+
+2019.12.05 
+	[Art] -Ax
+	-Implemented placeholder Tiberium Ore art + glow (Based on Tiberian Sun sprites.)
+		* Disabled 'HR rendering' of sprites for now, since there is only the 64px version.
+		* 12 variations, 12 growth steps from 1-1000 ore units. For 'smoother' visual spread.

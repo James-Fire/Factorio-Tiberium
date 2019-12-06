@@ -53,7 +53,7 @@ data:extend(
     },
     collision_box = {{-0.1, -0.1}, {0.1, 0.1}},
     selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
-    stage_counts = {1000, 600, 400, 200, 100, 50, 20, 1},
+    stage_counts = {1000, 750, 600, 500, 400, 300, 200, 100, 50, 30, 20, 1},
     stages =
     {
       sheet =
@@ -62,17 +62,17 @@ data:extend(
         priority = "extra-high",
         width = 64,
         height = 64,
-        frame_count = 8,
-        variation_count = 8,
-        hr_version = {
-          filename = "__Factorio-Tiberium__/graphics/entity/ores/hr-tiberium-ore.png",
-          priority = "extra-high",
-          width = 128,
-          height = 128,
-          frame_count = 8,
-          variation_count = 8,
-          scale = 0.5
-        }
+        frame_count = 12,
+        variation_count = 12,
+        --hr_version = {
+        -- filename = "__Factorio-Tiberium__/graphics/entity/ores/hr-tiberium-ore.png",
+        --  priority = "extra-high",
+        --  width = 128,
+        --  height = 128,
+        --  frame_count = 8,
+        --  variation_count = 8,
+        --  scale = 0.5
+        --}
       }
     },
     stages_effect =
@@ -83,21 +83,21 @@ data:extend(
         priority = "extra-high",
         width = 64,
         height = 64,
-        frame_count = 8,
-        variation_count = 8,
+        frame_count = 12,
+        variation_count = 12,
         blend_mode = "additive",
         flags = {"light"},
-        hr_version = {
-          filename = "__Factorio-Tiberium__/graphics/entity/ores/hr-tiberium-ore-glow.png",
-          priority = "extra-high",
-          width = 128,
-          height = 128,
-          frame_count = 8,
-          variation_count = 8,
-          scale = 0.5,
-          blend_mode = "additive",
-          flags = {"light"},
-        }
+        --hr_version = {
+        --  filename = "__Factorio-Tiberium__/graphics/entity/ores/hr-tiberium-ore-glow.png",
+        --  priority = "extra-high",
+        --  width = 128,
+        --  height = 128,
+        --  frame_count = 8,
+        --  variation_count = 8,
+        --  scale = 0.5,
+        --  blend_mode = "additive",
+        --  flags = {"light"},
+        --}
       }
     },
     effect_animation_period = 5,
