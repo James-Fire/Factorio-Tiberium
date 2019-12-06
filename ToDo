@@ -4,6 +4,7 @@ Priority 1: UPS with growth
 -Damage, and the exclusions for it
 -Liquid tib in inventory on death spawns ore, leaves "acid" puddle
 -Change growth code to use node richness instead of distance from spawn.
+-Modded power poles appear to take damage from growth. Mod Advanced Electric.
 3: Fill in missing items
 -Basic Weaponry
 -Gate
