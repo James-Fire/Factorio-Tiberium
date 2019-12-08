@@ -11,6 +11,10 @@ data:extend
             type = "unlock-recipe",
             recipe = "tiberium-ore-centrifuging"
         },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-ore-sludge-centrifuging"
+        },
         {
             type = "unlock-recipe",
             recipe = "tiberium-armor"
@@ -41,15 +45,23 @@ data:extend
       {
         {
             type = "unlock-recipe",
-            recipe = "tiberium-sludge-centrifuging"
+            recipe = "tiberium-slurry-centrifuging"
         },
-	{
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-sludge-to-stone-brick"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-slurry-sludge-centrifuging"
+        },
+		{
             type = "unlock-recipe",
             recipe = "tiberium-ore-processing"
         },
-        {
+		{
             type = "unlock-recipe",
-            recipe = "tiberium-wall"
+            recipe = "sonic-wall-node"
         },
 		{
             type = "unlock-recipe",
@@ -73,7 +85,15 @@ data:extend
         },
 		{
             type = "unlock-recipe",
+            recipe = "stone-growth-credit"
+        },
+		{
+            type = "unlock-recipe",
             recipe = "oil-growth-credit"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "growth-accelerator"
         },
       },
 	  
@@ -104,7 +124,19 @@ data:extend
         },
 		{
             type = "unlock-recipe",
-            recipe = "tiberium-liquid-centrifuging"
+            recipe = "tiberium-liquid-processing"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-molten-centrifuging"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-molten-sludge-centrifuging"
+        },
+		{
+            type = "unlock-recipe",
+            recipe =  "tiberium-slurry-to-crude-oil"
         },
 		{
             type = "unlock-recipe",
@@ -143,6 +175,14 @@ data:extend
         },
 		{
             type = "unlock-recipe",
+            recipe = "liquid-tiberium-cell"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-slurry-to-uranium-ore"
+        },
+		{
+            type = "unlock-recipe",
             recipe = "tiberium-brick-to-iron-ore"
         },
 		{
@@ -157,46 +197,30 @@ data:extend
             type = "unlock-recipe",
             recipe = "tiberium-brick-to-stone"
         },
-		{
-            type = "unlock-recipe",
-            recipe = "tiberium-brick-to-crude-oil"
-        },
-		{
-            type = "unlock-recipe",
-            recipe = "tiberium-brick-to-uranium-ore"
-        },
-		{
+		--[[{
             type = "unlock-recipe",
             recipe = "tiberium-brick-to-water"
+        },]]
+        {
+            type = "unlock-recipe",
+            recipe = "tiberium-molten-to-iron-ore"
         },
         {
             type = "unlock-recipe",
-            recipe = "tiberium-liquid-to-iron-ore"
+            recipe = "tiberium-molten-to-copper-ore"
         },
         {
             type = "unlock-recipe",
-            recipe = "tiberium-liquid-to-copper-ore"
+            recipe = "tiberium-molten-to-coal"
         },
         {
             type = "unlock-recipe",
-            recipe = "tiberium-liquid-to-coal"
+            recipe = "tiberium-molten-to-stone"
         },
-        {
+        --[[{
             type = "unlock-recipe",
-            recipe = "tiberium-liquid-to-stone"
-        },
-		{
-            type = "unlock-recipe",
-            recipe = "tiberium-liquid-to-uranium-ore"
-        },
-        {
-            type = "unlock-recipe",
-            recipe = "tiberium-liquid-to-crude-oil"
-        },
-        {
-            type = "unlock-recipe",
-            recipe = "tiberium-liquid-to-water"
-        },
+            recipe = "tiberium-molten-to-water"
+        },]]
 		{
             type = "unlock-recipe",
             recipe = "tiberium-network-node"
