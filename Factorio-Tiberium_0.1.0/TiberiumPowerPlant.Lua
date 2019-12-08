@@ -5,8 +5,8 @@ data:extend({
       icon = "__base__/graphics/icons/chemical-plant.png",
       icon_size = 32,
       flags = {},
-      subgroup = "energy",
-      order = "b[steam-power]-d[tiberium-plant]",
+      subgroup = "a-buildings",
+      order = "m",
       place_result = "tiberium-plant",
       stack_size = 20
     },
@@ -15,6 +15,8 @@ data:extend({
       name = "tiberium-plant",
       energy_required = 15,
       enabled = "false",
+	  subgroup = "a-buildings",
+	  order = "m",
       ingredients = {
         {"steel-plate", 25},
         {"electric-engine-unit", 10},
