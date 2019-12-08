@@ -140,7 +140,7 @@ data:extend({
 	{
 		type = "container",
 		name = "growth-accelerator",
-		icon = "__Warehousing__/graphics/icons/warehouse-basic.png",
+		icon = "__base__/graphics/icons/accumulator.png",
 		icon_size = 32,
 		flags = {"placeable-neutral", "placeable-player", "player-creation"},
 		minable = {mining_time = 2, result = "growth-accelerator"},
@@ -161,10 +161,9 @@ data:extend({
 		selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
 		fast_replaceable_group = "container",
 		inventory_size = 10,
-		scale_info_icons = settings.startup["Warehousing-icon-scaling"].value,
 		picture =
 		{
-			filename = "__Warehousing__/graphics/entity/storehouse-basic.png",
+			filename = "__base__\graphics\entity\electric-mining-drill/hr-electric-mining-drill-N-patch.png",
 			priority = "high",
 			width = 129,
 			height = 100,
@@ -205,7 +204,7 @@ data:extend({
 	{
 		type = "item",
 		name = "growth-accelerator",
-		icon = "__Warehousing__/graphics/icons/storehouse-basic.png",
+		icon = "__base__/graphics/icons/accumulator.png",
 		icon_size = 32,
 		subgroup = "a-buildings",
 		order = "g",
