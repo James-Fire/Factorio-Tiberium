@@ -1,3 +1,4 @@
+require("item-groups")
 require("TiberiumOre")
 require("TiberiumArmor")
 require("TiberiumWall")
