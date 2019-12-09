@@ -1,10 +1,10 @@
-local item = {
+--[[local item = {
     type = "item",
     name = "tiberium-wall",
     icon = "__Factorio-Tiberium__/graphics/icons/tiberium-wall.png",
     icon_size = 32,
     flags = {},
-    subgroup = "defensive-structure",
+    subgroup = "a-buildings",
     order = "a[wall]-a[wall]",
     place_result = "tiberium-wall",
     stack_size = 100
@@ -778,14 +778,43 @@ local tiberiumWall = {
   }
 
  tiberiumWall.pictures.tint={r=0.2,g=0.5,b=0.2,a=0.9}
-
-local recipe = {
+ 
+ local recipe = {
     type = "recipe",
     name = "tiberium-wall",
     ingredients = {{"electronic-circuit",5},{"stone-wall",1}},
+	subgroup = "a-buildings",
     result = "tiberium-wall",
     energy_required = 2,
     enabled = false
 }
 
 data:extend{item, tiberiumWall,recipe}
+
+local item = {
+    type = "item",
+    name = "tiberium-gate",
+    icon = "__Factorio-Tiberium__/graphics/icons/tiberium-gate.png",
+    icon_size = 32,
+    flags = {},
+    subgroup = "a-buildings",
+    order = "a[wall]-a[wall]",
+    place_result = "tiberium-gate",
+    stack_size = 100
+}
+ 
+local tiberiumGate = util.table.deepcopy(data.raw["gate"]["gate"])
+tiberiumGate.name = "tiberium-gate"
+
+--tiberiumGate.pictures.tint={r=0.2,g=0.5,b=0.2,a=0.9}
+ 
+local recipe = {
+    type = "recipe",
+    name = "tiberium-gate",
+    ingredients = {{"electronic-circuit",5},{"gate",1}},
+    result = "tiberium-gate",
+	subgroup = "a-buildings",
+    energy_required = 2,
+    enabled = false
+}
+data:extend{item, tiberiumGate,recipe}]]

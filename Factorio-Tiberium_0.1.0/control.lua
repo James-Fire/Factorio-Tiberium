@@ -241,13 +241,6 @@ function PlaceOre(entity, howmany)
 
   --game.print({"", timer, " end of updating mining drills ", #drills})
 end
-
---[[
-Nodes spawn like oil
-Fix mining drill exclusions
-Sonic Gate
-Fix belt exclusions
-]]
 commands.add_command(
   "setTibTickRate",
   "Sets how often Tiberium should attempt to grow. (default: 20)",
@@ -453,3 +446,27 @@ script.on_event(
     end
   end
 )
+
+--[[local lib = {}
+
+lib.events =
+{
+  [defines.events.on_research_finished] = on_research_finished,
+  [defines.events.on_built_entity] = on_created_entity,
+  [defines.events.on_tick] = on_tick,
+  [defines.events.on_chunk_generated] = on_chunk_generated,
+}
+
+lib.on_load = function()
+
+end
+
+lib.on_configuration_changed = function()
+
+end
+
+lib.on_init = function()
+
+end
+
+return lib]]

@@ -1,0 +1,37 @@
+Changes Node harvesting recipe, to smooth out production from it. Increased richness of nodes to compensate, since each cycle of the Node harvester harvests one "unit" from the node, regardless of how much it produces.
+
+Added stone growth credit recipe.
+
+Added pollution modifier to molten tib. If ya burn it, the trees will not thank you.
+
+Made growth credit image.
+
+Made icons for each growth credit recipe.
+
+Made icon for Waste recycling recipe.
+
+Changed order of outputs in centrifuging, hopefully to reduce wasted inserter swings. Also removed uranium and oil from output. Direct from slurry only now.
+
+Water recipes commented out. They're largely useless.
+
+Made different icons for the centrifuging recipes.
+
+Added recipe/icon to make stone bricks/concrete out of tiberium waste.
+
+Made new icons for direct recipes.
+
+Fully redid the recipe balancing.
+
+Added a sonic gate.
+
+Removed "Crystal" from localized tib name.
+
+Fully changed liquid tib over to molten.
+
+Added liquid tib fluid.
+
+Fully made the growth accelerator.
+
+Added liquid tib production to make power out of.
+
+Nuclear fuel production from liquid tib, expensive to be efficient.
