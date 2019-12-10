@@ -163,7 +163,7 @@ data:extend({
 		inventory_size = 10,
 		picture =
 		{
-			filename = "__base__\graphics\entity\electric-mining-drill/hr-electric-mining-drill-N-patch.png",
+			filename = "__base__/graphics/entity/electric-mining-drill/hr-electric-mining-drill-N-patch.png",
 			priority = "high",
 			width = 129,
 			height = 100,
