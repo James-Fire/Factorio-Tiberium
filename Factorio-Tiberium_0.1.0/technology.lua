@@ -60,9 +60,9 @@ data:extend
             recipe = "tiberium-ore-processing"
         },
 		{
-			type = "unlock-recipe",
-			recipe = "sonic-wall-node"
-		}
+            type = "unlock-recipe",
+            recipe = "sonic-wall-node"
+        },
 		{
             type = "unlock-recipe",
             recipe = "tib-pumpjack"
