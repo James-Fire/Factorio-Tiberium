@@ -1,4 +1,4 @@
-require "CnC_Walls" --Note, to make SonicWalls work / be passable, 
+require "scripts/CnC_Walls" --Note, to make SonicWalls work / be passable, 
 
 script.on_init(
   function()
