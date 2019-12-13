@@ -103,6 +103,7 @@ function AddOre(surface, position, growthRate)
   else
     --game.print(string.format("x:%.2f y:%.2f new | %f", position.x, position.y, math.random()))
     oreEntity = surface.create_entity {name = "tiberium-ore", amount = growthRate, position = position}
+	game.surfaces[1].destroy_decoratives{ position = position } --Remove decoration on tile on spread.
   end
 
   --damage adjacent entities unless it's in the list of exemptDamageItems

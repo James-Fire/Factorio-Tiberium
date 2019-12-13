@@ -46,7 +46,7 @@ data:extend(
     {
       hardness = 0.05,
       mining_particle = "stone-particle",
-      mining_time = 0.1,
+      mining_time = 1,
       result = "tiberium-ore",
       --fluid_amount = 10,
       --required_fluid = "sulfuric-acid"
@@ -64,15 +64,15 @@ data:extend(
         height = 64,
         frame_count = 12,
         variation_count = 12,
-        --hr_version = {
-        -- filename = "__Factorio-Tiberium__/graphics/entity/ores/hr-tiberium-ore.png",
-        --  priority = "extra-high",
-        --  width = 128,
-        --  height = 128,
-        --  frame_count = 8,
-        --  variation_count = 8,
-        --  scale = 0.5
-        --}
+        hr_version = {
+         filename = "__Factorio-Tiberium__/graphics/entity/ores/hr-tiberium-ore.png",
+          priority = "extra-high",
+          width = 128,
+          height = 128,
+          frame_count = 12,
+          variation_count = 12,
+          scale = 0.5
+        }
       }
     },
     stages_effect =
@@ -100,11 +100,11 @@ data:extend(
         --}
       }
     },
-    effect_animation_period = 5,
+    effect_animation_period = 4,
     effect_animation_period_deviation = 1,
-    effect_darkness_multiplier = 3.6,
-    min_effect_alpha = 0.2,
-    max_effect_alpha = 0.3,
+    effect_darkness_multiplier = 2.0,
+    min_effect_alpha = 0.3,
+    max_effect_alpha = 0.5,
     map_color = {r=0, g=0.9, b=0}
   },
   
