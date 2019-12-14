@@ -1,7 +1,4 @@
 # Factorio-Tiberium
-Note to anyone interested in testing it, it currently doesn't work if it's zipped, for whatever reason.  
-Currently trying to figure that one out, -Ax  
-  
 The tiberium mod for Factorio  
 Currently being updated and expanded.
 
