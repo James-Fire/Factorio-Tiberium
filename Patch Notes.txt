@@ -55,30 +55,7 @@ Added liquid tib production to make power out of.
 
 Nuclear fuel production from liquid tib, expensive to be efficient.
 
-DATE
-
-
-
-Liquid Tiberium Spread missile.* Needs to trigger event to place ore.
-
-Nodes are now affected by distance to spawn for richness.* No idea how to fix, or even what is wrong.
-
-Rebalanced ore value, and molten to slurry ratio.
-
-
-
-Check:
-
-
-
-
-
-
-
-
-
-
-Finished:
+2020-01-08
 
 Fix Node Harvester using 20x power of mining drill for equivalent tib.
 
