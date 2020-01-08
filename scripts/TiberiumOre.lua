@@ -10,6 +10,16 @@ data:extend(
         order = "a[tiberium-ore]",
         stack_size = 200
     },
+	{
+        type = "item",
+        name = "tiberium-ion-core",
+        icon = "__base__/graphics/icons/nuclear-reactor.png",
+		icon_size = 32,
+        flags = {},
+        subgroup = "raw-resource",
+        order = "a[tiberium-ore]",
+        stack_size = 200
+    },
 	}
 )
 
@@ -33,6 +43,10 @@ data:extend(
 	{
 		type = "resource-category",
 		name = "advanced-solid-tiberium"
+	},
+	{
+		type = "resource-category",
+		name = "advanced-liquid-tiberium"
 	},
   {
     type = "resource",
@@ -188,6 +202,58 @@ data:extend(
       }
     },
     map_color = {0, 0.9, 0},
+    map_grid = false
+  },
+})
+
+data:extend(
+{
+  {
+    type = "resource",
+    name = "tibGrowthNode_infinite",
+    icon = "__base__/graphics/icons/crude-oil.png",
+    icon_size = 32,
+    flags = {"placeable-neutral"},
+    category = "advanced-liquid-tiberium",
+    order="a-b-a",
+    infinite = true,
+    highlight = true,
+    minimum = 600000,
+    normal = 3000000,
+    infinite_depletion_amount = 10,
+    resource_patch_search_radius = 12,
+    tree_removal_probability = 0.7,
+    tree_removal_max_distance = 32 * 32,
+    minable =
+    {
+      mining_time = 10,
+      results =
+      {
+        {
+          type = "fluid",
+          name = "molten-tiberium",
+          amount_min = 10,
+          amount_max = 10,
+          probability = 1
+        }
+      }
+    },
+    collision_box = {{-1.4, -1.4}, {1.4, 1.4}},
+    selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
+    stage_counts = {0},
+    stages =
+    {
+      sheet =
+      {
+        filename = "__base__/graphics/entity/crude-oil/crude-oil.png",
+        priority = "extra-high",
+        width = 75,
+        height = 61,
+        frame_count = 4,
+        variation_count = 1
+      }
+    },
+    map_color = {0.2, 0.9, 0},
     map_grid = false
   },
 })

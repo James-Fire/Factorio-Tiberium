@@ -13,6 +13,10 @@ data:extend
         },
 		{
             type = "unlock-recipe",
+            recipe = "tiberium-ore-pressing"
+        },
+		{
+            type = "unlock-recipe",
             recipe = "tiberium-ore-sludge-centrifuging"
         },
         {
@@ -59,10 +63,10 @@ data:extend
             type = "unlock-recipe",
             recipe = "tiberium-ore-processing"
         },
-		--{
-          --  type = "unlock-recipe",
-          --  recipe = "sonic-wall-node"
-        --},
+		{
+			type = "unlock-recipe",
+			recipe = "CnC_SonicWall_Hub"
+		},
 		{
             type = "unlock-recipe",
             recipe = "tib-pumpjack"
@@ -145,7 +149,16 @@ data:extend
 		{
             type = "unlock-recipe",
             recipe = "tiberium-plant"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-ion-core"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "ion-turret"
         }
+		
       },
 	  
 	  
@@ -171,15 +184,47 @@ data:extend
       {
 		{
             type = "unlock-recipe",
-            recipe = "advanced-tiberium-brick-processing"
-        },
-		{
-            type = "unlock-recipe",
             recipe = "liquid-tiberium-cell"
         },
 		{
             type = "unlock-recipe",
+            recipe = "tib-spike"
+        },
+		{
+            type = "unlock-recipe",
             recipe = "tiberium-slurry-to-uranium-ore"
+        },
+        {
+            type = "unlock-recipe",
+            recipe = "tiberium-molten-to-iron-ore"
+        },
+        {
+            type = "unlock-recipe",
+            recipe = "tiberium-molten-to-copper-ore"
+        },
+        {
+            type = "unlock-recipe",
+            recipe = "tiberium-molten-to-coal"
+        },
+        {
+            type = "unlock-recipe",
+            recipe = "tiberium-molten-to-stone"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-network-node"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "energy-growth-credit"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "liquid-tiberium-spread"
+        },
+		--[[{
+            type = "unlock-recipe",
+            recipe = "advanced-tiberium-brick-processing"
         },
 		{
             type = "unlock-recipe",
@@ -197,38 +242,14 @@ data:extend
             type = "unlock-recipe",
             recipe = "tiberium-brick-to-stone"
         },
-		--[[{
+		{
             type = "unlock-recipe",
             recipe = "tiberium-brick-to-water"
-        },]]
-        {
-            type = "unlock-recipe",
-            recipe = "tiberium-molten-to-iron-ore"
         },
-        {
-            type = "unlock-recipe",
-            recipe = "tiberium-molten-to-copper-ore"
-        },
-        {
-            type = "unlock-recipe",
-            recipe = "tiberium-molten-to-coal"
-        },
-        {
-            type = "unlock-recipe",
-            recipe = "tiberium-molten-to-stone"
-        },
-        --[[{
+		{
             type = "unlock-recipe",
             recipe = "tiberium-molten-to-water"
         },]]
-		{
-            type = "unlock-recipe",
-            recipe = "tiberium-network-node"
-        },
-		{
-            type = "unlock-recipe",
-            recipe = "energy-growth-credit"
-        },
       },
       prerequisites = {"tiberium-power-tech"},
       unit =
@@ -244,33 +265,6 @@ data:extend
         },
         time = 40
       }
-   },
-   
-   {
-		type = "technology",
-		name = "CnC_SonicWall_Hub",
-		icon = "__Factorio-Tiberium__/graphics/technology/tiberium-processing-tech.png",
-        icon_size = 128,
-		unit =
-		{
-			count = 100,
-			ingredients =
-			{
-				{"automation-science-pack", 1},
-				{"logistic-science-pack", 1},
-				{"chemical-science-pack", 1}
-			},
-			time = 10
-		},
-		prerequisites = {"advanced-tiberium-processing-tech"},
-		effects = {
-			{
-				type = "unlock-recipe",
-				recipe = "CnC_SonicWall_Hub"
-			}
-		},
-		order = "a-a-a",
-	}
-   
+   }, 
    
 }

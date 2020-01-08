@@ -37,7 +37,7 @@ data:extend {
     max_temperature = 1000,
     name = "liquid-tiberium",
     order = "a[fluid]-c[crude-oil]",
-    fuel_value = "50MJ",
+    fuel_value = "25MJ",
 	emissions_multiplier = 3,
     pressure_to_speed_ratio = 0.4,
     type = "fluid"
@@ -61,8 +61,6 @@ data:extend {
     max_temperature = 1000,
     name = "molten-tiberium",
     order = "a[fluid]-c[crude-oil]",
-    fuel_value = "50MJ",
-	emissions_multiplier = 3,
     pressure_to_speed_ratio = 0.4,
     type = "fluid"
   },
@@ -112,8 +110,17 @@ data:extend {
   },
   {
     type = "item",
+    name = "tiberium-bar",
+    icon = "__Factorio-Tiberium__/graphics/icons/tiberium-bar.png",
+    icon_size = 32,
+    flags = {},
+    subgroup = "intermediate-product",
+    stack_size = 100
+  },
+  {
+    type = "item",
     name = "tiberium-brick",
-    icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick.png",
+    icon = "__Factorio-Tiberium__/graphics/icons/tiberium-bar.png",
     icon_size = 32,
     flags = {},
     subgroup = "intermediate-product",
@@ -123,144 +130,81 @@ data:extend {
 
 data:extend(
   {
+	{
+      type = "recipe",
+      name = "tiberium-ore-pressing",
+      category = "crafting",
+      energy_required = 2,
+      enabled = false,
+      ingredients = {
+        {type = "item", name = "tiberium-ore", amount = 1}
+      },
+      results = {
+        {type = "item", name = "tiberium-bar", amount = 10},
+      },
+      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-bar.png",
+      icon_size = 32,
+      subgroup = "a-refining",
+      order = "a"
+    },
     {
       type = "recipe",
       name = "tiberium-ore-processing",
       category = "oil-processing",
-      energy_required = 5,
+      energy_required = 15,
+	  emissions_multiplier = 2,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "water", amount = 100},
-        {type = "item", name = "tiberium-ore", amount = 5}
+        {type = "fluid", name = "water", amount = 150},
+         {type = "item", name = "tiberium-bar", amount = 10},
       },
       results = {
-        {type = "fluid", name = "tiberium-slurry", amount = 3},
+        {type = "fluid", name = "tiberium-slurry", amount = 6},
+		{type = "fluid", name = "tiberium-sludge", amount = 1}
       },
       icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-waste.png",
       icon_size = 32,
       subgroup = "a-refining",
-      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+      order = "a"
     },
     {
       type = "recipe",
       name = "advanced-tiberium-ore-processing",
       category = "oil-processing",
-      energy_required = 5,
+      energy_required = 10,
+	  emissions_multiplier = 2,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "water", amount = 50},
-        {type = "fluid", name = "tiberium-slurry", amount = 3},
+        {type = "fluid", name = "water", amount = 100},
+        {type = "fluid", name = "tiberium-slurry", amount = 10},
       },
       results = {
-        {type = "fluid", name = "molten-tiberium", amount = 4}
+        {type = "fluid", name = "molten-tiberium", amount = 6},
+		{type = "fluid", name = "tiberium-sludge", amount = 1}
       },
       icon = "__Factorio-Tiberium__/graphics/icons/fluid/molten-tiberium.png",
       icon_size = 32,
       subgroup = "a-refining",
-      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
-    },
-	
-    {
-      type = "recipe",
-      name = "advanced-tiberium-brick-processing",
-      category = "crafting-with-fluid",
-      energy_required = 2,
-      enabled = false,
-      ingredients = {
-        {type = "fluid", name = "molten-tiberium", amount = 3}
-      },
-      results = {
-        {type = "item", name = "tiberium-brick", amount = 2}
-      },
-      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick.png",
-      icon_size = 32,
-      subgroup = "a-refining",
-      order = "b[oil-processing]-h[advanced-oil-processing]"
+      order = "b"
     },
 	{
       type = "recipe",
       name = "tiberium-liquid-processing",
       category = "chemistry",
-      energy_required = 20,
+      energy_required = 60,
+	  emissions_multiplier = 2,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "molten-tiberium", amount = 3},
+        {type = "fluid", name = "molten-tiberium", amount = 9},
       },
       results = {
-        {type = "fluid", name = "liquid-tiberium", amount = 1}
+        {type = "fluid", name = "liquid-tiberium", amount = 3},
+		{type = "fluid", name = "tiberium-sludge", amount = 1}
       },
       icon = "__Factorio-Tiberium__/graphics/icons/fluid/liquid-tiberium.png",
       icon_size = 32,
       subgroup = "a-refining",
       order = "m"
-    },
-    {
-      type = "recipe",
-      name = "tiberium-brick-to-iron-ore",
-      category = "chemistry",
-      energy_required = 4,
-      enabled = false,
-      ingredients = {
-        {type = "item", name = "tiberium-brick", amount = 1}
-      },
-      results = {
-        {type = "item", name = "iron-ore", amount = 4}
-      },
-      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick-to-iron.png",
-      icon_size = 32,
-      subgroup = "a-direct",
-      order = "b[oil-processing]-e[advanced-oil-processing]"
-    },
-    {
-      type = "recipe",
-      name = "tiberium-brick-to-copper-ore",
-      category = "chemistry",
-      energy_required = 4,
-      enabled = false,
-      ingredients = {
-        {type = "item", name = "tiberium-brick", amount = 1}
-      },
-      results = {
-        {type = "item", name = "copper-ore", amount = 4}
-      },
-      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick-to-copper.png",
-      icon_size = 32,
-      subgroup = "a-direct",
-      order = "b[oil-processing]-f[advanced-oil-processing]"
-    },
-    {
-      type = "recipe",
-      name = "tiberium-brick-to-coal",
-      category = "chemistry",
-      energy_required = 4,
-      enabled = false,
-      ingredients = {
-        {type = "item", name = "tiberium-brick", amount = 1}
-      },
-      results = {
-        {type = "item", name = "coal", amount = 4}
-      },
-      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick-to-coal.png",
-      icon_size = 32,
-      subgroup = "a-direct",
-      order = "b[oil-processing]-g[advanced-oil-processing]"
-    },
-    {
-      type = "recipe",
-      name = "tiberium-brick-to-stone",
-      category = "chemistry",
-      energy_required = 4,
-      enabled = false,
-      ingredients = {
-        {type = "item", name = "tiberium-brick", amount = 1}
-      },
-      results = {
-        {type = "item", name = "stone", amount = 4}
-      },
-      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick-to-stone.png",
-      icon_size = 32,
-      subgroup = "a-direct",
-      order = "b[oil-processing]-d[petroleum-gas-processing]"
     },
 	{
       type = "recipe",
@@ -279,23 +223,7 @@ data:extend(
       subgroup = "a-direct",
       order = "z"
     },
-    --[[{
-      type = "recipe",
-      name = "tiberium-brick-to-water",
-      category = "chemistry",
-      energy_required = 0.1,
-      enabled = false,
-      ingredients = {
-        {type = "item", name = "tiberium-brick", amount = 1}
-      },
-      results = {
-        {type = "fluid", name = "water", amount = 1000}
-      },
-      icon = "__base__/graphics/icons/fluid/water.png",
-      icon_size = 32,
-      subgroup = "a-direct",
-      order = "b[oil-processing]-g[light-oil-processing]"
-    },]]
+    
     {
       type = "recipe",
       name = "tiberium-molten-to-iron-ore",
@@ -303,10 +231,10 @@ data:extend(
       energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "molten-tiberium", amount = 3}
+        {type = "fluid", name = "molten-tiberium", amount = 1}
       },
       results = {
-        {type = "item", name = "iron-ore", amount = 4}
+        {type = "item", name = "iron-ore", amount = 20}
       },
       icon = "__Factorio-Tiberium__/graphics/icons/molten-to-iron.png",
       icon_size = 32,
@@ -320,10 +248,10 @@ data:extend(
       energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "molten-tiberium", amount = 3}
+        {type = "fluid", name = "molten-tiberium", amount = 1}
       },
       results = {
-        {type = "item", name = "copper-ore", amount = 4}
+        {type = "item", name = "copper-ore", amount = 15}
       },
       icon = "__Factorio-Tiberium__/graphics/icons/molten-to-copper.png",
       icon_size = 32,
@@ -337,10 +265,10 @@ data:extend(
       energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "molten-tiberium", amount = 3}
+        {type = "fluid", name = "molten-tiberium", amount = 1}
       },
       results = {
-        {type = "item", name = "coal", amount = 4}
+        {type = "item", name = "coal", amount = 10}
       },
       icon = "__Factorio-Tiberium__/graphics/icons/molten-to-coal.png",
       icon_size = 32,
@@ -354,10 +282,10 @@ data:extend(
       energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "molten-tiberium", amount = 3}
+        {type = "fluid", name = "molten-tiberium", amount = 1}
       },
       results = {
-        {type = "item", name = "stone", amount = 4}
+        {type = "item", name = "stone", amount = 5}
       },
       icon = "__Factorio-Tiberium__/graphics/icons/molten-to-stone.png",
       icon_size = 32,
@@ -371,10 +299,10 @@ data:extend(
       energy_required = 5,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "tiberium-slurry", amount = 15}
+        {type = "fluid", name = "tiberium-slurry", amount = 2}
       },
       results = {
-        {type = "item", name = "uranium-ore", amount = 6}
+        {type = "item", name = "uranium-ore", amount = 1}
       },
       icon = "__Factorio-Tiberium__/graphics/icons/slurry-to-uranium.png",
       icon_size = 32,
@@ -388,43 +316,26 @@ data:extend(
       energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "tiberium-slurry", amount = 3}
+        {type = "fluid", name = "tiberium-slurry", amount = 1}
       },
       results = {
-        {type = "fluid", name = "crude-oil", amount = 40}
+        {type = "fluid", name = "crude-oil", amount = 25}
       },
       icon = "__Factorio-Tiberium__/graphics/icons/slurry-to-oil.png",
       icon_size = 32,
       subgroup = "a-direct",
       order = "b[oil-processing]-z[heavy-oil-processing]"
     },
-    --[[{
-      type = "recipe",
-      name = "tiberium-molten-to-water",
-      category = "chemistry",
-      energy_required = 0.1,
-      enabled = false,
-      ingredients = {
-        {type = "fluid", name = "molten-tiberium", amount = 1}
-      },
-      results = {
-        {type = "fluid", name = "water", amount = 1000}
-      },
-      icon = "__base__/graphics/icons/fluid/water.png",
-      icon_size = 32,
-      subgroup = "a-direct",
-      order = "b[oil-processing]-g[light-oil-processing]"
-    },]]
     {
       type = "recipe",
       name = "tiberium-ore-centrifuging",
       category = "centrifuging",
 	  subgroup = "a-centrifuging",
-      energy_required = 5,
+      energy_required = 10,
       enabled = false,
       ingredients = {
         {type = "fluid", name = "water", amount = 100},
-        {type = "item", name = "tiberium-ore", amount = 34}
+         {type = "item", name = "tiberium-bar", amount = 25},
       },
       results = {
 		{type = "item", name = "stone", amount = 1},
@@ -441,10 +352,10 @@ data:extend(
       name = "tiberium-slurry-centrifuging",
       category = "centrifuging",
 	  subgroup = "a-centrifuging",
-      energy_required = 4,
+      energy_required = 8,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "tiberium-slurry", amount = 22}
+        {type = "fluid", name = "tiberium-slurry", amount = 15}
       },
       results = {
 		{type = "item", name = "stone", amount = 1},
@@ -461,10 +372,10 @@ data:extend(
       name = "tiberium-molten-centrifuging",
       category = "centrifuging",
 	  subgroup = "a-centrifuging",
-      energy_required = 4,
+      energy_required = 6,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "molten-tiberium", amount = 22}
+        {type = "fluid", name = "molten-tiberium", amount = 9}
       },
       results = {
 		{type = "item", name = "stone", amount = 1},
@@ -481,11 +392,11 @@ data:extend(
       name = "tiberium-ore-sludge-centrifuging",
       category = "centrifuging",
 	  subgroup = "a-centrifuging",
-      energy_required = 5,
+      energy_required = 10,
       enabled = false,
       ingredients = {
         {type = "fluid", name = "water", amount = 100},
-        {type = "item", name = "tiberium-ore", amount = 34}
+        {type = "item", name = "tiberium-bar", amount = 25}
       },
       results = {
 		{type = "fluid", name = "tiberium-sludge", amount = 1},
@@ -502,10 +413,10 @@ data:extend(
       name = "tiberium-slurry-sludge-centrifuging",
       category = "centrifuging",
 	  subgroup = "a-centrifuging",
-      energy_required = 4,
+      energy_required = 8,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "tiberium-slurry", amount = 22}
+        {type = "fluid", name = "tiberium-slurry", amount = 15}
       },
       results = {
 		{type = "fluid", name = "tiberium-sludge", amount = 1},
@@ -522,10 +433,10 @@ data:extend(
       name = "tiberium-molten-sludge-centrifuging",
       category = "centrifuging",
 	  subgroup = "a-centrifuging",
-      energy_required = 4,
+      energy_required = 6,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "molten-tiberium", amount = 22}
+        {type = "fluid", name = "molten-tiberium", amount = 9}
       },
       results = {
 		{type = "fluid", name = "tiberium-sludge", amount = 1},
@@ -541,7 +452,7 @@ data:extend(
       type = "recipe",
       name = "tiberium-waste-recycling",
       category = "chemistry",
-      energy_required = 2,
+      energy_required = 10,
       enabled = false,
       ingredients = {
         {type = "fluid", name = "molten-tiberium", amount = 20},
@@ -696,6 +607,27 @@ data:extend(
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
 	{
+      type = "recipe",
+      name = "tiberium-ion-core",
+      category = "chemistry",
+	  subgroup = "a-items",
+      energy_required = 20,
+      enabled = false,
+      ingredients = {
+		{type = "fluid", name = "liquid-tiberium", amount = 1},
+		{type = "item", name = "steel-plate", amount = 2},
+		{type = "item", name = "copper-plate", amount = 2},
+        {type = "item", name = "processing-unit", amount = 2},
+        {type = "item", name = "pipe", amount = 1},
+      },
+      results = {
+        {type = "item", name = "tiberium-ion-core", amount = 1},
+      },
+      icon = "__base__/graphics/icons/nuclear-reactor.png",
+      icon_size = 32,
+      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+    },
+	{
 		type = "recipe",
 		name = "CnC_SonicWall_Hub",
         enabled = false,
@@ -705,3 +637,125 @@ data:extend(
 	},
   }
 )
+
+
+	--[[{
+      type = "recipe",
+      name = "advanced-tiberium-brick-processing",
+      category = "crafting-with-fluid",
+      energy_required = 4,
+	  emissions_multiplier = 2,
+      enabled = false,
+      ingredients = {
+        {type = "fluid", name = "molten-tiberium", amount = 3}
+      },
+      results = {
+        {type = "item", name = "tiberium-brick", amount = 1}
+      },
+      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick.png",
+      icon_size = 32,
+      subgroup = "a-refining",
+      order = "h"
+    },
+	{
+      type = "recipe",
+      name = "tiberium-brick-to-iron-ore",
+      category = "chemistry",
+      energy_required = 4,
+      enabled = false,
+      ingredients = {
+        {type = "item", name = "tiberium-brick", amount = 1}
+      },
+      results = {
+        {type = "item", name = "iron-ore", amount = 4}
+      },
+      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick-to-iron.png",
+      icon_size = 32,
+      subgroup = "a-direct",
+      order = "b[oil-processing]-e[advanced-oil-processing]"
+    },
+    {
+      type = "recipe",
+      name = "tiberium-brick-to-copper-ore",
+      category = "chemistry",
+      energy_required = 4,
+      enabled = false,
+      ingredients = {
+        {type = "item", name = "tiberium-brick", amount = 1}
+      },
+      results = {
+        {type = "item", name = "copper-ore", amount = 4}
+      },
+      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick-to-copper.png",
+      icon_size = 32,
+      subgroup = "a-direct",
+      order = "b[oil-processing]-f[advanced-oil-processing]"
+    },
+    {
+      type = "recipe",
+      name = "tiberium-brick-to-coal",
+      category = "chemistry",
+      energy_required = 4,
+      enabled = false,
+      ingredients = {
+        {type = "item", name = "tiberium-brick", amount = 1}
+      },
+      results = {
+        {type = "item", name = "coal", amount = 4}
+      },
+      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick-to-coal.png",
+      icon_size = 32,
+      subgroup = "a-direct",
+      order = "b[oil-processing]-g[advanced-oil-processing]"
+    },
+    {
+      type = "recipe",
+      name = "tiberium-brick-to-stone",
+      category = "chemistry",
+      energy_required = 4,
+      enabled = false,
+      ingredients = {
+        {type = "item", name = "tiberium-brick", amount = 1}
+      },
+      results = {
+        {type = "item", name = "stone", amount = 4}
+      },
+      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick-to-stone.png",
+      icon_size = 32,
+      subgroup = "a-direct",
+      order = "b[oil-processing]-d[petroleum-gas-processing]"
+    },
+	{
+      type = "recipe",
+      name = "tiberium-brick-to-water",
+      category = "chemistry",
+      energy_required = 0.1,
+      enabled = false,
+      ingredients = {
+        {type = "item", name = "tiberium-brick", amount = 1}
+      },
+      results = {
+        {type = "fluid", name = "water", amount = 1000}
+      },
+      icon = "__base__/graphics/icons/fluid/water.png",
+      icon_size = 32,
+      subgroup = "a-direct",
+      order = "b[oil-processing]-g[light-oil-processing]"
+    },
+	{
+      type = "recipe",
+      name = "tiberium-molten-to-water",
+      category = "chemistry",
+      energy_required = 0.1,
+      enabled = false,
+      ingredients = {
+        {type = "fluid", name = "molten-tiberium", amount = 1}
+      },
+      results = {
+        {type = "fluid", name = "water", amount = 1000}
+      },
+      icon = "__base__/graphics/icons/fluid/water.png",
+      icon_size = 32,
+      subgroup = "a-direct",
+      order = "b[oil-processing]-g[light-oil-processing]"
+    },]]

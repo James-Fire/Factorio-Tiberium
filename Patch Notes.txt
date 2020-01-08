@@ -54,3 +54,29 @@ Fully made the growth accelerator.
 Added liquid tib production to make power out of.
 
 Nuclear fuel production from liquid tib, expensive to be efficient.
+
+2020-01-08
+
+Fix Node Harvester using 20x power of mining drill for equivalent tib.
+
+Commented out debug info printing to the console.
+
+Removed Tiberium Brick recipes.
+
+Added Tiberium Spikes. They slowly, and forever, produce molten tiberium from nodes, and block growth on them.
+
+Changed Growth Accelerator entity over to centrifuge.
+
+Fixed localization for Sonic Wall Hubs to include distance they work at.
+
+Added Ion Beam turrets, including unique component. The Orbital Ion Cannon uses this unique component instead of laser turrets if you have both mods active.
+
+Moved Sonic walls to using the proper tech, instead of a renamed tech from the orginal mod.
+
+It now takes more time and energy to produce liquid tiberium for your power needs.
+
+All tiberium refining recipes now double the pollution output of the machine.
+
+Redid refining chains, so that refining is aways denser and more valuable.
+
+Waste Processing takes much longer for a single cycle.
