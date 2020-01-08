@@ -35,8 +35,7 @@ script.on_init(
       {name = "pipe", count = 50},
       {name = "small-electric-pole", count = 10},
       {name = "electric-mining-drill", count = 5},
-      {name = "assembling-machine-2", count = 1},
-      {name = "sulfuric-acid-barrel", count = 10}
+      {name = "assembling-machine-2", count = 1}
     }
 
     -- This is a list of prototypes that should not be damaged by growing tiberium
@@ -74,7 +73,7 @@ script.on_init(
       "fast-splitter",
       "express-splitter"
     }
-    global.tiberiumProducts = {"tiberium-brick", global.oreType}
+    global.tiberiumProducts = {"tiberium-bar", global.oreType}
     global.liquidTiberiumProducts = {"liquid-tiberium", "tiberium-sludge", "tiberium-waste"}
 
     if not game.forces[global.damageForceName] then
@@ -249,12 +248,21 @@ function PlaceOre(entity, howmany)
   --game.print({"", timer, " end of updating mining drills ", #drills})
 end
 
---[[
-Nodes spawn like oil
-Fix mining drill exclusions
-Sonic Gate
-Fix belt exclusions
-]]
+function LiquidBomb(surface, position, resource, amount)
+    local radius = math.floor(amount^0.244)
+    for x = position.x - radius, position.x + radius do
+        for y = position.y - radius, position.y + radius do
+            local intensity = math.floor(radius^2 - (position.x - x)^2 - (position.y - y)^2)
+            if intensity > 0 then
+                local corrected_pos = surface.find_non_colliding_position(resource, {x,y}, 10, 1)
+                if corrected_pos ~= nil then
+                    surface.create_entity{name=resource, position=corrected_pos, amount=intensity, enable_tree_removal=false, enable_cliff_removal=false}
+                end
+            end
+        end
+    end
+end
+
 commands.add_command(
   "setTibTickRate",
   "Sets how often Tiberium should attempt to grow. (default: 20)",
@@ -406,6 +414,24 @@ script.on_event(
 	if (event.created_entity.name == "CnC_SonicWall_Hub") then 
 		CnC_SonicWall_AddNode(event.created_entity, event.tick) 
 	end
+	if (event.created_entity.name == "tib-spike") then 
+		local entity = event.created_entity
+		local position = event.created_entity.position
+		local area = {
+			{x = math.floor(position.x), y = math.floor(position.y)},
+			{x = math.ceil(position.x), y = math.ceil(position.y)}
+	    }
+		local entities = game.get_surface(1).find_entities_filtered{area = area, name = "tibGrowthNode"}
+			for _, entity in pairs(entities) do
+			  entity.destroy()
+			  local entity = game.get_surface(1).create_entity
+				{
+				name = "tibGrowthNode_infinite",
+				position = position,
+				force = neutral,
+				}
+		end
+	end
 	
   end
 )
@@ -423,12 +449,12 @@ script.on_event(
       for i = 1, #alldrills, 1 do
         table.insert(global.drills, alldrills[i])
       end
-      game.print("Updated drill list and found " .. #global.drills .. " drills")
+      --[[game.print("Updated drill list and found " .. #global.drills .. " drills")
 
       game.print(
         "node count=" ..
           #global.tibGrowthNodeList .. " intervalBetweenNodeUpdates " .. global.intervalBetweenNodeUpdates
-      )
+      )]]
     end
 
     -- Spawn ore check

@@ -22,7 +22,7 @@ tiberiumGrowthNodeEntity.animations = data.raw["mining-drill"]["pumpjack"].anima
 tiberiumGrowthNodeEntity.mining_speed = 5
 tiberiumGrowthNodeEntity.subgroup = "a-buildings"
 tiberiumGrowthNodeEntity.order = "e"
-tiberiumGrowthNodeEntity.energy_usage = "25000kW"
+tiberiumGrowthNodeEntity.energy_usage = "20000kW"
 tiberiumGrowthNodeEntity.resource_categories = {}
 tiberiumGrowthNodeEntity.minable.result = "tib-pumpjack"
 
@@ -31,7 +31,7 @@ table.insert(tiberiumGrowthNodeEntity.resource_categories, "advanced-solid-tiber
 tiberiumGrowthNodeEntity.energy_source = {
         type = "electric",
         usage_priority = "secondary-input",
-        emissions = 10 / 25000
+        emissions = 20 / 20000
     },
 data:extend{tiberiumGrowthNodeItem, tiberiumGrowthNodeEntity,
   {
@@ -64,6 +64,70 @@ data:extend{tiberiumGrowthNodeItem, tiberiumGrowthNodeEntity,
 		{"iron-plate", 100}
 	  },
 	  result = "tib-pumpjack"
+	}
+  }
+}
+
+local tiberiumSpikeItem = table.deepcopy(data.raw.item["pumpjack"])
+tiberiumSpikeItem.name = "tib-spike"
+tiberiumSpikeItem.subgroup = "a-buildings"
+tiberiumSpikeItem.order = "e"
+tiberiumSpikeItem.place_result = "tib-spike"
+
+local tiberiumSpikeEntity = table.deepcopy(data.raw["mining-drill"]["pumpjack"])
+tiberiumSpikeEntity.name = "tib-spike"
+tiberiumSpikeEntity.icon = data.raw["mining-drill"]["pumpjack"].icon
+tiberiumSpikeEntity.base_picture = data.raw["mining-drill"]["pumpjack"].base_picture
+tiberiumSpikeEntity.radius_visualisation_picture = data.raw["mining-drill"]["pumpjack"].radius_visualisation_picture
+tiberiumSpikeEntity.animations = data.raw["mining-drill"]["pumpjack"].animations
+tiberiumSpikeEntity.mining_speed = 5
+tiberiumSpikeEntity.subgroup = "a-buildings"
+tiberiumSpikeEntity.order = "m"
+tiberiumGrowthNodeEntity.energy_usage = "20000kW"
+tiberiumSpikeEntity.resource_categories = {}
+tiberiumSpikeEntity.minable.result = "tib-spike"
+
+tiberiumSpikeEntity.resource_searching_radius = 0.49
+table.insert(tiberiumSpikeEntity.resource_categories, "advanced-liquid-tiberium")
+table.insert(tiberiumSpikeEntity.resource_categories, "advanced-solid-tiberium")
+tiberiumSpikeEntity.energy_source = {
+        type = "void",
+        usage_priority = "secondary-input",
+        emissions = 2
+    },
+data:extend{tiberiumSpikeItem, tiberiumSpikeEntity,
+  {
+	type = "recipe",
+	name = "tib-spike",
+	normal =
+	{
+	  energy_required = 20,
+	  enabled = false,
+	  subgroup = "a-buildings",
+	  order = "e",
+	  ingredients =
+	  {
+		{"processing-unit", 25},
+		{"iron-gear-wheel", 50},
+		{"iron-plate", 100},
+		{"CnC_SonicWall_Hub", 2}
+	  },
+	  result = "tib-spike"
+	},
+	expensive =
+	{
+	  energy_required = 30,
+	  enabled = false,
+	  subgroup = "a-buildings",
+	  order = "e",
+	  ingredients =
+	  {
+		{"processing-unit", 25},
+		{"iron-gear-wheel", 50},
+		{"iron-plate", 100},
+		{"CnC_SonicWall_Hub", 2}
+	  },
+	  result = "tib-spike"
 	}
   }
 }
@@ -140,12 +204,12 @@ data:extend({
 	{
 		type = "container",
 		name = "growth-accelerator",
-		icon = "__base__/graphics/icons/accumulator.png",
+		icon = "__base__/graphics/icons/centrifuge.png",
 		icon_size = 32,
 		flags = {"placeable-neutral", "placeable-player", "player-creation"},
 		minable = {mining_time = 2, result = "growth-accelerator"},
 		max_health = 250,
-		corpse = "big-remnants",
+		corpse = "centrifuge-remnants",
 		dying_explosion = "medium-explosion",
 		open_sound = { filename = "__base__/sound/machine-open.ogg", volume = 0.85 },
 		close_sound = { filename = "__base__/sound/machine-close.ogg", volume = 0.75 },
@@ -163,7 +227,7 @@ data:extend({
 		inventory_size = 10,
 		picture =
 		{
-			filename = "__base__/graphics/entity/electric-mining-drill/hr-electric-mining-drill-N-patch.png",
+			filename = "__base__/graphics/entity/centrifuge/centrifuge-C.png",
 			priority = "high",
 			width = 129,
 			height = 100,
@@ -204,7 +268,7 @@ data:extend({
 	{
 		type = "item",
 		name = "growth-accelerator",
-		icon = "__base__/graphics/icons/accumulator.png",
+		icon = "__base__/graphics/icons/centrifuge.png",
 		icon_size = 32,
 		subgroup = "a-buildings",
 		order = "g",

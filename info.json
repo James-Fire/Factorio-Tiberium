@@ -8,7 +8,8 @@
     "factorio_version": "0.17",
     "dependencies": [
 		"base >= 0.17.35",
-		"?bobmining >=0.17.0"
+		"?bobmining >=0.17.0",
+		"?Orbital Ion Cannon"
 	],
     "description": "Origonaly by Zillo7 fixed by SAH4001, fixed again by Oktabyte. Now being taken on by JamesFire. Adds Tiberium - Harvest it to convert it to other ores."
 }

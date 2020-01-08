@@ -37,9 +37,9 @@ data:extend({
     max_health = 300,
     corpse = "medium-remnants",
     dying_explosion = "medium-explosion",
-    max_power_output = (50 / 60) .. "MJ",
+    max_power_output = (100 / 60) .. "MJ",
 	effectivity = 2,
-    fluid_usage_per_tick = 1 / 60,
+    fluid_usage_per_tick = 2 / 60,
 	maximum_temperature = 1000, --not needed...
 	burns_fluid = true,
     scale_fluid_usage = true,
@@ -49,7 +49,7 @@ data:extend({
     energy_source = {
         type = "electric",
         usage_priority = "secondary-output",
-        emissions = 10 / 1000
+        emissions = 5 / 1000
     },
 
 	horizontal_animation = {
