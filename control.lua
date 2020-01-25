@@ -17,7 +17,7 @@ script.on_init(
     global.intervalBetweenNodeUpdates =
       math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
 
-    global.baseGrowthRate = 50 -- how much ore to place at once
+    global.baseGrowthRate = 10 -- how much ore to place at once
     global.baseSize = 10 -- The maximum radius of the field
     global.contactDamage = 1 --how much damage should be applied to objects over tiberium?
     global.contactDamageTime = 30 --how long (in ticks) should players be damaged after contacting tiberium?
@@ -54,7 +54,9 @@ script.on_init(
       ["splitter"] = true,
       ["fast-splitter"] = true,
       ["express-splitter"] = true,
-      ["stone-wall"] = true
+      ["stone-wall"] = true,
+	  ["CnC_SonicWall_Hub"] = true,
+	  ["CnC_SonicWall_Wall"] = true
     }
 
     global.growUnderItems = {
@@ -138,7 +140,11 @@ function CheckPoint(surface, position, lastValidPosition, growthRate)
     {x = math.ceil(position.x), y = math.ceil(position.y)}
   }
 
-  if (#surface.find_entities_filtered({area = area, name = "tiberium-wall"}) > 0) then
+  if 
+  
+  (#surface.find_entities_filtered({area = area, name = "CnC_SonicWall_Hub"}) > 0) or
+  (#surface.find_entities_filtered({area = area, name = "CnC_SonicWall_Wall"}) > 0) 
+  then
     --game.print("Found tiberium wall, placing ore at the last valid position" .. math.random())
     AddOre(surface, lastValidPosition, growthRate * .50)
     return true
