@@ -137,10 +137,10 @@ data:extend(
       energy_required = 2,
       enabled = false,
       ingredients = {
-        {type = "item", name = "tiberium-ore", amount = 1}
+        {type = "item", name = "tiberium-ore", amount = 5}
       },
       results = {
-        {type = "item", name = "tiberium-bar", amount = 10},
+        {type = "item", name = "tiberium-bar", amount = 1},
       },
       icon = "__Factorio-Tiberium__/graphics/icons/tiberium-bar.png",
       icon_size = 32,
