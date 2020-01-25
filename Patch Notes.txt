@@ -55,7 +55,9 @@ Added liquid tib production to make power out of.
 
 Nuclear fuel production from liquid tib, expensive to be efficient.
 
-2020-01-08
+
+
+Jan 8 2020
 
 Fix Node Harvester using 20x power of mining drill for equivalent tib.
 
@@ -80,3 +82,30 @@ All tiberium refining recipes now double the pollution output of the machine.
 Redid refining chains, so that refining is aways denser and more valuable.
 
 Waste Processing takes much longer for a single cycle.
+
+DATE
+
+
+
+Liquid Tiberium Spread missile.* Needs to trigger event to place ore.
+
+Nodes are now affected by distance to spawn for richness.* No idea how to fix, or even what is wrong.
+
+Check:
+
+
+
+
+
+
+
+
+
+
+Finished:
+
+Ion beam projector can now be picked up as itself.
+
+Changed name of Seed warhead to Liquid Tiberium Bomb. (Will make a seed item once I can figure that out.)
+
+Sonic Fences now block tib growth.

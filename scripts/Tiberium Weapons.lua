@@ -53,7 +53,7 @@ data:extend{
     icon = "__base__/graphics/icons/laser-turret.png",
     icon_size = 32,
     flags = { "placeable-player", "placeable-enemy", "player-creation"},
-    minable = { mining_time = 0.5, result = "laser-turret" },
+    minable = { mining_time = 0.5, result = "ion-turret" },
     max_health = 1000,
     collision_box = {{ -0.7, -0.7}, {0.7, 0.7}},
     selection_box = {{ -1, -1}, {1, 1}},
