@@ -83,29 +83,34 @@ Redid refining chains, so that refining is aways denser and more valuable.
 
 Waste Processing takes much longer for a single cycle.
 
-DATE
+
+Jan 28 2020
+
+Fully updated to 0.18
+
+We now have a Tiberium Damage type. Tiberium inflicts this dmage type now.
+
+Tiberium Armour protects from Tiberium damage.
+
+Tiberium Bullets.
+
+Upped damage from the Ion Projector. Now 4x the vanilla laser turret.
+
+Growth Accelerators now can only be placed on nodes.
+
+Growth Accelerator is immune to tiberium damage.
+
+Tiberium Core missiles. Explosive missiles, with a little bit of liquid tib to give some extra oomph.
+
+Liquid Tiberium bomb is no longer just a nuke. It's a BIG nuke.
+
+Changed Tiberium Ore stack size to 50, to be in line with other ores.
+
+Automated recipe system allows for much more flexible recipes.
 
 
+TODO:
 
 Liquid Tiberium Spread missile.* Needs to trigger event to place ore.
 
 Nodes are now affected by distance to spawn for richness.* No idea how to fix, or even what is wrong.
-
-Check:
-
-
-
-
-
-
-
-
-
-
-Finished:
-
-Ion beam projector can now be picked up as itself.
-
-Changed name of Seed warhead to Liquid Tiberium Bomb. (Will make a seed item once I can figure that out.)
-
-Sonic Fences now block tib growth.

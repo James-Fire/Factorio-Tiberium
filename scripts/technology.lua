@@ -13,10 +13,6 @@ data:extend
         },
 		{
             type = "unlock-recipe",
-            recipe = "tiberium-ore-pressing"
-        },
-		{
-            type = "unlock-recipe",
             recipe = "tiberium-ore-sludge-centrifuging"
         },
         {
@@ -47,6 +43,10 @@ data:extend
 	  icon_size = 128,
       effects =
       {
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-magazine"
+        },
         {
             type = "unlock-recipe",
             recipe = "tiberium-slurry-centrifuging"
@@ -140,11 +140,7 @@ data:extend
         },
 		{
             type = "unlock-recipe",
-            recipe =  "tiberium-slurry-to-crude-oil"
-        },
-		{
-            type = "unlock-recipe",
-            recipe = "tiberium-waste-recycling"
+            recipe =  "tiberium-molten-to-crude-oil"
         },
 		{
             type = "unlock-recipe",
@@ -156,9 +152,16 @@ data:extend
         },
 		{
             type = "unlock-recipe",
+            recipe = "tiberium-nuke"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-rocket"
+        },
+		{
+            type = "unlock-recipe",
             recipe = "ion-turret"
         }
-		
       },
 	  
 	  
@@ -192,7 +195,7 @@ data:extend
         },
 		{
             type = "unlock-recipe",
-            recipe = "tiberium-slurry-to-uranium-ore"
+            recipe = "tiberium-molten-to-uranium-ore"
         },
         {
             type = "unlock-recipe",
@@ -217,10 +220,6 @@ data:extend
 		{
             type = "unlock-recipe",
             recipe = "energy-growth-credit"
-        },
-		{
-            type = "unlock-recipe",
-            recipe = "liquid-tiberium-spread"
         },
 		--[[{
             type = "unlock-recipe",

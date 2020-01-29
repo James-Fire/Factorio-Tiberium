@@ -1,3 +1,7 @@
+--Deprecated in favour of the Sonic Hub generation
+
+
+
 local item = {
     type = "item",
     name = "tiberium-wall",

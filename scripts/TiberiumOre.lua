@@ -3,7 +3,7 @@ data:extend(
 	{
         type = "item",
         name = "growth-credit",
-        icon = "__Factorio-Tiberium__/graphics/icons/tiberium-ore.png",
+        icon = "__Factorio-Tiberium__/graphics/icons/growth-credit.png",
 		icon_size = 32,
         flags = {},
         subgroup = "raw-resource",
@@ -14,7 +14,7 @@ data:extend(
         type = "item",
         name = "tiberium-ion-core",
         icon = "__base__/graphics/icons/nuclear-reactor.png",
-		icon_size = 32,
+		icon_size = 64,
         flags = {},
         subgroup = "raw-resource",
         order = "a[tiberium-ore]",
@@ -130,7 +130,7 @@ data:extend(
         flags = {},
         subgroup = "raw-resource",
         order = "a[tiberium-ore]",
-        stack_size = 200
+        stack_size = 50
     },
     }
     )
@@ -146,7 +146,7 @@ data:extend(
   {
     type = "resource",
     name = "tibGrowthNode",
-    icon = "__base__/graphics/icons/crude-oil.png",
+    icon = "__base__/graphics/icons/crude-oil-resource.png",
     icon_size = 32,
     flags = {"placeable-neutral"},
     category = "advanced-solid-tiberium",
@@ -211,7 +211,7 @@ data:extend(
   {
     type = "resource",
     name = "tibGrowthNode_infinite",
-    icon = "__base__/graphics/icons/crude-oil.png",
+    icon = "__base__/graphics/icons/crude-oil-resource.png",
     icon_size = 32,
     flags = {"placeable-neutral"},
     category = "advanced-liquid-tiberium",
