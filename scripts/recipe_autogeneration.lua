@@ -1,4 +1,4 @@
-require("scripts/recipes")
+require("scripts/recipe")
 
 --Centrifuge inputs/outputs
 local TiberiumPerCycle    = 40
