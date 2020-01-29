@@ -56,7 +56,8 @@ script.on_init(
       ["express-splitter"] = true,
       ["stone-wall"] = true,
 	  ["CnC_SonicWall_Hub"] = true,
-	  ["CnC_SonicWall_Wall"] = true
+	  ["CnC_SonicWall_Wall"] = true,
+	  ["growth-accelerator"] = true
     }
 
     global.growUnderItems = {
@@ -113,7 +114,7 @@ function AddOre(surface, position, growthRate)
     printTable(global.exemptDamageItems)
     if global.exemptDamageItems[entitiesToDamage[i].type] == nil then
       if entitiesToDamage[i].prototype.max_health > 0 then
-        entitiesToDamage[i].damage(global.structureDamage, game.forces.neutral, "acid")
+        entitiesToDamage[i].damage(global.structureDamage, game.forces.neutral, "tiberium")
       end
     end
   end
@@ -438,6 +439,24 @@ script.on_event(
 				}
 		end
 	end
+	if (event.created_entity.name == "growth-accelerator-node") then 
+		local entity = event.created_entity
+		local position = event.created_entity.position
+		local area = {
+			{x = math.floor(position.x), y = math.floor(position.y)},
+			{x = math.ceil(position.x), y = math.ceil(position.y)}
+	    }
+		local entities = game.get_surface(1).find_entities_filtered{area = area, name = "growth-accelerator-node"}
+			for _, entity in pairs(entities) do
+			  entity.destroy()
+			  local entity = game.get_surface(1).create_entity
+				{
+				name = "growth-accelerator",
+				position = position,
+				force = game.get_player(event.player_index).force,
+				}
+		end
+	end
 	
   end
 )
@@ -485,7 +504,7 @@ script.on_event(
         #playerPositionOre > 0 and game.players[i] and game.players[i].valid and game.players[i].character and
           not game.players[i].character.vehicle
        then
-        game.players[i].character.damage(global.contactDamage, game.forces.tiberium, "acid")
+        game.players[i].character.damage(global.contactDamage, game.forces.tiberium, "tiberium")
       end
 
       --if player is holding tiberium products, add damage
@@ -493,7 +512,7 @@ script.on_event(
       if inventory then
         for p = 1, #global.tiberiumProducts, 1 do
           if inventory.get_item_count(global.tiberiumProducts[p]) > 0 then
-            game.players[i].character.damage(0.1, game.forces.tiberium, "acid")
+            game.players[i].character.damage(0.1, game.forces.tiberium, "tiberium")
             break
           end
         end

@@ -3,7 +3,7 @@ data:extend({
       type = "item",
       name = "tiberium-plant",
       icon = "__base__/graphics/icons/chemical-plant.png",
-      icon_size = 32,
+      icon_size = 64,
       flags = {},
       subgroup = "a-buildings",
       order = "m",
@@ -31,7 +31,7 @@ data:extend({
     type = "generator",
     name = "tiberium-plant",
     icon = "__base__/graphics/icons/chemical-plant.png",
-    icon_size = 32,
+    icon_size = 64,
     flags = {"placeable-neutral","placeable-player", "player-creation"},
     minable = {mining_time = 0.1, result = "tiberium-plant"},
     max_health = 300,
@@ -46,10 +46,11 @@ data:extend({
     collision_box = {{-1.2, -1.2}, {1.2, 1.2}},
     selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
     drawing_box = {{-1.5, -1.9}, {1.5, 1.5}},
+	
     energy_source = {
         type = "electric",
         usage_priority = "secondary-output",
-        emissions = 5 / 1000
+		emissions_per_minute = 500,
     },
 
 	horizontal_animation = {
