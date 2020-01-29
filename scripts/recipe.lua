@@ -1,6 +1,3 @@
-
-
-
 TibProductivity = {}
 
 table.insert(TibProductivity, "tiberium-ore-processing")
@@ -19,21 +16,6 @@ for km, vm in pairs(data.raw.module) do
     end
   end
 end
-
---[[
-Variables
-Direct recipe product = 32
-Direct oil recipe product = 140
-Tiberium per cycle = 40
-Slurry per cycle = 40
-Molten recipe input = 16
-Iron Per Cycle = 17
-Copper Per Cycle = 18
-Coal Per Cycle = 3
-Stone Per Cycle = 2
-Oil Per Cycle = 70
-Slurry to molten = 2
-]]
 
 
 data:extend {
