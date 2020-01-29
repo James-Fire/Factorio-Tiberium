@@ -1,7 +1,7 @@
 require("scripts/item-groups")
 require("scripts/TiberiumOre")
 require("scripts/TiberiumWall")
-require("scripts/recipes")
+require("scripts/recipe")
 require("scripts/technology")
 require("scripts/TiberiumControlNetwork")
 require("scripts/TiberiumPowerPlant")
