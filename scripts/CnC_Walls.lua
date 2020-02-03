@@ -3,8 +3,8 @@
 local horz_wall, vert_wall = 1, 2
 local dir_mods = {{1,0,horz_wall},{-1,0,horz_wall},{0,1,vert_wall},{0,-1,vert_wall}}
 
-local kw_per_tick = 22
-local kj_to_fill = 12500
+local kw_per_tick = 100
+local kj_to_fill = 5000
 local wall_health = 10000
 
 local joules_per_hitpoint = 400

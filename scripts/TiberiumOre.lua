@@ -8,7 +8,7 @@ data:extend(
         flags = {},
         subgroup = "raw-resource",
         order = "a[tiberium-ore]",
-        stack_size = 200
+        stack_size = 20
     },
 	{
         type = "item",

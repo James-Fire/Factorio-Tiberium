@@ -43,4 +43,16 @@ data:extend({
     group = "tiberium",
     order = "f-5",
   },
+  {
+    type = "recipe-category",
+    name = "tiberium-centrifuge-1"
+  },
+  {
+    type = "recipe-category",
+    name = "tiberium-centrifuge-2"
+  },
+  {
+    type = "recipe-category",
+    name = "tiberium-centrifuge-3"
+  },
 })

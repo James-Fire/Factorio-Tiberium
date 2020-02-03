@@ -34,7 +34,7 @@ tiberiumArmor.resistances = {
 
 local recipe = table.deepcopy(data.raw.recipe["heavy-armor"])
 recipe.name = "tiberium-armor"
-recipe.ingredients = {{"copper-plate",200},{"steel-plate",50}}
+recipe.ingredients = {{"plastic-bar",50},{"steel-plate",50},{"pipe",2}}
 recipe.result = "tiberium-armor"
 
 data:extend{tiberiumArmor,recipe}

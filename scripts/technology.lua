@@ -13,6 +13,10 @@ data:extend
         },
 		{
             type = "unlock-recipe",
+            recipe = "tiberium-centrifuge"
+        },
+		{
+            type = "unlock-recipe",
             recipe = "tiberium-ore-sludge-centrifuging"
         },
         {
@@ -43,6 +47,10 @@ data:extend
 	  icon_size = 128,
       effects =
       {
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-centrifuge-2"
+        },
 		{
             type = "unlock-recipe",
             recipe = "tiberium-magazine"
@@ -122,6 +130,10 @@ data:extend
 	  icon_size = 128,
       effects =
       {
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-centrifuge-3"
+        },
         {
             type = "unlock-recipe",
             recipe = "advanced-tiberium-ore-processing"
