@@ -1,3 +1,4 @@
+
 TibProductivity = {}
 
 table.insert(TibProductivity, "tiberium-ore-processing")
@@ -16,6 +17,7 @@ for km, vm in pairs(data.raw.module) do
     end
   end
 end
+
 
 
 data:extend {
@@ -202,6 +204,8 @@ data:extend(
       icon = "__Factorio-Tiberium__/graphics/icons/tiberium-sludge-to-stone-brick.png",
       icon_size = 32,
       subgroup = "a-direct",
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
       order = "z"
     },
     
@@ -214,11 +218,12 @@ data:extend(
       ingredients = {
       },
       results = {
-        {type = "item", name = "iron-ore", amount = 20}
       },
       icon = "__Factorio-Tiberium__/graphics/icons/molten-to-iron.png",
       icon_size = 32,
       subgroup = "a-direct",
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
       order = "b[oil-processing]-e[advanced-oil-processing]"
     },
     {
@@ -230,11 +235,12 @@ data:extend(
       ingredients = {
       },
       results = {
-        {type = "item", name = "copper-ore", amount = 15}
       },
       icon = "__Factorio-Tiberium__/graphics/icons/molten-to-copper.png",
       icon_size = 32,
       subgroup = "a-direct",
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
       order = "b[oil-processing]-f[advanced-oil-processing]"
     },
     {
@@ -246,11 +252,12 @@ data:extend(
       ingredients = {
       },
       results = {
-        {type = "item", name = "coal", amount = 10}
       },
       icon = "__Factorio-Tiberium__/graphics/icons/molten-to-coal.png",
       icon_size = 32,
       subgroup = "a-direct",
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
       order = "b[oil-processing]-g[advanced-oil-processing]"
     },
     {
@@ -262,11 +269,12 @@ data:extend(
       ingredients = {
       },
       results = {
-        {type = "item", name = "stone", amount = 5}
       },
       icon = "__Factorio-Tiberium__/graphics/icons/molten-to-stone.png",
       icon_size = 32,
       subgroup = "a-direct",
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
       order = "b[oil-processing]-d[petroleum-gas-processing]"
     },
     {
@@ -278,11 +286,12 @@ data:extend(
       ingredients = {
       },
       results = {
-        {type = "item", name = "uranium-ore", amount = 1}
       },
       icon = "__Factorio-Tiberium__/graphics/icons/slurry-to-uranium.png",
       icon_size = 32,
       subgroup = "a-direct",
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
       order = "b[oil-processing]-y[petroleum-gas-processing]"
     },
     {
@@ -294,17 +303,18 @@ data:extend(
       ingredients = {
       },
       results = {
-        {type = "fluid", name = "crude-oil", amount = 25}
       },
       icon = "__Factorio-Tiberium__/graphics/icons/slurry-to-oil.png",
       icon_size = 32,
       subgroup = "a-direct",
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
       order = "b[oil-processing]-z[heavy-oil-processing]"
     },
     {
       type = "recipe",
       name = "tiberium-ore-centrifuging",
-      category = "centrifuging",
+      category = "tiberium-centrifuge-1",
 	  subgroup = "a-centrifuging",
       energy_required = 10,
       enabled = false,
@@ -315,12 +325,14 @@ data:extend(
       },
       icon = "__Factorio-Tiberium__/graphics/icons/tiberium-centrifuging.png",
       icon_size = 32,
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
       order = "a[fluid-chemistry]-f[heavy-oil-cracking]"
     },
     {
       type = "recipe",
       name = "tiberium-slurry-centrifuging",
-      category = "centrifuging",
+      category = "tiberium-centrifuge-2",
 	  subgroup = "a-centrifuging",
       energy_required = 8,
       enabled = false,
@@ -330,12 +342,14 @@ data:extend(
       },
       icon = "__Factorio-Tiberium__/graphics/icons/slurry-centrifuging.png",
       icon_size = 32,
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
     {
       type = "recipe",
       name = "tiberium-molten-centrifuging",
-      category = "centrifuging",
+      category = "tiberium-centrifuge-3",
 	  subgroup = "a-centrifuging",
       energy_required = 6,
       enabled = false,
@@ -345,12 +359,14 @@ data:extend(
       },
       icon = "__Factorio-Tiberium__/graphics/icons/molten-centrifuging.png",
       icon_size = 32,
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
       order = "c[fluid-chemistry]-f[heavy-oil-cracking]"
     },
 	{
       type = "recipe",
       name = "tiberium-ore-sludge-centrifuging",
-      category = "centrifuging",
+      category = "tiberium-centrifuge-1",
 	  subgroup = "a-centrifuging",
       energy_required = 10,
       enabled = false,
@@ -361,12 +377,14 @@ data:extend(
       },
       icon = "__Factorio-Tiberium__/graphics/icons/tiberium-centrifuging.png",
       icon_size = 32,
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
       order = "d"
     },
     {
       type = "recipe",
       name = "tiberium-slurry-sludge-centrifuging",
-      category = "centrifuging",
+      category = "tiberium-centrifuge-2",
 	  subgroup = "a-centrifuging",
       energy_required = 8,
       enabled = false,
@@ -376,12 +394,14 @@ data:extend(
       },
       icon = "__Factorio-Tiberium__/graphics/icons/slurry-centrifuging.png",
       icon_size = 32,
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
       order = "e"
     },
     {
       type = "recipe",
       name = "tiberium-molten-sludge-centrifuging",
-      category = "centrifuging",
+      category = "tiberium-centrifuge-3",
 	  subgroup = "a-centrifuging",
       energy_required = 6,
       enabled = false,
@@ -391,6 +411,8 @@ data:extend(
       },
       icon = "__Factorio-Tiberium__/graphics/icons/molten-centrifuging.png",
       icon_size = 32,
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
       order = "f"
     },
 	{
@@ -571,7 +593,12 @@ data:extend(
 		name = "CnC_SonicWall_Hub",
         enabled = false,
 		energy_required = 5,
-		ingredients = {{"steel-plate", 25}, {"advanced-circuit", 10}, {"battery", 10}},
+		ingredients = {
+			{"copper-plate", 25},
+			{"steel-plate", 25},
+			{"advanced-circuit", 10},
+			{"battery", 10}
+		},
 		result = "CnC_SonicWall_Hub"
 	},
   }

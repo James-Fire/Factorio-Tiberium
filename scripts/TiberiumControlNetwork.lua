@@ -46,6 +46,7 @@ data:extend{tiberiumGrowthNodeItem, tiberiumGrowthNodeEntity,
 	  ingredients =
 	  {
 		{"advanced-circuit", 25},
+		{"electric-mining-drill", 5},
 		{"iron-gear-wheel", 50},
 		{"iron-plate", 100}
 	  },
@@ -60,6 +61,7 @@ data:extend{tiberiumGrowthNodeItem, tiberiumGrowthNodeEntity,
 	  ingredients =
 	  {
 		{"advanced-circuit", 25},
+		{"electric-mining-drill", 5},
 		{"iron-gear-wheel", 50},
 		{"iron-plate", 100}
 	  },
@@ -109,7 +111,8 @@ data:extend{tiberiumSpikeItem, tiberiumSpikeEntity,
 	  {
 		{"processing-unit", 25},
 		{"iron-gear-wheel", 50},
-		{"iron-plate", 100},
+		{"electric-mining-drill", 5},
+		{"steel-plate", 100},
 		{"CnC_SonicWall_Hub", 2}
 	  },
 	  result = "tib-spike"
@@ -124,7 +127,8 @@ data:extend{tiberiumSpikeItem, tiberiumSpikeEntity,
 	  {
 		{"processing-unit", 25},
 		{"iron-gear-wheel", 50},
-		{"iron-plate", 100},
+		{"electric-mining-drill", 5},
+		{"steel-plate", 100},
 		{"CnC_SonicWall_Hub", 2}
 	  },
 	  result = "tib-spike"
@@ -169,9 +173,12 @@ data:extend({tiberiumNetworkNodeItem,tiberiumNetworkNodeEntity,tibcat,
 	  order = "b",
       ingredients =
       {
-        {"advanced-circuit", 25},
+        {"processing-unit", 25},
         {"iron-gear-wheel", 50},
-        {"iron-plate", 100}
+		{"electric-engine-unit", 10},
+		{"electric-mining-drill", 5},
+		{"pipe", 100},
+        {"steel-plate", 100}
       },
       result = "tiberium-network-node"
     },
@@ -268,10 +275,8 @@ data:extend({
 		ingredients =
 		{
 			{"steel-plate", 25},
-			{"electric-engine-unit", 10},
 			{"advanced-circuit", 15},
-			{"pipe", 10},
-			{"chemical-plant", 1}
+			{"pipe", 10}
 		},
 		energy_required = 30,
 		result = "growth-accelerator",
@@ -399,11 +404,11 @@ data:extend({
         energy_source =
         {
             type = "electric",
-            buffer_capacity = "12.5MJ",
+            buffer_capacity = "5MJ",
             usage_priority = "primary-input",
-            input_flow_limit = "1250kW",
+            input_flow_limit = "1500kW",
             output_flow_limit = "0W",
-            drain = "125kW"
+            drain = "500kW"
         },
         picture =
         {

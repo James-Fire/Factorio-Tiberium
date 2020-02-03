@@ -109,6 +109,42 @@ Changed Tiberium Ore stack size to 50, to be in line with other ores.
 Automated recipe system allows for much more flexible recipes.
 
 
+Feb 
+
+Tiered Tiberium centrifuges.
+
+Switched around the products in the centrifuges to promote faster working.
+
+Increased charging speed of Sonic Walls. Reduced required charge. Increased constant drain.
+
+Changed stack size of Growth Credits to 20. Each Growth Accelerator can store 200, which is enough for 2 full growth cycles at max amount in the settings.
+
+Added setting to change how many growth credits can be consumed each cycle. Default 50.
+
+Added setting to change how much damage tiberium does in the various cases. Default 10.
+
+Added setting to add sludge to direct recipes. Default off.
+
+Recipe Updates:
+
+Iron plate upgraded to steel in:Tiberium Node Harvester, Tiberium Spike, Tiberium Control Node.
+
+Electric Mining Drill added to:Tiberium Node Harvester, Tiberium Spike, Tiberium Control Node.
+
+Electric Engine Units added to Tiberium Control Node.
+
+Iron Pipe added to Tiberium Control Node.
+
+Copper Plate added to Sonic Walls.
+
+Advanced Circuits upgraded to processing units in Tiberium Control Node.
+
+Removed Chemical Plant and Electric Engine Unit from Growth Accelerator.
+
+Copper plate exchanged for plastic in Tiberium Armour.
+
+Added Iron Pipe to Tiberium Armour.
+
 TODO:
 
 Liquid Tiberium Spread missile.* Needs to trigger event to place ore.

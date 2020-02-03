@@ -1,5 +1,9 @@
 require "scripts/CnC_Walls" --Note, to make SonicWalls work / be passable, 
 
+local GrowthCreditMax = settings.global["growth-credit"].value
+local TiberiumDamage = settings.global["tiberium-damage"].value
+--local TiberiumGrowth = settings.global["tiberium-growth"].value
+--local TiberiumRadius = settings.global["tiberium-radius"].value
 script.on_init(
   function()
     global.tibGrowthNodeListIndex = 0
@@ -17,12 +21,12 @@ script.on_init(
     global.intervalBetweenNodeUpdates =
       math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
 
-    global.baseGrowthRate = 10 -- how much ore to place at once
+    global.baseGrowthRate = 100 -- how much ore to place at once
     global.baseSize = 10 -- The maximum radius of the field
-    global.contactDamage = 1 --how much damage should be applied to objects over tiberium?
+    global.contactDamage = TiberiumDamage --how much damage should be applied to objects over tiberium?
     global.contactDamageTime = 30 --how long (in ticks) should players be damaged after contacting tiberium?
-    global.structureDamage = 1 --how much damage should be applied to adjacent buildings? (excluding electric-mining-drill)
-    global.vehicleDamage = 1 --how much damage should be applied to vehicles players are in?
+    global.structureDamage = TiberiumDamage --how much damage should be applied to adjacent buildings? (excluding electric-mining-drill)
+    global.vehicleDamage = TiberiumDamage --how much damage should be applied to vehicles players are in?
     global.damageForceName = "tiberium"
     global.tiberiumLevel = 0 --The level of tiberium; affects growth/damage patterns
     global.oreType = "tiberium-ore"
@@ -101,7 +105,7 @@ function AddOre(surface, position, growthRate)
     entities[1].destroy()
   elseif (#entities == 1) then
     --game.print(string.format("x:%.2f y:%.2f update | %f", position.x, position.y, math.random()))
-    entities[1].amount = math.min(entities[1].amount + growthRate, 50000)
+    entities[1].amount = math.min(entities[1].amount + growthRate, 10000)
   else
     --game.print(string.format("x:%.2f y:%.2f new | %f", position.x, position.y, math.random()))
     oreEntity = surface.create_entity {name = "tiberium-ore", amount = growthRate, position = position}
@@ -186,6 +190,15 @@ function PlaceOre(entity, howmany)
 
   howmany = howmany or 1
   --game.print("Placing " .. growthRate .. " ore " .. howmany .. " times " .. math.random())
+    local accelerator = surface.find_entity("growth-accelerator", position)
+  if (accelerator ~= nil) then
+    local inventory = accelerator.get_output_inventory()
+    local creditCount = math.min(inventory.get_item_count("growth-credit"), GrowthCreditMax)
+    if (creditCount > 0) then
+      howmany = howmany + creditCount
+      inventory.remove({name = "growth-credit", count = creditCount})
+    end
+  end
 
   for howmanycount = 1, howmany, 1 do
     local direction = math.random() * 2 * math.pi
@@ -504,7 +517,7 @@ script.on_event(
         #playerPositionOre > 0 and game.players[i] and game.players[i].valid and game.players[i].character and
           not game.players[i].character.vehicle
        then
-        game.players[i].character.damage(global.contactDamage, game.forces.tiberium, "tiberium")
+        game.players[i].character.damage(TiberiumDamage, game.forces.tiberium, "tiberium")
       end
 
       --if player is holding tiberium products, add damage
