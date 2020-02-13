@@ -53,7 +53,7 @@ data:extend({
     energy_source = {
         type = "electric",
         usage_priority = "secondary-output",
-		emissions_per_minute = 500,
+		emission = 5,
     },
 
 	horizontal_animation = {
@@ -420,6 +420,7 @@ data:extend({
     max_health = 350,
     corpse = "centrifuge-remnants",
     dying_explosion = "centrifuge-explosion",
+	fast_replaceable_group = "tib-centrifuge",
     resistances =
     {
       {

@@ -72,16 +72,15 @@ data:extend{tiberiumGrowthNodeItem, tiberiumGrowthNodeEntity,
 
 local tiberiumSpikeItem = table.deepcopy(data.raw.item["pumpjack"])
 tiberiumSpikeItem.name = "tib-spike"
+tiberiumSpikeItem.icon = "__Factorio-Tiberium__/graphics/icons/tiberium-spike.png"
 tiberiumSpikeItem.subgroup = "a-buildings"
 tiberiumSpikeItem.order = "e"
 tiberiumSpikeItem.place_result = "tib-spike"
 
 local tiberiumSpikeEntity = table.deepcopy(data.raw["mining-drill"]["pumpjack"])
 tiberiumSpikeEntity.name = "tib-spike"
-tiberiumSpikeEntity.icon = data.raw["mining-drill"]["pumpjack"].icon
-tiberiumSpikeEntity.base_picture = data.raw["mining-drill"]["pumpjack"].base_picture
+tiberiumSpikeEntity.icon = "__Factorio-Tiberium__/graphics/icons/tiberium-spike.png"
 tiberiumSpikeEntity.radius_visualisation_picture = data.raw["mining-drill"]["pumpjack"].radius_visualisation_picture
-tiberiumSpikeEntity.animations = data.raw["mining-drill"]["pumpjack"].animations
 tiberiumSpikeEntity.mining_speed = 5
 tiberiumSpikeEntity.subgroup = "a-buildings"
 tiberiumSpikeEntity.order = "m"
@@ -150,7 +149,7 @@ tiberiumNetworkNodeEntity.energy_usage = "25000kW"
 tiberiumNetworkNodeEntity.mining_speed = 10
 tiberiumNetworkNodeEntity.subgroup = "a-buildings"
 tiberiumNetworkNodeItem.order = "b"
-tiberiumNetworkNodeEntity.resource_searching_radius = 100
+tiberiumNetworkNodeEntity.resource_searching_radius = 50
 tiberiumNetworkNodeEntity.resource_categories = {}
 tiberiumNetworkNodeEntity.minable.result = "tiberium-network-node"
 table.insert(tiberiumNetworkNodeEntity.resource_categories, tibcat.name)
@@ -218,7 +217,7 @@ data:extend({
 	{
 		type = "container",
 		name = "growth-accelerator",
-		icon = "__base__/graphics/icons/centrifuge.png",
+		icon = "__Factorio-Tiberium__/graphics/icons/growth-accelerator.png",
 		icon_size = 64,
 		flags = {"placeable-neutral", "placeable-player", "player-creation"},
 		minable = {mining_time = 2, result = "growth-accelerator"},
@@ -284,7 +283,7 @@ data:extend({
 	{
 		type = "item",
 		name = "growth-accelerator",
-		icon = "__base__/graphics/icons/centrifuge.png",
+		icon = "__Factorio-Tiberium__/graphics/icons/growth-accelerator.png",
 		icon_size = 64,
 		subgroup = "a-buildings",
 		order = "g",
@@ -294,7 +293,7 @@ data:extend({
 	{
 		type = "item",
 		name = "growth-accelerator-node",
-		icon = "__base__/graphics/icons/centrifuge.png",
+		icon = "__Factorio-Tiberium__/graphics/icons/growth-accelerator.png",
 		icon_size = 64,
 		subgroup = "a-buildings",
 		order = "g",

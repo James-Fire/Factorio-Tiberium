@@ -113,6 +113,36 @@ data:extend {
   },
   {
     type = "item",
+    name = "tiberium-empty-cell",
+    icon = "__Factorio-Tiberium__/graphics/icons/empty-fuel-cell.png",
+    icon_size = 64,
+    flags = {},
+    subgroup = "intermediate-product",
+    stack_size = 100
+  },
+  {
+    type = "item",
+    name = "tiberium-dirty-cell",
+    icon = "__Factorio-Tiberium__/graphics/icons/dirty-fuel-cell.png",
+    icon_size = 64,
+    flags = {},
+    subgroup = "intermediate-product",
+    stack_size = 5
+  },
+  {
+    type = "item",
+    name = "tiberium-fuel-cell",
+    icon = "__base__/graphics/icons/uranium-fuel-cell.png",
+    icon_size = 64,
+    flags = {},
+    subgroup = "intermediate-product",
+	fuel_category = "nuclear",
+    burnt_result = "tiberium-dirty-cell",
+	fuel_value = "1GJ",
+    stack_size = 5
+  },
+  {
+    type = "item",
     name = "tiberium-bar",
     icon = "__Factorio-Tiberium__/graphics/icons/tiberium-bar.png",
     icon_size = 32,
@@ -219,7 +249,6 @@ data:extend(
       },
       results = {
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/molten-to-iron.png",
       icon_size = 32,
       subgroup = "a-direct",
 	  allow_as_intermediate = false,
@@ -236,7 +265,6 @@ data:extend(
       },
       results = {
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/molten-to-copper.png",
       icon_size = 32,
       subgroup = "a-direct",
 	  allow_as_intermediate = false,
@@ -253,7 +281,6 @@ data:extend(
       },
       results = {
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/molten-to-coal.png",
       icon_size = 32,
       subgroup = "a-direct",
 	  allow_as_intermediate = false,
@@ -270,7 +297,6 @@ data:extend(
       },
       results = {
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/molten-to-stone.png",
       icon_size = 32,
       subgroup = "a-direct",
 	  allow_as_intermediate = false,
@@ -287,7 +313,6 @@ data:extend(
       },
       results = {
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/slurry-to-uranium.png",
       icon_size = 32,
       subgroup = "a-direct",
 	  allow_as_intermediate = false,
@@ -304,7 +329,6 @@ data:extend(
       },
       results = {
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/slurry-to-oil.png",
       icon_size = 32,
       subgroup = "a-direct",
 	  allow_as_intermediate = false,
@@ -509,7 +533,6 @@ data:extend(
       results = {
         {type = "item", name = "growth-credit", amount = 1},
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/stone-growth-credit.png",
       icon_size = 32,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
@@ -553,7 +576,7 @@ data:extend(
       energy_required = 20,
       enabled = false,
       ingredients = {
-		{type = "fluid", name = "liquid-tiberium", amount = 102},
+		{type = "fluid", name = "liquid-tiberium", amount = 25},
 		{type = "item", name = "steel-plate", amount = 2},
 		{type = "item", name = "copper-plate", amount = 2},
         {type = "item", name = "electric-engine-unit", amount = 1},
@@ -567,6 +590,66 @@ data:extend(
       icon_size = 64,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
+	{
+      type = "recipe",
+      name = "tiberium-empty-cell",
+      category = "chemistry",
+	  subgroup = "a-items",
+      energy_required = 20,
+      enabled = false,
+      ingredients = {
+		{type = "item", name = "steel-plate", amount = 2},
+		{type = "item", name = "copper-plate", amount = 2},
+        {type = "item", name = "plastic-bar", amount = 5},
+      },
+      results = {
+        {type = "item", name = "tiberium-empty-cell", amount = 10},
+      },
+      icon_size = 64,
+      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+    },
+	{
+      type = "recipe",
+      name = "tiberium-cell-cleaning",
+      category = "chemistry",
+	  subgroup = "a-items",
+      energy_required = 20,
+      enabled = false,
+      ingredients = {
+		{type = "item", name = "tiberium-dirty-cell", amount = 10},
+        {type = "item", name = "plastic-bar", amount = 1},
+		{type = "fluid", name = "water", amount = 50},
+      },
+      results = {
+        {type = "item", name = "tiberium-empty-cell", amount = 9},
+		{type = "item", name = "tiberium-empty-cell", amount = 1, probability = 0.9},
+		{type = "fluid", name = "tiberium-sludge", amount = 1},
+      },
+      icon_size = 64,
+	  icon = "__Factorio-Tiberium__/graphics/icons/dirty-fuel-cell.png",
+      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+    },
+	
+	{
+      type = "recipe",
+      name = "tiberium-fuel-cell",
+      category = "chemistry",
+	  subgroup = "a-items",
+      energy_required = 20,
+      enabled = false,
+      ingredients = {
+		{type = "item", name = "tiberium-empty-cell", amount = 1},
+		{type = "fluid", name = "liquid-tiberium", amount = 10},
+      },
+      results = {
+        {type = "item", name = "tiberium-fuel-cell", amount = 1},
+      },
+      icon_size = 64,
+      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+    },
+	
+	
+	
 	{
       type = "recipe",
       name = "tiberium-ion-core",

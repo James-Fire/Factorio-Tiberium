@@ -23,18 +23,14 @@ data:extend
             type = "unlock-recipe",
             recipe = "tiberium-armor"
         },
-		{
-            type = "unlock-recipe",
-            recipe = "centrifuge"
-        }
       },
       prerequisites = {"oil-processing", "sulfur-processing"},
       unit =
       {
-        count = 200,
+        count = 100,
         ingredients =
         {
-          {"automation-science-pack", 1},
+          {"automation-science-pack", 2},
           {"logistic-science-pack", 1}
         },
         time = 10
@@ -90,10 +86,6 @@ data:extend
 		{
             type = "unlock-recipe",
             recipe = "coal-growth-credit"
-        },
-		{
-            type = "unlock-recipe",
-            recipe = "uranium-growth-credit"
         },
 		{
             type = "unlock-recipe",
@@ -172,6 +164,22 @@ data:extend
         },
 		{
             type = "unlock-recipe",
+            recipe = "uranium-growth-credit"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-empty-cell"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-fuel-cell"
+        },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-cell-cleaning"
+        },
+		{
+            type = "unlock-recipe",
             recipe = "ion-turret"
         }
       },
@@ -190,6 +198,33 @@ data:extend
         time = 10
       }
    },
+   --[[{
+      type = "technology",
+      name = "advanced-tiberium-transmutation-tech",
+      icon = "__Factorio-Tiberium__/graphics/technology/advanced-tiberium-processing-tech.png",
+	  icon_size = 128,
+      effects =
+      {
+		{
+            type = "unlock-recipe",
+            recipe = "uranium-growth-credit"
+        },
+      },
+	  
+	  
+      prerequisites = {"advanced-tiberium-processing-tech"},
+      unit =
+      {
+        count = 200,
+        ingredients =
+        {
+          {"automation-science-pack", 1},
+          {"logistic-science-pack", 1},
+          {"chemical-science-pack", 2}
+        },
+        time = 10
+      }
+   },]]
    {
       type = "technology",
       name = "tiberium-control-network-tech",
@@ -233,6 +268,11 @@ data:extend
             type = "unlock-recipe",
             recipe = "energy-growth-credit"
         },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-seed"
+        },
+		
 		--[[{
             type = "unlock-recipe",
             recipe = "advanced-tiberium-brick-processing"

@@ -1,15 +1,19 @@
 {
     "name": "Factorio-Tiberium",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "title": "Factorio and Conquer: Tiberian Dawn",
     "author": "JamesFire",
     "contact": "",
     "homepage": "https://github.com/James-Fire/Factorio-Tiberium",
     "factorio_version": "0.18",
     "dependencies": [
-		"base >= 0.17.35",
+		"base >= 0.18.3",
 		"?bobmining >=0.17.0",
 		"?Orbital Ion Cannon",
+		"?bobores >=0.17.0",
+		"?bobrevamp >=0.17.0",
+		"?bobplates >=0.17.0",
+		"?Mining_Drones",
 		"LSlib"
 	],
     "description": "Origonaly by Zillo7 fixed by SAH4001, fixed again by Oktabyte. Now being taken on by JamesFire. Adds Tiberium - Harvest it to convert it to other ores."

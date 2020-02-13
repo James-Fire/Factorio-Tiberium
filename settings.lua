@@ -2,6 +2,12 @@ data:extend(
 {
   {
     type = "bool-setting",
+    name = "debug-text",
+    setting_type = "startup",
+    default_value = false,
+  },
+  {
+    type = "bool-setting",
     name = "tiberium-byproduct-1",
     setting_type = "startup",
     default_value = true,
@@ -35,24 +41,31 @@ data:extend(
   {
     type = "int-setting",
     name = "tiberium-damage",
-    setting_type = "runtime-global",
+    setting_type = "startup",
     default_value = 10,
     minimum_value = 5,
   },
-  --[[{ Need contingencies in place before implementation.
+  {
     type = "int-setting",
     name = "tiberium-radius",
-    setting_type = "runtime-global",
-    default_value = 10,
+    setting_type = "startup",
+    default_value = 30,
     minimum_value = 5,
-  },]]
-  --[[{ Not much point right now. Should probably have a recipe multiplier too.
+  },
+  {
     type = "int-setting",
     name = "tiberium-growth",
-    setting_type = "runtime-global",
+    setting_type = "startup",
     default_value = 100,
     minimum_value = 1,
-  },]]
+  },
+  {
+    type = "int-setting",
+    name = "tiberium-value",
+    setting_type = "startup",
+    default_value = 10,
+    minimum_value = 1,
+  },
 }
 )
 

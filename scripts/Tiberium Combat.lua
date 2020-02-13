@@ -1,3 +1,8 @@
+--The Spanish Inquisition
+
+local hit_effects = require ("__base__/prototypes/entity/demo-hit-effects")
+local sounds = require("__base__/prototypes/entity/demo-sounds")
+
 local tiberiumArmor = table.deepcopy(data.raw.armor["heavy-armor"])
 
 tiberiumArmor.name = "tiberium-armor"
@@ -97,7 +102,6 @@ data:extend{
     ingredients =
     {
       {"steel-plate", 10},
-      {"tiberium-ore", 10},
     },
     result = "tiberium-magazine"
   }
@@ -285,7 +289,7 @@ data:extend{
     {
       {"rocket-control-unit", 10},
       {"explosives", 10},
-      {type = "fluid", name = "liquid-tiberium", amount = 3}
+      {type = "fluid", name = "liquid-tiberium", amount = 10}
     },
     result = "tiberium-nuke"
   },
@@ -344,6 +348,109 @@ data:extend{
               }
             }
           }
+        }
+      }
+    },
+    light = {intensity = 0.8, size = 15},
+    animation =
+    {
+      filename = "__base__/graphics/entity/rocket/rocket.png",
+      frame_count = 8,
+      line_length = 8,
+      width = 9,
+      height = 35,
+      shift = {0, 0},
+      priority = "high"
+    },
+    shadow =
+    {
+      filename = "__base__/graphics/entity/rocket/rocket-shadow.png",
+      frame_count = 1,
+      width = 7,
+      height = 24,
+      priority = "high",
+      shift = {0, 0}
+    },
+    smoke =
+    {
+      {
+        name = "smoke-fast",
+        deviation = {0.15, 0.15},
+        frequency = 1,
+        position = {0, 1},
+        slow_down_factor = 1,
+        starting_frame = 3,
+        starting_frame_deviation = 5,
+        starting_frame_speed = 0,
+        starting_frame_speed_deviation = 5
+      }
+    }
+  },
+}
+data:extend{
+
+  {
+    type = "ammo",
+    name = "tiberium-seed",
+    icon = "__base__/graphics/icons/atomic-bomb.png",
+    icon_size = 64,
+    ammo_type =
+    {
+      range_modifier = 5,
+      cooldown_modifier = 3,
+      target_type = "position",
+      category = "rocket",
+      action =
+      {
+        type = "direct",
+        action_delivery =
+        {
+          type = "projectile",
+          projectile = "tiberium-seed",
+          starting_speed = 0.05,
+          source_effects =
+          {
+            type = "create-entity",
+            entity_name = "explosion-hit"
+          }
+        }
+      }
+    },
+    subgroup = "a-items",
+    order = "d[rocket-launcher]-c[atomic-bomb]",
+    stack_size = 10
+  },
+  {
+    type = "recipe",
+    name = "tiberium-seed",
+    enabled = false,
+	category = "crafting-with-fluid",
+    energy_required = 50,
+    ingredients =
+    {
+      {"explosives", 1},
+      {"rocket-control-unit", 10},
+      {type = "fluid", name = "liquid-tiberium", amount = 200}
+    },
+    result = "tiberium-seed"
+  },
+  {
+    type = "projectile",
+    name = "tiberium-seed",
+    flags = {"not-on-map"},
+    acceleration = 0.005,
+    action =
+    {
+      type = "direct",
+      action_delivery =
+      {
+        type = "instant",
+        target_effects =
+        {	
+			{
+            type = "script",
+            effect_id = "seed-launch"
+          },
         }
       }
     },
@@ -570,3 +677,148 @@ data:extend{
 	}
   }
  }
+local TiberiumDamage = settings.startup["tiberium-damage"].value
+local TiberiumRadius = {settings.startup["tiberium-radius"].value*1.1}
+data:extend({
+{
+    type = "land-mine",
+    name = "ore-land-mine",
+    icon = "__Factorio-Tiberium__/graphics/entity/null-sprite.png",
+	collision_mask = {"object-layer"},
+	force_die_on_attack = false,
+	max_health = 10000,
+	destructible = false,
+    icon_size = 1,
+    flags =
+    {
+      "not-on-map"
+    },
+    minable = nil,
+    damaged_trigger_effect = hit_effects.entity(),	
+	picture_safe =
+    {
+      filename = "__Factorio-Tiberium__/graphics/entity/null-sprite.png",
+      priority = "medium",
+      width = 1,
+      height = 1
+    },
+    picture_set =
+    {
+      filename = "__Factorio-Tiberium__/graphics/entity/null-sprite.png",
+      priority = "medium",
+      width = 1,
+      height = 1
+    },
+    picture_set_enemy =
+    {
+      filename = "__Factorio-Tiberium__/graphics/entity/null-sprite.png",
+      priority = "medium",
+      width = 1,
+      height = 1
+    },
+    trigger_radius = 1,
+    ammo_category = "landmine",
+    action =
+    {
+      type = "direct",
+      action_delivery =
+      {
+        type = "instant",
+        source_effects =
+        {
+          {
+            type = "nested-result",
+            action =
+            {
+              type = "area",
+              radius = 1,
+              force = "enemy",
+              action_delivery =
+              {
+                type = "instant",
+                target_effects =
+                {
+                  {
+                    type = "damage",
+                    damage = { amount = 1, type = "tiberium"}
+                  },
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    type = "land-mine",
+    name = "node-land-mine",
+    icon = "__Factorio-Tiberium__/graphics/entity/null-sprite.png",
+    dying_explosion = "land-mine-explosion",
+    icon_size = 1,
+	force_die_on_attack = false,
+	max_health = 10000,
+	collision_mask = {"object-layer"},
+	destructible = false,
+    flags =
+    {
+      "not-on-map"
+    },
+    minable = nil,
+    damaged_trigger_effect = hit_effects.entity(),
+    picture_safe =
+    {
+      filename = "__Factorio-Tiberium__/graphics/entity/null-sprite.png",
+      priority = "medium",
+      width = 1,
+      height = 1
+    },
+    picture_set =
+    {
+      filename = "__Factorio-Tiberium__/graphics/entity/null-sprite.png",
+      priority = "medium",
+      width = 1,
+      height = 1
+    },
+    picture_set_enemy =
+    {
+      filename = "__Factorio-Tiberium__/graphics/entity/null-sprite.png",
+      priority = "medium",
+      width = 1,
+      height = 1
+    },
+    trigger_radius = 33,
+    ammo_category = "landmine",
+    action =
+    {
+      type = "direct",
+      action_delivery =
+      {
+        type = "instant",
+        source_effects =
+        {
+          {
+            type = "nested-result",
+            action =
+            {
+              type = "area",
+              radius = 33,
+              force = "enemy",
+              action_delivery =
+              {
+                type = "instant",
+                target_effects =
+                {
+                  {
+                    type = "damage",
+                    damage = { amount = 0.1, type = "tiberium"}
+                  },
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}) 

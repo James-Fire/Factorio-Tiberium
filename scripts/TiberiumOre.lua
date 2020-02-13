@@ -67,7 +67,7 @@ data:extend(
     },
     collision_box = {{-0.1, -0.1}, {0.1, 0.1}},
     selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
-    stage_counts = {1000, 750, 600, 500, 400, 300, 200, 100, 50, 30, 20, 1},
+    stage_counts = {9000, 7500, 6000, 4700, 3500, 2500, 1500, 800, 400, 200, 100, 1},
     stages =
     {
       sheet =
@@ -167,8 +167,8 @@ data:extend(
         {
           type = "item",
           name = "tiberium-ore",
-          amount_min = 10,
-          amount_max = 10,
+          amount_min = 1,
+          amount_max = 2,
           probability = 1
         }
       }
@@ -184,7 +184,7 @@ data:extend(
       random_probability = 1/48,
       random_spot_size_minimum = 1,
       random_spot_size_maximum = 1, -- don't randomize spot size
-      additional_richness = 2200000, -- this increases the total everywhere, so base_density needs to be decreased to compensate
+      additional_richness = 200000, -- this increases the total everywhere, so base_density needs to be decreased to compensate
       has_starting_area_placement = true,
       regular_rq_factor_multiplier = 1
     },
@@ -220,13 +220,13 @@ data:extend(
     highlight = true,
     minimum = 600000,
     normal = 3000000,
-    infinite_depletion_amount = 10,
+    infinite_depletion_amount = 5,
     resource_patch_search_radius = 12,
     tree_removal_probability = 0.7,
     tree_removal_max_distance = 32 * 32,
     minable =
     {
-      mining_time = 10,
+      mining_time = 5,
       results =
       {
         {
