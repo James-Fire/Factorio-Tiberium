@@ -157,7 +157,7 @@ Feb 2 (Again)
 Automated tiberium resitance application to armour. Compatibility with other mods is (hopefully) assured.
 
 
-Feb
+Feb 12
 
 Added an option to choose how much ore is created per growth cycle. All recipes automatically adjust to changed value of tib. (Recipe multiplier, basically.)
 
@@ -198,3 +198,14 @@ Overhauled damage system, so now nodes use landmines. Which means they damage bi
 Spaced out the ore transitioning, so it doesn't cap out at 1000.
 
 Increased node growth radius. Testing showed we can go higher without adversly affecting UPS.
+
+
+Feb 16
+
+Removed Centrifuge editing to add fluid boxes, as they aren't needed.
+
+Removed Direct Recipe Waste setting, pending crash fixes.
+
+Fixed a crash because it doesn't have the correct variables.
+
+Fixed variables for vanilla not being generated if bobs isn't active at all.

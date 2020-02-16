@@ -157,6 +157,7 @@ if (mods["bobores"]) then
 			local CreditCost = (OrePerCredit/DirectRecipeOutput)*(MoltenPerCycle/SlurrytoMolten*OretoSlurry)/CreditEfficiency*RecipeMult
 			local CreditTime = 60*RecipeMult
 			local EnergyCreditCost = 200*RecipeMult
+			local SludgePerCycle = StonePerCycle
 			LSlib.recipe.addIngredient("tiberium-molten-to-iron-ore", "molten-tiberium", MoltenPerCycle, "fluid")
 			LSlib.recipe.addIngredient("tiberium-molten-to-copper-ore", "molten-tiberium", MoltenPerCycle, "fluid")
 			LSlib.recipe.addIngredient("tiberium-molten-to-coal", "molten-tiberium", MoltenPerCycle, "fluid")
@@ -296,7 +297,21 @@ else
 
 --Vanilla recipe code
 
-
+local IronPerCycle    = 17*RecipeMult
+local CopperPerCycle    = 18*RecipeMult
+local CoalPerCycle    = 3*RecipeMult
+local StonePerCycle    = 2*RecipeMult
+local OilPerCycle    = 70*RecipeMult
+local TotalCentOutput = OilPerCycle+StonePerCycle+CoalPerCycle+CopperPerCycle+IronPerCycle
+local DirectRecipeOutput = TotalCentOutput*0.8*RecipeMult --Must be a multiple of 4, so that DirectUraniumOutput is a whole number.
+local DirectOilOutput = DirectRecipeOutput*(OilPerCycle/IronPerCycle)
+local DirectUraniumOutput = DirectRecipeOutput/4
+local CreditEfficiency = 0.75 --How much of the ore should be converted into tiberium when used.
+local OrePerCredit = settings.startup["tiberium-growth"].value
+local CreditCost = (OrePerCredit/DirectRecipeOutput)*(MoltenPerCycle/SlurrytoMolten*OretoSlurry)/CreditEfficiency*RecipeMult
+local CreditTime = 60*RecipeMult
+local EnergyCreditCost = 200*RecipeMult
+local SludgePerCycle = StonePerCycle
 
 
 
@@ -394,14 +409,14 @@ LSlib.recipe.addIngredient("uranium-growth-credit", "uranium-ore", CreditCost, "
 
 end
 
-if settings.startup["tiberium-byproduct-direct"].value == true then
-	LSlib.recipe.addResult("iron-growth-credit", "tiberium-sludge",SludgePerCycle, "fluid")
-	LSlib.recipe.addResult("copper-growth-credit", "tiberium-sludge", SludgePerCycle, "fluid")
-	LSlib.recipe.addResult("coal-growth-credit", "tiberium-sludge", SludgePerCycle, "fluid")
-	LSlib.recipe.addResult("stone-growth-credit", "tiberium-sludge", SludgePerCycle, "fluid")
-	LSlib.recipe.addResult("oil-growth-credit", "tiberium-sludge", SludgePerCycle, "fluid")
-	LSlib.recipe.addResult("uranium-growth-credit", "tiberium-sludge", SludgePerCycle, "fluid")
-end
+--[[if settings.startup["tiberium-byproduct-direct"].value == true then
+	LSlib.recipe.addResult("tiberium-molten-to-iron-ore", "tiberium-sludge", SludgePerCycle, "fluid")
+	LSlib.recipe.addResult("tiberium-molten-to-copper-ore", "tiberium-sludge", SludgePerCycle, "fluid")
+	LSlib.recipe.addResult("tiberium-molten-to-coal", "tiberium-sludge", SludgePerCycle, "fluid")
+	LSlib.recipe.addResult("tiberium-molten-to-stone", "tiberium-sludge", SludgePerCycle, "fluid")
+	LSlib.recipe.addResult("tiberium-molten-to-crude-oil", "tiberium-sludge", SludgePerCycle, "fluid")
+	LSlib.recipe.addResult("tiberium-molten-to-uranium-ore", "tiberium-sludge", SludgePerCycle, "fluid")
+end]]
 
 if settings.startup["waste-recycling"].value == true then
 		LSlib.technology.addRecipeUnlock("tiberium-power-tech", "tiberium-waste-recycling")
