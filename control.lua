@@ -11,6 +11,8 @@ script.on_init(
   function()
     global.tibGrowthNodeListIndex = 0
     global.tibGrowthNodeList = {}
+	global.tibMineNodeListIndex = 0
+	global.tibMineNodeList = {}
     global.drills = {}
 
     -- Does not appear to be currently used so commenting out for now
@@ -192,7 +194,7 @@ function PlaceOre(entity, howmany)
   local growthRate = global.baseGrowthRate * math.max(1, math.sqrt(position.x + position.y) / 10)
   -- Scale size based on distance from spawn, separate from density in case we end up wanting them to
   -- scale differently
-  local size = global.baseSize * math.max(1, math.sqrt(position.x + position.y) / 100)
+  local size = TiberiumRadius * math.max(1, math.sqrt(position.x + position.y) / 100)
 
   howmany = howmany or 1
   --game.print("Placing " .. growthRate .. " ore " .. howmany .. " times " .. math.random())
@@ -354,7 +356,13 @@ commands.add_command(
     for i = 1, #allnodes, 1 do
       table.insert(global.tibGrowthNodeList, allnodes[i])
     end
+	local allmines = game.surfaces[1].find_entities_filtered {name = "node-land-mine"}
+    global.tibMineNodeList = {}
+    for i = 1, #allmines, 1 do
+      table.insert(global.tibMineNodeList, allmines[i])
+    end
     game.print("Found " .. #global.tibGrowthNodeList .. " nodes")
+	game.print("Found " .. #global.tibMineNodeList .. " mines")
 
     local alldrills = game.surfaces[1].find_entities_filtered {type = "mining-drill"}
     global.drills = {}
@@ -445,7 +453,7 @@ script.on_event(
     local entities = game.surfaces[1].find_entities_filtered {area = event.area, name = "tibGrowthNode"}
 	for i, entity in pairs(entities) do
 		if entity.valid then
-			game.get_surface(1).create_entity{name = "node-land-mine", position = entity.position, force = game.forces.tiberium}
+			game.get_surface(1).create_entity{name = "node-land-mine", position = entity.position, force = game.forces.player}
 		else
 			game.print("Node is invalid: mine placement")
 		end
@@ -556,14 +564,12 @@ script.on_event(
       for i = 1, #alldrills, 1 do
         table.insert(global.drills, alldrills[i])
       end
-		if settings.startup["debug-text"].value == true then
-			game.print("Updated drill list and found " .. #global.drills .. " drills")
+			--[[game.print("Updated drill list and found " .. #global.drills .. " drills")
 
 		  game.print(
 			"node count=" ..
 			  #global.tibGrowthNodeList .. " intervalBetweenNodeUpdates " .. global.intervalBetweenNodeUpdates
-		  )
-		end
+		  )]]
     end
 
     -- Spawn ore check
@@ -591,16 +597,37 @@ script.on_event(
 	end
 )
 script.on_nth_tick(7200,function(event)
+	local entities = game.get_surface(1).find_entities_filtered{area = area, name = "node-land-mine"}
+	if entities[i] then
+		global.tibMineNodeList = {}
+		table.insert(global.tibMineNodeList, entities[i])
+	end
 	for i, entity in pairs(global.tibGrowthNodeList) do
+		if entity.valid then
+			local Minearea = {
+				{x = math.ceil(entity.position.x)+2, y = math.ceil(entity.position.y)+2},
+				{x = math.floor(entity.position.x)-2, y = math.floor(entity.position.y)-2}
+			}
+			local entities = game.get_surface(1).find_entities_filtered{area = Minearea, name = "node-land-mine"}
+			if entities[1] then
+			else
+				game.get_surface(1).create_entity{name = "node-land-mine", position = entity.position, force = game.forces.player}
+				game.print("Place Mine") 
+			end
+			--[[for _, entity in pairs(Nodeentities) do
+				entity.damage(TiberiumDamage, game.forces.tiberium, "tiberium")]]
+		end
+	end
+	for i, entity in pairs(global.tibMineNodeList) do
 		if entity.valid then
 			local area = {
 				{x = math.ceil(entity.position.x)+1, y = math.ceil(entity.position.y)+1},
 				{x = math.floor(entity.position.x)-1, y = math.floor(entity.position.y)-1}
 			}
-			local entities = game.get_surface(1).find_entities_filtered{area = area, name = "node-land-mine"}
+			local entities = game.get_surface(1).find_entities_filtered{area = area, name = "tibGrowthNode"}
 			if entities[1] then
 			else
-				game.get_surface(1).create_entity{name = "node-land-mine", position = entity.position, force = game.forces.tiberium}
+				entity.destroy()
 			end
 			--[[for _, entity in pairs(Nodeentities) do
 				entity.damage(TiberiumDamage, game.forces.tiberium, "tiberium")]]
@@ -619,9 +646,7 @@ script.on_nth_tick(10,function(event)
        then
         game.players[i].character.damage(TiberiumDamage*0.1, game.forces.tiberium, "tiberium")
       end
-
-      --if player is holding tiberium products, add damage
-      local inventory = game.players[i].get_inventory(defines.inventory.item_main)
+	  local inventory = game.players[i].get_inventory(defines.inventory.item_main)
       if inventory then
         for p = 1, #global.tiberiumProducts, 1 do
           if inventory.get_item_count(global.tiberiumProducts[p]) > 0 then
@@ -629,6 +654,19 @@ script.on_nth_tick(10,function(event)
             break
           end
         end
+	end
+	--If player is in range of node, damage them.
+	for i, entity in pairs(global.tibGrowthNodeList) do
+		if entity.valid then
+			local Nodeentities = game.get_surface(1).find_entities_filtered{position = entity.position, radius = global.baseSize*1.1, type = "character"}
+			for _, entity in pairs(Nodeentities) do
+				if game.players[i] then
+					game.players[i].character.damage(TiberiumDamage*0.5, game.forces.tiberium, "tiberium")
+				end
+			end
+		end
+
+      --if player is holding tiberium products, add damage
       end
     end
 	end

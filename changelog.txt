@@ -209,3 +209,14 @@ Removed Direct Recipe Waste setting, pending crash fixes.
 Fixed a crash because it doesn't have the correct variables.
 
 Fixed variables for vanilla not being generated if bobs isn't active at all.
+
+
+Feb 16
+
+Fixed up node damage system. Nodes now only damage the player, and entities belonging to non-player forces.
+
+Fixed tib spikes apparently being unable to collide with the mines.
+
+Sonic fences now go over rails.
+
+Fixed fluid icons.

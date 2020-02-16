@@ -758,7 +758,9 @@ data:extend({
     icon_size = 1,
 	force_die_on_attack = false,
 	max_health = 10000,
-	collision_mask = {"object-layer"},
+	collision_mask = {"layer-15"},
+    collision_box = {{ -0.7, -0.7}, {0.7, 0.7}},
+    selection_box = {{ -1, -1}, {1, 1}},
 	destructible = false,
     flags =
     {
@@ -788,7 +790,30 @@ data:extend({
       height = 1
     },
     trigger_radius = 33,
+	trigger_force = "enemy",
     ammo_category = "landmine",
+	resistances = {
+	   {
+		  type = "physical",
+		  decrease = 100,
+		  percent = 100
+	   },
+	   {
+		  type = "explosion",
+		  decrease = 100,
+		  percent = 100
+	   },
+	   {
+		  type = "tiberium",
+		  decrease = 100,
+		  percent = 100
+	   },
+	   {
+		  type = "acid",
+		  decrease = 100,
+		  percent = 100
+	   }
+	},
     action =
     {
       type = "direct",
