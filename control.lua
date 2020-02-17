@@ -444,6 +444,17 @@ commands.add_command(
 --	end
 --  end
 --end)
+commands.add_command(
+  "tibFixMineLag",
+  "Deletes all the tib mines on the map",
+  function()
+    local entities = game.get_surface(1).find_entities_filtered{area = area, name = "node-land-mine"}
+    for i = 1, #entities, 1 do
+      entities[i].destroy()
+    end
+  end
+)
+
 
 
 --initial chunk scan
@@ -605,17 +616,16 @@ script.on_nth_tick(7200,function(event)
 	for i, entity in pairs(global.tibGrowthNodeList) do
 		if entity.valid then
 			local Minearea = {
-				{x = math.ceil(entity.position.x)+2, y = math.ceil(entity.position.y)+2},
-				{x = math.floor(entity.position.x)-2, y = math.floor(entity.position.y)-2}
+				{x = math.floor(entity.position.x)-2, y = math.floor(entity.position.y)-2},
+				{x = math.ceil(entity.position.x)+2, y = math.ceil(entity.position.y)+2}
 			}
 			local entities = game.get_surface(1).find_entities_filtered{area = Minearea, name = "node-land-mine"}
 			if entities[1] then
+				game.print("No Mine")
 			else
 				game.get_surface(1).create_entity{name = "node-land-mine", position = entity.position, force = game.forces.player}
 				game.print("Place Mine") 
 			end
-			--[[for _, entity in pairs(Nodeentities) do
-				entity.damage(TiberiumDamage, game.forces.tiberium, "tiberium")]]
 		end
 	end
 	for i, entity in pairs(global.tibMineNodeList) do
