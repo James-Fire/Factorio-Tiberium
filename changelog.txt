@@ -220,3 +220,10 @@ Fixed tib spikes apparently being unable to collide with the mines.
 Sonic fences now go over rails.
 
 Fixed fluid icons.
+
+
+Feb 17
+
+Fixed mine placement, so they do not get repeatedly placed.
+
+Added a command to remove all mines, to reset it. /tibFixMineLag 
