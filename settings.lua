@@ -40,6 +40,14 @@ data:extend(
   },
   {
     type = "int-setting",
+    name = "tiberium-max-per-tile",
+    setting_type = "startup",
+    default_value = 1000,
+    maximum_value = 10000,
+    minimum_value = 100
+  },
+  {
+    type = "int-setting",
     name = "tiberium-damage",
     setting_type = "startup",
     default_value = 10,
