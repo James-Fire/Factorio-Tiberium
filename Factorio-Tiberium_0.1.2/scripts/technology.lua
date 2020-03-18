@@ -366,7 +366,7 @@ data:extend
         },
 		
       },
-      prerequisites = {""},
+      prerequisites = {},
       unit =
       {
         count = 50,
