@@ -626,8 +626,6 @@ script.on_nth_tick(7200,function(event)
 			else
 				entity.destroy()
 			end
-			--[[for _, entity in pairs(Nodeentities) do
-				entity.damage(TiberiumDamage, game.forces.tiberium, "tiberium")]]
 		end
 	end
 end
@@ -662,8 +660,6 @@ script.on_nth_tick(10,function(event)
 				end
 			end
 		end
-
-      --if player is holding tiberium products, add damage
       end
     end
 	end

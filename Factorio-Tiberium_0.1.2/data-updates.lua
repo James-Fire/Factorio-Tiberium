@@ -9,29 +9,42 @@ if (mods["Orbital Ion Cannon"]) then
 	end
 end
 
-table.insert(data.raw["assembling-machine"]["chemical-plant"].crafting_categories, "basic-tiberium-science")
-table.insert(data.raw["assembling-machine"]["chemical-plant"].crafting_categories, "tiberium-science")
-
-for _,assemblingName in pairs{
-	"assembling-machine",
-	"assembling-machine-2",
-	"assembling-machine-3",
-} do
-  table.insert(data.raw["assembling-machine"][assemblingName].crafting_categories, "basic-tiberium-science")
+TibBasicScience = {"chemical-plant", "assembling-machine-1", "assembling-machine-2", "assembling-machine-3"}
+if (mods["bobassembly"]) then
+	table.insert(TibBasicScience, "chemical-plant-2")
+	table.insert(TibBasicScience, "chemical-plant-3")
+	table.insert(TibBasicScience, "chemical-plant-4")
 end
 
+for i, name in pairs(TibBasicScience) do
+	LSlib.entity.addCraftingCategory("assembling-machine", name, "basic-tiberium-science")
+end
 
+--table.insert(data.raw["assembling-machine"][entity].crafting_categories, "basic-tiberium-science")
+TibScience = {"chemical-plant"}
 
 if (mods["bobassembly"]) then
-		for _,assemblingName in pairs{
+	table.insert(TibScience, "chemical-plant-2")
+	table.insert(TibScience, "chemical-plant-3")
+	table.insert(TibScience, "chemical-plant-4")
+end
+
+for _,TS in pairs(TibScience) do
+	LSlib.entity.addCraftingCategory("assembling-machine", TS, "tiberium-science")
+end
+--table.insert(data.raw["assembling-machine"][entity].crafting_categories, "tiberium-science")
+
+
+--[[if (mods["bobassembly"]) then
+		for _,chemicalName in pairs{
 			"chemical-plant",
 			"chemical-plant-2",
 		    "chemical-plant-3",
 			"chemical-plant-4",
 		} do
-		  table.insert(data.raw["assembling-machine"][assemblingName].crafting_categories, "tiberium-science")
+		  table.insert(data.raw["assembling-machine"][chemicalName].crafting_categories, "tiberium-science")
 		end
-end
+end]]
 
 --[[if (mods["Mining_Drones"]) then
 	data.raw["assembling-machine"][names.mining_depot].animation = make_4way_animation_from_spritesheet(
