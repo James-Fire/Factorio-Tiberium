@@ -9,6 +9,19 @@ if (mods["Orbital Ion Cannon"]) then
 	end
 end
 
+table.insert(data.raw["assembling-machine"]["chemical-plant"].crafting_categories, "basic-tiberium-science")
+table.insert(data.raw["assembling-machine"]["chemical-plant"].crafting_categories, "tiberium-science")
+
+for _,assemblingName in pairs{
+	"assembling-machine",
+	"assembling-machine-2",
+	"assembling-machine-3",
+} do
+  table.insert(data.raw["assembling-machine"][assemblingName].crafting_categories, "basic-tiberium-science")
+end
+
+
+
 if (mods["bobassembly"]) then
 		for _,assemblingName in pairs{
 			"chemical-plant",

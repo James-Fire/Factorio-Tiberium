@@ -206,7 +206,7 @@ data:extend(
 	{
       type = "recipe",
       name = "tiberium-science",
-      category = "tiberium-science",
+      category = "basic-tiberium-science",
 	  crafting_machine_tint = TibCraftingTint,
       energy_required = 20,
       enabled = false,
@@ -224,7 +224,7 @@ data:extend(
 	{
       type = "recipe",
       name = "tiberium-ore-mechanical-data",
-      category = "tiberium-science",
+      category = "basic-tiberium-science",
 	  crafting_machine_tint = TibCraftingTint,
       energy_required = 20,
       enabled = false,
@@ -318,7 +318,7 @@ data:extend(
 	{
       type = "recipe",
       name = "tiberium-slurry-mechanical-data",
-      category = "tiberium-science",
+      category = "basic-tiberium-science",
 	  crafting_machine_tint = TibCraftingTint,
       energy_required = 20,
       enabled = false,
@@ -412,7 +412,7 @@ data:extend(
 	{
       type = "recipe",
       name = "tiberium-molten-mechanical-data",
-      category = "tiberium-science",
+      category = "basic-tiberium-science",
 	  crafting_machine_tint = TibCraftingTint,
       energy_required = 20,
       enabled = false,
@@ -506,7 +506,7 @@ data:extend(
 	{
       type = "recipe",
       name = "tiberium-liquid-mechanical-data",
-      category = "tiberium-science",
+      category = "basic-tiberium-science",
 	  crafting_machine_tint = TibCraftingTint,
       energy_required = 20,
       enabled = false,

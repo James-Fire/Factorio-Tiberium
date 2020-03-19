@@ -81,6 +81,10 @@ data:extend({
   },
   {
     type = "recipe-category",
+    name = "basic-tiberium-science"
+  },
+  {
+    type = "recipe-category",
     name = "tiberium-science"
   },
 })
