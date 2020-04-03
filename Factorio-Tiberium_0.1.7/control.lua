@@ -655,7 +655,7 @@ script.on_nth_tick(10,function(event)
 	end]]
 	--If player is in range of nodes, damage them based on how many.
 	for k, player in pairs (game.connected_players) do
-	  if player.character then
+	  if (player.character ~= nil) then
 		local nearby_count = player.surface.count_entities_filtered{name = "tibGrowthNode", position = player.position, radius = TiberiumRadius * 1.1}
 			if nearby_count > 0 then
 			  player.character.damage(TiberiumDamage * nearby_count * 0.5, game.forces.tiberium, "tiberium")
