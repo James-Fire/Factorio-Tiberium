@@ -3,7 +3,7 @@ require("scripts/recipe")
 
 
 
-local RecipeMult = (settings.startup["tiberium-growth"].value)/(100)
+local RecipeMult = math.max(0.5, settings.startup["tiberium-growth"].value)/(100)
 
 --Universal Variables used no matter what mods are active
 local CreditTime = 60*RecipeMult
@@ -67,6 +67,9 @@ if (mods["bobores"]) then
 	LSlib.recipe.addResult("tiberium-molten-to-coal", "coal", DirectRecipeOutput, "item")
 	LSlib.recipe.addResult("tiberium-molten-to-stone", "stone", DirectRecipeOutput, "item")
 	LSlib.recipe.addResult("tiberium-molten-to-crude-oil", "crude-oil", DirectOilOutput, "fluid")
+	LSlib.recipe.duplicate("tiberium-molten-to-stone", "tiberium-molten-to-uranium")
+	LSlib.recipe.editResult("tiberium-molten-to-uranium", "stone", "uranium-ore", 0.25)
+	LSlib.technology.addRecipeUnlock("advanced-tiberium-transmutation-tech", "tiberium-molten-to-uranium")
 	
 	if (mods["angelsrefining"]) then
 		AngelsMult = 1

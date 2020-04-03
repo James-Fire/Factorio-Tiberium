@@ -760,7 +760,6 @@ data:extend({
 	max_health = 10000,
 	collision_mask = {"layer-15"},
     collision_box = {{ -0.7, -0.7}, {0.7, 0.7}},
-    selection_box = {{ -1, -1}, {1, 1}},
 	destructible = false,
     flags =
     {

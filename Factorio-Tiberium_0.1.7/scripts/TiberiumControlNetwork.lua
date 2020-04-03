@@ -372,6 +372,7 @@ data:extend({
         collision_box = {{-0.4, -0.4}, {0.4, 0.4}},
         selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
         minable = {mining_time = 0.5, result = "CnC_SonicWall_Hub"},
+		trigger_created_entity= true,
         max_health = 200,
         repair_speed_modifier = 1.5,
         corpse = "wall-remnants",

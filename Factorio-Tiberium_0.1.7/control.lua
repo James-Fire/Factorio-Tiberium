@@ -240,7 +240,7 @@ function PlaceOre(entity, howmany)
   game.write_file("tiberiumgrowth.log", {"", timer, " end of placement loop", "|", math.random(), "\r\n"}, true)
 
   -- Tell any mining drills in the area to wake up
-  -- 2.5 is default mining drill radius, should check drill prototypes for largest radius
+  -- 2.5 is tiberium mining drill radius, should check drill prototypes for largest radius
   -- local drills = surface.find_entities_filtered({radius = math.sqrt(size ^ 2 * 2) + 2.5, type = "mining-drill"})
   --local drills = surface.find_entities_filtered({type = "mining-drill"})
   --game.print({"", timer, " end of find_entities_filtered({type = \"mining-drill\"}) ", #drills})
@@ -317,7 +317,7 @@ end
 script.on_event(defines.events.on_script_trigger_effect, on_script_trigger_effect)
 commands.add_command(
   "setTibTickRate",
-  "Sets how often Tiberium should attempt to grow. (default: 20)",
+  "Sets how often Tiberium should attempt to grow. (tiberium: 20)",
   function(list)
     global.tickSkip = tonumber(list["parameter"])
     game.player.print(global.tickSkip)
@@ -615,16 +615,18 @@ script.on_nth_tick(7200,function(event)
 			end
 		end
 	end
-	for i, entity in pairs(global.tibMineNodeList) do
-		if entity.valid then
-			local area = {
-				{x = math.ceil(entity.position.x)+1, y = math.ceil(entity.position.y)+1},
-				{x = math.floor(entity.position.x)-1, y = math.floor(entity.position.y)-1}
-			}
-			local entities = game.get_surface(1).find_entities_filtered{area = area, name = "tibGrowthNode"}
-			if entities[1] then
-			else
-				entity.destroy()
+	if (tibMineNodeList ~= nil) then
+		for i, entity in pairs(global.tibMineNodeList) do
+			if entity.valid then
+				local area = {
+					{x = math.ceil(entity.position.x)+1, y = math.ceil(entity.position.y)+1},
+					{x = math.floor(entity.position.x)-1, y = math.floor(entity.position.y)-1}
+				}
+				local entities = game.get_surface(1).find_entities_filtered{area = area, name = "tibGrowthNode"}
+				if entities[1] then
+				else
+					entity.destroy()
+				end
 			end
 		end
 	end
@@ -632,9 +634,9 @@ end
 )
 script.on_nth_tick(10,function(event)
 --check if players are over tiberium, damage them if they are unarmored
-    for i, player in pairs(game.players) do
+    --[[for i, player in pairs(game.players) do
       local playerPositionOre =
-        global.world.find_entities_filtered {name = global.oreType, position = game.players[i].position, radius = 1}
+		game.get_surface.find_entities_filtered {name = global.oreType, position = game.players[i].position, radius = 1}
       if
         #playerPositionOre > 0 and game.players[i] and game.players[i].valid and game.players[i].character and
           not game.players[i].character.vehicle
@@ -650,18 +652,20 @@ script.on_nth_tick(10,function(event)
           end
         end
 	end
-	--If player is in range of node, damage them.
-	for i, entity in pairs(global.tibGrowthNodeList) do
-		if entity.valid then
-			local Nodeentities = game.get_surface(1).find_entities_filtered{position = entity.position, radius = global.baseSize*1.1, type = "character"}
-			for _, entity in pairs(Nodeentities) do
-				if game.players[i] then
-					game.players[i].character.damage(TiberiumDamage*0.5, game.forces.tiberium, "tiberium")
-				end
+	end]]
+	--If player is in range of nodes, damage them based on how many.
+	for k, player in pairs (game.connected_players) do
+	  if player.character then
+		local nearby_count = player.surface.count_entities_filtered{name = "tibGrowthNode", position = player.position, radius = TiberiumRadius * 1.1}
+			if nearby_count > 0 then
+			  player.character.damage(TiberiumDamage * nearby_count * 0.5, game.forces.tiberium, "tiberium")
+			end
+		local nearby_ore_count = player.surface.count_entities_filtered{name = "tiberium-ore", position = player.position, radius = 1.5}
+			if nearby_ore_count > 0 then
+			  player.character.damage(TiberiumDamage * nearby_ore_count * 0.1, game.forces.tiberium, "tiberium")
 			end
 		end
-      end
-    end
+	end
 	end
 )
 --Intended to place mines on Ore, but doesn't appear to work.
@@ -688,6 +692,24 @@ end)
 script.on_event(defines.events.on_robot_built_entity, function(event)
     if (event.created_entity.name == "CnC_SonicWall_Hub") then 
 	CnC_SonicWall_AddNode(event.created_entity, event.tick) 
+	end
+end)
+
+script.on_event(defines.events.script_raised_built, function(event)
+    if (event.created_entity.name == "CnC_SonicWall_Hub") then 
+	CnC_SonicWall_AddNode(event.created_entity, event.tick) 
+	end
+end)
+
+script.on_event(defines.events.script_raised_revive, function(event)
+    if (event.created_entity.name == "CnC_SonicWall_Hub") then 
+	CnC_SonicWall_AddNode(event.created_entity, event.tick) 
+	end
+end)
+
+script.on_event(defines.events.script_raised_destroy, function(event)
+    if (event.entity.name == "CnC_SonicWall_Hub") then 
+	CnC_SonicWall_DeleteNode(event.entity) 
 	end
 end)
 
