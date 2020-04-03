@@ -658,11 +658,15 @@ script.on_nth_tick(10,function(event)
 	  if (player.character ~= nil) then
 		local nearby_count = player.surface.count_entities_filtered{name = "tibGrowthNode", position = player.position, radius = TiberiumRadius * 1.1}
 			if nearby_count > 0 then
-			  player.character.damage(TiberiumDamage * nearby_count * 0.5, game.forces.tiberium, "tiberium")
+				if (player.character ~= nil) then
+					player.character.damage(TiberiumDamage * nearby_count * 0.5, game.forces.tiberium, "tiberium")
+				end
 			end
 		local nearby_ore_count = player.surface.count_entities_filtered{name = "tiberium-ore", position = player.position, radius = 1.5}
 			if nearby_ore_count > 0 then
-			  player.character.damage(TiberiumDamage * nearby_ore_count * 0.1, game.forces.tiberium, "tiberium")
+				if (player.character ~= nil) then
+					player.character.damage(TiberiumDamage * nearby_ore_count * 0.1, game.forces.tiberium, "tiberium")
+				end
 			end
 		end
 	end
