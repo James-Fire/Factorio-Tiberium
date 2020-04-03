@@ -690,20 +690,23 @@ script.on_event(defines.events.on_trigger_created_entity, function(event)
 end)
 
 script.on_event(defines.events.on_robot_built_entity, function(event)
+	if (event.created_entity ~= nil) then
     if (event.created_entity.name == "CnC_SonicWall_Hub") then 
 	CnC_SonicWall_AddNode(event.created_entity, event.tick) 
 	end
 end)
 
 script.on_event(defines.events.script_raised_built, function(event)
-    if (event.created_entity.name == "CnC_SonicWall_Hub") then 
-	CnC_SonicWall_AddNode(event.created_entity, event.tick) 
+	if (event.entity ~= nil) then
+    if (event.entity.name == "CnC_SonicWall_Hub") then 
+	CnC_SonicWall_AddNode(event.entity, event.tick) 
 	end
 end)
 
 script.on_event(defines.events.script_raised_revive, function(event)
-    if (event.created_entity.name == "CnC_SonicWall_Hub") then 
-	CnC_SonicWall_AddNode(event.created_entity, event.tick) 
+	if (event.entity ~= nil) then
+    if (event.entity.name == "CnC_SonicWall_Hub") then 
+	CnC_SonicWall_AddNode(event.entity, event.tick) 
 	end
 end)
 
