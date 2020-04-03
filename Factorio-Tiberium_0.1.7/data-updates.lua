@@ -46,8 +46,8 @@ end
 		end
 end]]
 
-if (mods["Mining_Drones"]) then
-	data.raw["assembling-machine"][names.mining_depot].animation = make_4way_animation_from_spritesheet
+--[[if (mods["Mining_Drones"]) then
+	data.raw["assembling-machine"][names.mining_depot].animation = make_4way_animation_from_spritesheet{
     {
       layers =
       {
@@ -88,8 +88,9 @@ if (mods["Mining_Drones"]) then
         }
       }
     }
+	}
 	--data.raw["unit"][bot_name].icon = 
-end
+end]]
 
 for _, armor in pairs(data.raw.armor) do
 	log("found armor")

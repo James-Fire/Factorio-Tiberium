@@ -1,3 +1,11 @@
+April 3
+
+Fixed arrangement of recipes creation. Again.
+
+Attempted a fix to Sonic Wall stuff. Construction Drones, not working with Bots.
+
+---------------------------------------------------------------------------------------------------
+
 March 27
 
 Fixed damage from Tiberium Ore working across surfaces.
@@ -5,10 +13,6 @@ Fixed damage from Tiberium Ore working across surfaces.
 Redid damage from tiberium ore to be more efficient.
 
 Fixed tiberium magazines having a cost of 0 if you do fun stuff.
-
-Fixed arrangement of recipes creation. Again.
-
-Attempted a fix to Sonic Wall stuff. Construction Drones, not working with Bots.
 
 ---------------------------------------------------------------------------------------------------
 
