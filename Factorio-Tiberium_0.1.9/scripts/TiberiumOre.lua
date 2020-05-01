@@ -132,8 +132,9 @@ data:extend(
         flags = {},
         subgroup = "raw-resource",
         order = "a[tiberium-ore]",
-        stack_size = 50
-	    fuel_value = "1MJ",
+        stack_size = 50,
+	    fuel_value = "2MJ",
+		fuel_category = "chemical",
 		emissions_multiplier = 100,
     },
     }

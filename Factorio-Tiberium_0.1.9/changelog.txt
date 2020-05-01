@@ -1,3 +1,15 @@
+May 1 (Third of his name)
+
+Upped Tiberium Fuel value.
+
+Fixed a missing 'end'.
+
+May 1 (Second verse, just like the first.)
+
+Fixed tiberium fuel stuff.
+
+Fixed a missing parenthesis, because they don't like me.
+
 May 1
 
 Fixed inventory products not damaging the player.

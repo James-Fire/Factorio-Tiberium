@@ -608,6 +608,7 @@ script.on_nth_tick(7200,function(event)
 		for i = 1, #allsrfhubs, 1 do
 		  table.insert(global.hexi_hardlight_nodes, allsrfhubs[i])
 		end
+	end
 	local allmines = game.surfaces[1].find_entities_filtered {name = "node-land-mine"}
     global.tibMineNodeList = {}
     for i = 1, #allmines, 1 do
@@ -649,23 +650,23 @@ end
 script.on_nth_tick(10,function(event)
 --check if players are over tiberium, damage them if they are unarmored
     for i, player in pairs(game.players) do
-      local playerPositionOre =
-		game.get_surface.find_entities_filtered {name = global.oreType, position = game.players[i].position, radius = 1}
-      if
-        #playerPositionOre > 0 and game.players[i] and game.players[i].valid and game.players[i].character and
-          not game.players[i].character.vehicle
-       then
-        game.players[i].character.damage(TiberiumDamage*0.1, game.forces.tiberium, "tiberium")
-      end
-	  local inventory = game.players[i].get_inventory(defines.inventory.item_main)
-      if inventory then
-        for p = 1, #global.tiberiumProducts, 1 do
-          if inventory.get_item_count(global.tiberiumProducts[p]) > 0 then
-            game.players[i].character.damage(0.3, game.forces.tiberium, "tiberium")
-            break
-          end
-        end
-	end
+		local playerPositionOre =
+			player.surface.find_entities_filtered {name = global.oreType, position = game.players[i].position, radius = 1}
+		if
+			#playerPositionOre > 0 and game.players[i] and game.players[i].valid and game.players[i].character and
+			  not game.players[i].character.vehicle
+		   then
+			game.players[i].character.damage(TiberiumDamage*0.1, game.forces.tiberium, "tiberium")
+		  end
+		local inventory = game.players[i].get_inventory(defines.inventory.item_main)
+		  if inventory then
+			for p = 1, #global.tiberiumProducts, 1 do
+			  if inventory.get_item_count(global.tiberiumProducts[p]) > 0 then
+				game.players[i].character.damage(0.3, game.forces.tiberium, "tiberium")
+				break
+			  end
+			end
+		end
 	end
 	--If player is in range of nodes, damage them based on how many.
 	for k, player in pairs (game.connected_players) do
@@ -690,6 +691,7 @@ script.on_nth_tick(10,function(event)
 			  end
 			end
 		end
+	end
 	end
 	end
 )
