@@ -1,3 +1,23 @@
+May 1
+
+Fixed inventory products not damaging the player.
+
+Fixed SRF hubs not being properly tracked.
+
+Added SRF hub updating to the rebuild command.
+
+Fixed recipe autogeneration for bob's alone.
+
+Added a fuel value and pollution multiplier to tiberium. You can burn it, and destroy the entire planet by doing so.
+
+---------------------------------------------------------------------------------------------------
+
+April 8
+
+Something got lost in the portal update. Fixed.
+
+---------------------------------------------------------------------------------------------------
+
 April 3
 
 Fixed arrangement of recipes creation. Again.

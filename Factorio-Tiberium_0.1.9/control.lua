@@ -349,6 +349,13 @@ commands.add_command(
     end
     game.print("Found " .. #global.tibGrowthNodeList .. " nodes")
 	game.print("Found " .. #global.tibMineNodeList .. " mines")
+	local allsrfhubs = game.surfaces[1].find_entities_filtered {name = "CnC_SonicWall_Hub"}
+    global.hexi_hardlight_nodes = {}
+    for i = 1, #allsrfhubs, 1 do
+      table.insert(global.hexi_hardlight_nodes, allsrfhubs[i])
+    end
+    game.print("Found " .. #global.tibGrowthNodeList .. " nodes")
+	game.print("Found " .. #global.tibMineNodeList .. " mines")
 
     local alldrills = game.surfaces[1].find_entities_filtered {type = "mining-drill"}
     global.drills = {}
@@ -595,11 +602,17 @@ script.on_event(
 	end
 )
 script.on_nth_tick(7200,function(event)
-	local entities = game.get_surface(1).find_entities_filtered{area = area, name = "node-land-mine"}
-	if entities[i] then
-		global.tibMineNodeList = {}
-		table.insert(global.tibMineNodeList, entities[i])
-	end
+	local allsrfhubs = game.surfaces[1].find_entities_filtered {name = "CnC_SonicWall_Hub"}
+	if allsrfhubs[i] then
+		global.hexi_hardlight_nodes = {}
+		for i = 1, #allsrfhubs, 1 do
+		  table.insert(global.hexi_hardlight_nodes, allsrfhubs[i])
+		end
+	local allmines = game.surfaces[1].find_entities_filtered {name = "node-land-mine"}
+    global.tibMineNodeList = {}
+    for i = 1, #allmines, 1 do
+      table.insert(global.tibMineNodeList, allmines[i])
+    end
 	for i, entity in pairs(global.tibGrowthNodeList) do
 		if entity.valid then
 			local Minearea = {
@@ -615,6 +628,7 @@ script.on_nth_tick(7200,function(event)
 			end
 		end
 	end
+	
 	if (tibMineNodeList ~= nil) then
 		for i, entity in pairs(global.tibMineNodeList) do
 			if entity.valid then
@@ -634,7 +648,7 @@ end
 )
 script.on_nth_tick(10,function(event)
 --check if players are over tiberium, damage them if they are unarmored
-    --[[for i, player in pairs(game.players) do
+    for i, player in pairs(game.players) do
       local playerPositionOre =
 		game.get_surface.find_entities_filtered {name = global.oreType, position = game.players[i].position, radius = 1}
       if
@@ -652,7 +666,7 @@ script.on_nth_tick(10,function(event)
           end
         end
 	end
-	end]]
+	end
 	--If player is in range of nodes, damage them based on how many.
 	for k, player in pairs (game.connected_players) do
 	  if (player.character ~= nil) then
@@ -667,6 +681,13 @@ script.on_nth_tick(10,function(event)
 				if (player.character ~= nil) then
 					player.character.damage(TiberiumDamage * nearby_ore_count * 0.1, game.forces.tiberium, "tiberium")
 				end
+			end
+		if inventory then
+			for p = 1, #global.tiberiumProducts, 1 do
+			  if inventory.get_item_count(global.tiberiumProducts[p]) > 0 then
+				game.players[i].character.damage(0.3, game.forces.tiberium, "tiberium")
+				break
+			  end
 			end
 		end
 	end
