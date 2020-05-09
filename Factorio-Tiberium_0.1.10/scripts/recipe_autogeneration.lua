@@ -87,9 +87,9 @@ if (mods["bobores"]) then
 	LSlib.recipe.addResult("tiberium-molten-to-coal", "coal", DirectRecipeOutput, "item")
 	LSlib.recipe.addResult("tiberium-molten-to-stone", "stone", DirectRecipeOutput, "item")
 	LSlib.recipe.addResult("tiberium-molten-to-crude-oil", "crude-oil", DirectOilOutput, "fluid")
-	LSlib.recipe.setMainResult("tiberium-molten-to-stone", "stone")
-	LSlib.recipe.setMainResult("tiberium-molten-to-coal", "coal")
-	LSlib.recipe.setMainResult("tiberium-molten-to-crude-oil", "crude-oil")
+	--LSlib.recipe.setMainResult("tiberium-molten-to-stone", "stone")
+	--LSlib.recipe.setMainResult("tiberium-molten-to-coal", "coal")
+	--LSlib.recipe.setMainResult("tiberium-molten-to-crude-oil", "crude-oil")
 	LSlib.recipe.duplicate("tiberium-molten-to-stone", "tiberium-molten-to-uranium")
 	LSlib.recipe.editResult("tiberium-molten-to-uranium", "stone", "uranium-ore", 0.25)
 	LSlib.technology.addRecipeUnlock("advanced-tiberium-transmutation-tech", "tiberium-molten-to-uranium")
@@ -466,7 +466,7 @@ LSlib.recipe.setEngergyRequired(recipeName, energyRequired)
 	--else
 	--Recipes that are Duplicated
 	LSlib.recipe.addResult("tiberium-molten-to-stone", "stone", DirectRecipeOutput, "item")
-	LSlib.recipe.setMainResult("tiberium-molten-to-stone", "stone")
+	--LSlib.recipe.setMainResult("tiberium-molten-to-stone", "stone")
 	
 	LSlib.recipe.addIngredient("stone-growth-credit", "stone", CreditCost, "item")
 	LSlib.recipe.duplicate("tiberium-molten-to-stone", "tiberium-molten-to-uranium")
@@ -476,9 +476,9 @@ LSlib.recipe.setEngergyRequired(recipeName, energyRequired)
 	
 	LSlib.recipe.addResult("tiberium-molten-to-coal", "coal", DirectRecipeOutput, "item")
 	LSlib.recipe.addResult("tiberium-molten-to-crude-oil", "crude-oil", DirectRecipeOutput, "fluid")
-	LSlib.recipe.setMainResult("tiberium-molten-to-coal", "coal")
+	--LSlib.recipe.setMainResult("tiberium-molten-to-coal", "coal")
 	LSlib.recipe.addResult("tiberium-molten-to-crude-oil", "crude-oil", DirectRecipeOutput*(OilPerCycle/IronPerCycle), "fluid")
-	LSlib.recipe.setMainResult("tiberium-molten-to-crude-oil", "crude-oil")
+	--LSlib.recipe.setMainResult("tiberium-molten-to-crude-oil", "crude-oil")
 	LSlib.recipe.addIngredient("coal-growth-credit", "coal", CreditCost, "item")
 	LSlib.recipe.setEngergyRequired("coal-growth-credit", CreditTime)
 	LSlib.recipe.setEngergyRequired("stone-growth-credit", CreditTime)
@@ -556,7 +556,6 @@ LSlib.recipe.addIngredient("iron-growth-credit", "iron-ore", CreditCost, "item")
 LSlib.recipe.addIngredient("copper-growth-credit", "copper-ore", CreditCost, "item")
 LSlib.recipe.addIngredient("oil-growth-credit", "crude-oil", CreditCost*(OilPerCycle/17), "fluid")
 LSlib.recipe.addIngredient("uranium-growth-credit", "uranium-ore", CreditCost*(DirectUraniumOutput/DirectRecipeOutput), "item")
-
 
 
 end
