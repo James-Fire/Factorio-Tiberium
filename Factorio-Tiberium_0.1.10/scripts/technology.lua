@@ -21,6 +21,10 @@ data:extend
             type = "unlock-recipe",
             recipe = "tiberium-ore-sludge-centrifuging"
         },
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-sludge-to-stone-brick"
+        },
         {
             type = "unlock-recipe",
             recipe = "tiberium-armor"
@@ -58,10 +62,6 @@ data:extend
         },
 		{
             type = "unlock-recipe",
-            recipe = "tiberium-sludge-to-stone-brick"
-        },
-		{
-            type = "unlock-recipe",
             recipe = "tiberium-slurry-sludge-centrifuging"
         },
 		{
@@ -76,8 +76,6 @@ data:extend
             type = "unlock-recipe",
             recipe = "tib-pumpjack"
         },
-		
-		
 		{
             type = "unlock-recipe",
             recipe = "tiberium-farming"
@@ -180,10 +178,6 @@ data:extend
 		{
             type = "unlock-recipe",
             recipe = "tiberium-ion-core"
-        },
-		{
-            type = "unlock-recipe",
-            recipe = "tiberium-nuke"
         },
 		{
             type = "unlock-recipe",
@@ -330,6 +324,11 @@ data:extend
 		{
             type = "unlock-recipe",
             recipe = "tiberium-seed"
+        },
+		
+		{
+            type = "unlock-recipe",
+            recipe = "tiberium-nuke"
         },
       },
       prerequisites = {"tiberium-power-tech", "tiberium-electromagnetic-research"},
