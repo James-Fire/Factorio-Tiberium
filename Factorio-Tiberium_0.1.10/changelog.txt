@@ -1,6 +1,25 @@
-<<<<<<< Updated upstream
 May
-=======
+
+The nearest tib field should now be fully grown, so you don't need to run into the damage zone to harvest it.*
+
+Tiberium immune Power Armour.*
+
+Added more fallback within having Bob's Ores.*
+
+Gave up on coding growth to not damage poles, and just made them immune to tib damage. Fuck it.*
+
+---------------------------------------------------------------------------------------------------
+
+May 10 
+
+Fixed the Tiberium Value setting. Tiberium Value now only affects Refining recipes and growth credit recipes.
+
+Fixed the usage of the wrong setting for autogeneration.
+
+Fixed a debug thing.
+
+---------------------------------------------------------------------------------------------------
+
 May 9
 
 Added to description of SRF hub with power upkeep requirements.
@@ -13,15 +32,7 @@ Uranium Growth Credits are now scaled to the direct recipe.
 
 Moved sludge to brick to earlier.
 
-The nearest tib field should now be fully grown, so you don't need to run into the damage zone to harvest it.*
-
 Moved Liquid Tib Bomb to later.
-
-Tiberium immune Power Armour.*
-
-Added more fallback within having Bob's Ores.*
-
-Gave up on coding growth to not damage poles, and just made them immune to tib damage. Fuck it.*
 
 ---------------------------------------------------------------------------------------------------
 
@@ -44,13 +55,10 @@ Reintroduced setting to give direct recipes sludge waste.
 ---------------------------------------------------------------------------------------------------
 
 May 6
->>>>>>> Stashed changes
 
 Added chemical science pack prereq to Advanced Tiberium Processing.
 
 Appropriately locked the No Mine and Place Mine debug message behind the debug setting.
-
-Correctly set the minimum values for settings, so that weird things don't happen.*
 
 Fixed Centrifuge recipes not being better than the direct recipes. Ish. They're not actually better, in a way?
 
@@ -72,13 +80,11 @@ Increased time requirements for refining.
 
 Reduced the relative time required to make Liquid Tiberium.
 
-Gave up on coding growth to not damage poles, and just made them immune to tib damage. Fuck it.*
-
 Reduced efficiency of Direct Recipes.
 
 Added Infinite researches so you don't have to dismantle all Tiberium Data Production.
 
----------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------- 1.9
 
 May 1 (Third of his name)
 

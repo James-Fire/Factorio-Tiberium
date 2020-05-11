@@ -3,21 +3,24 @@ require("scripts/recipe")
 
 
 
-local RecipeMult = math.max(0.5, settings.startup["tiberium-growth"].value/(100))
+local RecipeMult = math.floor((settings.startup["tiberium-value"] +.5)/10) 
+
+
+
 
 --Universal Variables used no matter what mods are active
 local CreditTime = 100*RecipeMult
 local EnergyCreditCost = CreditTime*3
-local InputMaterial = 10*RecipeMult --Must be a multiple of 5, so that SlurrytoMolten makes a whole number.
+local InputMaterial = 10/RecipeMult --Must be a multiple of 5, so that SlurrytoMolten makes a whole number.
 local OretoSlurry = InputMaterial/5
 local SlurrytoMolten = InputMaterial*0.06
 local WaterRequirement = InputMaterial*10
 local RefineEnergyRequired = InputMaterial*0.25
 local WastePerCycle = InputMaterial/10
-local CentEnergyRequired = 10*RecipeMult
-local TiberiumPerCycle    = 40*RecipeMult*(settings.startup["tiberium-value"].value/10)
+local CentEnergyRequired = 10/RecipeMult
+local TiberiumPerCycle    = 40/RecipeMult
 local SlurryPerCycle    = TiberiumPerCycle
-local MoltenPerCycle    = 16*RecipeMult
+local MoltenPerCycle    = 16/RecipeMult
 local CreditEfficiency = 0.75 --How much of the ore should be converted into tiberium when used.
 local OrePerCredit = settings.startup["tiberium-growth"].value
 local DirectRecipeMult = 0.6 --The Efficiency of using Direct recipes over the Centrifuge recipes. All centrifuge outputs are added together and multiplied by this to get the Direct output.
@@ -26,12 +29,12 @@ local RefiningTime = 20
 
 --Universal things that need to be done regardless of mods active
 if settings.startup["tiberium-byproduct-direct"].value == true then
---	LSlib.recipe.addResult("tiberium-molten-to-stone", "tiberium-sludge", WastePerCycle, "fluid")
+	--LSlib.recipe.addResult("tiberium-molten-to-stone", "tiberium-sludge", WastePerCycle, "fluid")
 	--LSlib.recipe.addResult("tiberium-molten-to-crude-oil", "tiberium-sludge", WastePerCycle, "fluid")
 	--LSlib.recipe.addResult("tiberium-molten-to-coal", "tiberium-sludge", WastePerCycle, "fluid")
 end
 
-LSlib.recipe.addIngredient("tiberium-magazine", "tiberium-ore", 10*RecipeMult, "item")	
+LSlib.recipe.addIngredient("tiberium-magazine", "tiberium-ore", 10/RecipeMult, "item")	
 LSlib.recipe.setEngergyRequired("tiberium-molten-to-stone", DirectRecipeTime)
 LSlib.recipe.setEngergyRequired("tiberium-molten-to-crude-oil", DirectRecipeTime)
 LSlib.recipe.setEngergyRequired("tiberium-molten-to-coal", DirectRecipeTime)
@@ -39,8 +42,10 @@ LSlib.recipe.addIngredient("tiberium-molten-to-coal", "molten-tiberium", MoltenP
 LSlib.recipe.addIngredient("tiberium-molten-to-stone", "molten-tiberium", MoltenPerCycle, "fluid")
 LSlib.recipe.addIngredient("tiberium-molten-to-crude-oil", "molten-tiberium", MoltenPerCycle, "fluid")
 LSlib.recipe.addResult("tiberium-farming", "tiberium-ore", OrePerCredit*1.5, "item")
-LSlib.recipe.addResult("tiberium-farming", "tiberium-data", OrePerCredit*0.125, "item")
 LSlib.recipe.addResult("tiberium-farming", "tiberium-data", OrePerCredit*0.1, "item")
+
+
+
 
 
 LSlib.recipe.setEngergyRequired("tiberium-ore-processing", RefiningTime*1.5)
@@ -56,24 +61,24 @@ LSlib.recipe.setEngergyRequired("tiberium-liquid-processing", RefiningTime*4)
 if (mods["bobores"]) then
 	--Variables needed regardless of other Bob's mods being active.
 	local BobsMult = 100 --Since the requirement for bob's ores are weird, this is here to make it all whole numbers.
-	local AluminumPerCycle    = 4.4*RecipeMult*BobsMult
-	local IronPerCycle    = 4.2*RecipeMult*BobsMult
-	local StonePerCycle    = 4.1*RecipeMult*BobsMult
-	local CopperPerCycle    = 3.2*RecipeMult*BobsMult
-	local CoalPerCycle    = 2.7*RecipeMult*BobsMult
-	local QuartzPerCycle    = 1.9*RecipeMult*BobsMult
-	local TinPerCycle    = 1.7*RecipeMult*BobsMult
-	local GoldPerCycle    = 0.8*RecipeMult*BobsMult
-	local TitaniumPerCycle    = 0.5*RecipeMult*BobsMult
-	local TungstenPerCycle    = 0.25*RecipeMult*BobsMult
-	local LeadPerCycle    = 0.14*RecipeMult*BobsMult
-	local SlverPerCycle    = 0.13*RecipeMult*BobsMult
-	local NickelPerCycle    = 0.07*RecipeMult*BobsMult
-	local ZincPerCycle    = 0.02*RecipeMult*BobsMult
-	local OilPerCycle    = 44*RecipeMult*BobsMult
+	local AluminumPerCycle    = 4.4*BobsMult
+	local IronPerCycle    = 4.2*BobsMult
+	local StonePerCycle    = 4.1*BobsMult
+	local CopperPerCycle    = 3.2*BobsMult
+	local CoalPerCycle    = 2.7*BobsMult
+	local QuartzPerCycle    = 1.9*BobsMult
+	local TinPerCycle    = 1.7*BobsMult
+	local GoldPerCycle    = 0.8*BobsMult
+	local TitaniumPerCycle    = 0.5*BobsMult
+	local TungstenPerCycle    = 0.25*BobsMult
+	local LeadPerCycle    = 0.14*BobsMult
+	local SlverPerCycle    = 0.13*BobsMult
+	local NickelPerCycle    = 0.07*BobsMult
+	local ZincPerCycle    = 0.02*BobsMult
+	local OilPerCycle    = 44*BobsMult
 	local SludgePerCycle = StonePerCycle
 	local TotalCentOutput = (AluminumPerCycle+LeadPerCycle+SlverPerCycle+ZincPerCycle+QuartzPerCycle+GoldPerCycle+TinPerCycle+TitaniumPerCycle+TungstenPerCycle+NickelPerCycle+OilPerCycle+StonePerCycle+CoalPerCycle+CopperPerCycle+IronPerCycle)/BobsMult
-	local DirectRecipeOutput = TotalCentOutput*DirectRecipeMult*RecipeMult --0.8 so that direct recipes are only 80% efficient compared to centrifugin, but they do focus.
+	local DirectRecipeOutput = TotalCentOutput*DirectRecipeMult
 	local DirectOilOutput = DirectRecipeOutput*((OilPerCycle/BobsMult)/(IronPerCycle/BobsMult))
 	local DirectUraniumOutput = math.floor(DirectRecipeOutput/4 +.5) 
 	local CreditCost = (OrePerCredit/DirectRecipeOutput)*(MoltenPerCycle/SlurrytoMolten*OretoSlurry)/CreditEfficiency*RecipeMult
@@ -87,9 +92,9 @@ if (mods["bobores"]) then
 	LSlib.recipe.addResult("tiberium-molten-to-coal", "coal", DirectRecipeOutput, "item")
 	LSlib.recipe.addResult("tiberium-molten-to-stone", "stone", DirectRecipeOutput, "item")
 	LSlib.recipe.addResult("tiberium-molten-to-crude-oil", "crude-oil", DirectOilOutput, "fluid")
-	--LSlib.recipe.setMainResult("tiberium-molten-to-stone", "stone")
-	--LSlib.recipe.setMainResult("tiberium-molten-to-coal", "coal")
-	--LSlib.recipe.setMainResult("tiberium-molten-to-crude-oil", "crude-oil")
+	LSlib.recipe.setMainResult("tiberium-molten-to-stone", "stone")
+	LSlib.recipe.setMainResult("tiberium-molten-to-coal", "coal")
+	LSlib.recipe.setMainResult("tiberium-molten-to-crude-oil", "crude-oil")
 	LSlib.recipe.duplicate("tiberium-molten-to-stone", "tiberium-molten-to-uranium")
 	LSlib.recipe.editResult("tiberium-molten-to-uranium", "stone", "uranium-ore", 0.25)
 	LSlib.technology.addRecipeUnlock("advanced-tiberium-transmutation-tech", "tiberium-molten-to-uranium")
@@ -390,15 +395,13 @@ if (mods["bobores"]) then
 
 			else
 			--Vanilla fallback code if Bob's revamp, which is what actually changes most of the recipe ingredients, isn't active
-				local IronPerCycle    = 17*RecipeMult
-				local CopperPerCycle    = 18*RecipeMult
-				local CoalPerCycle    = 3*RecipeMult
-				local StonePerCycle    = 2*RecipeMult
-				local OilPerCycle    = 70*RecipeMult
+				local IronPerCycle    = 17
+				local CopperPerCycle    = 18
+				local CoalPerCycle    = 3
+				local StonePerCycle    = 2
+				local OilPerCycle    = 70
 				local TotalCentOutput = OilPerCycle+StonePerCycle+CoalPerCycle+CopperPerCycle+IronPerCycle
-				local DirectRecipeOutput = TotalCentOutput*DirectRecipeMult*RecipeMult --Must be a multiple of 4, so that DirectUraniumOutput is a whole number.
-				local DirectOilOutput = DirectRecipeOutput
-				local DirectUraniumOutput = DirectRecipeOutput % 1 >= 0.5 and math.ceil(DirectRecipeOutput) or math.floor(DirectRecipeOutput)/4
+				local DirectRecipeOutput = TotalCentOutput*DirectRecipeMult --Must be a multiple of 4, so that DirectUraniumOutput is a whole number.
 				local DirectOilOutput = DirectRecipeOutput*(OilPerCycle/IronPerCycle)
 				local DirectUraniumOutput = math.floor(DirectRecipeOutput/4 +.5) 
 				local CreditCost = (OrePerCredit/DirectRecipeOutput)*(MoltenPerCycle/SlurrytoMolten*OretoSlurry)/CreditEfficiency*RecipeMult
@@ -443,13 +446,13 @@ else
 
 --Vanilla recipe code
 
-local IronPerCycle    = 17*RecipeMult
-local CopperPerCycle    = 18*RecipeMult
-local CoalPerCycle    = 3*RecipeMult
-local StonePerCycle    = 2*RecipeMult
-local OilPerCycle    = 70*RecipeMult
+local IronPerCycle    = 17
+local CopperPerCycle    = 18
+local CoalPerCycle    = 3
+local StonePerCycle    = 2
+local OilPerCycle    = 70
 local TotalCentOutput = OilPerCycle+StonePerCycle+CoalPerCycle+CopperPerCycle+IronPerCycle
-local DirectRecipeOutput = TotalCentOutput*DirectRecipeMult*RecipeMult --Must be a multiple of 4, so that DirectUraniumOutput is a whole number.
+local DirectRecipeOutput = TotalCentOutput*DirectRecipeMult --Must be a multiple of 4, so that DirectUraniumOutput is a whole number.
 local DirectUraniumOutput = math.floor(DirectRecipeOutput/4 +.5) 
 local CreditCost = (OrePerCredit/DirectRecipeOutput)*(MoltenPerCycle/SlurrytoMolten*OretoSlurry)/CreditEfficiency*RecipeMult
 local SludgePerCycle = StonePerCycle
@@ -466,7 +469,7 @@ LSlib.recipe.setEngergyRequired(recipeName, energyRequired)
 	--else
 	--Recipes that are Duplicated
 	LSlib.recipe.addResult("tiberium-molten-to-stone", "stone", DirectRecipeOutput, "item")
-	--LSlib.recipe.setMainResult("tiberium-molten-to-stone", "stone")
+	LSlib.recipe.setMainResult("tiberium-molten-to-stone", "stone")
 	
 	LSlib.recipe.addIngredient("stone-growth-credit", "stone", CreditCost, "item")
 	LSlib.recipe.duplicate("tiberium-molten-to-stone", "tiberium-molten-to-uranium")
@@ -475,10 +478,9 @@ LSlib.recipe.setEngergyRequired(recipeName, energyRequired)
 	
 	
 	LSlib.recipe.addResult("tiberium-molten-to-coal", "coal", DirectRecipeOutput, "item")
-	LSlib.recipe.addResult("tiberium-molten-to-crude-oil", "crude-oil", DirectRecipeOutput, "fluid")
-	--LSlib.recipe.setMainResult("tiberium-molten-to-coal", "coal")
+	LSlib.recipe.setMainResult("tiberium-molten-to-coal", "coal")
 	LSlib.recipe.addResult("tiberium-molten-to-crude-oil", "crude-oil", DirectRecipeOutput*(OilPerCycle/IronPerCycle), "fluid")
-	--LSlib.recipe.setMainResult("tiberium-molten-to-crude-oil", "crude-oil")
+	LSlib.recipe.setMainResult("tiberium-molten-to-crude-oil", "crude-oil")
 	LSlib.recipe.addIngredient("coal-growth-credit", "coal", CreditCost, "item")
 	LSlib.recipe.setEngergyRequired("coal-growth-credit", CreditTime)
 	LSlib.recipe.setEngergyRequired("stone-growth-credit", CreditTime)
@@ -556,6 +558,7 @@ LSlib.recipe.addIngredient("iron-growth-credit", "iron-ore", CreditCost, "item")
 LSlib.recipe.addIngredient("copper-growth-credit", "copper-ore", CreditCost, "item")
 LSlib.recipe.addIngredient("oil-growth-credit", "crude-oil", CreditCost*(OilPerCycle/17), "fluid")
 LSlib.recipe.addIngredient("uranium-growth-credit", "uranium-ore", CreditCost*(DirectUraniumOutput/DirectRecipeOutput), "item")
+
 
 
 end

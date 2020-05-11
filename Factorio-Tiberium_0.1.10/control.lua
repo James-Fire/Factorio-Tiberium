@@ -259,7 +259,7 @@ function PlaceOre(entity, howmany)
     end
   end
 	  if settings.startup["debug-text"].value == true then
-		game.print({"", timer, " end of updating mining drills ", #drills, "|", math.random()})
+		game.print({"", timer, " end of updating mining drills ", global.drills, "|", math.random()})
 	end
 end
 
