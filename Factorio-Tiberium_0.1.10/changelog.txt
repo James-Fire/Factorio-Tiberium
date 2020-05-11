@@ -18,6 +18,8 @@ Fixed the usage of the wrong setting for autogeneration.
 
 Fixed a debug thing.
 
+Fixed growth not scaling to the North and West.
+
 ---------------------------------------------------------------------------------------------------
 
 May 9

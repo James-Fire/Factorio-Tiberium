@@ -169,7 +169,7 @@ function PlaceOre(entity, howmany)
   local position = entity.position
 
   -- Scale growth rate based on distance from spawn
-  local growthRate = global.baseGrowthRate * math.max(1, math.sqrt(position.x + position.y) / 10)
+  local growthRate = math.abs(global.baseGrowthRate * math.max(1, math.sqrt(position.x + position.y) / 10))
   -- Scale size based on distance from spawn, separate from density in case we end up wanting them to
   -- scale differently
   local size = TiberiumRadius * math.max(1, math.sqrt(position.x + position.y) / 100)
