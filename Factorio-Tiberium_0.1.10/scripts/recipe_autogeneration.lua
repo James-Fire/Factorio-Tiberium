@@ -3,7 +3,7 @@ require("scripts/recipe")
 
 
 
-local RecipeMult = math.floor((settings.startup["tiberium-value"] +.5)/10) 
+local RecipeMult = math.floor(settings.startup["tiberium-value"].value +.5)/10 
 
 
 
@@ -18,9 +18,9 @@ local WaterRequirement = InputMaterial*10
 local RefineEnergyRequired = InputMaterial*0.25
 local WastePerCycle = InputMaterial/10
 local CentEnergyRequired = 10/RecipeMult
-local TiberiumPerCycle    = 40/RecipeMult
+local TiberiumPerCycle    = 40
 local SlurryPerCycle    = TiberiumPerCycle
-local MoltenPerCycle    = 16/RecipeMult
+local MoltenPerCycle    = 16
 local CreditEfficiency = 0.75 --How much of the ore should be converted into tiberium when used.
 local OrePerCredit = settings.startup["tiberium-growth"].value
 local DirectRecipeMult = 0.6 --The Efficiency of using Direct recipes over the Centrifuge recipes. All centrifuge outputs are added together and multiplied by this to get the Direct output.
@@ -81,7 +81,7 @@ if (mods["bobores"]) then
 	local DirectRecipeOutput = TotalCentOutput*DirectRecipeMult
 	local DirectOilOutput = DirectRecipeOutput*((OilPerCycle/BobsMult)/(IronPerCycle/BobsMult))
 	local DirectUraniumOutput = math.floor(DirectRecipeOutput/4 +.5) 
-	local CreditCost = (OrePerCredit/DirectRecipeOutput)*(MoltenPerCycle/SlurrytoMolten*OretoSlurry)/CreditEfficiency*RecipeMult
+	local CreditCost = (OrePerCredit/DirectRecipeOutput)*(MoltenPerCycle/SlurrytoMolten*OretoSlurry)/CreditEfficiency
 	LSlib.recipe.addIngredient("oil-growth-credit", "crude-oil", CreditCost*(OilPerCycle/IronPerCycle), "fluid")
 	LSlib.recipe.setEngergyRequired("stone-growth-credit", CreditTime)
 	LSlib.recipe.setEngergyRequired("oil-growth-credit", CreditTime)
@@ -404,7 +404,7 @@ if (mods["bobores"]) then
 				local DirectRecipeOutput = TotalCentOutput*DirectRecipeMult --Must be a multiple of 4, so that DirectUraniumOutput is a whole number.
 				local DirectOilOutput = DirectRecipeOutput*(OilPerCycle/IronPerCycle)
 				local DirectUraniumOutput = math.floor(DirectRecipeOutput/4 +.5) 
-				local CreditCost = (OrePerCredit/DirectRecipeOutput)*(MoltenPerCycle/SlurrytoMolten*OretoSlurry)/CreditEfficiency*RecipeMult
+				local CreditCost = (OrePerCredit/DirectRecipeOutput)*(MoltenPerCycle/SlurrytoMolten*OretoSlurry)/CreditEfficiency
 				local SludgePerCycle = StonePerCycle
 				
 				LSlib.recipe.duplicate("tiberium-molten-to-stone", "tiberium-molten-to-iron")
@@ -454,7 +454,7 @@ local OilPerCycle    = 70
 local TotalCentOutput = OilPerCycle+StonePerCycle+CoalPerCycle+CopperPerCycle+IronPerCycle
 local DirectRecipeOutput = TotalCentOutput*DirectRecipeMult --Must be a multiple of 4, so that DirectUraniumOutput is a whole number.
 local DirectUraniumOutput = math.floor(DirectRecipeOutput/4 +.5) 
-local CreditCost = (OrePerCredit/DirectRecipeOutput)*(MoltenPerCycle/SlurrytoMolten*OretoSlurry)/CreditEfficiency*RecipeMult
+local CreditCost = (OrePerCredit/DirectRecipeOutput)*(MoltenPerCycle/SlurrytoMolten*OretoSlurry)/CreditEfficiency
 local SludgePerCycle = StonePerCycle
 
 LSlib.recipe.addIngredient(recipeName, ingredientName, ingredientAmount, ingredientType)

@@ -259,7 +259,7 @@ function PlaceOre(entity, howmany)
     end
   end
 	  if settings.startup["debug-text"].value == true then
-		game.print({"", timer, " end of updating mining drills ", global.drills, "|", math.random()})
+		game.print({"", timer, " end of updating mining drills ", #global.drills, "|", math.random()})
 	end
 end
 
@@ -676,10 +676,10 @@ script.on_nth_tick(10,function(event)
 	--If player is in range of nodes, damage them based on how many.
 	for k, player in pairs (game.connected_players) do
 	  if (player.character ~= nil) then
-		local nearby_count = player.surface.count_entities_filtered{name = "tibGrowthNode", position = player.position, radius = TiberiumRadius * 1.1}
+		local nearby_count = player.surface.count_entities_filtered{name = "tibGrowthNode", position = player.position, radius = TiberiumRadius * 0.6}
 			if nearby_count > 0 then
 				if (player.character ~= nil) then
-					player.character.damage(TiberiumDamage * nearby_count * 0.5, game.forces.tiberium, "tiberium")
+					player.character.damage(TiberiumDamage * nearby_count^0.8 * 0.5, game.forces.tiberium, "tiberium")
 				end
 			end
 		local nearby_ore_count = player.surface.count_entities_filtered{name = "tiberium-ore", position = player.position, radius = 1.5}
