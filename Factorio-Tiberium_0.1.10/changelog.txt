@@ -1,5 +1,21 @@
 May 12
 
+Fixed autogeneration math stuff, so Tiberium Value isn't backwards.
+
+Fully commented out 'setMainResult'
+
+Tiberium immune Power Armour.*
+
+Added more fallback within having Bob's Ores.*
+
+Gave up on coding growth to not damage poles, and just made them immune to tib damage. Fuck it.*
+
+The nearest tib field should now be fully grown, so you don't need to run into the damage zone to harvest it.*
+
+---------------------------------------------------------------------------------------------------
+
+May 12
+
 Fixed a debug thing.
 
 Fixed autogeneration setting usage.
@@ -7,16 +23,6 @@ Fixed autogeneration setting usage.
 Reduced range of node damage from 10% more than growth radius to 60% of growth radius.
 
 Added an exponent to the node damage formula, so each added node is less effective than the previous.
-
-Fixed autogeneration math stuff, so Tiberium Value isn't backwards.
-
-The nearest tib field should now be fully grown, so you don't need to run into the damage zone to harvest it.*
-
-Tiberium immune Power Armour.*
-
-Added more fallback within having Bob's Ores.*
-
-Gave up on coding growth to not damage poles, and just made them immune to tib damage. Fuck it.*
 
 ---------------------------------------------------------------------------------------------------
 
