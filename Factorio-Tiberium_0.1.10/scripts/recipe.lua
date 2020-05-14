@@ -202,6 +202,7 @@ data:extend(
       },
       icon = "__Factorio-Tiberium__/graphics/icons/Tiberium-farming.png",
       icon_size = 64,
+	  allow_decomposition = false,
       subgroup = "a-science",
       order = "a-1"
     },
@@ -892,6 +893,7 @@ data:extend(
       },
       icon = "__Factorio-Tiberium__/graphics/icons/iron-growth-credit.png",
       icon_size = 32,
+	  allow_decomposition = false,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
 	{
@@ -909,6 +911,7 @@ data:extend(
       },
       icon = "__Factorio-Tiberium__/graphics/icons/copper-growth-credit.png",
       icon_size = 32,
+	  allow_decomposition = false,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
 	{
@@ -926,6 +929,7 @@ data:extend(
       },
       icon = "__Factorio-Tiberium__/graphics/icons/coal-growth-credit.png",
       icon_size = 32,
+	  allow_decomposition = false,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
 	{
@@ -943,6 +947,7 @@ data:extend(
       },
       icon = "__Factorio-Tiberium__/graphics/icons/uranium-growth-credit.png",
       icon_size = 32,
+	  allow_decomposition = false,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
 	{
@@ -959,6 +964,7 @@ data:extend(
         {type = "item", name = "growth-credit", amount = 1},
       },
       icon_size = 32,
+	  allow_decomposition = false,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
 	{
@@ -976,6 +982,7 @@ data:extend(
       },
       icon = "__Factorio-Tiberium__/graphics/icons/oil-growth-credit.png",
       icon_size = 32,
+	  allow_decomposition = false,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
 	{
@@ -993,6 +1000,7 @@ data:extend(
       },
       icon = "__Factorio-Tiberium__/graphics/icons/energy-growth-credit.png",
       icon_size = 32,
+	  allow_decomposition = false,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
 	
