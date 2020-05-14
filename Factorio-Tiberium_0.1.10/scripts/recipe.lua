@@ -963,6 +963,7 @@ data:extend(
       results = {
         {type = "item", name = "growth-credit", amount = 1},
       },
+	  icon = "__Factorio-Tiberium__/graphics/icons/stone-growth-credit.png",
       icon_size = 32,
 	  allow_decomposition = false,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
