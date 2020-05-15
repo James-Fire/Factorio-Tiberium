@@ -29,6 +29,8 @@ if settings.startup["tiberium-byproduct-direct"].value == true then  -- Direct S
 end
 
 LSlib.recipe.addIngredient("tiberium-magazine", "tiberium-ore", math.max(10/RecipeMult, 1), "item") --So it doesn't crash for large RecipeMults
+LSlib.recipe.setEngergyRequired("tiberium-ore-processing", RefineEnergyRequired)
+LSlib.recipe.setEngergyRequired("advanced-tiberium-ore-processing", RefineEnergyRequired)  --Liquid Tiberium Processing is just a constant 60s
 LSlib.recipe.setEngergyRequired("tiberium-molten-to-stone", DirectRecipeTime)
 LSlib.recipe.setEngergyRequired("tiberium-molten-to-crude-oil", DirectRecipeTime)
 LSlib.recipe.setEngergyRequired("tiberium-molten-to-coal", DirectRecipeTime)
@@ -65,7 +67,6 @@ if (mods["bobores"]) then
 	local DirectOilOutput = DirectRecipeOutput*((OilPerCycle/BobsMult)/(IronPerCycle/BobsMult))
 	local DirectUraniumOutput = math.floor(DirectRecipeOutput/4 +.5) 
 	local CreditCost = (OrePerCredit/DirectRecipeOutput)*(MoltenPerCycle/SlurrytoMolten*OretoSlurry)/CreditEfficiency
-	local BobsRefiningTime = 20
 	
 	LSlib.recipe.addIngredient("oil-growth-credit", "crude-oil", CreditCost*(OilPerCycle/IronPerCycle), "fluid")
 	LSlib.recipe.setEngergyRequired("stone-growth-credit", CreditTime)
@@ -84,9 +85,6 @@ if (mods["bobores"]) then
 	LSlib.recipe.editResult("tiberium-molten-to-uranium", "stone", "uranium-ore", 0.25)
 	LSlib.recipe.setMainResult("tiberium-molten-to-uranium", "uranium-ore")
 	LSlib.technology.addRecipeUnlock("advanced-tiberium-transmutation-tech", "tiberium-molten-to-uranium")
-	LSlib.recipe.setEngergyRequired("tiberium-ore-processing", BobsRefiningTime*1.5)
-	LSlib.recipe.setEngergyRequired("advanced-tiberium-ore-processing", BobsRefiningTime)
-	LSlib.recipe.setEngergyRequired("tiberium-liquid-processing", BobsRefiningTime*4)
 	
 	if (mods["angelsrefining"]) then
 		AngelsMult = 1
@@ -471,7 +469,6 @@ else
 	-- LSlib.recipe.addIngredient(recipeName, ingredientName, ingredientAmount, ingredientType)
 	-- LSlib.recipe.addResult(recipeName, resultName, resultAmount, resultType)
 	-- LSlib.recipe.setResultCount(recipeName, resultName, resultAmount)
-	
 	-- LSlib.recipe.setEngergyRequired(recipeName, energyRequired)
 	
 	-- Direct Recipes
@@ -499,15 +496,10 @@ else
 	LSlib.recipe.setMainResult("tiberium-molten-to-copper", "copper-ore")
 	LSlib.technology.addRecipeUnlock("advanced-tiberium-transmutation-tech", "tiberium-molten-to-copper")
 	
-	LSlib.recipe.addIngredient("tiberium-molten-to-crude-oil", "molten-tiberium", MoltenPerCycle, "fluid")
-	LSlib.recipe.addIngredient("tiberium-molten-to-uranium", "molten-tiberium", MoltenPerCycle, "fluid")
-	
 	-- Refining Recipes
-	LSlib.recipe.setEngergyRequired("tiberium-ore-processing", RefineEnergyRequired)
 	LSlib.recipe.addIngredient("tiberium-ore-processing", "tiberium-ore", InputMaterial, "item")
 	LSlib.recipe.addResult("tiberium-ore-processing", "tiberium-slurry", InputMaterial*OretoSlurry, "fluid")
 	
-	LSlib.recipe.setEngergyRequired("advanced-tiberium-ore-processing", RefineEnergyRequired)
 	LSlib.recipe.addIngredient("advanced-tiberium-ore-processing", "tiberium-slurry", InputMaterial, "fluid")
 	LSlib.recipe.addResult("advanced-tiberium-ore-processing", "molten-tiberium", InputMaterial*SlurrytoMolten, "fluid")
 	
