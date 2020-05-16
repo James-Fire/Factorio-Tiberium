@@ -2,7 +2,7 @@ require "scripts/CnC_Walls" --Note, to make SonicWalls work / be passable,
 
 local GrowthCreditMax = settings.global["growth-credit"].value
 local TiberiumDamage = settings.startup["tiberium-damage"].value
---local TiberiumGrowth = settings.global["tiberium-growth"].value
+local TiberiumGrowth = settings.startup["tiberium-growth"].value
 local TiberiumRadius = settings.startup["tiberium-radius"].value
 local TiberiumMaxPerTile = settings.startup["tiberium-max-per-tile"].value
 --In order to make something debug only, use "if settings.startup["debug-text"].value == true then", and activate the debug-setting startup option.
@@ -28,7 +28,7 @@ script.on_init(
       math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
 	global.intervalBetweenDamageUpdates =
       math.floor(math.max(60 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
-    global.baseGrowthRate = 100 -- how much ore to place at once
+    global.baseGrowthRate = TiberiumGrowth -- how much ore to place at once
     global.baseSize = TiberiumRadius -- The maximum radius of the field
     global.contactDamage = TiberiumDamage --how much damage should be applied to objects over tiberium?
     global.contactDamageTime = 30 --how long (in ticks) should players be damaged after contacting tiberium?
@@ -91,10 +91,15 @@ function AddOre(surface, position, growthRate)
 		oreEntity = entities[1]
     oreEntity.amount = math.min(oreEntity.amount + growthRate, TiberiumMaxPerTile)
   else
-  
-		--game.print(string.format("x:%.2f y:%.2f new | %f", position.x, position.y, math.random()))
-		
-    oreEntity = surface.create_entity {name = "tiberium-ore", amount = growthRate, position = position}
+	--game.print(string.format("x:%.2f y:%.2f new | %f", position.x, position.y, math.random()))
+	--Tiberium destroys all other resources as it spreads
+	local otherResources = surface.find_entities_filtered({area = area, type = "resource"})
+	for _, entity in pairs(otherResources) do  --Make sure not destroy other Tiberium
+	  if (entity.name ~= "tiberium-ore") and (entity.name ~= "tibGrowthNode") and (entity.name ~= "tibGrowthNode_infinite") then
+	    entity.destroy()
+	  end
+	end
+    oreEntity = surface.create_entity {name = "tiberium-ore", amount = math.min(growthRate, TiberiumMaxPerTile), position = position}
 	game.surfaces[1].destroy_decoratives{ position = position } --Remove decoration on tile on spread.
   end
 
@@ -131,11 +136,9 @@ function CheckPoint(surface, position, lastValidPosition, growthRate)
     {x = math.ceil(position.x), y = math.ceil(position.y)}
   }
 
-  if 
-  
-  (#surface.find_entities_filtered({area = area, name = "CnC_SonicWall_Hub"}) > 0) or
-  (#surface.find_entities_filtered({area = area, name = "CnC_SonicWall_Wall"}) > 0) 
-  then
+  if (#surface.find_entities_filtered({area = area, name = "CnC_SonicWall_Hub"}) > 0) or
+		(#surface.find_entities_filtered({area = area, name = "CnC_SonicWall_Wall"}) > 0) or
+		(#surface.find_entities_filtered({area = area, name = "cliff"}) > 0) then
     --game.print("Found tiberium wall, placing ore at the last valid position" .. math.random())
     AddOre(surface, lastValidPosition, growthRate * .50)
     return true
@@ -172,11 +175,11 @@ function PlaceOre(entity, howmany)
   local growthRate = global.baseGrowthRate * math.max(1, math.sqrt(math.abs(position.x) + math.abs(position.y)) / 10)
   -- Scale size based on distance from spawn, separate from density in case we end up wanting them to
   -- scale differently
-  local size = TiberiumRadius * math.max(1, math.sqrt(position.x + position.y) / 100)
+  local size = TiberiumRadius * math.max(1, math.sqrt(math.abs(position.x) + math.abs(position.y)) / 100)
 
   howmany = howmany or 1
   --game.print("Placing " .. growthRate .. " ore " .. howmany .. " times " .. math.random())
-    local accelerator = surface.find_entity("growth-accelerator", position)
+  local accelerator = surface.find_entity("growth-accelerator", position)
   if (accelerator ~= nil) then
     local inventory = accelerator.get_output_inventory()
     local creditCount = math.min(inventory.get_item_count("growth-credit"), GrowthCreditMax)
@@ -258,9 +261,9 @@ function PlaceOre(entity, howmany)
       drill.active = true
     end
   end
-	  if settings.startup["debug-text"].value == true then
-		game.print({"", timer, " end of updating mining drills ", #global.drills, "|", math.random()})
-	end
+  if settings.startup["debug-text"].value == true then
+	game.print({"", timer, " end of updating mining drills ", #global.drills, "|", math.random()})
+  end
 end
 
 --Code for making the Liquid Seed spread tib
@@ -292,18 +295,20 @@ function LiquidBomb(surface, position, resource, amount)
         end
     end
 	local center = {x = math.floor(position.x)+0.5, y = math.floor(position.y)+0.5}
+	local area = {{center.x-1, center.y-1},{center.x+1, center.y+1}}
 	local oreEntity = surface.find_entity("tiberium-ore", {center.x, center.y})
 	if oreEntity then
-		if oreEntity.amount >= TiberiumMaxPerTile then
-			local ore = surface.find_entities_filtered{name = "tiberium-ore", area = {{center.x-1, center.y-1},{center.x+1, center.y+1}}}
+		local existingNodes = surface.find_entities_filtered{name = "tibGrowthNode", area = area}
+		if (oreEntity.amount >= TiberiumMaxPerTile) and (#existingNodes == 0) then
+			local ore = surface.find_entities_filtered{name = "tiberium-ore", area = area}
 			for _, entity in pairs(ore) do
 				entity.destroy()
 			end
 			local node = surface.create_entity{name="tibGrowthNode", position = center, amount = 15000}
 			  table.insert(global.tibGrowthNodeList, node)
-			end
 		end
 	end
+end
 
 --Liquid Seed trigger
 local on_script_trigger_effect = function(event)
