@@ -33,7 +33,7 @@ data:extend
       prerequisites = {"tiberium-mechanical-research"},
       unit =
       {
-        count = 100,
+        count = 200,
         ingredients =
         {
           {"tiberium-science", 1},
@@ -91,10 +91,12 @@ data:extend
       prerequisites = {"tiberium-processing-tech", "chemical-science-pack"},
       unit =
       {
-        count = 200,
+        count = 1000,
         ingredients =
         {
           {"tiberium-science", 1},
+		  {"automation-science-pack", 1},
+		  {"logistic-science-pack", 1},
           {"chemical-science-pack", 1}
         },
         time = 10
@@ -139,11 +141,13 @@ data:extend
 	   prerequisites = {"advanced-tiberium-processing-tech", "tiberium-thermal-research"},
       unit =
       {
-        count = 200,
+        count = 1500,
         ingredients =
         {
           {"tiberium-science", 1},
-          {"chemical-science-pack", 2}
+		  {"automation-science-pack", 1},
+		  {"logistic-science-pack", 1},
+          {"chemical-science-pack", 1}
         },
         time = 10
       }
@@ -193,11 +197,13 @@ data:extend
       prerequisites = {"tiberium-molten-processing", "tiberium-chemical-research"},
       unit =
       {
-        count = 200,
+        count = 2000,
         ingredients =
         {
           {"tiberium-science", 1},
-          {"chemical-science-pack", 2}
+		  {"automation-science-pack", 1},
+		  {"logistic-science-pack", 1},
+          {"chemical-science-pack", 1}
         },
         time = 10
       }
@@ -235,12 +241,13 @@ data:extend
       prerequisites = {"tiberium-molten-processing", "tiberium-nuclear-research"},
       unit =
       {
-        count = 200,
+        count = 5000,
         ingredients =
         {
           {"tiberium-science", 1},
+		  {"automation-science-pack", 1},
           {"logistic-science-pack", 1},
-          {"chemical-science-pack", 2},
+          {"chemical-science-pack", 1},
 		  {"production-science-pack", 1},
         },
         time = 10
@@ -288,10 +295,12 @@ data:extend
       prerequisites = {"tiberium-nuclear-research", "advanced-tiberium-processing-tech"},
       unit =
       {
-        count = 200,
+        count = 2500,
         ingredients =
         {
           {"tiberium-science", 1},
+		  {"automation-science-pack", 1},
+		  {"logistic-science-pack", 1},
           {"chemical-science-pack", 1},
 		  {"production-science-pack", 1},
         },
@@ -334,13 +343,15 @@ data:extend
       prerequisites = {"tiberium-power-tech", "tiberium-electromagnetic-research"},
       unit =
       {
-        count = 150,
+        count = 2500,
         ingredients =
         {
-          {"tiberium-science", 2},
-          {"chemical-science-pack", 2},
+          {"tiberium-science", 1},
+		  {"automation-science-pack", 1},
+		  {"logistic-science-pack", 1},
+          {"chemical-science-pack", 1},
 		  {"production-science-pack", 1},
-          {"utility-science-pack", 2}
+          {"utility-science-pack", 1}
         },
         time = 40
       }
@@ -395,7 +406,7 @@ data:extend
       prerequisites = {"tiberium-mechanical-research", "advanced-material-processing"},
       unit =
       {
-        count = 50,
+        count = 100,
         ingredients =
         {
           {"automation-science-pack", 1},
@@ -428,7 +439,7 @@ data:extend
 	  
       unit =
       {
-        count = 50,
+        count = 200,
         ingredients =
         {
           {"automation-science-pack", 1},
@@ -465,7 +476,7 @@ data:extend
       prerequisites = {"tiberium-chemical-research", "kovarex-enrichment-process"},
       unit =
       {
-        count = 50,
+        count = 500,
         ingredients =
         {
           {"automation-science-pack", 1},
@@ -503,7 +514,7 @@ data:extend
       prerequisites = {"tiberium-nuclear-research", "utility-science-pack"},
       unit =
       {
-        count = 50,
+        count = 1000,
         ingredients =
         {
           {"automation-science-pack", 1},
@@ -547,6 +558,11 @@ data:extend
       ingredients =
       {
         {"tiberium-science", 1},
+		{"automation-science-pack", 1},
+		{"logistic-science-pack", 1},
+		{"chemical-science-pack", 1},
+		{"production-science-pack", 1},
+		{"utility-science-pack", 1}
 		{"space-science-pack", 1}
       },
       time = 60
@@ -585,6 +601,11 @@ data:extend
       ingredients =
       {
         {"tiberium-science", 1},
+		{"automation-science-pack", 1},
+		{"logistic-science-pack", 1},
+		{"chemical-science-pack", 1},
+		{"production-science-pack", 1},
+		{"utility-science-pack", 1}
 		{"space-science-pack", 1}
       },
       time = 60

@@ -1,3 +1,15 @@
+May 17
+
+Added minimum version requirement for the Library.
+
+Infinite techs now use all science packs.
+
+Tiberium Science Pack no longer "replaces" Automation and Logistics. Any technology that uses vanilla packs uses all the ones below too.
+
+Tech costs rebalanced.
+
+---------------------------------------------------------------------------------------------------
+
 May 15
 
 Taco's Notes:
