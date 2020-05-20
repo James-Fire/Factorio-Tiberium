@@ -31,6 +31,7 @@ end
 LSlib.recipe.addIngredient("tiberium-magazine", "tiberium-ore", math.max(10/RecipeMult, 1), "item") --So it doesn't crash for large RecipeMults
 LSlib.recipe.setEngergyRequired("tiberium-ore-processing", RefineEnergyRequired)
 LSlib.recipe.setEngergyRequired("advanced-tiberium-ore-processing", RefineEnergyRequired)  --Liquid Tiberium Processing is just a constant 60s
+LSlib.recipe.setEngergyRequired("tiberium-liquid-processing", RefineEnergyRequired*24)
 LSlib.recipe.setEngergyRequired("tiberium-molten-to-stone", DirectRecipeTime)
 LSlib.recipe.setEngergyRequired("tiberium-molten-to-crude-oil", DirectRecipeTime)
 LSlib.recipe.setEngergyRequired("tiberium-molten-to-coal", DirectRecipeTime)
@@ -81,10 +82,7 @@ if (mods["bobores"]) then
 	LSlib.recipe.setMainResult("tiberium-molten-to-stone", "stone")
 	LSlib.recipe.setMainResult("tiberium-molten-to-coal", "coal")
 	LSlib.recipe.setMainResult("tiberium-molten-to-crude-oil", "crude-oil")
-	LSlib.recipe.duplicate("tiberium-molten-to-stone", "tiberium-molten-to-uranium")
-	LSlib.recipe.editResult("tiberium-molten-to-uranium", "stone", "uranium-ore", 0.25)
-	LSlib.recipe.setMainResult("tiberium-molten-to-uranium", "uranium-ore")
-	LSlib.technology.addRecipeUnlock("advanced-tiberium-transmutation-tech", "tiberium-molten-to-uranium")
+	
 	
 	if (mods["angelsrefining"]) then
 		AngelsMult = 1
@@ -428,6 +426,7 @@ if (mods["bobores"]) then
 				LSlib.recipe.addResult("tiberium-molten-to-stone", "stone", DirectRecipeOutput, "item")
 				LSlib.recipe.addResult("tiberium-molten-to-crude-oil", "crude-oil", DirectOilOutput, "fluid")
 				LSlib.recipe.addResult("tiberium-molten-to-uranium", "uranium-ore", DirectUraniumOutput, "item")
+				LSlib.technology.addRecipeUnlock("advanced-tiberium-transmutation-tech", "tiberium-molten-to-uranium")
 				LSlib.recipe.setMainResult("tiberium-molten-to-coal", "coal")
 				LSlib.recipe.setMainResult("tiberium-molten-to-stone", "stone")
 				LSlib.recipe.setMainResult("tiberium-molten-to-crude-oil", "crude-oil")

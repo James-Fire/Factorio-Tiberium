@@ -1,3 +1,51 @@
+May 17
+
+Added minimum version requirement for the Library.
+
+Infinite techs now use all science packs.
+
+Tiberium Science Pack no longer "replaces" Automation and Logistics. Any technology that uses vanilla packs uses all the ones below too.
+
+Tech costs rebalanced.
+
+---------------------------------------------------------------------------------------------------
+
+May 15
+
+Taco's Notes:
+
+Improved tooltips so they don't show funky stuff that has no bearing on how it would actually be made.
+
+Added main_products so the Direct Sludge Waste setting can be used.
+
+Expanded support for Tiberium Growth so it scales growth credit and farming recipes.
+
+Added edge case support so choosing certain Tiberium Values won't crash your game.
+
+Added Stone Growth Credit icon.
+
+Some formatting cleanup. (Not that this affects the end users most of the time, but appreciated nonetheless.)
+
+Standardized Refining Times.
+
+Fixes ticket-0009: Tiberium growth now scales up regardless of which direction you go from the origin.
+
+Fixes ticket-0009: Tiberium growth now scales with the Tiberium Growth setting.
+
+Fixes ticket-0010: Tiberium no longer destroys/passes through cliffs.
+
+Fixes ticket-0013: Tiberium nodes now have a minimum distance between them when spawn by Liquid Tiberium Seed rockets.
+
+Fixes ticket-0014: Tiberium no longer naturally exceeds the maximum Max Tiberium Per Tile setting.
+
+Tiberium Ore now destroys other resources when it spreads instead of just growing over them.
+
+James' notes:
+
+Working on Automation! In the mod, not in-game.
+
+---------------------------------------------------------------------------------------------------
+
 May 12
 
 Fixed autogeneration math stuff, so Tiberium Value isn't backwards.
