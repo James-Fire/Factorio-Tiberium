@@ -484,16 +484,19 @@ else
 	LSlib.recipe.editResult("tiberium-molten-to-uranium", "stone", "uranium-ore", 0.25)
 	LSlib.recipe.setMainResult("tiberium-molten-to-uranium", "uranium-ore")
 	LSlib.technology.addRecipeUnlock("advanced-tiberium-transmutation-tech", "tiberium-molten-to-uranium")
+	LSlib.recipe.setOrderstring("tiberium-molten-to-uranium", "f")
 
 	LSlib.recipe.duplicate("tiberium-molten-to-stone", "tiberium-molten-to-iron")
 	LSlib.recipe.editResult("tiberium-molten-to-iron", "stone", "iron-ore", 1)
 	LSlib.recipe.setMainResult("tiberium-molten-to-iron", "iron-ore")
 	LSlib.technology.addRecipeUnlock("advanced-tiberium-transmutation-tech", "tiberium-molten-to-iron")
+	LSlib.recipe.setOrderstring("tiberium-molten-to-iron", "a")
 	
 	LSlib.recipe.duplicate("tiberium-molten-to-stone", "tiberium-molten-to-copper")
 	LSlib.recipe.editResult("tiberium-molten-to-copper", "stone", "copper-ore", 1)
 	LSlib.recipe.setMainResult("tiberium-molten-to-copper", "copper-ore")
 	LSlib.technology.addRecipeUnlock("advanced-tiberium-transmutation-tech", "tiberium-molten-to-copper")
+	LSlib.recipe.setOrderstring("tiberium-molten-to-copper", "b")
 	
 	-- Refining Recipes
 	LSlib.recipe.addIngredient("tiberium-ore-processing", "tiberium-ore", InputMaterial, "item")
@@ -563,6 +566,10 @@ else
 	LSlib.recipe.addIngredient("copper-growth-credit", "copper-ore", CreditCost, "item")
 	LSlib.recipe.addIngredient("oil-growth-credit", "crude-oil", CreditCost*(OilPerCycle/IronPerCycle), "fluid")
 	LSlib.recipe.addIngredient("uranium-growth-credit", "uranium-ore", CreditCost*(DirectUraniumOutput/DirectRecipeOutput), "item")
+end
+
+if (mods["angelspetrochem"]) then --Replace the vanilla Chemical Plant with one of Angel's, cause apparently it's too hard to simply use the vanilla one.
+	LSlib.recipe.editIngredient("tiberium-plant", "chemical-plant", "angels-chemical-plant-2", 1)    
 end
 
 

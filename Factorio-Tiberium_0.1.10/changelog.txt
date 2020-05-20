@@ -1,3 +1,13 @@
+May 20
+
+Fixed Tiberium Power Plant for use with Angel's Petrochem.
+
+Fixed bots placing the wrong Growth Accelerator.
+
+Fixed bots not converting the Node for Tib Spikes.
+
+Juggled recipe order in my tab some more.
+
 May 17
 
 Added minimum version requirement for the Library.

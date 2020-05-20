@@ -9,6 +9,7 @@
     "dependencies": [
 		"base >= 0.18.3",
 		"?angelsrefining",
+		"?angelspetrochem",
 		"?bobmining >=0.17.0",
 		"?Orbital Ion Cannon",
 		"?bobores >=0.17.0",

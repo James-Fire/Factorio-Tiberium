@@ -732,6 +732,49 @@ script.on_event(defines.events.on_robot_built_entity, function(event)
 		CnC_SonicWall_AddNode(event.created_entity, event.tick) 
 		end
 	end
+	if (event.created_entity.name == "tib-spike") then 
+		local entity = event.created_entity
+		local position = event.created_entity.position
+		local area = {
+			{x = math.floor(position.x), y = math.floor(position.y)},
+			{x = math.ceil(position.x), y = math.ceil(position.y)}
+	    }
+		local mineentities = game.get_surface(1).find_entities_filtered{area = area, name = "node-land-mine"}
+			for _, entity in pairs(mineentities) do
+			  entity.destroy()
+			end
+		local entities = game.get_surface(1).find_entities_filtered{area = area, name = "tibGrowthNode"}
+			for _, entity in pairs(entities) do
+				local noderichness = entity.amount
+			  entity.destroy()
+			  local entity = game.get_surface(1).create_entity
+				{
+				name = "tibGrowthNode_infinite",
+				position = position,
+				force = neutral,
+				amount = noderichness*10,
+				raise_built = true
+				}
+		end
+	end
+	if (event.created_entity.name == "growth-accelerator-node") then 
+		local entity = event.created_entity
+		local position = event.created_entity.position
+		local area = {
+			{x = math.floor(position.x), y = math.floor(position.y)},
+			{x = math.ceil(position.x), y = math.ceil(position.y)}
+	    }
+		local entities = game.get_surface(1).find_entities_filtered{area = area, name = "growth-accelerator-node"}
+			for _, entity in pairs(entities) do
+			  entity.destroy()
+			  local entity = game.get_surface(1).create_entity
+				{
+				name = "growth-accelerator",
+				position = position,
+				force = event.robot.force,
+				}
+		end
+	end
 end)
 
 script.on_event(defines.events.script_raised_built, function(event)
@@ -740,12 +783,98 @@ script.on_event(defines.events.script_raised_built, function(event)
 		CnC_SonicWall_AddNode(event.entity, event.tick) 
 		end
 	end
+	if (event.entity.name == "tib-spike") then 
+		local entity = event.entity
+		local position = event.entity.position
+		local area = {
+			{x = math.floor(position.x), y = math.floor(position.y)},
+			{x = math.ceil(position.x), y = math.ceil(position.y)}
+	    }
+		local mineentities = game.get_surface(1).find_entities_filtered{area = area, name = "node-land-mine"}
+			for _, entity in pairs(mineentities) do
+			  entity.destroy()
+			end
+		local entities = game.get_surface(1).find_entities_filtered{area = area, name = "tibGrowthNode"}
+			for _, entity in pairs(entities) do
+				local noderichness = entity.amount
+			  entity.destroy()
+			  local entity = game.get_surface(1).create_entity
+				{
+				name = "tibGrowthNode_infinite",
+				position = position,
+				force = neutral,
+				amount = noderichness*10,
+				raise_built = true
+				}
+		end
+	end
+	if (event.entity.name == "growth-accelerator-node") then 
+		local entity = event.entity
+		local position = event.entity.position
+		local area = {
+			{x = math.floor(position.x), y = math.floor(position.y)},
+			{x = math.ceil(position.x), y = math.ceil(position.y)}
+	    }
+		local entities = game.get_surface(1).find_entities_filtered{area = area, name = "growth-accelerator-node"}
+			for _, entity in pairs(entities) do
+			  entity.destroy()
+			  local entity = game.get_surface(1).create_entity
+				{
+				name = "growth-accelerator",
+				position = position,
+				force = game.get_player(event.player_index).force,
+				}
+		end
+	end
 end)
 
 script.on_event(defines.events.script_raised_revive, function(event)
 	if (event.entity ~= nil) then
 		if (event.entity.name == "CnC_SonicWall_Hub") then 
 		CnC_SonicWall_AddNode(event.entity, event.tick) 
+		end
+	end
+	if (event.created_entity.name == "tib-spike") then 
+		local entity = event.created_entity
+		local position = event.created_entity.position
+		local area = {
+			{x = math.floor(position.x), y = math.floor(position.y)},
+			{x = math.ceil(position.x), y = math.ceil(position.y)}
+	    }
+		local mineentities = game.get_surface(1).find_entities_filtered{area = area, name = "node-land-mine"}
+			for _, entity in pairs(mineentities) do
+			  entity.destroy()
+			end
+		local entities = game.get_surface(1).find_entities_filtered{area = area, name = "tibGrowthNode"}
+			for _, entity in pairs(entities) do
+				local noderichness = entity.amount
+			  entity.destroy()
+			  local entity = game.get_surface(1).create_entity
+				{
+				name = "tibGrowthNode_infinite",
+				position = position,
+				force = neutral,
+				amount = noderichness*10,
+				raise_built = true
+				}
+		end
+	end
+	if (event.created_entity.name == "growth-accelerator-node") then 
+		local entity = event.created_entity
+		local position = event.created_entity.position
+		local area = {
+			{x = math.floor(position.x), y = math.floor(position.y)},
+			{x = math.ceil(position.x), y = math.ceil(position.y)}
+	    }
+		local entities = game.get_surface(1).find_entities_filtered{area = area, name = "growth-accelerator-node"}
+			for _, entity in pairs(entities) do
+			  entity.destroy()
+			  local entity = game.get_surface(1).create_entity
+				{
+				name = "growth-accelerator",
+				position = position,
+				force = game.get_player(event.player_index).force,
+				}
 		end
 	end
 end)
