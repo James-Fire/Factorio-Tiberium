@@ -1,224 +1,247 @@
 -- Basic setup, variables to use. (Might expose to settings sometime? Or perhaps make research allow for longer wall segments?)
 
 local horz_wall, vert_wall = 1, 2
-local dir_mods = {{1,0,horz_wall},{-1,0,horz_wall},{0,1,vert_wall},{0,-1,vert_wall}}
-
-local kw_per_tick = 100
-local kj_to_fill = 5000
+local dir_mods = {{x = 1, y = 0, variation = horz_wall}, {x = -1, y = 0, variation = horz_wall},
+				  {x = 0, y = 1, variation = vert_wall}, {x = 0, y = -1, variation = vert_wall}}
 local wall_health = 10000
-
 local joules_per_hitpoint = 400
 local node_range = 16
 
+local abs   = math.abs
+local floor = math.floor
+local ceil  = math.ceil
+local max   = math.max
+local min   = math.min
 -- Functions translplanted + renamed to clarify
 
+--Returns array containing up to 4 entities that could connect to an SRF emitter at the given position
+--Assumes node_range, horz_wall, vert_wall, global.SRF_nodes
 function CnC_SonicWall_FindNodes(surf, pos, force, dir)
-    local near_nodes = {nil, nil, nil, nil}
-    local near_dists = {999, 999, 999, 999}
-    for k,v in pairs(global.hexi_hardlight_nodes) do
-        if not force or force.name == v.force.name then
-            local that_surf = v.surface
-            if surf.index == that_surf.index then
-                local that_pos = v.position
-                if pos.x == that_pos.x and pos.y ~= that_pos.y then
-                    if dir == vert_wall or dir == horz_wall + vert_wall then
-                        local diff = that_pos.y - pos.y
-                        if math.abs(diff) <= node_range then
-                            local sy, ty
-                            if diff < 0 then
-                                if -diff < near_dists[1] then
-                                    near_nodes[1] = v
-                                    near_dists[1] = -diff
-                                end
-                            else
-                                if diff < near_dists[2] then
-                                    near_nodes[2] = v
-                                    near_dists[2] = diff
-                                end
-                            end
-                        end
-                    end
-                elseif pos.x ~= that_pos.x and pos.y == that_pos.y then
-                    if dir == horz_wall or dir == horz_wall + vert_wall then
-                        local diff = that_pos.x - pos.x
-                        if math.abs(diff) <= node_range then
-                            local sx, tx
-                            if diff < 0 then
-                                if -diff < near_dists[3] then
-                                    near_nodes[3] = v
-                                    near_dists[3] = -diff
-                                end
-                            else
-                                if diff < near_dists[4] then
-                                    near_nodes[4] = v
-                                    near_dists[4] = diff
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end
-    
-    local nodes = {}
-    if near_nodes[1] ~= nil then nodes[#nodes+1] = near_nodes[1] end
-    if near_nodes[2] ~= nil then nodes[#nodes+1] = near_nodes[2] end
-    if near_nodes[3] ~= nil then nodes[#nodes+1] = near_nodes[3] end
-    if near_nodes[4] ~= nil then nodes[#nodes+1] = near_nodes[4] end
-    return nodes
+	local near_nodes = {nil, nil, nil, nil}
+	local near_dists = {999, 999, 999, 999}
+	for _, emitter in pairs(global.SRF_nodes) do
+		if not force or force.name == emitter.force.name then
+			if surf.index == emitter.surface.index then
+				local that_pos = emitter.position
+				if pos.x == that_pos.x and pos.y ~= that_pos.y then
+					if dir == vert_wall or dir == horz_wall + vert_wall then
+						local diff = that_pos.y - pos.y
+						if abs(diff) <= node_range then
+							if diff < 0 then
+								if -diff < near_dists[1] then
+									near_nodes[1] = emitter
+									near_dists[1] = -diff
+								end
+							else
+								if diff < near_dists[2] then
+									near_nodes[2] = emitter
+									near_dists[2] = diff
+								end
+							end
+						end
+					end
+				elseif pos.x ~= that_pos.x and pos.y == that_pos.y then
+					if dir == horz_wall or dir == horz_wall + vert_wall then
+						local diff = that_pos.x - pos.x
+						if abs(diff) <= node_range then
+							if diff < 0 then
+								if -diff < near_dists[3] then
+									near_nodes[3] = emitter
+									near_dists[3] = -diff
+								end
+							else
+								if diff < near_dists[4] then
+									near_nodes[4] = emitter
+									near_dists[4] = diff
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	
+	local nodes = {}
+	for i = 1, 4 do
+		if near_nodes[i] then table.insert(nodes, near_nodes[i]) end
+	end
+	
+	return nodes
 end
 
+--Called by on_built_entity in control.lua
+--Modifies global.SRF_nodes, global.SRF_node_ticklist, global.SRF_segments
 function CnC_SonicWall_AddNode(entity, tick)
-    global.hexi_hardlight_nodes[#global.hexi_hardlight_nodes+1] = entity
-    global.hexi_hardlight_node_ticklist[#global.hexi_hardlight_node_ticklist+1] = {entity, tick + math.ceil(kj_to_fill / kw_per_tick)}
+	table.insert(global.SRF_nodes, entity)
+	table.insert(global.SRF_node_ticklist, {emitter = entity, tick = tick + ceil(entity.electric_buffer_size / entity.electric_input_flow_limit)})
+	CnC_SonicWall_DisableNode(entity)  --Destroy any walls that went through where the wall was placed so it can calculate new walls
 end
 
+--Destroys walls connected to given SRF emitter
+--Modifies global.SRF_segments
 function CnC_SonicWall_DisableNode(entity)
-    local surf = entity.surface
-    local pos = {x=math.floor(entity.position.x),y=math.floor(entity.position.y)}
-    
-    for k,v in pairs(dir_mods) do
-        local tx = pos.x + v[1]
-        local ty = pos.y + v[2]
-        while global.hexi_hardlight_segments[surf.index] and global.hexi_hardlight_segments[surf.index][tx] and global.hexi_hardlight_segments[surf.index][tx][ty] do
-            local wall = global.hexi_hardlight_segments[surf.index][tx][ty]
-            if wall[1] == v[3] then
-                global.hexi_hardlight_segments[surf.index][tx][ty][2].destroy()
-                global.hexi_hardlight_segments[surf.index][tx][ty] = nil
-            elseif wall[1] == horz_wall + vert_wall then
-                global.hexi_hardlight_segments[surf.index][tx][ty][1] = horz_wall + vert_wall - v[3]
-                global.hexi_hardlight_segments[surf.index][tx][ty][2].graphics_variation = horz_wall + vert_wall - v[3]
-            end
-            tx = tx + v[1]
-            ty = ty + v[2]
-        end
-    end
+	local surf = entity.surface
+	local x = floor(entity.position.x)
+	local y = floor(entity.position.y)
+	
+	for _, dir in pairs(dir_mods) do
+		local tx = x + dir.x
+		local ty = y + dir.y
+		while global.SRF_segments[surf.index] and global.SRF_segments[surf.index][tx] and global.SRF_segments[surf.index][tx][ty] do
+			local wall = global.SRF_segments[surf.index][tx][ty]
+			if wall[1] == dir.variation then
+				global.SRF_segments[surf.index][tx][ty][2].destroy()
+				global.SRF_segments[surf.index][tx][ty] = nil
+			elseif wall[1] == horz_wall + vert_wall then
+				global.SRF_segments[surf.index][tx][ty][1] = horz_wall + vert_wall - dir.variation
+				global.SRF_segments[surf.index][tx][ty][2].graphics_variation = horz_wall + vert_wall - dir.variation
+			end
+			tx = tx + dir.x
+			ty = ty + dir.y
+		end
+	end
+	--Also destroy any wall that is on top of the node
+	if global.SRF_segments[surf.index] and global.SRF_segments[surf.index][x] and global.SRF_segments[surf.index][x][y] then
+		global.SRF_segments[surf.index][x][y][2].destroy()
+		global.SRF_segments[surf.index][x][y] = nil
+	end
 end
 
-function CnC_SonicWall_DeleteNode(entity)
-    CnC_SonicWall_DisableNode(entity)
-    for k,v in pairs(global.hexi_hardlight_nodes) do
-        if v == entity then
-            table.remove(global.hexi_hardlight_nodes, k)
-            break
-        end
-    end
-    for k,v in pairs(global.hexi_hardlight_node_ticklist) do
-        if v[1] == entity then
-            table.remove(global.hexi_hardlight_node_ticklist, k)
-            break
-        end
-    end
+--Called by on_entity_died in control.lua
+--Modifies global.SRF_nodes, global.SRF_node_ticklist, global.SRF_low_power_ticklist
+function CnC_SonicWall_DeleteNode(entity, tick)
+	local k = find_value_in_table(global.SRF_nodes, entity)
+	if k then table.remove(global.SRF_nodes, k) end
+	
+	k = find_value_in_table(global.SRF_node_ticklist, entity, "emitter")
+	if k then table.remove(global.SRF_node_ticklist, k) end
+
+	k = find_value_in_table(global.SRF_low_power_ticklist, entity, "emitter")
+	if k then table.remove(global.SRF_low_power_ticklist, k) end
+
+	CnC_SonicWall_DisableNode(entity)
+	--Tell connected walls to reevaluate their connections
+	local connected_nodes = CnC_SonicWall_FindNodes(entity.surface, entity.position, entity.force, horz_wall + vert_wall)
+	for i = 1, #connected_nodes do
+		table.insert(global.SRF_node_ticklist, {emitter = connected_nodes[i], tick = tick + 10})
+	end
 end
 
+--Currently unused?
 function CnC_SonicWall_WallDamage(surf, pos, tick)
-    if global.hexi_hardlight_segments[surf.index] and global.hexi_hardlight_segments[surf.index][math.floor(pos.x)] and global.hexi_hardlight_segments[surf.index][math.floor(pos.x)][math.floor(pos.y)] then
-        local mark_death = false
-        local force = nil
-        
-        local wall = global.hexi_hardlight_segments[surf.index][math.floor(pos.x)][math.floor(pos.y)]
-        local damage_amt = wall_health - wall[2].health
-        wall[2].health = wall_health
-        local joule_cost = damage_amt * joules_per_hitpoint
-        
-        local connected_nodes = CnC_SonicWall_FindNodes(surf, pos, nil, wall[1], true)
-        local shared_cost = joule_cost / #connected_nodes
-        for k,v in pairs(connected_nodes) do
-            if not force then force = v.force end
-            local energy = v.energy - shared_cost * joules_per_hitpoint
-            if energy < 0 then energy = 0 end
-            v.energy = energy
-            
-            if energy == 0 then
-                if not mark_death then
-                    CnC_SonicWall_SendAlert(v.force, defines.alert_type.entity_destroyed, wall[2])
-                    mark_death = true
-                end
-                CnC_SonicWall_DisableNode(v)
-                global.hexi_hardlight_node_ticklist[#global.hexi_hardlight_node_ticklist+1] = {v, tick + math.ceil(kj_to_fill / kw_per_tick)}
-            end
-        end
-        if not mark_death then
-            CnC_SonicWall_SendAlert(force, defines.alert_type.entity_under_attack, wall[2])
-        end
-    end
+	local x = floor(pos.x)
+	local y = floor(pos.y)
+	if global.SRF_segments[surf.index] and global.SRF_segments[surf.index][x] and global.SRF_segments[surf.index][x][y] then
+		local mark_death = false
+		local force = nil
+		
+		local wall = global.SRF_segments[surf.index][x][y]
+		local damage_amt = wall_health - wall[2].health
+		wall[2].health = wall_health
+		local joule_cost = damage_amt * joules_per_hitpoint
+		
+		local connected_nodes = CnC_SonicWall_FindNodes(surf, pos, nil, wall[1], true) --What did the extra arg originally do?
+		local shared_cost = joule_cost / #connected_nodes
+		for _, node in pairs(connected_nodes) do
+			if not force then force = node.force end
+			local energy = node.energy - shared_cost * joules_per_hitpoint
+			if energy < 0 then energy = 0 end
+			node.energy = energy
+			
+			if energy == 0 then
+				if not mark_death then
+					CnC_SonicWall_SendAlert(node.force, defines.alert_type.entity_destroyed, wall[2])
+					mark_death = true
+				end
+				CnC_SonicWall_DisableNode(node)
+				table.insert(global.SRF_node_ticklist, {node, tick + ceil(node.electric_buffer_size / node.electric_input_flow_limit)})
+			end
+		end
+		if not mark_death then
+			CnC_SonicWall_SendAlert(force, defines.alert_type.entity_under_attack, wall[2])
+		end
+	end
 end
 
+--Currently unused?
 function CnC_SonicWall_SendAlert(force, alert_type, entity)
-    for k,v in pairs(force.players) do
-        v.add_alert(entity, alert_type)
-    end
+	for k, v in pairs(force.players) do
+		v.add_alert(entity, alert_type)
+	end
 end
 
+--Returns whether a wall of a given orientation can be placed at a given position
+--Assumes global.SRF_segments, horz_wall, vert_wall
 function CnC_SonicWall_TestWall(surf, pos, dir, node)
-    if not global.hexi_hardlight_segments[surf.index] then global.hexi_hardlight_segments[surf.index] = {} end
-    if not global.hexi_hardlight_segments[surf.index][math.floor(pos[1])] then global.hexi_hardlight_segments[surf.index][math.floor(pos[1])] = {} end
-    
-    if not global.hexi_hardlight_segments[surf.index][math.floor(pos[1])][math.floor(pos[2])] then
-        if not surf.can_place_entity{name="CnC_SonicWall_Wall", position=pos, force=node.force} then return false end
-    else
-        local wall = global.hexi_hardlight_segments[surf.index][math.floor(pos[1])][math.floor(pos[2])]
-        if wall[1] ~= horz_wall + vert_wall - dir then return false end
-    end
-    
-    return true
+	local x = floor(pos[1])
+	local y = floor(pos[2])
+	if not global.SRF_segments[surf.index] then global.SRF_segments[surf.index] = {} end
+	if not global.SRF_segments[surf.index][x] then global.SRF_segments[surf.index][x] = {} end
+	
+	if not global.SRF_segments[surf.index][x][y] then
+		if not surf.can_place_entity{name = "CnC_SonicWall_Wall", position=pos, force = node.force} then return false end
+	else
+		local wall = global.SRF_segments[surf.index][x][y]
+		if wall[1] ~= horz_wall + vert_wall - dir then return false end --There is already a wall in the direction we want
+	end
+	
+	return true
 end
 
+--Makes a wall of a given orientation can be placed at a given position
+--Assumes horz_wall, vert_wall
+--Modifies global.SRF_segments
 function CnC_SonicWall_MakeWall(surf, pos, dir, node)
-    if not global.hexi_hardlight_segments[surf.index] then global.hexi_hardlight_segments[surf.index] = {} end
-    if not global.hexi_hardlight_segments[surf.index][math.floor(pos[1])] then global.hexi_hardlight_segments[surf.index][math.floor(pos[1])] = {} end
-    
-    if not global.hexi_hardlight_segments[surf.index][math.floor(pos[1])][math.floor(pos[2])] then
-        local wall = surf.create_entity{name="CnC_SonicWall_Wall", position=pos, force=node.force}
-        if not wall then error("Wall creation failed!") end
-        wall.graphics_variation = dir
-        global.hexi_hardlight_segments[surf.index][math.floor(pos[1])][math.floor(pos[2])] = {dir, wall}
-    else
-        local wall = global.hexi_hardlight_segments[surf.index][math.floor(pos[1])][math.floor(pos[2])]
-        if wall[1] == horz_wall + vert_wall - dir then wall[1] = horz_wall + vert_wall end
-        wall[2].graphics_variation = horz_wall + vert_wall
-    end
+	local x = floor(pos[1])
+	local y = floor(pos[2])
+	if not global.SRF_segments[surf.index] then global.SRF_segments[surf.index] = {} end
+	if not global.SRF_segments[surf.index][x] then global.SRF_segments[surf.index][x] = {} end
+	
+	if not global.SRF_segments[surf.index][x][y] then
+		local wall = surf.create_entity{name="CnC_SonicWall_Wall", position=pos, force=node.force}
+		if not wall then error("Wall creation failed!") end
+		wall.graphics_variation = dir
+		global.SRF_segments[surf.index][x][y] = {dir, wall}
+	else
+		local wall = global.SRF_segments[surf.index][x][y]
+		if wall[1] == horz_wall + vert_wall - dir then wall[1] = horz_wall + vert_wall end
+		wall[2].graphics_variation = horz_wall + vert_wall
+	end
 end
 
+--Makes a wall connecting two given emitters if an uninterupted wall is possible
+--Assumes node_range, horz_wall, vert_wall
+--Modifies global.SRF_segments
 function tryCnC_SonicWall_MakeWall(node1, node2)
-    local that_pos = node2.position
-    
-    if node1.position.x == that_pos.x and node1.position.y ~= that_pos.y then
-        local diff = that_pos.y - node1.position.y
-        if math.abs(diff) <= node_range and math.abs(diff) > 1 then
-            local sy, ty
-            if diff < 0 then
-                sy, ty = that_pos.y+1, node1.position.y-1
-            else
-                sy, ty = node1.position.y+1, that_pos.y-1
-            end
-            
-            for y=sy,ty do
-                if not CnC_SonicWall_TestWall(node1.surface, {node1.position.x,y}, vert_wall, node1) then return end
-            end
-            for y=sy,ty do
-                CnC_SonicWall_MakeWall(node1.surface, {node1.position.x,y}, vert_wall, node1)
-            end
-        end
-    elseif node1.position.x ~= that_pos.x and node1.position.y == that_pos.y then
-        local diff = that_pos.x - node1.position.x
-        if math.abs(diff) <= node_range and math.abs(diff) > 1 then
-            local sx, tx
-            if diff < 0 then
-                sx, tx = that_pos.x+1, node1.position.x-1
-            else
-                sx, tx = node1.position.x+1, that_pos.x-1
-            end
-            
-            for x=sx,tx do
-                if not CnC_SonicWall_TestWall(node1.surface, {x,node1.position.y}, horz_wall, node1) then return end
-            end
-            for x=sx,tx do
-                CnC_SonicWall_MakeWall(node1.surface, {x,node1.position.y}, horz_wall, node1)
-            end
-        end
-    end
+	local that_pos = node2.position
+	if node1.position.x == that_pos.x and node1.position.y ~= that_pos.y then
+		local diff = abs(that_pos.y - node1.position.y)
+		if diff <= node_range and diff > 1 then
+			local sy, ty
+			sy = min(node1.position.y, that_pos.y) + 1
+			ty = max(node1.position.y, that_pos.y) - 1
+			for y = sy, ty do
+				if not CnC_SonicWall_TestWall(node1.surface, {node1.position.x, y}, vert_wall, node1) then return end
+			end
+			for y = sy, ty do
+				CnC_SonicWall_MakeWall(node1.surface, {node1.position.x, y}, vert_wall, node1)
+			end
+		end
+	elseif node1.position.x ~= that_pos.x and node1.position.y == that_pos.y then
+		local diff = abs(that_pos.x - node1.position.x)
+		if diff <= node_range and diff > 1 then
+			local sx, tx
+			sx = min(node1.position.x, that_pos.x) + 1
+			tx = max(node1.position.x, that_pos.x) - 1
+			for x = sx, tx do
+				if not CnC_SonicWall_TestWall(node1.surface, {x, node1.position.y}, horz_wall, node1) then return end
+			end
+			for x = sx, tx do
+				CnC_SonicWall_MakeWall(node1.surface, {x, node1.position.y}, horz_wall, node1)
+			end
+		end
+	end
 end
 
 -- That's the end of the functions.
@@ -226,48 +249,121 @@ end
 -- OnTick used to be in script.on_event(defines.events.on_tick, function(event), for example.
 
 function CnC_SonicWall_OnTick(event)
-    local cur_tick = event.tick
+	local cur_tick = event.tick
 	
+	if not global.SRF_damage then  --Set up renamed globals if they don't exist yet
+		convertSrfGlobals()
+	end
 	
-    
-    while #global.hexi_hardlight_damage > 0 do
-        CnC_SonicWall_WallDamage(global.hexi_hardlight_damage[1][1], global.hexi_hardlight_damage[1][2], event.tick)
-        table.remove(global.hexi_hardlight_damage, 1)
-    end
-    
-    for i=#global.hexi_hardlight_node_ticklist,1,-1 do
-        local cur = global.hexi_hardlight_node_ticklist[i]
-        if cur[2] <= cur_tick then
-            local charge_rem = kj_to_fill - (cur[1].energy / 1000)
-            if charge_rem <= 0 then
-                local connected_nodes = CnC_SonicWall_FindNodes(cur[1].surface, cur[1].position, cur[1].force, horz_wall + vert_wall)
-                for k,v in pairs(connected_nodes) do
-                    if (v.energy / 1000) >= kj_to_fill then
-                        tryCnC_SonicWall_MakeWall(cur[1], v)
-                    end
-                end
-                table.remove(global.hexi_hardlight_node_ticklist, i)
-            else cur[2] = cur_tick + math.ceil(charge_rem / kw_per_tick) end
-        end
-    end
+	while #global.SRF_damage > 0 do
+		CnC_SonicWall_WallDamage(global.SRF_damage[1][1], global.SRF_damage[1][2], event.tick)
+		table.remove(global.SRF_damage, 1)
+	end
+	
+	for i = #global.SRF_node_ticklist, 1, -1 do
+		local charging = global.SRF_node_ticklist[i]
+		if charging.tick <= cur_tick then
+			local charge_rem = charging.emitter.electric_buffer_size - charging.emitter.energy
+			if charge_rem <= 0 then
+				local connected_nodes = CnC_SonicWall_FindNodes(charging.emitter.surface, charging.emitter.position,
+																charging.emitter.force, horz_wall + vert_wall)
+				for _, node in pairs(connected_nodes) do
+					if node.energy > 0 then  --Doesn't need to be fully powered as long as it was once fully powered
+						if not find_value_in_table(global.SRF_node_ticklist, node, "emitter") then
+							tryCnC_SonicWall_MakeWall(charging.emitter, node)
+						end
+					end
+				end
+				table.remove(global.SRF_node_ticklist, i)
+			else
+				charging.tick = cur_tick + ceil(charge_rem / charging.emitter.electric_input_flow_limit)
+			end
+		end
+	end
+	
+	if cur_tick % 60 == 0 then --Check for all emitters for low power once per second
+		for _, emitter in pairs(global.SRF_nodes) do
+			local ticks_rem = emitter.energy / emitter.electric_drain
+			if ticks_rem > 0 and ticks_rem <= 60 then
+				table.insert(global.SRF_low_power_ticklist, {emitter = emitter, tick = cur_tick + ceil(ticks_rem)})
+			end
+		end
+	end
+	
+	for i = #global.SRF_low_power_ticklist, 1, -1 do --Regularly check low power emitters to disable when their power runs out
+		local low = global.SRF_low_power_ticklist[i]
+		if low.tick <= cur_tick and low.emitter then
+			local ticks_rem = low.emitter.energy / low.emitter.electric_drain
+			if ticks_rem <= 0 then
+				CnC_SonicWall_DeleteNode(low.emitter, cur_tick)  --Removes it from low power ticklist as well
+				CnC_SonicWall_AddNode(low.emitter, cur_tick)
+			else
+				low.tick = cur_tick + ceil(ticks_rem)
+			end
+		end
+	end
 end
 
 function CnC_SonicWall_OnTriggerCreatedEntity(event)
 	if event.entity.name == "CnC_SonicWall_Wall-damage" then
-        global.hexi_hardlight_damage[#global.hexi_hardlight_damage+1] = {event.entity.surface, event.entity.position}
-        event.entity.destroy()
-    end
+		table.insert(global.SRF_damage, {event.entity.surface, event.entity.position})
+		event.entity.destroy()
+	end
+end
+
+--Helper function
+--Returns the key for a given value in a given table or false if it doesn't exist
+--Optional subscript argument for when the list contains other lists
+function find_value_in_table(list, value, subscript)
+	if not list then return false end
+	if not value then return false end
+	for k, v in pairs(list) do
+		if subscript then
+			if v[subscript] == value then return k end
+		else
+			if v == value then return k end
+		end
+	end
+	return false
 end
 
 function CnC_SonicWall_OnInit(event)
-	global.hexi_hardlight_nodes = {}
-    global.hexi_hardlight_node_ticklist = {}
-    global.hexi_hardlight_segments = {}
-    global.hexi_hardlight_damage = {}
+	global.SRF_nodes = {}
+	global.SRF_node_ticklist = {}
+	global.SRF_segments = {}
+	global.SRF_damage = {}
+	global.SRF_low_power_ticklist = {}
 end
 
-
-
+function convertSrfGlobals()
+	if global.hexi_hardlight_nodes then
+		global.SRF_nodes = global.hexi_hardlight_nodes
+	elseif not global.SRF_nodes then
+		global.SRF_nodes = {}
+	end
+	
+	if global.hexi_hardlight_node_ticklist then
+		global.SRF_node_ticklist = global.hexi_hardlight_node_ticklist
+	elseif not global.SRF_node_ticklist then
+		global.SRF_node_ticklist = {}
+	end
+	
+	if global.hexi_hardlight_segments then
+		global.SRF_segments = global.hexi_hardlight_segments
+	elseif not global.SRF_segments then
+		global.SRF_segments = {}
+	end
+	
+	if global.hexi_hardlight_damage then
+		global.SRF_damage = global.hexi_hardlight_damage
+	elseif not global.SRF_damage then
+		global.SRF_damage = {}
+	end
+	
+	if not global.SRF_low_power_ticklist then
+		global.SRF_low_power_ticklist = {}
+	end
+end
 
 
 

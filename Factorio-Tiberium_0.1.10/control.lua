@@ -1,4 +1,4 @@
-require "scripts/CnC_Walls" --Note, to make SonicWalls work / be passable, 
+require "scripts/CnC_Walls" --Note, to make SonicWalls work / be passable,
 
 local GrowthCreditMax = settings.global["growth-credit"].value
 local TiberiumDamage = settings.startup["tiberium-damage"].value
@@ -69,8 +69,7 @@ script.on_init(
     end
 	
 	-- CnC SonicWalls Init
-	 CnC_SonicWall_OnInit(event) 
-	
+	CnC_SonicWall_OnInit(event)
   end
 )
 
@@ -84,7 +83,7 @@ function AddOre(surface, position, growthRate)
   local entities = surface.find_entities_filtered({area = area, name = {"tiberium-ore"}})
 
   if (#entities >= 1) then
-		--game.print("ERROR multiple entities | " .. math.random()) 
+		--game.print("ERROR multiple entities | " .. math.random())
    -- entities[1].destroy()
  --elseif (#entities == 1) then
 		--game.print(string.format("x:%.2f y:%.2f update | %f", position.x, position.y, math.random()))
@@ -225,7 +224,7 @@ function PlaceOre(entity, howmany)
       y = y + dy
       i = i + 1
     end
-    
+
     if (not done) then
       --game.print("Walked all the way to the end of the line, placing ore at the last valid position" .. math.random())
       oreEntity = AddOre(surface, lastValidPosition, growthRate)
@@ -355,9 +354,9 @@ commands.add_command(
     game.print("Found " .. #global.tibGrowthNodeList .. " nodes")
 	game.print("Found " .. #global.tibMineNodeList .. " mines")
 	local allsrfhubs = game.surfaces[1].find_entities_filtered {name = "CnC_SonicWall_Hub"}
-    global.hexi_hardlight_nodes = {}
+    global.SRF_nodes = {}
     for i = 1, #allsrfhubs, 1 do
-      table.insert(global.hexi_hardlight_nodes, allsrfhubs[i])
+      table.insert(global.SRF_nodes, allsrfhubs[i])
     end
     game.print("Found " .. #global.tibGrowthNodeList .. " nodes")
 	game.print("Found " .. #global.tibMineNodeList .. " mines")
@@ -510,11 +509,10 @@ script.on_event(
     if (event.created_entity.type == "mining-drill") then
       table.insert(global.drills, event.created_entity)
 	end
-	
-	if (event.created_entity.name == "CnC_SonicWall_Hub") then 
-		CnC_SonicWall_AddNode(event.created_entity, event.tick) 
+	if (event.created_entity.name == "CnC_SonicWall_Hub") then
+	  CnC_SonicWall_AddNode(event.created_entity, event.tick)
 	end
-	if (event.created_entity.name == "tib-spike") then 
+	if (event.created_entity.name == "tib-spike") then
 		local entity = event.created_entity
 		local position = event.created_entity.position
 		local area = {
@@ -522,14 +520,14 @@ script.on_event(
 			{x = math.ceil(position.x), y = math.ceil(position.y)}
 	    }
 		local mineentities = game.get_surface(1).find_entities_filtered{area = area, name = "node-land-mine"}
-			for _, entity in pairs(mineentities) do
-			  entity.destroy()
-			end
+		for _, entity in pairs(mineentities) do
+			entity.destroy()
+		end
 		local entities = game.get_surface(1).find_entities_filtered{area = area, name = "tibGrowthNode"}
-			for _, entity in pairs(entities) do
-				local noderichness = entity.amount
-			  entity.destroy()
-			  local entity = game.get_surface(1).create_entity
+		for _, entity in pairs(entities) do
+			local noderichness = entity.amount
+			entity.destroy()
+			local entity = game.get_surface(1).create_entity
 				{
 				name = "tibGrowthNode_infinite",
 				position = position,
@@ -539,7 +537,7 @@ script.on_event(
 				}
 		end
 	end
-	if (event.created_entity.name == "growth-accelerator-node") then 
+	if (event.created_entity.name == "growth-accelerator-node") then
 		local entity = event.created_entity
 		local position = event.created_entity.position
 		local area = {
@@ -547,9 +545,9 @@ script.on_event(
 			{x = math.ceil(position.x), y = math.ceil(position.y)}
 	    }
 		local entities = game.get_surface(1).find_entities_filtered{area = area, name = "growth-accelerator-node"}
-			for _, entity in pairs(entities) do
-			  entity.destroy()
-			  local entity = game.get_surface(1).create_entity
+		for _, entity in pairs(entities) do
+		    entity.destroy()
+		    local entity = game.get_surface(1).create_entity
 				{
 				name = "growth-accelerator",
 				position = position,
@@ -557,10 +555,8 @@ script.on_event(
 				}
 		end
 	end
-	
   end
 )
-
 
 
 script.on_event(
@@ -574,11 +570,9 @@ script.on_event(
       for i = 1, #alldrills, 1 do
         table.insert(global.drills, alldrills[i])
       end
-			if settings.startup["debug-text"].value == true then
+	  if settings.startup["debug-text"].value == true then
         game.print("Updated drill list and found " .. #global.drills .. " drills")
-
-
-		  game.print("node count=" ..  #global.tibGrowthNodeList .. " intervalBetweenNodeUpdates " .. global.intervalBetweenNodeUpdates)
+		game.print("node count=" ..  #global.tibGrowthNodeList .. " intervalBetweenNodeUpdates " .. global.intervalBetweenNodeUpdates)
       end
     end
 
@@ -597,21 +591,22 @@ script.on_event(
     end
 	
 	--[[	-- No need to poll the SonicWall tick script if there aren't any present in the world.
-	if (table_size(global.hexi_hardlight_nodes) > 0)
+	if (table_size(global.SRF_nodes) > 0)
 		then CnC_SonicWall_OnTick(event) end ]]--
 		
-		CnC_SonicWall_OnTick(event) 
+		CnC_SonicWall_OnTick(event)
 		--[[ I'll just let this poll for now, otherwise it would crash, trying to reference a nil table on non-fresh, post-sonicwall games.
 		]]
 		
-	end
+  end
 )
+
 script.on_nth_tick(7200,function(event)
 	local allsrfhubs = game.surfaces[1].find_entities_filtered {name = "CnC_SonicWall_Hub"}
 	if allsrfhubs[i] then
-		global.hexi_hardlight_nodes = {}
+		global.SRF_nodes = {}
 		for i = 1, #allsrfhubs, 1 do
-		  table.insert(global.hexi_hardlight_nodes, allsrfhubs[i])
+		  table.insert(global.SRF_nodes, allsrfhubs[i])
 		end
 	end
 	local allmines = game.surfaces[1].find_entities_filtered {name = "node-land-mine"}
@@ -634,7 +629,7 @@ script.on_nth_tick(7200,function(event)
 			else
 				game.get_surface(1).create_entity{name = "node-land-mine", position = entity.position, force = game.forces.player}
 				if settings.startup["debug-text"].value == true then
-					game.print("Place Mine") 
+					game.print("Place Mine")
 				end
 			end
 		end
@@ -657,6 +652,7 @@ script.on_nth_tick(7200,function(event)
 	end
 end
 )
+
 script.on_nth_tick(10,function(event)
 --check if players are over tiberium, damage them if they are unarmored
     for i, player in pairs(game.connected_players) do
@@ -701,12 +697,12 @@ script.on_nth_tick(10,function(event)
 			  end
 			end
 		end
+	  end
 	end
-	end
-	end
+  end
 )
 --Intended to place mines on Ore, but doesn't appear to work.
---[[script.on_nth_tick(14400,function(event) 
+--[[script.on_nth_tick(14400,function(event)
 	local globalOre = game.get_surface(1).find_entities_filtered{area = area, name = "tiberium-ore"}
 	for i, entity in pairs(globalOre) do
 		if entity.valid then
@@ -724,12 +720,15 @@ end
 
 script.on_event(defines.events.on_trigger_created_entity, function(event)
     CnC_SonicWall_OnTriggerCreatedEntity(event)
+	if settings.startup["debug-text"].value then  --Checking when this is actually called
+		game.print("SRF Wall damaged at "..event.entity.position.x..", "..event.entity.position.y)
+	end
 end)
 
 script.on_event(defines.events.on_robot_built_entity, function(event)
 	if (event.created_entity ~= nil) then
-		if (event.created_entity.name == "CnC_SonicWall_Hub") then 
-		CnC_SonicWall_AddNode(event.created_entity, event.tick) 
+		if (event.created_entity.name == "CnC_SonicWall_Hub") then
+			CnC_SonicWall_AddNode(event.created_entity, event.tick)
 		end
 	end
 	if (event.created_entity.name == "tib-spike") then 
@@ -779,8 +778,8 @@ end)
 
 script.on_event(defines.events.script_raised_built, function(event)
 	if (event.entity ~= nil) then
-		if (event.entity.name == "CnC_SonicWall_Hub") then 
-		CnC_SonicWall_AddNode(event.entity, event.tick) 
+		if (event.entity.name == "CnC_SonicWall_Hub") then
+			CnC_SonicWall_AddNode(event.entity, event.tick)
 		end
 	end
 	if (event.entity.name == "tib-spike") then 
@@ -830,8 +829,8 @@ end)
 
 script.on_event(defines.events.script_raised_revive, function(event)
 	if (event.entity ~= nil) then
-		if (event.entity.name == "CnC_SonicWall_Hub") then 
-		CnC_SonicWall_AddNode(event.entity, event.tick) 
+		if (event.entity.name == "CnC_SonicWall_Hub") then
+			CnC_SonicWall_AddNode(event.entity, event.tick)
 		end
 	end
 	if (event.created_entity.name == "tib-spike") then 
@@ -880,25 +879,25 @@ script.on_event(defines.events.script_raised_revive, function(event)
 end)
 
 script.on_event(defines.events.script_raised_destroy, function(event)
-    if (event.entity.name == "CnC_SonicWall_Hub") then 
-	CnC_SonicWall_DeleteNode(event.entity) 
+    if (event.entity.name == "CnC_SonicWall_Hub") then
+		CnC_SonicWall_DeleteNode(event.entity, event.tick)
 	end
 end)
 
 script.on_event(defines.events.on_pre_player_mined_item, function(event)
-    if (event.entity.name == "CnC_SonicWall_Hub") then 
-	CnC_SonicWall_DeleteNode(event.entity) 
+    if (event.entity.name == "CnC_SonicWall_Hub") then
+		CnC_SonicWall_DeleteNode(event.entity, event.tick)
 	end
 end)
 
 script.on_event(defines.events.on_robot_pre_mined, function(event)
-    if (event.entity.name == "CnC_SonicWall_Hub") then 
-	CnC_SonicWall_DeleteNode(event.entity) 
+    if (event.entity.name == "CnC_SonicWall_Hub") then
+		CnC_SonicWall_DeleteNode(event.entity, event.tick)
 	end
 end)
 
 script.on_event(defines.events.on_entity_died, function(event)
-    if (event.entity.name == "CnC_SonicWall_Hub") then 
-	CnC_SonicWall_DeleteNode(event.entity) 
+    if (event.entity.name == "CnC_SonicWall_Hub") then
+		CnC_SonicWall_DeleteNode(event.entity, event.tick)
 	end
 end)
