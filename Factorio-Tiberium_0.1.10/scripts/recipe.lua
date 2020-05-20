@@ -735,7 +735,7 @@ data:extend(
       subgroup = "a-direct",
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
-      order = "b[oil-processing]-g[advanced-oil-processing]"
+      order = "d"
     },
     {
       type = "recipe",
@@ -752,7 +752,7 @@ data:extend(
       subgroup = "a-direct",
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
-      order = "b[oil-processing]-d[petroleum-gas-processing]"
+      order = "c"
     },
     {
       type = "recipe",
@@ -769,7 +769,7 @@ data:extend(
       subgroup = "a-direct",
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
-      order = "b[oil-processing]-z[heavy-oil-processing]"
+      order = "e"
     },
 	
 --Centrifuging Recipes
@@ -894,7 +894,8 @@ data:extend(
       icon = "__Factorio-Tiberium__/graphics/icons/iron-growth-credit.png",
       icon_size = 32,
 	  allow_decomposition = false,
-      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+      order = "a",
+	  always_show_made_in = true,
     },
 	{
       type = "recipe",
@@ -912,43 +913,8 @@ data:extend(
       icon = "__Factorio-Tiberium__/graphics/icons/copper-growth-credit.png",
       icon_size = 32,
 	  allow_decomposition = false,
-      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
-    },
-	{
-      type = "recipe",
-      name = "coal-growth-credit",
-      category = "chemistry",
-	  subgroup = "a-growth-credits",
-	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
-      enabled = false,
-      ingredients = {
-      },
-      results = {
-        {type = "item", name = "growth-credit", amount = 1},
-      },
-      icon = "__Factorio-Tiberium__/graphics/icons/coal-growth-credit.png",
-      icon_size = 32,
-	  allow_decomposition = false,
-      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
-    },
-	{
-      type = "recipe",
-      name = "uranium-growth-credit",
-      category = "chemistry",
-	  subgroup = "a-growth-credits",
-	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
-      enabled = false,
-      ingredients = {
-      },
-      results = {
-        {type = "item", name = "growth-credit", amount = 1},
-      },
-      icon = "__Factorio-Tiberium__/graphics/icons/uranium-growth-credit.png",
-      icon_size = 32,
-	  allow_decomposition = false,
-      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+      order = "b",
+	  always_show_made_in = true,
     },
 	{
       type = "recipe",
@@ -966,7 +932,27 @@ data:extend(
 	  icon = "__Factorio-Tiberium__/graphics/icons/stone-growth-credit.png",
       icon_size = 32,
 	  allow_decomposition = false,
-      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+      order = "c",
+	  always_show_made_in = true,
+    },
+	{
+      type = "recipe",
+      name = "coal-growth-credit",
+      category = "chemistry",
+	  subgroup = "a-growth-credits",
+	  crafting_machine_tint = TibCraftingTint,
+      energy_required = 20,
+      enabled = false,
+      ingredients = {
+      },
+      results = {
+        {type = "item", name = "growth-credit", amount = 1},
+      },
+      icon = "__Factorio-Tiberium__/graphics/icons/coal-growth-credit.png",
+      icon_size = 32,
+	  allow_decomposition = false,
+      order = "d",
+	  always_show_made_in = true,
     },
 	{
       type = "recipe",
@@ -984,7 +970,27 @@ data:extend(
       icon = "__Factorio-Tiberium__/graphics/icons/oil-growth-credit.png",
       icon_size = 32,
 	  allow_decomposition = false,
-      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+      order = "e",
+	  always_show_made_in = true,
+    },
+	{
+      type = "recipe",
+      name = "uranium-growth-credit",
+      category = "chemistry",
+	  subgroup = "a-growth-credits",
+	  crafting_machine_tint = TibCraftingTint,
+      energy_required = 20,
+      enabled = false,
+      ingredients = {
+      },
+      results = {
+        {type = "item", name = "growth-credit", amount = 1},
+      },
+      icon = "__Factorio-Tiberium__/graphics/icons/uranium-growth-credit.png",
+      icon_size = 32,
+	  allow_decomposition = false,
+      order = "f",
+	  always_show_made_in = true,
     },
 	{
       type = "recipe",
@@ -1002,7 +1008,8 @@ data:extend(
       icon = "__Factorio-Tiberium__/graphics/icons/energy-growth-credit.png",
       icon_size = 32,
 	  allow_decomposition = false,
-      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+      order = "g",
+	  always_show_made_in = true,
     },
 	
 --Power recipes
