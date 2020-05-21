@@ -124,7 +124,9 @@ function CnC_SonicWall_DeleteNode(entity, tick)
 	--Tell connected walls to reevaluate their connections
 	local connected_nodes = CnC_SonicWall_FindNodes(entity.surface, entity.position, entity.force, horz_wall + vert_wall)
 	for i = 1, #connected_nodes do
-		table.insert(global.SRF_node_ticklist, {emitter = connected_nodes[i], tick = tick + 10})
+		if not find_value_in_table(global.SRF_node_ticklist, connected_nodes[i], "emitter") then
+			table.insert(global.SRF_node_ticklist, {emitter = connected_nodes[i], tick = tick + 10})
+		end
 	end
 end
 
@@ -285,7 +287,9 @@ function CnC_SonicWall_OnTick(event)
 		for _, emitter in pairs(global.SRF_nodes) do
 			local ticks_rem = emitter.energy / emitter.electric_drain
 			if ticks_rem > 0 and ticks_rem <= 60 then
-				table.insert(global.SRF_low_power_ticklist, {emitter = emitter, tick = cur_tick + ceil(ticks_rem)})
+				if not find_value_in_table(global.SRF_low_power_ticklist, emitter, "emitter") then
+					table.insert(global.SRF_low_power_ticklist, {emitter = emitter, tick = cur_tick + ceil(ticks_rem)})
+				end
 			end
 		end
 	end
@@ -343,7 +347,10 @@ function convertSrfGlobals()
 	end
 	
 	if global.hexi_hardlight_node_ticklist then
-		global.SRF_node_ticklist = global.hexi_hardlight_node_ticklist
+		global.SRF_node_ticklist = {}
+		for _, v in pairs(global.hexi_hardlight_node_ticklist) do
+			table.insert(global.SRF_node_ticklist, {emitter = v[1], tick = v[2]})
+		end
 	elseif not global.SRF_node_ticklist then
 		global.SRF_node_ticklist = {}
 	end
@@ -364,9 +371,3 @@ function convertSrfGlobals()
 		global.SRF_low_power_ticklist = {}
 	end
 end
-
-
-
-
-
-
