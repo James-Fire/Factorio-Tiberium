@@ -722,23 +722,6 @@ data:extend(
 --Direct Recipes
     {
       type = "recipe",
-      name = "tiberium-molten-to-coal",
-      category = "chemistry",
-	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 4,
-      enabled = false,
-      ingredients = {
-      },
-      results = {
-      },
-      icon_size = 32,
-      subgroup = "a-direct",
-	  allow_as_intermediate = false,
-	  allow_decomposition = false,
-      order = "d"
-    },
-    {
-      type = "recipe",
       name = "tiberium-molten-to-stone",
       category = "chemistry",
 	  crafting_machine_tint = TibCraftingTint,
@@ -753,6 +736,23 @@ data:extend(
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
       order = "c"
+    },
+    {
+      type = "recipe",
+      name = "tiberium-molten-to-coal",
+      category = "chemistry",
+	  crafting_machine_tint = TibCraftingTint,
+      energy_required = 4,
+      enabled = false,
+      ingredients = {
+      },
+      results = {
+      },
+      icon_size = 32,
+      subgroup = "a-direct",
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
+      order = "d"
     },
     {
       type = "recipe",
@@ -837,7 +837,7 @@ data:extend(
       },
       results = {
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-centrifuging.png",
+      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-sludge-centrifuging.png",
       icon_size = 32,
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
@@ -854,7 +854,7 @@ data:extend(
       },
       results = {
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/slurry-centrifuging.png",
+      icon = "__Factorio-Tiberium__/graphics/icons/slurry-sludge-centrifuging.png",
       icon_size = 32,
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
@@ -871,7 +871,7 @@ data:extend(
       },
       results = {
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/molten-centrifuging.png",
+      icon = "__Factorio-Tiberium__/graphics/icons/molten-sludge-centrifuging.png",
       icon_size = 32,
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,

@@ -2,7 +2,7 @@ data:extend({
   {
     type = "item-group",
     name = "tiberium",
-    icon = "__Factorio-Tiberium__/graphics/technology/advanced-tiberium-processing-tech.png",
+    icon = "__Factorio-Tiberium__/graphics/technology/tiberium-processing-tech.png",
     icon_size = 128,
     inventory_order = "f-m",
     order = "f-m",
