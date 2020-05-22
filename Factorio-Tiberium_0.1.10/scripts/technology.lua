@@ -110,7 +110,7 @@ data:extend
 			},
 			{
 				type = "unlock-recipe",
-				recipe = "advanced-tiberium-ore-processing"
+				recipe = "molten-tiberium-processing"
 			},
 			{
 				type = "unlock-recipe",

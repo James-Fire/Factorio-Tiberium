@@ -16,6 +16,15 @@ if (mods["bobassembly"]) then
 	table.insert(TibBasicScience, "chemical-plant-4")
 end
 
+if (mods["angelspetrochem"]) then
+	table.insert(TibBasicScience, "angels-chemical-plant")
+	table.insert(TibBasicScience, "angels-chemical-plant-2")
+	table.insert(TibBasicScience, "angels-chemical-plant-3")
+	table.insert(TibBasicScience, "angels-chemical-plant-4")
+	table.insert(TibBasicScience, "advanced-chemical-plant")
+	table.insert(TibBasicScience, "advanced-chemical-plant-2")
+end
+
 for i, name in pairs(TibBasicScience) do
 	LSlib.entity.addCraftingCategory("assembling-machine", name, "basic-tiberium-science")
 end
@@ -27,6 +36,15 @@ if (mods["bobassembly"]) then
 	table.insert(TibScience, "chemical-plant-2")
 	table.insert(TibScience, "chemical-plant-3")
 	table.insert(TibScience, "chemical-plant-4")
+end
+
+if (mods["angelspetrochem"]) then
+	table.insert(TibScience, "angels-chemical-plant")
+	table.insert(TibScience, "angels-chemical-plant-2")
+	table.insert(TibScience, "angels-chemical-plant-3")
+	table.insert(TibScience, "angels-chemical-plant-4")
+	table.insert(TibScience, "advanced-chemical-plant")
+	table.insert(TibScience, "advanced-chemical-plant-2")
 end
 
 for _,TS in pairs(TibScience) do
