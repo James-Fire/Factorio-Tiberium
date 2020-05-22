@@ -1,3 +1,15 @@
+---------------------------------------------------------------------------------------------------1.11
+
+May 23
+
+Fixes tickets 0028, 0031, and 0032: Multiplayer games no longer crash when someone who joined the server before you disconnects
+
+Players no longer take proximity-based Tiberium damage while inside of vehicles
+
+Fixed Molten Tiberium crafting time being quadrupled
+
+---------------------------------------------------------------------------------------------------1.10
+
 May 22
 
 Fixes ticket 0001: Using Angels mods with no Bob's mods now has recipe support
