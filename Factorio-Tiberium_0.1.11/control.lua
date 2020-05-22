@@ -654,53 +654,37 @@ end
 )
 
 script.on_nth_tick(10,function(event)
---check if players are over tiberium, damage them if they are unarmored
-    for i, player in pairs(game.connected_players) do
-		local playerPositionOre =
-			player.surface.find_entities_filtered {name = global.oreType, position = game.players[i].position, radius = 1}
-		if
-			#playerPositionOre > 0 and game.players[i] and game.players[i].valid and game.players[i].character and
-			  not game.players[i].character.vehicle
-		   then
-			game.players[i].character.damage(TiberiumDamage*0.1, game.forces.tiberium, "tiberium")
-		  end
-		local inventory = game.players[i].get_inventory(defines.inventory.item_main)
-		  if inventory then
-			for p = 1, #global.tiberiumProducts, 1 do
-			  if inventory.get_item_count(global.tiberiumProducts[p]) > 0 then
-				game.players[i].character.damage(0.3, game.forces.tiberium, "tiberium")
-				break
-			  end
-			end
+    for _, player in pairs(game.connected_players) do
+		if not player.valid or not player.character then break end
+		--Damage players that are standing on Tiberium Ore and not in vehicles
+		local playerPositionOre = player.surface.find_entities_filtered {name = "tiberium-ore", position = player.position, radius = 1}
+		if #playerPositionOre > 0 and not player.character.vehicle then
+			player.character.damage(TiberiumDamage * 0.1, game.forces.tiberium, "tiberium")
 		end
-	end
-	--If player is in range of nodes, damage them based on how many.
-	for k, player in pairs (game.connected_players) do
-	  if (player.character ~= nil) then
-		local nearby_count = player.surface.count_entities_filtered{name = "tibGrowthNode", position = player.position, radius = TiberiumRadius * 0.6}
-			if nearby_count > 0 then
-				if (player.character ~= nil) then
-					player.character.damage(TiberiumDamage * nearby_count^0.8 * 0.5, game.forces.tiberium, "tiberium")
-				end
-			end
+		--Extra damage for being in the middle of a patch vs at the edge?
 		local nearby_ore_count = player.surface.count_entities_filtered{name = "tiberium-ore", position = player.position, radius = 1.5}
-			if nearby_ore_count > 0 then
-				if (player.character ~= nil) then
-					player.character.damage(TiberiumDamage * nearby_ore_count * 0.1, game.forces.tiberium, "tiberium")
+		if nearby_ore_count > 0 and not player.character.vehicle then
+			player.character.damage(TiberiumDamage * nearby_ore_count * 0.1, game.forces.tiberium, "tiberium")
+		end
+		--Damage players that are moderately close to Tiberium nodes and not in vehicles, more damage per nearby multiple node
+		local nearby_node_count = player.surface.count_entities_filtered{name = "tibGrowthNode", position = player.position, radius = TiberiumRadius * 0.6}
+		if nearby_node_count > 0 and not player.character.vehicle then
+			player.character.damage(TiberiumDamage * 0.5 * nearby_node_count ^ 0.8, game.forces.tiberium, "tiberium")
+		end
+		--Damage players with unsafe Tiberium products in their inventory
+		local inventory = player.get_inventory(defines.inventory.item_main)
+		if inventory then
+			for p = 1, #global.tiberiumProducts do
+				if inventory.get_item_count(global.tiberiumProducts[p]) > 0 then
+					player.character.damage(0.3, game.forces.tiberium, "tiberium")
+					break
 				end
 			end
-		if inventory then
-			for p = 1, #global.tiberiumProducts, 1 do
-			  if inventory.get_item_count(global.tiberiumProducts[p]) > 0 then
-				game.players[i].character.damage(0.3, game.forces.tiberium, "tiberium")
-				break
-			  end
-			end
 		end
-	  end
 	end
-  end
+end
 )
+
 --Intended to place mines on Ore, but doesn't appear to work.
 --[[script.on_nth_tick(14400,function(event)
 	local globalOre = game.get_surface(1).find_entities_filtered{area = area, name = "tiberium-ore"}
