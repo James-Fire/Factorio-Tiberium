@@ -1,3 +1,15 @@
+May 22
+
+Fixes ticket 0001: Using Angels mods with no Bob's mods now has recipe support
+
+Fixes ticket 0029: Angels chem plants can now produce Tiberium Science
+
+Fixes recipe typo from previous commit
+
+Refactored recipe_autogeneration to reduce repitition
+
+Prevented Tiberium nodes from spawning in the starting area
+
 May 20
 
 Fixed Tiberium Power Plant for use with Angel's Petrochem.
