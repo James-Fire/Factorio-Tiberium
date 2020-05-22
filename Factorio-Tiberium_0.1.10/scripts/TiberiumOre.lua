@@ -190,7 +190,7 @@ data:extend(
       random_spot_size_minimum = 1,
       random_spot_size_maximum = 1, -- don't randomize spot size
       additional_richness = 200000, -- this increases the total everywhere, so base_density needs to be decreased to compensate
-      has_starting_area_placement = true,
+      has_starting_area_placement = false,
       regular_rq_factor_multiplier = 1
     },
     stage_counts = {0},

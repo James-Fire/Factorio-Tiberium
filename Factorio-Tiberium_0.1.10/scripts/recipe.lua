@@ -3,7 +3,7 @@
 TibProductivity = {}
 table.insert(TibProductivity, "tiberium-science")
 table.insert(TibProductivity, "tiberium-ore-processing")
-table.insert(TibProductivity, "advanced-tiberium-ore-processing")
+table.insert(TibProductivity, "molten-tiberium-processing")
 table.insert(TibProductivity, "tiberium-liquid-processing")
 
 for km, vm in pairs(data.raw.module) do
@@ -643,7 +643,7 @@ data:extend(
     },
     {
       type = "recipe",
-      name = "advanced-tiberium-ore-processing",
+      name = "molten-tiberium-processing",
       category = "oil-processing",
 	  crafting_machine_tint = TibCraftingTint,
       energy_required = 10,
@@ -720,6 +720,23 @@ data:extend(
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
 --Direct Recipes
+    {
+      type = "recipe",
+      name = "template-direct",
+      category = "chemistry",
+	  crafting_machine_tint = TibCraftingTint,
+      energy_required = 4,
+      enabled = false,
+      ingredients = {
+      },
+      results = {
+      },
+      icon_size = 32,
+      subgroup = "a-direct",
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
+      order = "c"
+    },
     {
       type = "recipe",
       name = "tiberium-molten-to-stone",
@@ -880,7 +897,7 @@ data:extend(
 --Growth Credits
 	{
       type = "recipe",
-      name = "iron-growth-credit",
+      name = "template-growth-credit",
       category = "chemistry",
 	  subgroup = "a-growth-credits",
 	  crafting_machine_tint = TibCraftingTint,
@@ -891,105 +908,10 @@ data:extend(
       results = {
         {type = "item", name = "growth-credit", amount = 1},
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/iron-growth-credit.png",
-      icon_size = 32,
-	  allow_decomposition = false,
-      order = "a",
-	  always_show_made_in = true,
-    },
-	{
-      type = "recipe",
-      name = "copper-growth-credit",
-      category = "chemistry",
-	  subgroup = "a-growth-credits",
-	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
-      enabled = false,
-      ingredients = {
-      },
-      results = {
-        {type = "item", name = "growth-credit", amount = 1},
-      },
-      icon = "__Factorio-Tiberium__/graphics/icons/copper-growth-credit.png",
-      icon_size = 32,
-	  allow_decomposition = false,
-      order = "b",
-	  always_show_made_in = true,
-    },
-	{
-      type = "recipe",
-      name = "stone-growth-credit",
-      category = "chemistry",
-	  subgroup = "a-growth-credits",
-	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
-      enabled = false,
-      ingredients = {
-      },
-      results = {
-        {type = "item", name = "growth-credit", amount = 1},
-      },
-	  icon = "__Factorio-Tiberium__/graphics/icons/stone-growth-credit.png",
+      icon = "__Factorio-Tiberium__/graphics/icons/energy-growth-credit.png",
       icon_size = 32,
 	  allow_decomposition = false,
       order = "c",
-	  always_show_made_in = true,
-    },
-	{
-      type = "recipe",
-      name = "coal-growth-credit",
-      category = "chemistry",
-	  subgroup = "a-growth-credits",
-	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
-      enabled = false,
-      ingredients = {
-      },
-      results = {
-        {type = "item", name = "growth-credit", amount = 1},
-      },
-      icon = "__Factorio-Tiberium__/graphics/icons/coal-growth-credit.png",
-      icon_size = 32,
-	  allow_decomposition = false,
-      order = "d",
-	  always_show_made_in = true,
-    },
-	{
-      type = "recipe",
-      name = "oil-growth-credit",
-      category = "chemistry",
-	  subgroup = "a-growth-credits",
-	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
-      enabled = false,
-      ingredients = {
-      },
-      results = {
-        {type = "item", name = "growth-credit", amount = 1},
-      },
-      icon = "__Factorio-Tiberium__/graphics/icons/oil-growth-credit.png",
-      icon_size = 32,
-	  allow_decomposition = false,
-      order = "e",
-	  always_show_made_in = true,
-    },
-	{
-      type = "recipe",
-      name = "uranium-growth-credit",
-      category = "chemistry",
-	  subgroup = "a-growth-credits",
-	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
-      enabled = false,
-      ingredients = {
-      },
-      results = {
-        {type = "item", name = "growth-credit", amount = 1},
-      },
-      icon = "__Factorio-Tiberium__/graphics/icons/uranium-growth-credit.png",
-      icon_size = 32,
-	  allow_decomposition = false,
-      order = "f",
 	  always_show_made_in = true,
     },
 	{
@@ -1008,7 +930,7 @@ data:extend(
       icon = "__Factorio-Tiberium__/graphics/icons/energy-growth-credit.png",
       icon_size = 32,
 	  allow_decomposition = false,
-      order = "g",
+      order = "z",
 	  always_show_made_in = true,
     },
 	
