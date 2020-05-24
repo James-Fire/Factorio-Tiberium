@@ -802,7 +802,7 @@ data:extend(
       },
       results = {
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-centrifuging.png",
+      icon = "__Factorio-Tiberium__/graphics/icons/ore-centrifuging.png",
       icon_size = 32,
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
@@ -854,7 +854,7 @@ data:extend(
       },
       results = {
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-sludge-centrifuging.png",
+      icon = "__Factorio-Tiberium__/graphics/icons/ore-sludge-centrifuging.png",
       icon_size = 32,
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,

@@ -38,42 +38,45 @@ script.on_init(
     global.tiberiumLevel = 0 --The level of tiberium; affects growth/damage patterns
     global.oreType = "tiberium-ore"
     global.world = game.surfaces[1]
-    global.giveStartingItems = true
-    global.startingItems = {
-      {name = "oil-refinery", count = 1},
-      {name = "solar-panel", count = 10},
-      {name = "chemical-plant", count = 5},
-      {name = "pipe", count = 50},
-      {name = "small-electric-pole", count = 10},
-      {name = "electric-mining-drill", count = 5},
-      {name = "assembling-machine-2", count = 1}
-    }
-
+    -- global.giveStartingItems = true
+    -- global.startingItems = {
+      -- {name = "oil-refinery", count = 1},
+      -- {name = "solar-panel", count = 10},
+      -- {name = "chemical-plant", count = 5},
+      -- {name = "pipe", count = 50},
+      -- {name = "small-electric-pole", count = 10},
+      -- {name = "electric-mining-drill", count = 5},
+      -- {name = "assembling-machine-2", count = 1}
+    -- }
+	
+    if not game.forces[global.damageForceName] then
+      game.create_force(global.damageForceName)
+    end
     -- This is a list of prototypes that should not be damaged by growing tiberium
     global.exemptDamageItems = {
       ["mining-drill"] = true,
       ["transport-belt"] = true,
       ["underground-belt"] = true,
-      ["fast-underground-belt"] = true,
-      ["express-underground-belt"] = true,
       ["splitter"] = true,
-      ["fast-splitter"] = true,
-      ["express-splitter"] = true,
-      ["stone-wall"] = true
+      ["wall"] = true,
+	  ["pipe"] = true,
+	  ["pipe-to-ground"] = true,
+	  ["electric-pole"] = true
     }
+	if settings.startup["biters-immune-to-tiberium-damage"].value then
+		game.forces.enemy.set_cease_fire(global.damageForceName, true)
+		global.exemptDamageItems["unit-spawner"] = true
+		global.exemptDamageItems["turret"] = true
+	end
+	
+	game.forces.player.set_cease_fire(global.damageForceName, true)
     global.tiberiumProducts = {"tiberium-bar", global.oreType}
     global.liquidTiberiumProducts = {"liquid-tiberium", "tiberium-sludge", "tiberium-waste"}
-
-    if not game.forces[global.damageForceName] then
-      game.create_force(global.damageForceName)
-    end
 	
 	-- CnC SonicWalls Init
 	CnC_SonicWall_OnInit(event)
   end
 )
-
-
 
 function AddOre(surface, position, growthRate)
   local area = {
@@ -88,7 +91,7 @@ function AddOre(surface, position, growthRate)
  --elseif (#entities == 1) then
 		--game.print(string.format("x:%.2f y:%.2f update | %f", position.x, position.y, math.random()))
 		oreEntity = entities[1]
-    oreEntity.amount = math.min(oreEntity.amount + growthRate, TiberiumMaxPerTile)
+    oreEntity.amount = math.max(math.min(oreEntity.amount + growthRate, TiberiumMaxPerTile), oreEntity.amount) --Don't reduce ore amount when growing node
   else
 	--game.print(string.format("x:%.2f y:%.2f new | %f", position.x, position.y, math.random()))
 	--Tiberium destroys all other resources as it spreads
@@ -446,7 +449,7 @@ commands.add_command(
   "tibFixMineLag",
   "Deletes all the tib mines on the map",
   function()
-    local entities = game.get_surface(1).find_entities_filtered{area = area, name = "node-land-mine"}
+    local entities = game.get_surface(1).find_entities_filtered{name = "node-land-mine"}
     for i = 1, #entities, 1 do
       entities[i].destroy()
     end
@@ -462,7 +465,7 @@ script.on_event(
     local entities = game.surfaces[1].find_entities_filtered {area = event.area, name = "tibGrowthNode"}
 	for i, entity in pairs(entities) do
 		if entity.valid then
-			game.get_surface(1).create_entity{name = "node-land-mine", position = entity.position, force = game.forces.player}
+			game.get_surface(1).create_entity{name = "node-land-mine", position = entity.position, force = game.forces.tiberium}
 		else
 			game.print("Node is invalid: mine placement")
 		end
@@ -627,7 +630,7 @@ script.on_nth_tick(7200,function(event)
 					game.print("No Mine")
 				end
 			else
-				game.get_surface(1).create_entity{name = "node-land-mine", position = entity.position, force = game.forces.player}
+				game.get_surface(1).create_entity{name = "node-land-mine", position = entity.position, force = game.forces.tiberium}
 				if settings.startup["debug-text"].value == true then
 					game.print("Place Mine")
 				end
@@ -659,24 +662,24 @@ script.on_nth_tick(10,function(event)
 		--Damage players that are standing on Tiberium Ore and not in vehicles
 		local playerPositionOre = player.surface.find_entities_filtered {name = "tiberium-ore", position = player.position, radius = 1}
 		if #playerPositionOre > 0 and not player.character.vehicle then
-			player.character.damage(TiberiumDamage * 0.1, game.forces.tiberium, "tiberium")
+			player.character.damage(TiberiumDamage * 0.1, game.forces.neutral, "tiberium")
 		end
 		--Extra damage for being in the middle of a patch vs at the edge?
 		local nearby_ore_count = player.surface.count_entities_filtered{name = "tiberium-ore", position = player.position, radius = 1.5}
 		if nearby_ore_count > 0 and not player.character.vehicle then
-			player.character.damage(TiberiumDamage * nearby_ore_count * 0.1, game.forces.tiberium, "tiberium")
+			player.character.damage(TiberiumDamage * nearby_ore_count * 0.1, game.forces.neutral, "tiberium")
 		end
 		--Damage players that are moderately close to Tiberium nodes and not in vehicles, more damage per nearby multiple node
 		local nearby_node_count = player.surface.count_entities_filtered{name = "tibGrowthNode", position = player.position, radius = TiberiumRadius * 0.6}
 		if nearby_node_count > 0 and not player.character.vehicle then
-			player.character.damage(TiberiumDamage * 0.5 * nearby_node_count ^ 0.8, game.forces.tiberium, "tiberium")
+			player.character.damage(TiberiumDamage * 0.5 * nearby_node_count ^ 0.8, game.forces.neutral, "tiberium")
 		end
 		--Damage players with unsafe Tiberium products in their inventory
 		local inventory = player.get_inventory(defines.inventory.item_main)
 		if inventory then
 			for p = 1, #global.tiberiumProducts do
 				if inventory.get_item_count(global.tiberiumProducts[p]) > 0 then
-					player.character.damage(0.3, game.forces.tiberium, "tiberium")
+					player.character.damage(TiberiumDamage * 0.3, game.forces.neutral, "tiberium")
 					break
 				end
 			end
@@ -715,7 +718,7 @@ script.on_event(defines.events.on_robot_built_entity, function(event)
 			CnC_SonicWall_AddNode(event.created_entity, event.tick)
 		end
 	end
-	if (event.created_entity.name == "tib-spike") then 
+	if (event.created_entity.name == "tib-spike") then
 		local entity = event.created_entity
 		local position = event.created_entity.position
 		local area = {
@@ -740,7 +743,7 @@ script.on_event(defines.events.on_robot_built_entity, function(event)
 				}
 		end
 	end
-	if (event.created_entity.name == "growth-accelerator-node") then 
+	if (event.created_entity.name == "growth-accelerator-node") then
 		local entity = event.created_entity
 		local position = event.created_entity.position
 		local area = {
@@ -766,7 +769,7 @@ script.on_event(defines.events.script_raised_built, function(event)
 			CnC_SonicWall_AddNode(event.entity, event.tick)
 		end
 	end
-	if (event.entity.name == "tib-spike") then 
+	if (event.entity.name == "tib-spike") then
 		local entity = event.entity
 		local position = event.entity.position
 		local area = {
@@ -791,7 +794,7 @@ script.on_event(defines.events.script_raised_built, function(event)
 				}
 		end
 	end
-	if (event.entity.name == "growth-accelerator-node") then 
+	if (event.entity.name == "growth-accelerator-node") then
 		local entity = event.entity
 		local position = event.entity.position
 		local area = {
@@ -817,7 +820,7 @@ script.on_event(defines.events.script_raised_revive, function(event)
 			CnC_SonicWall_AddNode(event.entity, event.tick)
 		end
 	end
-	if (event.created_entity.name == "tib-spike") then 
+	if (event.created_entity.name == "tib-spike") then
 		local entity = event.created_entity
 		local position = event.created_entity.position
 		local area = {
@@ -842,7 +845,7 @@ script.on_event(defines.events.script_raised_revive, function(event)
 				}
 		end
 	end
-	if (event.created_entity.name == "growth-accelerator-node") then 
+	if (event.created_entity.name == "growth-accelerator-node") then
 		local entity = event.created_entity
 		local position = event.created_entity.position
 		local area = {

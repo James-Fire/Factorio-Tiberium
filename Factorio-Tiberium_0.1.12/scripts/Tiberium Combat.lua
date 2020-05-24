@@ -678,7 +678,7 @@ data:extend{
   }
  }
 local TiberiumDamage = settings.startup["tiberium-damage"].value
-local TiberiumRadius = {settings.startup["tiberium-radius"].value*1.1}
+local TiberiumRadius = settings.startup["tiberium-radius"].value
 data:extend({
 {
     type = "land-mine",
@@ -740,7 +740,7 @@ data:extend({
                 {
                   {
                     type = "damage",
-                    damage = { amount = 1, type = "tiberium"}
+                    damage = {amount = TiberiumDamage * 0.1, type = "tiberium"}
                   },
                 }
               }
@@ -788,7 +788,7 @@ data:extend({
       width = 1,
       height = 1
     },
-    trigger_radius = 33,
+    trigger_radius = TiberiumRadius * 0.6,
 	trigger_force = "enemy",
     ammo_category = "landmine",
 	resistances = {
@@ -826,7 +826,7 @@ data:extend({
             action =
             {
               type = "area",
-              radius = 33,
+              radius = TiberiumRadius * 0.6,
               force = "enemy",
               action_delivery =
               {
@@ -835,7 +835,7 @@ data:extend({
                 {
                   {
                     type = "damage",
-                    damage = { amount = 2, type = "tiberium"}
+                    damage = {amount = TiberiumDamage * 0.2, type = "tiberium"}
                   },
                 }
               }
