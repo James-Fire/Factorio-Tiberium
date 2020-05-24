@@ -64,12 +64,14 @@ script.on_init(
 	  ["electric-pole"] = true
     }
 	if settings.startup["biters-immune-to-tiberium-damage"].value then
-		game.forces.enemy.set_cease_fire(global.damageForceName, true)
+		game.forces[global.damageForceName].set_cease_fire(game.forces.enemy, true)
 		global.exemptDamageItems["unit-spawner"] = true
 		global.exemptDamageItems["turret"] = true
 	end
 	
+	game.forces.enemy.set_cease_fire(global.damageForceName, true)
 	game.forces.player.set_cease_fire(global.damageForceName, true)
+	game.forces[global.damageForceName].set_cease_fire(game.forces.player, true)
     global.tiberiumProducts = {"tiberium-bar", global.oreType}
     global.liquidTiberiumProducts = {"liquid-tiberium", "tiberium-sludge", "tiberium-waste"}
 	
@@ -504,64 +506,6 @@ script.on_event(
   end
 )]]
 
--- Double check here XX, I think using only on_built_entity might mean that robot-placed drills don't add to the list.
--- Gotta test, that.
-script.on_event(
-  defines.events.on_built_entity,
-  function(event)
-    if (event.created_entity.type == "mining-drill") then
-      table.insert(global.drills, event.created_entity)
-	end
-	if (event.created_entity.name == "CnC_SonicWall_Hub") then
-	  CnC_SonicWall_AddNode(event.created_entity, event.tick)
-	end
-	if (event.created_entity.name == "tib-spike") then
-		local entity = event.created_entity
-		local position = event.created_entity.position
-		local area = {
-			{x = math.floor(position.x), y = math.floor(position.y)},
-			{x = math.ceil(position.x), y = math.ceil(position.y)}
-	    }
-		local mineentities = game.get_surface(1).find_entities_filtered{area = area, name = "node-land-mine"}
-		for _, entity in pairs(mineentities) do
-			entity.destroy()
-		end
-		local entities = game.get_surface(1).find_entities_filtered{area = area, name = "tibGrowthNode"}
-		for _, entity in pairs(entities) do
-			local noderichness = entity.amount
-			entity.destroy()
-			local entity = game.get_surface(1).create_entity
-				{
-				name = "tibGrowthNode_infinite",
-				position = position,
-				force = neutral,
-				amount = noderichness*10,
-				raise_built = true
-				}
-		end
-	end
-	if (event.created_entity.name == "growth-accelerator-node") then
-		local entity = event.created_entity
-		local position = event.created_entity.position
-		local area = {
-			{x = math.floor(position.x), y = math.floor(position.y)},
-			{x = math.ceil(position.x), y = math.ceil(position.y)}
-	    }
-		local entities = game.get_surface(1).find_entities_filtered{area = area, name = "growth-accelerator-node"}
-		for _, entity in pairs(entities) do
-		    entity.destroy()
-		    local entity = game.get_surface(1).create_entity
-				{
-				name = "growth-accelerator",
-				position = position,
-				force = game.get_player(event.player_index).force,
-				}
-		end
-	end
-  end
-)
-
-
 script.on_event(
   defines.events.on_tick,
   function(event)
@@ -712,179 +656,85 @@ script.on_event(defines.events.on_trigger_created_entity, function(event)
 	end
 end)
 
-script.on_event(defines.events.on_robot_built_entity, function(event)
-	if (event.created_entity ~= nil) then
-		if (event.created_entity.name == "CnC_SonicWall_Hub") then
-			CnC_SonicWall_AddNode(event.created_entity, event.tick)
+local on_new_entity = function(event)
+	local new_entity = event.created_entity and event.created_entity or event.entity --Handle multiple event types
+	if (new_entity.type == "mining-drill") then
+		local duplicate = false
+		for _, drill in pairs(global.drills) do
+			if drill == new_entity then	duplicate = true break end
 		end
+		if not duplicate then table.insert(global.drills, new_entity) end
 	end
-	if (event.created_entity.name == "tib-spike") then
-		local entity = event.created_entity
-		local position = event.created_entity.position
+	if (new_entity.name == "CnC_SonicWall_Hub") then
+		CnC_SonicWall_AddNode(new_entity, event.tick)
+	elseif (new_entity.name == "tib-spike") then
+		local position = new_entity.position
 		local area = {
 			{x = math.floor(position.x), y = math.floor(position.y)},
 			{x = math.ceil(position.x), y = math.ceil(position.y)}
-	    }
+		}
 		local mineentities = game.get_surface(1).find_entities_filtered{area = area, name = "node-land-mine"}
-			for _, entity in pairs(mineentities) do
-			  entity.destroy()
-			end
-		local entities = game.get_surface(1).find_entities_filtered{area = area, name = "tibGrowthNode"}
-			for _, entity in pairs(entities) do
-				local noderichness = entity.amount
-			  entity.destroy()
-			  local entity = game.get_surface(1).create_entity
+		for _, entity in pairs(mineentities) do
+			entity.destroy()
+		end
+		local nodes = game.get_surface(1).find_entities_filtered{area = area, name = "tibGrowthNode"}
+		for _, node in pairs(nodes) do
+			local noderichness = node.amount
+			node.destroy()
+			local entity = game.get_surface(1).create_entity
 				{
 				name = "tibGrowthNode_infinite",
 				position = position,
 				force = neutral,
-				amount = noderichness*10,
+				amount = noderichness * 10,
 				raise_built = true
 				}
 		end
-	end
-	if (event.created_entity.name == "growth-accelerator-node") then
-		local entity = event.created_entity
-		local position = event.created_entity.position
+	elseif (new_entity.name == "growth-accelerator-node") then
+		local position = new_entity.position
 		local area = {
 			{x = math.floor(position.x), y = math.floor(position.y)},
 			{x = math.ceil(position.x), y = math.ceil(position.y)}
-	    }
-		local entities = game.get_surface(1).find_entities_filtered{area = area, name = "growth-accelerator-node"}
-			for _, entity in pairs(entities) do
-			  entity.destroy()
-			  local entity = game.get_surface(1).create_entity
+		}
+		local accelerators = game.get_surface(1).find_entities_filtered{area = area, name = "growth-accelerator-node"}
+		for _, accelerator in pairs(accelerators) do
+			local force = accelerator.force
+			accelerator.destroy()
+			local entity = game.get_surface(1).create_entity
 				{
 				name = "growth-accelerator",
 				position = position,
-				force = event.robot.force,
+				force = force,
 				}
 		end
 	end
-end)
+end
 
-script.on_event(defines.events.script_raised_built, function(event)
-	if (event.entity ~= nil) then
-		if (event.entity.name == "CnC_SonicWall_Hub") then
-			CnC_SonicWall_AddNode(event.entity, event.tick)
-		end
-	end
-	if (event.entity.name == "tib-spike") then
-		local entity = event.entity
-		local position = event.entity.position
-		local area = {
-			{x = math.floor(position.x), y = math.floor(position.y)},
-			{x = math.ceil(position.x), y = math.ceil(position.y)}
-	    }
-		local mineentities = game.get_surface(1).find_entities_filtered{area = area, name = "node-land-mine"}
-			for _, entity in pairs(mineentities) do
-			  entity.destroy()
-			end
-		local entities = game.get_surface(1).find_entities_filtered{area = area, name = "tibGrowthNode"}
-			for _, entity in pairs(entities) do
-				local noderichness = entity.amount
-			  entity.destroy()
-			  local entity = game.get_surface(1).create_entity
-				{
-				name = "tibGrowthNode_infinite",
-				position = position,
-				force = neutral,
-				amount = noderichness*10,
-				raise_built = true
-				}
-		end
-	end
-	if (event.entity.name == "growth-accelerator-node") then
-		local entity = event.entity
-		local position = event.entity.position
-		local area = {
-			{x = math.floor(position.x), y = math.floor(position.y)},
-			{x = math.ceil(position.x), y = math.ceil(position.y)}
-	    }
-		local entities = game.get_surface(1).find_entities_filtered{area = area, name = "growth-accelerator-node"}
-			for _, entity in pairs(entities) do
-			  entity.destroy()
-			  local entity = game.get_surface(1).create_entity
-				{
-				name = "growth-accelerator",
-				position = position,
-				force = game.get_player(event.player_index).force,
-				}
-		end
-	end
-end)
-
-script.on_event(defines.events.script_raised_revive, function(event)
-	if (event.entity ~= nil) then
-		if (event.entity.name == "CnC_SonicWall_Hub") then
-			CnC_SonicWall_AddNode(event.entity, event.tick)
-		end
-	end
-	if (event.created_entity.name == "tib-spike") then
-		local entity = event.created_entity
-		local position = event.created_entity.position
-		local area = {
-			{x = math.floor(position.x), y = math.floor(position.y)},
-			{x = math.ceil(position.x), y = math.ceil(position.y)}
-	    }
-		local mineentities = game.get_surface(1).find_entities_filtered{area = area, name = "node-land-mine"}
-			for _, entity in pairs(mineentities) do
-			  entity.destroy()
-			end
-		local entities = game.get_surface(1).find_entities_filtered{area = area, name = "tibGrowthNode"}
-			for _, entity in pairs(entities) do
-				local noderichness = entity.amount
-			  entity.destroy()
-			  local entity = game.get_surface(1).create_entity
-				{
-				name = "tibGrowthNode_infinite",
-				position = position,
-				force = neutral,
-				amount = noderichness*10,
-				raise_built = true
-				}
-		end
-	end
-	if (event.created_entity.name == "growth-accelerator-node") then
-		local entity = event.created_entity
-		local position = event.created_entity.position
-		local area = {
-			{x = math.floor(position.x), y = math.floor(position.y)},
-			{x = math.ceil(position.x), y = math.ceil(position.y)}
-	    }
-		local entities = game.get_surface(1).find_entities_filtered{area = area, name = "growth-accelerator-node"}
-			for _, entity in pairs(entities) do
-			  entity.destroy()
-			  local entity = game.get_surface(1).create_entity
-				{
-				name = "growth-accelerator",
-				position = position,
-				force = game.get_player(event.player_index).force,
-				}
-		end
-	end
-end)
+script.on_event(defines.events.on_built_entity, on_new_entity)
+script.on_event(defines.events.on_robot_built_entity, on_new_entity)
+script.on_event(defines.events.script_raised_built, on_new_entity)
+script.on_event(defines.events.script_raised_revive, on_new_entity)
 
 script.on_event(defines.events.script_raised_destroy, function(event)
-    if (event.entity.name == "CnC_SonicWall_Hub") then
+	if (event.entity.name == "CnC_SonicWall_Hub") then
 		CnC_SonicWall_DeleteNode(event.entity, event.tick)
 	end
 end)
 
 script.on_event(defines.events.on_pre_player_mined_item, function(event)
-    if (event.entity.name == "CnC_SonicWall_Hub") then
+	if (event.entity.name == "CnC_SonicWall_Hub") then
 		CnC_SonicWall_DeleteNode(event.entity, event.tick)
 	end
 end)
 
 script.on_event(defines.events.on_robot_pre_mined, function(event)
-    if (event.entity.name == "CnC_SonicWall_Hub") then
+	if (event.entity.name == "CnC_SonicWall_Hub") then
 		CnC_SonicWall_DeleteNode(event.entity, event.tick)
 	end
 end)
 
 script.on_event(defines.events.on_entity_died, function(event)
-    if (event.entity.name == "CnC_SonicWall_Hub") then
+	if (event.entity.name == "CnC_SonicWall_Hub") then
 		CnC_SonicWall_DeleteNode(event.entity, event.tick)
 	end
 end)
