@@ -1,3 +1,23 @@
+May 24
+
+Fixes ticket 0035: guardrails on settings to reduce crashes
+
+Minimum damage of 0 means that players can disable Tiberium damage
+
+Fixes ticket 0036: added setting to prevent biters from dying to Tiberium
+
+Additional entity types are exempt from growth damage (so you can power your miners and transport molten Tiberium from your spikes)
+
+Continuing refactor of recipe_autogeneration (removed another 60 lines of redundancy)
+
+Fixed "quartz-ore" crash for Bob's-NoAngel's
+
+Fixes biters attacking invincible Tiberium nodes
+
+Added tooltips for spiked Tiberium nodes
+
+Fixes script_raised_revive crash reported by cvl
+
 ---------------------------------------------------------------------------------------------------1.11
 
 May 23
