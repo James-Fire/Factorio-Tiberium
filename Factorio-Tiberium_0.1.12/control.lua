@@ -109,10 +109,10 @@ function AddOre(surface, position, growthRate)
 
   --damage adjacent entities unless it's in the list of exemptDamageItems
   local entitiesToDamage = surface.find_entities(area)
-  for i = 1, #entitiesToDamage, 1 do
-    printTable(global.exemptDamageItems)
-    if global.exemptDamageItems[entitiesToDamage[i].type] == nil then
-      if entitiesToDamage[i].prototype.max_health > 0 then
+  for i = 1, #entitiesToDamage do
+    if not entitiesToDamage[i].valid then break end
+    if not global.exemptDamageItems[entitiesToDamage[i].type] then
+      if entitiesToDamage[i].health > 0 then
         entitiesToDamage[i].damage(global.structureDamage, game.forces.neutral, "tiberium")
       end
     end
