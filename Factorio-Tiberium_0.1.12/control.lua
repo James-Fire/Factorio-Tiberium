@@ -112,7 +112,7 @@ function AddOre(surface, position, growthRate)
   for i = 1, #entitiesToDamage do
     if not entitiesToDamage[i].valid then break end
     if not global.exemptDamageItems[entitiesToDamage[i].type] then
-      if entitiesToDamage[i].health > 0 then
+      if entitiesToDamage[i].prototype.max_health > 0 and entitiesToDamage[i].health > 0 then
         entitiesToDamage[i].damage(global.structureDamage, game.forces.neutral, "tiberium")
       end
     end
