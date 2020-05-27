@@ -73,6 +73,7 @@ data:extend{tiberiumGrowthNodeItem, tiberiumGrowthNodeEntity,
 local tiberiumSpikeItem = table.deepcopy(data.raw.item["pumpjack"])
 tiberiumSpikeItem.name = "tib-spike"
 tiberiumSpikeItem.icon = "__Factorio-Tiberium__/graphics/icons/tiberium-spike.png"
+tiberiumSpikeItem.icon_mipmaps = nil
 tiberiumSpikeItem.subgroup = "a-buildings"
 tiberiumSpikeItem.order = "e"
 tiberiumSpikeItem.place_result = "tib-spike"
@@ -80,6 +81,7 @@ tiberiumSpikeItem.place_result = "tib-spike"
 local tiberiumSpikeEntity = table.deepcopy(data.raw["mining-drill"]["pumpjack"])
 tiberiumSpikeEntity.name = "tib-spike"
 tiberiumSpikeEntity.icon = "__Factorio-Tiberium__/graphics/icons/tiberium-spike.png"
+tiberiumSpikeEntity.icon_mipmaps = nil
 tiberiumSpikeEntity.radius_visualisation_picture = data.raw["mining-drill"]["pumpjack"].radius_visualisation_picture
 tiberiumSpikeEntity.mining_speed = 5
 tiberiumSpikeEntity.subgroup = "a-buildings"

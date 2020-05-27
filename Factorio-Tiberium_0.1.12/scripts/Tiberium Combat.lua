@@ -677,8 +677,10 @@ data:extend{
 	}
   }
  }
+
+--Moving away from land mines for performance reasons, probably need it uncommented for backwards compatibility
 local TiberiumDamage = settings.startup["tiberium-damage"].value
-local TiberiumRadius = settings.startup["tiberium-radius"].value
+local TiberiumRadius = 20 + settings.startup["tiberium-spread"].value * 0.3
 data:extend({
 {
     type = "land-mine",
