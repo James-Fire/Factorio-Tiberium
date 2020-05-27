@@ -176,6 +176,10 @@ data:extend
 			},
 			{
 				type = "unlock-recipe",
+				recipe = "tiberium-waste-recycling"
+			},
+			{
+				type = "unlock-recipe",
 				recipe = "tiberium-rocket"
 			},
 			{

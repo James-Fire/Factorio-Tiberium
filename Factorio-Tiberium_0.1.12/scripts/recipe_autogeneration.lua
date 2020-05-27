@@ -4,7 +4,7 @@ require("scripts/recipe")
 local RecipeMult = math.floor(settings.startup["tiberium-value"].value +.5)/10
 
 --Universal Variables used no matter what mods are active
-local OrePerCredit = settings.startup["tiberium-growth"].value
+local OrePerCredit = settings.startup["tiberium-growth"].value * 10
 local CreditTime = RecipeMult*OrePerCredit  --Scale with OrePerCredit instead of just constant 100
 local EnergyCreditCost = CreditTime*3
 local InputMaterial = 10/RecipeMult
@@ -498,10 +498,6 @@ if settings.startup["tiberium-byproduct-2"].value == true then  -- Refining Sulf
 	LSlib.recipe.addResult("tiberium-ore-processing", "sulfur", WastePerCycle, "item")
 	LSlib.recipe.addResult("molten-tiberium-processing", "sulfur", WastePerCycle, "item")
 	LSlib.recipe.addResult("tiberium-liquid-processing", "sulfur", WastePerCycle, "item")
-end
-
-if settings.startup["waste-recycling"].value == true then  -- Waste Recycling setting
-	LSlib.technology.addRecipeUnlock("tiberium-power-tech", "tiberium-waste-recycling")
 end
 
 --Needs an icon since it has no output, idk how to delete it

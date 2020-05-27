@@ -2,11 +2,12 @@ require "scripts/CnC_Walls" --Note, to make SonicWalls work / be passable,
 
 local GrowthCreditMax = settings.global["growth-credit"].value
 local TiberiumDamage = settings.startup["tiberium-damage"].value
-local TiberiumGrowth = settings.startup["tiberium-growth"].value
-local TiberiumRadius = settings.startup["tiberium-radius"].value
-local TiberiumMaxPerTile = settings.startup["tiberium-max-per-tile"].value
+local TiberiumGrowth = settings.startup["tiberium-growth"].value * 10
+local TiberiumMaxPerTile = settings.startup["tiberium-growth"].value * 100 --Force 10:1 ratio with growth
+local TiberiumRadius = 25 + settings.startup["tiberium-spread"].value * 0.25 --Translates to 25-50 range
+local TiberiumSpread = settings.startup["tiberium-spread"].value
+local debugText = settings.startup["debug-text"].value
 --In order to make something debug only, use "if settings.startup["debug-text"].value == true then", and activate the debug-setting startup option.
-local seed_effect_id = "seed-launch"
 
 script.on_init(
   function()
@@ -16,28 +17,14 @@ script.on_init(
 	global.tibMineNodeList = {}
     global.drills = {}
 
-    -- Does not appear to be currently used so commenting out for now
+    -- Removed/unimplemented ideas
     --global.contaminatedPlayers = { } -- { player reference, ticks }
-
-    -- Each node should spawn tiberium once every 5 minutes (give or take a handful of ticks rounded when dividing)
-    -- Currently allowing this to potentially update every tick but to keep things under control minUpdateInterval
-    -- can be set to something greater than 1. When minUpdateInterval is reached the global tiberium growth rate
-    -- will stagnate instead of increasing with each new node found but updates will continue to happen for all fields.
-    global.minUpdateInterval = 1
-    global.intervalBetweenNodeUpdates =
-      math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
-	global.intervalBetweenDamageUpdates =
-      math.floor(math.max(60 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
-    global.baseGrowthRate = TiberiumGrowth -- how much ore to place at once
-    global.baseSize = TiberiumRadius -- The maximum radius of the field
-    global.contactDamage = TiberiumDamage --how much damage should be applied to objects over tiberium?
-    global.contactDamageTime = 30 --how long (in ticks) should players be damaged after contacting tiberium?
-    global.structureDamage = TiberiumDamage --how much damage should be applied to adjacent buildings? (excluding electric-mining-drill)
-    global.vehicleDamage = TiberiumDamage --how much damage should be applied to vehicles players are in?
-    global.damageForceName = "tiberium"
-    global.tiberiumLevel = 0 --The level of tiberium; affects growth/damage patterns
-    global.oreType = "tiberium-ore"
-    global.world = game.surfaces[1]
+	-- global.intervalBetweenDamageUpdates =
+      -- math.floor(math.max(60 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
+    --global.contactDamage = TiberiumDamage --how much damage should be applied to objects over tiberium?
+    --global.contactDamageTime = 30 --how long (in ticks) should players be damaged after contacting tiberium?
+    --global.vehicleDamage = TiberiumDamage --how much damage should be applied to vehicles players are in?
+    --global.tiberiumLevel = 0 --The level of tiberium; affects growth/damage patterns
     -- global.giveStartingItems = true
     -- global.startingItems = {
       -- {name = "oil-refinery", count = 1},
@@ -48,6 +35,16 @@ script.on_init(
       -- {name = "electric-mining-drill", count = 5},
       -- {name = "assembling-machine-2", count = 1}
     -- }
+
+    -- Each node should spawn tiberium once every 5 minutes (give or take a handful of ticks rounded when dividing)
+    -- Currently allowing this to potentially update every tick but to keep things under control minUpdateInterval
+    -- can be set to something greater than 1. When minUpdateInterval is reached the global tiberium growth rate
+    -- will stagnate instead of increasing with each new node found but updates will continue to happen for all fields.
+    global.minUpdateInterval = 1
+    global.intervalBetweenNodeUpdates = math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
+    global.damageForceName = "tiberium"
+    global.oreType = "tiberium-ore"
+    global.world = game.surfaces[1]
 	
     if not game.forces[global.damageForceName] then
       game.create_force(global.damageForceName)
@@ -61,17 +58,11 @@ script.on_init(
       ["wall"] = true,
 	  ["pipe"] = true,
 	  ["pipe-to-ground"] = true,
-	  ["electric-pole"] = true
-    }
-	if settings.startup["biters-immune-to-tiberium-damage"].value then
-		game.forces[global.damageForceName].set_cease_fire(game.forces.enemy, true)
-		global.exemptDamageItems["unit-spawner"] = true
-		global.exemptDamageItems["turret"] = true
-	end
+	  ["electric-pole"] = true,
+	  ["unit-spawner"] = true,  --Biters immune until both performance and evo factor are fixed
+	  ["turret"] = true
+	}
 	
-	game.forces.enemy.set_cease_fire(global.damageForceName, true)
-	game.forces.player.set_cease_fire(global.damageForceName, true)
-	game.forces[global.damageForceName].set_cease_fire(game.forces.player, true)
     global.tiberiumProducts = {"tiberium-bar", global.oreType}
     global.liquidTiberiumProducts = {"liquid-tiberium", "tiberium-sludge", "tiberium-waste"}
 	
@@ -81,197 +72,157 @@ script.on_init(
 )
 
 function AddOre(surface, position, growthRate)
-  local area = {
-    {x = math.floor(position.x), y = math.floor(position.y)},
-    {x = math.ceil(position.x), y = math.ceil(position.y)}
-  }
-  local entities = surface.find_entities_filtered({area = area, name = {"tiberium-ore"}})
+	local area = {
+		{x = math.floor(position.x), y = math.floor(position.y)},
+		{x = math.ceil(position.x), y = math.ceil(position.y)}
+		}
+	local entities = surface.find_entities_filtered({area = area, name = {"tiberium-ore"}})
 
-  if (#entities >= 1) then
-		--game.print("ERROR multiple entities | " .. math.random())
-   -- entities[1].destroy()
- --elseif (#entities == 1) then
-		--game.print(string.format("x:%.2f y:%.2f update | %f", position.x, position.y, math.random()))
+	if #entities >= 1 then
 		oreEntity = entities[1]
-    oreEntity.amount = math.max(math.min(oreEntity.amount + growthRate, TiberiumMaxPerTile), oreEntity.amount) --Don't reduce ore amount when growing node
-  else
-	--game.print(string.format("x:%.2f y:%.2f new | %f", position.x, position.y, math.random()))
-	--Tiberium destroys all other resources as it spreads
-	local otherResources = surface.find_entities_filtered({area = area, type = "resource"})
-	for _, entity in pairs(otherResources) do  --Make sure not destroy other Tiberium
-	  if (entity.name ~= "tiberium-ore") and (entity.name ~= "tibGrowthNode") and (entity.name ~= "tibGrowthNode_infinite") then
-	    entity.destroy()
-	  end
+		local newAmount = math.min(oreEntity.amount + growthRate, TiberiumMaxPerTile)
+		if newAmount > oreEntity.amount then --Don't reduce ore amount when growing node
+			oreEntity.amount = newAmount
+		end
+	else
+		--Tiberium destroys all other non-Tiberium resources as it spreads
+		local otherResources = surface.find_entities_filtered({area = area, type = "resource"})
+		for _, entity in pairs(otherResources) do
+			if (entity.name ~= "tiberium-ore") and (entity.name ~= "tibGrowthNode") and (entity.name ~= "tibGrowthNode_infinite") then
+				entity.destroy()
+			end
+		end
+		oreEntity = surface.create_entity {name = "tiberium-ore", amount = math.min(growthRate, TiberiumMaxPerTile), position = position}
+		surface.destroy_decoratives{position = position} --Remove decoration on tile on spread.
 	end
-    oreEntity = surface.create_entity {name = "tiberium-ore", amount = math.min(growthRate, TiberiumMaxPerTile), position = position}
-	game.surfaces[1].destroy_decoratives{ position = position } --Remove decoration on tile on spread.
-  end
 
-  --damage adjacent entities unless it's in the list of exemptDamageItems
-  local entitiesToDamage = surface.find_entities(area)
-  for i = 1, #entitiesToDamage, 1 do
-    printTable(global.exemptDamageItems)
-    if global.exemptDamageItems[entitiesToDamage[i].type] == nil then
-      if entitiesToDamage[i].prototype.max_health > 0 then
-        entitiesToDamage[i].damage(global.structureDamage, game.forces.neutral, "tiberium")
-      end
-    end
-  end
+	--Damage adjacent entities unless it's in the list of exemptDamageItems
+	local entitiesToDamage = surface.find_entities(area)
+	for i = 1, #entitiesToDamage do
+		if not entitiesToDamage[i].valid then break end
+		if not global.exemptDamageItems[entitiesToDamage[i].type] then
+			if entitiesToDamage[i].prototype.max_health > 0 and entitiesToDamage[i].health > 0 then
+				entitiesToDamage[i].damage(TiberiumDamage, game.forces.tiberium, "tiberium")
+			end
+		end
+	end
 
-   return oreEntity
+	return oreEntity
 end
 
 function CheckPoint(surface, position, lastValidPosition, growthRate)
-  -- if (position.x == nil or position.y == nil) then
-  --   game.print("x or y is nil in CheckPoint " .. math.random())
-  --   return
-  -- end
+	-- These checks are in roughly the order of guessed expense
+	local tile = surface.get_tile(position)
+	
+	if (not tile.collides_with("ground-tile")) then
+		AddOre(surface, lastValidPosition, growthRate)
+		return true  --Hit edge of water, add to previous ore
+	end
 
-  -- These checks are in roughly the order of guessed expense
-  local tile = surface.get_tile(position)
-  if (not tile.collides_with("ground-tile")) then
-    --game.print("Found a non-ground tile, placing ore at the last valid position" .. math.random())
-    AddOre(surface, lastValidPosition, growthRate)
-    return true
-  end
+	local area = {
+		{x = math.floor(position.x), y = math.floor(position.y)},
+		{x = math.floor(position.x) + 1, y = math.floor(position.y) + 1}
+		}
+	
+	local entitiesBlockTiberium = {"CnC_SonicWall_Hub", "CnC_SonicWall_Wall", "cliff"}
+	if surface.count_entities_filtered({area = area, name = entitiesBlockTiberium}) > 0 then
+		AddOre(surface, lastValidPosition, growthRate * 0.5)  --50% lost
+		return true  --Hit fence or cliff, add to previous ore
+	end
 
-  local area = {
-    {x = math.floor(position.x), y = math.floor(position.y)},
-    {x = math.ceil(position.x), y = math.ceil(position.y)}
-  }
-
-  if (#surface.find_entities_filtered({area = area, name = "CnC_SonicWall_Hub"}) > 0) or
-		(#surface.find_entities_filtered({area = area, name = "CnC_SonicWall_Wall"}) > 0) or
-		(#surface.find_entities_filtered({area = area, name = "cliff"}) > 0) then
-    --game.print("Found tiberium wall, placing ore at the last valid position" .. math.random())
-    AddOre(surface, lastValidPosition, growthRate * .50)
-    return true
-  end
-
-  -- If the current tile is an ore entity keep walking the line (return false for not done)
-  -- If we hit the end of the line without returning true ore is placed by a fallthrough check
-  -- in the line walk.
-
-  local oreEntity = surface.find_entities_filtered({area = area, name = {"tiberium-ore"}})
-  if (#oreEntity > 0) then
-    return false
-  else
-    -- game.print(
-    --   "Found a non-ore tile, placing ore here." .. position.x .. " " .. position.y .. " " .. math.random()
-    -- )
-    AddOre(surface, position, growthRate)
-    return true
-  end
+	if surface.count_entities_filtered({area = area, name = {"tiberium-ore"}}) == 0 then
+		AddOre(surface, position, growthRate)
+		return true  --Reached edge of patch, place new ore
+	else
+		return false  --Not at edge of patch, keep going
+	end
 end
 
 function PlaceOre(entity, howmany)
-  local timer = game.create_profiler()
+	--local timer = game.create_profiler()
 
-  if not entity.valid then
-    --game.print("entity is invalid")
-    return
-  end
+	if not entity.valid then return end
+	
+	howmany = howmany or 1
+	local surface = entity.surface
+	local position = entity.position
 
-  local surface = entity.surface
-  local position = entity.position
+	-- Scale growth rate based on distance from spawn
+	local growthRate = TiberiumGrowth * math.max(1, math.sqrt(math.abs(position.x) + math.abs(position.y)) / 20)
+			* math.max(1, TiberiumSpread / 50)
+	-- Scale size based on distance from spawn, separate from density in case we end up wanting them to scale differently
+	local size = TiberiumRadius * math.max(1, math.sqrt(math.abs(position.x) + math.abs(position.y)) / 30)
 
-  -- Scale growth rate based on distance from spawn
-  local growthRate = global.baseGrowthRate * math.max(1, math.sqrt(math.abs(position.x) + math.abs(position.y)) / 10)
-  -- Scale size based on distance from spawn, separate from density in case we end up wanting them to
-  -- scale differently
-  local size = TiberiumRadius * math.max(1, math.sqrt(math.abs(position.x) + math.abs(position.y)) / 100)
+	local accelerator = surface.find_entity("growth-accelerator", position)
+	if accelerator then
+		local inventory = accelerator.get_output_inventory()
+		local creditCount = math.min(inventory.get_item_count("growth-credit"), GrowthCreditMax)
+		if (creditCount > 0) then
+			howmany = howmany + creditCount
+			inventory.remove({name = "growth-credit", count = creditCount})
+		end
+	end
+	
+	for n = 1, howmany do
+		--Use polar coordinates to find a random angle and radius
+		local angle = math.random() * 2 * math.pi
+		local radius = 2.2 + math.sqrt(math.random()) * size -- A little over 2 to avoid putting too much on the node itself
+	
+		--Convert to cartesian and determine roughly how many tiles we travel through
+		local dx = radius * math.cos(angle)
+		local dy = radius * math.sin(angle)
+		step = math.max(math.abs(dx), math.abs(dy))
+		dx = dx / step
+		dy = dy / step
+		
+		local lastValidPosition = position
+		local x = position.x + dx
+		local y = position.y + dx
+		local i = 1
+		--Check each tile along the line and stop when we've added ore one time
+		while (i < step) do
+			newPosition = {x = x, y = y}
+			done = CheckPoint(surface, newPosition, lastValidPosition, growthRate)
+			if done then break end
+			
+			lastValidPosition = newPosition
+			x = x + dx
+			y = y + dy
+			i = i + 1
+		end
+		--Walked all the way to the end of the line, placing ore at the last valid position
+		if not done then
+			oreEntity = AddOre(surface, lastValidPosition, growthRate)
+			if math.random() < ((oreEntity.amount / TiberiumMaxPerTile) + (TiberiumSpread / 50 - 1)) then
+				local nodeNames = {"tibGrowthNode", "tibGrowthNode_infinite"}
+				if (surface.count_entities_filtered({position = newPosition, radius = TiberiumRadius * 0.8, name = nodeNames}) == 0) then
+					local node = surface.create_entity( {name = "tibGrowthNode", position = newPosition, amount = 15000})
+					table.insert(global.tibGrowthNodeList, node)
+				end
+			end
+		end
+	end
 
-  howmany = howmany or 1
-  --game.print("Placing " .. growthRate .. " ore " .. howmany .. " times " .. math.random())
-  local accelerator = surface.find_entity("growth-accelerator", position)
-  if (accelerator ~= nil) then
-    local inventory = accelerator.get_output_inventory()
-    local creditCount = math.min(inventory.get_item_count("growth-credit"), GrowthCreditMax)
-    if (creditCount > 0) then
-      howmany = howmany + creditCount
-      inventory.remove({name = "growth-credit", count = creditCount})
-    end
-  end
+	-- Tell all mining drills to wake up
+	if global.drills == nil then
+		global.drills = {}
+	end
 
-  for howmanycount = 1, howmany, 1 do
-    local direction = math.random() * 2 * math.pi
-    local length = 2.2 + math.random() * size -- A little over 2 to avoid putting too much on the node itself
-    --game.print("placement: " .. howmanycount .. " radians: " .. direction .. " length: " .. length .. " | " .. math.random())
-
-    local lastValidPosition = position
-
-    local x1 = position.x
-    local y1 = position.y
-    local x2 = position.x + length * math.cos(direction)
-    local y2 = position.y + length * math.sin(direction)
-
-    dx = (x2 - x1)
-    dy = (y2 - y1)
-    if (math.abs(dx) >= math.abs(dy)) then
-      step = math.abs(dx)
-    else
-      step = math.abs(dy)
-    end
-
-    dx = dx / step
-    dy = dy / step
-    x = x1
-    y = y1
-    i = 1
-    while (i < step) do
-      newPosition = {x = x, y = y}
-      done = CheckPoint(surface, newPosition, lastValidPosition, growthRate)
-      if (done) then
-        break
-      end
-      lastValidPosition = newPosition
-      x = x + dx
-      y = y + dy
-      i = i + 1
-    end
-
-    if (not done) then
-      --game.print("Walked all the way to the end of the line, placing ore at the last valid position" .. math.random())
-      oreEntity = AddOre(surface, lastValidPosition, growthRate)
-      if (math.random() > ((oreEntity.amount / TiberiumMaxPerTile) / 10)) then
-        if (surface.count_entities_filtered({position = newPosition, radius = TiberiumRadius * .9, name = {"tibGrowthNode", "tibGrowthNode_infinite"}}) == 0) then
-          local node = surface.create_entity( {name = "tibGrowthNode", position = newPosition, amount = 15000})
-          table.insert(global.tibGrowthNodeList, node)
-        end
-      end
-    end
-  end -- End of "howmany" loop
-
-  --game.print({"", timer, " end of placement loop", "|", math.random()})
-
-  game.write_file("tiberiumgrowth.log", {"", timer, " end of placement loop", "|", math.random(), "\r\n"}, true)
-
-  -- Tell any mining drills in the area to wake up
-  -- 2.5 is tiberium mining drill radius, should check drill prototypes for largest radius
-  -- local drills = surface.find_entities_filtered({radius = math.sqrt(size ^ 2 * 2) + 2.5, type = "mining-drill"})
-  --local drills = surface.find_entities_filtered({type = "mining-drill"})
-  --game.print({"", timer, " end of find_entities_filtered({type = \"mining-drill\"}) ", #drills})
-
-  if global.drills == nil then
-    global.drills = {}
-  end
-
-  for i = 1, #global.drills, 1 do
-    local drill = global.drills[i]
-    if (drill == nil or drill.valid == false) then
-      table.remove(drill)
-    else
-      drill.active = false
-      drill.active = true
-    end
-  end
-  if settings.startup["debug-text"].value == true then
-	game.print({"", timer, " end of updating mining drills ", #global.drills, "|", math.random()})
-  end
+	for i = 1, #global.drills, 1 do
+		local drill = global.drills[i]
+		if (drill == nil or drill.valid == false) then
+			table.remove(drill)
+		else
+			drill.active = false
+			drill.active = true
+		end
+	end
+	if debugText then
+		game.print({"", timer, " end of place ore at ", position.x, ", ", position.y, "|", math.random()})
+	end
 end
 
 --Code for making the Liquid Seed spread tib
-
 function LiquidBomb(surface, position, resource, amount)
     local radius = math.floor(amount^0.2)
     for x = position.x - radius*radius, position.x + radius*radius do
@@ -285,9 +236,9 @@ function LiquidBomb(surface, position, resource, amount)
 					local spike = surface.find_entity("tibGrowthNode_infinite", placePos)
 					if spike then
 					elseif node then
-						node.amount = node.amount+intensity
+						node.amount = node.amount + intensity
 					elseif oreEntity then
-						oreEntity.amount = oreEntity.amount+intensity
+						oreEntity.amount = oreEntity.amount + intensity
 					else
 						local tile = surface.get_tile(placePos)
 						if (tile.collides_with("ground-tile")) then
@@ -316,22 +267,14 @@ end
 
 --Liquid Seed trigger
 local on_script_trigger_effect = function(event)
-  if event.effect_id == seed_effect_id then
+  if event.effect_id == "seed-launch" then
 	LiquidBomb(game.surfaces[event.surface_index], event.target_position, "tiberium-ore", TiberiumMaxPerTile)
     return
   end
 end
 
-
 script.on_event(defines.events.on_script_trigger_effect, on_script_trigger_effect)
-commands.add_command(
-  "setTibTickRate",
-  "Sets how often Tiberium should attempt to grow. (tiberium: 20)",
-  function(list)
-    global.tickSkip = tonumber(list["parameter"])
-    game.player.print(global.tickSkip)
-  end
-)
+
 commands.add_command(
   "dumpTiberiumNodeList",
   "Print the list of known tiberium nodes",
@@ -375,15 +318,6 @@ commands.add_command(
   end
 )
 commands.add_command(
-  "tibSetbaseGrowthRate",
-  "Sets how many Tiberum spread per tiberium tick",
-  function(list)
-    global.baseGrowthRate = tonumber(list["parameter"])
-    game.player.print(global.baseGrowthRate)
-  end
-)
-
-commands.add_command(
   "tibGrowAllNodes",
   "Forces the mod to grow ore at every node",
   function(invocationdata)
@@ -391,10 +325,8 @@ commands.add_command(
 	local placements = tonumber(invocationdata["parameter"]) or 300
     game.print("There are " .. #global.tibGrowthNodeList .. " nodes in the list")
     for i = 1, #global.tibGrowthNodeList, 1 do
-		if settings.startup["debug-text"].value == true then
-			game.print(
-				"Growing node x:" .. global.tibGrowthNodeList[i].position.x .. " y:" .. global.tibGrowthNodeList[i].position.y
-			)
+		if debugText then
+			game.print("Growing node x:" .. global.tibGrowthNodeList[i].position.x .. " y:" .. global.tibGrowthNodeList[i].position.y)
 		end
       PlaceOre(global.tibGrowthNodeList[i], placements)
     end
@@ -414,20 +346,13 @@ commands.add_command(
   "tibDumpGlobals",
   "Dumps mod global variables (and may reset some if dev code in place)",
   function()
-    global.exemptDamageItems = {
-      ["mining-drill"] = true,
-      ["electric-pole"] = true,
-      ["transport-belt"] = true,
-      ["underground-belt"] = true,
-      ["splitter"] = true,
-    }
-
-    printTable(global.exemptDamageItems)
+	for k, v in pairs(global) do
+      printTable(global.k)
+	end
   end
 )
-
 commands.add_command(
-  "tibFixBrokenThings",
+  "tibDeleteOre",
   "Deletes all the tib ore on the map",
   function()
     local tibOres = global.tibGrowthNodeList[1].surface.find_entities_filtered({name = "tiberium-ore"})
@@ -437,7 +362,7 @@ commands.add_command(
   end
 )
 
---gives incoming players some starting items
+--[[gives incoming players some starting items
 --script.on_event(defines.events.on_player_joined_game, function(event)
 --  if global.giveStartingItems then
 --    local playerInventory = game.players[event.player_index].get_inventory(defines.inventory.player_main)
@@ -446,7 +371,7 @@ commands.add_command(
 --	  playerInventory.insert({name=global.startingItems[i].name, count=global.startingItems[i].count})
 --	end
 --  end
---end)
+--end)]]
 commands.add_command(
   "tibFixMineLag",
   "Deletes all the tib mines on the map",
@@ -459,35 +384,18 @@ commands.add_command(
 )
 
 
-
 --initial chunk scan
 script.on_event(
   defines.events.on_chunk_generated,
   function(event)
     local entities = game.surfaces[1].find_entities_filtered {area = event.area, name = "tibGrowthNode"}
-	for i, entity in pairs(entities) do
-		if entity.valid then
-			game.get_surface(1).create_entity{name = "node-land-mine", position = entity.position, force = game.forces.tiberium}
-		else
-			game.print("Node is invalid: mine placement")
-		end
-	end
-	--Intended to place special mines of Tib Ore when a new chunk is generated, but appears to not work.
-	--[[local globalOre = game.surfaces[1].find_entities_filtered {area = event.area, name = "tiberium-ore"}
-	for i, entity in pairs(entities) do
-		if entity.valid then
-			game.get_surface(1).create_entity{name = "ore-land-mine", position = entity.position, force = game.forces.tiberium}
-		else
-			game.print("Ore is invalid: mine placement")
-		end
-	end]]
     for i = 1, #entities, 1 do
       table.insert(global.tibGrowthNodeList, entities[i])
-      PlaceOre(entities[i], 10)
+	  local position = entities[i].position
+	  local howManyOre = math.min(math.max(10, (math.abs(position.x) + math.abs(position.y)) / 25), 200) --Start further nodes with more ore
+      PlaceOre(entities[i], howManyOre)
     end
-
-    global.intervalBetweenNodeUpdates =
-      math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
+    global.intervalBetweenNodeUpdates = math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
   end
 )
 --[[ Currently unused
@@ -517,7 +425,7 @@ script.on_event(
       for i = 1, #alldrills, 1 do
         table.insert(global.drills, alldrills[i])
       end
-	  if settings.startup["debug-text"].value == true then
+	  if debugText then
         game.print("Updated drill list and found " .. #global.drills .. " drills")
 		game.print("node count=" ..  #global.tibGrowthNodeList .. " intervalBetweenNodeUpdates " .. global.intervalBetweenNodeUpdates)
       end
@@ -536,94 +444,36 @@ script.on_event(
         PlaceOre(global.tibGrowthNodeList[global.tibGrowthNodeListIndex], 10)
       end
     end
-	
-	--[[	-- No need to poll the SonicWall tick script if there aren't any present in the world.
-	if (table_size(global.SRF_nodes) > 0)
-		then CnC_SonicWall_OnTick(event) end ]]--
-		
-		CnC_SonicWall_OnTick(event)
-		--[[ I'll just let this poll for now, otherwise it would crash, trying to reference a nil table on non-fresh, post-sonicwall games.
-		]]
-		
+
+	CnC_SonicWall_OnTick(event)
   end
 )
 
-script.on_nth_tick(7200,function(event)
+script.on_nth_tick(7200, function(event) --Every 2 minutes rebuild SRF global
 	local allsrfhubs = game.surfaces[1].find_entities_filtered {name = "CnC_SonicWall_Hub"}
 	if allsrfhubs[i] then
 		global.SRF_nodes = {}
 		for i = 1, #allsrfhubs, 1 do
-		  table.insert(global.SRF_nodes, allsrfhubs[i])
-		end
-	end
-	local allmines = game.surfaces[1].find_entities_filtered {name = "node-land-mine"}
-    global.tibMineNodeList = {}
-    for i = 1, #allmines, 1 do
-      table.insert(global.tibMineNodeList, allmines[i])
-    end
-	for i, entity in pairs(global.tibGrowthNodeList) do
-		if entity.valid then
-			local Minearea = {
-				{x = math.floor(entity.position.x)-2, y = math.floor(entity.position.y)-2},
-				{x = math.ceil(entity.position.x)+2, y = math.ceil(entity.position.y)+2}
-			}
-			local entities = game.get_surface(1).find_entities_filtered{area = Minearea, name = "node-land-mine"}
-			
-			if entities[1] then
-				if settings.startup["debug-text"].value == true then
-					game.print("No Mine")
-				end
-			else
-				game.get_surface(1).create_entity{name = "node-land-mine", position = entity.position, force = game.forces.tiberium}
-				if settings.startup["debug-text"].value == true then
-					game.print("Place Mine")
-				end
-			end
-		end
-	end
-	
-	if (tibMineNodeList ~= nil) then
-		for i, entity in pairs(global.tibMineNodeList) do
-			if entity.valid then
-				local area = {
-					{x = math.ceil(entity.position.x)+1, y = math.ceil(entity.position.y)+1},
-					{x = math.floor(entity.position.x)-1, y = math.floor(entity.position.y)-1}
-				}
-				local entities = game.get_surface(1).find_entities_filtered{area = area, name = "tibGrowthNode"}
-				if entities[1] then
-				else
-					entity.destroy()
-				end
-			end
+			table.insert(global.SRF_nodes, allsrfhubs[i])
 		end
 	end
 end
 )
 
-script.on_nth_tick(10,function(event)
+script.on_nth_tick(10, function(event)
     for _, player in pairs(game.connected_players) do
 		if not player.valid or not player.character then break end
 		--Damage players that are standing on Tiberium Ore and not in vehicles
-		local playerPositionOre = player.surface.find_entities_filtered {name = "tiberium-ore", position = player.position, radius = 1}
-		if #playerPositionOre > 0 and not player.character.vehicle then
-			player.character.damage(TiberiumDamage * 0.1, game.forces.neutral, "tiberium")
-		end
-		--Extra damage for being in the middle of a patch vs at the edge?
 		local nearby_ore_count = player.surface.count_entities_filtered{name = "tiberium-ore", position = player.position, radius = 1.5}
 		if nearby_ore_count > 0 and not player.character.vehicle then
-			player.character.damage(TiberiumDamage * nearby_ore_count * 0.1, game.forces.neutral, "tiberium")
-		end
-		--Damage players that are moderately close to Tiberium nodes and not in vehicles, more damage per nearby multiple node
-		local nearby_node_count = player.surface.count_entities_filtered{name = "tibGrowthNode", position = player.position, radius = TiberiumRadius * 0.6}
-		if nearby_node_count > 0 and not player.character.vehicle then
-			player.character.damage(TiberiumDamage * 0.5 * nearby_node_count ^ 0.8, game.forces.neutral, "tiberium")
+			player.character.damage(TiberiumDamage * nearby_ore_count * 0.1, game.forces.tiberium, "tiberium")
 		end
 		--Damage players with unsafe Tiberium products in their inventory
 		local inventory = player.get_inventory(defines.inventory.item_main)
 		if inventory then
 			for p = 1, #global.tiberiumProducts do
 				if inventory.get_item_count(global.tiberiumProducts[p]) > 0 then
-					player.character.damage(TiberiumDamage * 0.3, game.forces.neutral, "tiberium")
+					player.character.damage(TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")
 					break
 				end
 			end
@@ -632,32 +482,17 @@ script.on_nth_tick(10,function(event)
 end
 )
 
---Intended to place mines on Ore, but doesn't appear to work.
---[[script.on_nth_tick(14400,function(event)
-	local globalOre = game.get_surface(1).find_entities_filtered{area = area, name = "tiberium-ore"}
-	for i, entity in pairs(globalOre) do
-		if entity.valid then
-			local entities = game.get_surface(1).find_entities_filtered{area = area, name = "ore-land-mine"}
-			if entities[1] then
-			else
-				game.get_surface(1).create_entity{name = "ore-land-mine", position = entity.position, force = game.forces.tiberium}
-			end
-			for _, entity in pairs(Nodeentities) do
-				entity.damage(TiberiumDamage, game.forces.tiberium, "tiberium")
-		end
-	end
-end
-)]]
 
 script.on_event(defines.events.on_trigger_created_entity, function(event)
     CnC_SonicWall_OnTriggerCreatedEntity(event)
-	if settings.startup["debug-text"].value then  --Checking when this is actually called
+	if debugText then  --Checking when this is actually called
 		game.print("SRF Wall damaged at "..event.entity.position.x..", "..event.entity.position.y)
 	end
 end)
 
+
 local on_new_entity = function(event)
-	local new_entity = event.created_entity and event.created_entity or event.entity --Handle multiple event types
+	local new_entity = event.created_entity or event.entity --Handle multiple event types
 	if (new_entity.type == "mining-drill") then
 		local duplicate = false
 		for _, drill in pairs(global.drills) do
@@ -673,10 +508,6 @@ local on_new_entity = function(event)
 			{x = math.floor(position.x), y = math.floor(position.y)},
 			{x = math.ceil(position.x), y = math.ceil(position.y)}
 		}
-		local mineentities = game.get_surface(1).find_entities_filtered{area = area, name = "node-land-mine"}
-		for _, entity in pairs(mineentities) do
-			entity.destroy()
-		end
 		local nodes = game.get_surface(1).find_entities_filtered{area = area, name = "tibGrowthNode"}
 		for _, node in pairs(nodes) do
 			local noderichness = node.amount
@@ -715,26 +546,13 @@ script.on_event(defines.events.on_robot_built_entity, on_new_entity)
 script.on_event(defines.events.script_raised_built, on_new_entity)
 script.on_event(defines.events.script_raised_revive, on_new_entity)
 
-script.on_event(defines.events.script_raised_destroy, function(event)
+local on_remove_entity = function(event)
 	if (event.entity.name == "CnC_SonicWall_Hub") then
 		CnC_SonicWall_DeleteNode(event.entity, event.tick)
 	end
-end)
+end
 
-script.on_event(defines.events.on_pre_player_mined_item, function(event)
-	if (event.entity.name == "CnC_SonicWall_Hub") then
-		CnC_SonicWall_DeleteNode(event.entity, event.tick)
-	end
-end)
-
-script.on_event(defines.events.on_robot_pre_mined, function(event)
-	if (event.entity.name == "CnC_SonicWall_Hub") then
-		CnC_SonicWall_DeleteNode(event.entity, event.tick)
-	end
-end)
-
-script.on_event(defines.events.on_entity_died, function(event)
-	if (event.entity.name == "CnC_SonicWall_Hub") then
-		CnC_SonicWall_DeleteNode(event.entity, event.tick)
-	end
-end)
+script.on_event(defines.events.script_raised_destroy, on_remove_entity)
+script.on_event(defines.events.on_pre_player_mined_item, on_remove_entity)
+script.on_event(defines.events.on_robot_pre_mined, on_remove_entity)
+script.on_event(defines.events.on_entity_died, on_remove_entity)
