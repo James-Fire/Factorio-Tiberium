@@ -80,7 +80,7 @@ data:extend
 			},
 			{
 				type = "unlock-recipe",
-				recipe = "tib-pumpjack"
+				recipe = "node-harvester"
 			},
 		},
 		prerequisites = {"tiberium-separation-tech", "chemical-science-pack"},
