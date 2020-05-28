@@ -4,7 +4,7 @@ local GrowthCreditMax = settings.global["growth-credit"].value
 local TiberiumDamage = settings.startup["tiberium-damage"].value
 local TiberiumGrowth = settings.startup["tiberium-growth"].value * 10
 local TiberiumMaxPerTile = settings.startup["tiberium-growth"].value * 100 --Force 10:1 ratio with growth
-local TiberiumRadius = 25 + settings.startup["tiberium-spread"].value * 0.25 --Translates to 25-50 range
+local TiberiumRadius = 20 + settings.startup["tiberium-spread"].value * 0.4 --Translates to 20-60 range
 local TiberiumSpread = settings.startup["tiberium-spread"].value
 local debugText = settings.startup["debug-text"].value
 --In order to make something debug only, use "if settings.startup["debug-text"].value == true then", and activate the debug-setting startup option.
@@ -45,6 +45,7 @@ script.on_init(
     global.damageForceName = "tiberium"
     global.oreType = "tiberium-ore"
     global.world = game.surfaces[1]
+	global.tiberiumTerrain = nil --"dirt-4" --Performance is awful, disabling this
 	
     if not game.forces[global.damageForceName] then
       game.create_force(global.damageForceName)
@@ -73,9 +74,9 @@ script.on_init(
 
 function AddOre(surface, position, growthRate)
 	local area = {
-		{x = math.floor(position.x), y = math.floor(position.y)},
-		{x = math.ceil(position.x), y = math.ceil(position.y)}
-		}
+			{x = math.floor(position.x), y = math.floor(position.y)},
+			{x = math.floor(position.x) + 1, y = math.floor(position.y) + 1}
+	}
 	local entities = surface.find_entities_filtered({area = area, name = {"tiberium-ore"}})
 
 	if #entities >= 1 then
@@ -84,6 +85,8 @@ function AddOre(surface, position, growthRate)
 		if newAmount > oreEntity.amount then --Don't reduce ore amount when growing node
 			oreEntity.amount = newAmount
 		end
+	elseif surface.count_entities_filtered({area = area, name = {"tibGrowthNode", "tibGrowthNode_infinite"}}) > 0 then
+		return false --Don't place ore on top of nodes
 	else
 		--Tiberium destroys all other non-Tiberium resources as it spreads
 		local otherResources = surface.find_entities_filtered({area = area, type = "resource"})
@@ -93,6 +96,7 @@ function AddOre(surface, position, growthRate)
 			end
 		end
 		oreEntity = surface.create_entity {name = "tiberium-ore", amount = math.min(growthRate, TiberiumMaxPerTile), position = position}
+		if global.tiberiumTerrain then surface.set_tiles({{name = global.tiberiumTerrain, position = position}}, true, false) end
 		surface.destroy_decoratives{position = position} --Remove decoration on tile on spread.
 	end
 
@@ -124,13 +128,17 @@ function CheckPoint(surface, position, lastValidPosition, growthRate)
 		{x = math.floor(position.x) + 1, y = math.floor(position.y) + 1}
 		}
 	
-	local entitiesBlockTiberium = {"CnC_SonicWall_Hub", "CnC_SonicWall_Wall", "cliff"}
+	local entitiesBlockTiberium = {"CnC_SonicWall_Hub", "CnC_SonicWall_Wall", "cliff", "tibGrowthNode_infinite"}
 	if surface.count_entities_filtered({area = area, name = entitiesBlockTiberium}) > 0 then
 		AddOre(surface, lastValidPosition, growthRate * 0.5)  --50% lost
-		return true  --Hit fence or cliff, add to previous ore
+		return true  --Hit fence or cliff or spiked node, add to previous ore
 	end
-
-	if surface.count_entities_filtered({area = area, name = {"tiberium-ore"}}) == 0 then
+	
+	if surface.count_entities_filtered({area = area, name = "tibGrowthNode"}) > 0 then
+		return false  --Don't grow on top of active node, keep going
+	end
+	
+	if surface.count_entities_filtered({area = area, name = "tiberium-ore"}) == 0 then
 		AddOre(surface, position, growthRate)
 		return true  --Reached edge of patch, place new ore
 	else
@@ -193,11 +201,11 @@ function PlaceOre(entity, howmany)
 		--Walked all the way to the end of the line, placing ore at the last valid position
 		if not done then
 			oreEntity = AddOre(surface, lastValidPosition, growthRate)
-			if math.random() < ((oreEntity.amount / TiberiumMaxPerTile) + (TiberiumSpread / 50 - 1)) then
+			--Spread setting makes spawning new nodes more likely
+			if oreEntity and (math.random() < ((oreEntity.amount / TiberiumMaxPerTile) + (TiberiumSpread / 50 - 1))) then
 				local nodeNames = {"tibGrowthNode", "tibGrowthNode_infinite"}
 				if (surface.count_entities_filtered({position = newPosition, radius = TiberiumRadius * 0.8, name = nodeNames}) == 0) then
-					local node = surface.create_entity( {name = "tibGrowthNode", position = newPosition, amount = 15000})
-					table.insert(global.tibGrowthNodeList, node)
+					CreateNode(surface, newPosition)  --Use standard function to also remove overlapping ore
 				end
 			end
 		end
@@ -207,7 +215,6 @@ function PlaceOre(entity, howmany)
 	if global.drills == nil then
 		global.drills = {}
 	end
-
 	for i = 1, #global.drills, 1 do
 		local drill = global.drills[i]
 		if (drill == nil or drill.valid == false) then
@@ -219,6 +226,34 @@ function PlaceOre(entity, howmany)
 	end
 	if debugText then
 		game.print({"", timer, " end of place ore at ", position.x, ", ", position.y, "|", math.random()})
+	end
+end
+
+function CreateNode(surface, position)
+	local area = {{x = math.floor(position.x) - 0.8, y = math.floor(position.y) - 0.8},
+				  {x = math.floor(position.x) + 1.8, y = math.floor(position.y) + 1.8}}
+	--Avoid overlapping with other nodes
+	if surface.count_entities_filtered({area = area, name = "tibGrowthNode"}) == 0 then
+		--Clear other resources
+		local ore = surface.find_entities_filtered({area = area, type = "resource"})
+		for _, entity in pairs(ore) do
+			if entity.valid then
+				entity.destroy()
+			end
+		end
+		--Aesthetic changes
+		if global.tiberiumTerrain then
+			local newTiles = {}
+			local oldTiles = surface.find_tiles_filtered{area = area, collision_mask = "ground-tile"}
+			for i, tile in pairs(oldTiles) do
+				newTiles[i] = {name = global.tiberiumTerrain, position = tile.position}
+			end
+			surface.set_tiles(newTiles, true, false)
+		end
+		surface.destroy_decoratives{area = area}
+		--Actual node creation
+		local node = surface.create_entity{name="tibGrowthNode", position = position, amount = 15000}
+		table.insert(global.tibGrowthNodeList, node)
 	end
 end
 
@@ -249,19 +284,10 @@ function LiquidBomb(surface, position, resource, amount)
 			end
         end
     end
-	local center = {x = math.floor(position.x)+0.5, y = math.floor(position.y)+0.5}
-	local area = {{center.x-1, center.y-1},{center.x+1, center.y+1}}
-	local oreEntity = surface.find_entity("tiberium-ore", {center.x, center.y})
-	if oreEntity then
-		local existingNodes = surface.find_entities_filtered{name = "tibGrowthNode", area = area}
-		if (oreEntity.amount >= TiberiumMaxPerTile) and (#existingNodes == 0) then
-			local ore = surface.find_entities_filtered{name = "tiberium-ore", area = area}
-			for _, entity in pairs(ore) do
-				entity.destroy()
-			end
-			local node = surface.create_entity{name="tibGrowthNode", position = center, amount = 15000}
-			  table.insert(global.tibGrowthNodeList, node)
-		end
+	local center = {x = math.floor(position.x) + 0.5, y = math.floor(position.y) + 0.5}
+	local oreEntity = surface.find_entity("tiberium-ore", center)
+	if oreEntity and (oreEntity.amount >= TiberiumMaxPerTile) then
+		CreateNode(surface, center)
 	end
 end
 
@@ -276,7 +302,7 @@ end
 script.on_event(defines.events.on_script_trigger_effect, on_script_trigger_effect)
 
 commands.add_command(
-  "dumpTiberiumNodeList",
+  "tibDumpNodeList",
   "Print the list of known tiberium nodes",
   function()
     game.print("There are " .. #global.tibGrowthNodeList .. " nodes in the list")
@@ -286,7 +312,7 @@ commands.add_command(
   end
 )
 commands.add_command(
-  "tibRebuildNodeAndDrillLists",
+  "tibRebuildLists",
   "update lists of mining drills and tiberium nodes",
   function()
     local allnodes = game.surfaces[1].find_entities_filtered {name = "tibGrowthNode"}
@@ -394,6 +420,18 @@ script.on_event(
 	  local position = entities[i].position
 	  local howManyOre = math.min(math.max(10, (math.abs(position.x) + math.abs(position.y)) / 25), 200) --Start further nodes with more ore
       PlaceOre(entities[i], howManyOre)
+	  if global.tiberiumTerrain then
+		local surface = event.surface
+		local newTiles = {}
+		local tileArea = {{x = math.floor(position.x) - 0.9, y = math.floor(position.y) - 0.9},
+						  {x = math.floor(position.x) + 1.9, y = math.floor(position.y) + 1.9}}
+		local oldTiles = surface.find_tiles_filtered{area = tileArea, collision_mask = "ground-tile"}
+		for i, tile in pairs(oldTiles) do
+		  newTiles[i] = {name = global.tiberiumTerrain, position = tile.position}
+		end
+		surface.set_tiles(newTiles, true, false)
+		surface.destroy_decoratives{area = tileArea}
+	  end
     end
     global.intervalBetweenNodeUpdates = math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
   end
