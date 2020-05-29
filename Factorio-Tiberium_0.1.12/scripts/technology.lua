@@ -65,6 +65,14 @@ data:extend
 				type = "unlock-recipe",
 				recipe = "tiberium-slurry-mechanical-data"
 			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-sludge-to-concrete"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-slurry-to-refined-concrete"
+			},
 		},
 		prerequisites = {"tiberium-separation-tech", "advanced-electronics", "concrete"},
 		unit =

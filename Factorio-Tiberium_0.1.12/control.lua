@@ -230,8 +230,8 @@ function PlaceOre(entity, howmany)
 end
 
 function CreateNode(surface, position)
-	local area = {{x = math.floor(position.x) - 0.8, y = math.floor(position.y) - 0.8},
-				  {x = math.floor(position.x) + 1.8, y = math.floor(position.y) + 1.8}}
+	local area = {{x = math.floor(position.x) - 0.9, y = math.floor(position.y) - 0.9},
+				  {x = math.floor(position.x) + 1.9, y = math.floor(position.y) + 1.9}}
 	--Avoid overlapping with other nodes
 	if surface.count_entities_filtered({area = area, name = "tibGrowthNode"}) == 0 then
 		--Clear other resources
@@ -420,17 +420,18 @@ script.on_event(
 	  local position = entities[i].position
 	  local howManyOre = math.min(math.max(10, (math.abs(position.x) + math.abs(position.y)) / 25), 200) --Start further nodes with more ore
       PlaceOre(entities[i], howManyOre)
+	  --Cosmetic stuff
+	  local surface = event.surface
+	  local tileArea = {{x = math.floor(position.x) - 0.9, y = math.floor(position.y) - 0.9},
+						{x = math.floor(position.x) + 1.9, y = math.floor(position.y) + 1.9}}
+	  surface.destroy_decoratives{area = tileArea}
 	  if global.tiberiumTerrain then
-		local surface = event.surface
 		local newTiles = {}
-		local tileArea = {{x = math.floor(position.x) - 0.9, y = math.floor(position.y) - 0.9},
-						  {x = math.floor(position.x) + 1.9, y = math.floor(position.y) + 1.9}}
 		local oldTiles = surface.find_tiles_filtered{area = tileArea, collision_mask = "ground-tile"}
 		for i, tile in pairs(oldTiles) do
 		  newTiles[i] = {name = global.tiberiumTerrain, position = tile.position}
 		end
 		surface.set_tiles(newTiles, true, false)
-		surface.destroy_decoratives{area = tileArea}
 	  end
     end
     global.intervalBetweenNodeUpdates = math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))

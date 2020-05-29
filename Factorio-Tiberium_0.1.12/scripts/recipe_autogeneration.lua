@@ -346,45 +346,39 @@ if (mods["bobores"]) then
 	end
 elseif (mods["angelsrefining"] and mods["angelspetrochem"]) then
 	AngelsMult = 1
-	local IronPerCycle   = 17
-	local CopperPerCycle = 18
-	local CoalPerCycle   = 3
-	local StonePerCycle  = 2
-	local OilPerCycle    = 70
+	local IronPerCycle   = 17 * AngelsMult
+	local CopperPerCycle = 18 * AngelsMult
+	local CoalPerCycle   =  3 * AngelsMult
+	local StonePerCycle  =  2 * AngelsMult
+	local OilPerCycle    = 70 * AngelsMult
 	local TotalCentOutput = OilPerCycle+StonePerCycle+CoalPerCycle+CopperPerCycle+IronPerCycle
 	local DirectRecipeOutput = TotalCentOutput*DirectRecipeMult
 	local DirectOilOutput     = math.floor(DirectRecipeOutput * (OilPerCycle / IronPerCycle))
 	local DirectUraniumOutput = math.floor(DirectRecipeOutput/4 +.5)
 	local CreditCost = (OrePerCredit/DirectRecipeOutput)*(MoltenPerCycle/SlurrytoMolten*OretoSlurry)/CreditEfficiency
-	local SaphiritePerCycle  = 0.8 * IronPerCycle * AngelsMult
-	local JivolitePerCycle   = 0.2 * IronPerCycle * AngelsMult
-	local StiratitePerCycle  = 0.8 * CopperPerCycle * AngelsMult
-	local CrotinniumPerCycle = 0.2 * CopperPerCycle * AngelsMult
 
 	--Angel's Centrifuging Recipe generation
 	LSlib.recipe.setEngergyRequired("tiberium-ore-centrifuging", CentEnergyRequired*AngelsMult)
 	LSlib.recipe.addIngredient("tiberium-ore-centrifuging", "tiberium-ore", TiberiumPerCycle*AngelsMult, "item")
-	LSlib.recipe.addResult("tiberium-ore-centrifuging", "angels-ore1", SaphiritePerCycle, "item")
-	LSlib.recipe.addResult("tiberium-ore-centrifuging", "angels-ore2", JivolitePerCycle, "item")
-	LSlib.recipe.addResult("tiberium-ore-centrifuging", "angels-ore3", StiratitePerCycle, "item")
-	LSlib.recipe.addResult("tiberium-ore-centrifuging", "angels-ore4", CrotinniumPerCycle, "item")
+	LSlib.recipe.addResult("tiberium-ore-centrifuging", "angels-ore1", IronPerCycle, "item")  --Saphirite
+	LSlib.recipe.addResult("tiberium-ore-centrifuging", "angels-ore3", CopperPerCycle, "item")  --Stiratite
 	LSlib.recipe.addResult("tiberium-ore-centrifuging", "coal", CoalPerCycle, "item")
 	
 	LSlib.recipe.setEngergyRequired("tiberium-slurry-centrifuging", CentEnergyRequired*AngelsMult* 1.5)
 	LSlib.recipe.addIngredient("tiberium-slurry-centrifuging", "tiberium-slurry", SlurryPerCycle*AngelsMult, "fluid")
-	LSlib.recipe.addResult("tiberium-slurry-centrifuging", "angels-ore1", SaphiritePerCycle, "item")
-	LSlib.recipe.addResult("tiberium-slurry-centrifuging", "angels-ore2", JivolitePerCycle, "item")
-	LSlib.recipe.addResult("tiberium-slurry-centrifuging", "angels-ore3", StiratitePerCycle, "item")
-	LSlib.recipe.addResult("tiberium-slurry-centrifuging", "angels-ore4", CrotinniumPerCycle, "item")
+	LSlib.recipe.addResult("tiberium-slurry-centrifuging", "angels-ore1", math.ceil(IronPerCycle * 0.8), "item")  --Saphirite
+	LSlib.recipe.addResult("tiberium-slurry-centrifuging", "angels-ore2", IronPerCycle * 0.2, "item")  --Jivolite
+	LSlib.recipe.addResult("tiberium-slurry-centrifuging", "angels-ore3", math.ceil(CopperPerCycle * 0.8), "item")  --Stiratite
+	LSlib.recipe.addResult("tiberium-slurry-centrifuging", "angels-ore4", CopperPerCycle * 0.2, "item")  --Crotinnium
 	LSlib.recipe.addResult("tiberium-slurry-centrifuging", "coal", CoalPerCycle, "item")
 	LSlib.recipe.addResult("tiberium-slurry-centrifuging", "liquid-multi-phase-oil", OilPerCycle, "fluid")
 	
 	LSlib.recipe.setEngergyRequired("tiberium-molten-centrifuging", CentEnergyRequired*AngelsMult * 2)
 	LSlib.recipe.addIngredient("tiberium-molten-centrifuging", "molten-tiberium", MoltenPerCycle*AngelsMult, "fluid")
-	LSlib.recipe.addResult("tiberium-molten-centrifuging", "angels-ore1", SaphiritePerCycle, "item")
-	LSlib.recipe.addResult("tiberium-molten-centrifuging", "angels-ore2", JivolitePerCycle, "item")
-	LSlib.recipe.addResult("tiberium-molten-centrifuging", "angels-ore3", StiratitePerCycle, "item")
-	LSlib.recipe.addResult("tiberium-molten-centrifuging", "angels-ore4", CrotinniumPerCycle, "item")
+	LSlib.recipe.addResult("tiberium-molten-centrifuging", "angels-ore1", math.ceil(IronPerCycle * 0.6), "item")  --Saphirite
+	LSlib.recipe.addResult("tiberium-molten-centrifuging", "angels-ore2", IronPerCycle * 0.4, "item")  --Jivolite
+	LSlib.recipe.addResult("tiberium-molten-centrifuging", "angels-ore3", math.ceil(CopperPerCycle * 0.6), "item")  --Stiratite
+	LSlib.recipe.addResult("tiberium-molten-centrifuging", "angels-ore4", CopperPerCycle * 0.4, "item")  --Crotinnium
 	LSlib.recipe.addResult("tiberium-molten-centrifuging", "coal", CoalPerCycle, "item")
 	LSlib.recipe.addResult("tiberium-molten-centrifuging", "liquid-multi-phase-oil", OilPerCycle, "fluid")
 

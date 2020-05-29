@@ -683,7 +683,7 @@ data:extend(
 	{
       type = "recipe",
       name = "tiberium-sludge-to-stone-brick",
-      category = "chemistry",
+      category = "crafting-with-fluid",
 	  crafting_machine_tint = TibCraftingTint,
       energy_required = 2,
       enabled = false,
@@ -695,6 +695,45 @@ data:extend(
       },
       icon = "__Factorio-Tiberium__/graphics/icons/tiberium-sludge-to-stone-brick.png",
       icon_size = 32,
+      subgroup = "a-direct",
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
+	  always_show_made_in = true,
+      order = "x"
+    },
+	{
+      type = "recipe",
+      name = "tiberium-sludge-to-concrete",
+      category = "crafting-with-fluid",
+	  crafting_machine_tint = TibCraftingTint,
+      energy_required = 10,
+      enabled = false,
+      ingredients = {
+        {type = "fluid", name = "tiberium-sludge", amount = 5}
+      },
+      results = {
+        {type = "item", name = "concrete", amount = 10}
+      },
+      subgroup = "a-direct",
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
+	  always_show_made_in = true,
+      order = "y"
+    },
+	{
+      type = "recipe",
+      name = "tiberium-slurry-to-refined-concrete",
+      category = "crafting-with-fluid",
+	  crafting_machine_tint = TibCraftingTint,
+      energy_required = 10,
+      enabled = false,
+      ingredients = {
+        {type = "fluid", name = "tiberium-slurry", amount = 20},
+        {type = "item", name = "steel-plate", amount = 2}		
+      },
+      results = {
+        {type = "item", name = "refined-concrete", amount = 10}
+      },
       subgroup = "a-direct",
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
@@ -718,6 +757,7 @@ data:extend(
       icon = "__Factorio-Tiberium__/graphics/icons/tiberium-recycling.png",
       icon_size = 32,
       subgroup = "a-refining",
+	  allow_decomposition = false,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
 --Direct Recipes
@@ -949,6 +989,7 @@ data:extend(
       },
       icon_size = 64,
 	  icon = "__Factorio-Tiberium__/graphics/icons/dirty-fuel-cell.png",
+	  allow_decomposition = false,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
 	
