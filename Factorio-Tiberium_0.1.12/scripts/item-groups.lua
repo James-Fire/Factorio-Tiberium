@@ -88,4 +88,12 @@ data:extend({
     type = "recipe-category",
     name = "tiberium-science"
   },
+  {
+    type = "recipe-category",
+    name = "growth"
+  },
+  {
+    type = "fuel-category",
+    name = "growth"
+  },
 })

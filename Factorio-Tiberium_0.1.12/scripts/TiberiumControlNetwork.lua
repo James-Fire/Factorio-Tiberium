@@ -212,7 +212,7 @@ data:extend({growthSpikeItem,growthSpikeEntity})
 
 data:extend({
 	{
-		type = "container",
+		type = "furnace",
 		name = "growth-accelerator",
 		icon = "__Factorio-Tiberium__/graphics/icons/growth-accelerator.png",
 		icon_size = 64,
@@ -221,6 +221,10 @@ data:extend({
 		max_health = 250,
 		corpse = "centrifuge-remnants",
 		dying_explosion = "medium-explosion",
+		result_inventory_size = 1,
+		energy_usage = "90kW",
+		crafting_speed = 1,
+		source_inventory_size = 1,
 		open_sound = { filename = "__base__/sound/machine-open.ogg", volume = 0.85 },
 		close_sound = { filename = "__base__/sound/machine-close.ogg", volume = 0.75 },
 		vehicle_impact_sound = { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
@@ -237,16 +241,56 @@ data:extend({
 		},
 		collision_box = {{-1.2, -1.2}, {1.2, 1.2}},
 		selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
-		fast_replaceable_group = "container",
-		inventory_size = 10,
-		picture =
-		{
-			filename = "__base__/graphics/entity/centrifuge/centrifuge-C.png",
-			priority = "high",
-			width = 129,
-			height = 100,
-			shift = {0.421875, 0},
+		always_draw_idle_animation = true,
+    idle_animation =
+    {
+      layers =
+      {
+        -- Centrifuge A
+        {
+          filename = "__base__/graphics/entity/centrifuge/centrifuge-C.png",
+          priority = "high",
+          line_length = 8,
+          width = 119,
+          height = 107,
+          frame_count = 64,
+          shift = util.by_pixel(-0.5, -26.5),
+          hr_version =
+          {
+            filename = "__base__/graphics/entity/centrifuge/hr-centrifuge-C.png",
+            priority = "high",
+            scale = 0.5,
+            line_length = 8,
+            width = 237,
+            height = 214,
+            frame_count = 64,
+            shift = util.by_pixel(-0.25, -26.5)
+          }
+        },
+        {
+          filename = "__base__/graphics/entity/centrifuge/centrifuge-C-shadow.png",
+          draw_as_shadow = true,
+          priority = "high",
+          line_length = 8,
+          width = 132,
+          height = 74,
+          frame_count = 64,
+          shift = util.by_pixel(20, -10),
+          hr_version =
+          {
+            filename = "__base__/graphics/entity/centrifuge/hr-centrifuge-C-shadow.png",
+            draw_as_shadow = true,
+            priority = "high",
+            scale = 0.5,
+            line_length = 8,
+            width = 279,
+            height = 152,
+            frame_count = 64,
+            shift = util.by_pixel(16.75, -10)
+          }
+        },
 		},
+	},
 		circuit_wire_max_distance = 7.5,
 		circuit_wire_connection_point =
 		{
@@ -261,8 +305,17 @@ data:extend({
 				green = {-0.16, -0.9}
 			}
 		},
+		crafting_categories = {"growth"},
+		energy_source =
+		{
+		  type = "burner",
+		  fuel_category = "growth",
+		  effectivity = 1,
+		  fuel_inventory_size = 5,
+		  emissions_per_minute = 2,
+		},
 	},
-	{ -- Basic Warehouse
+	{
 		type = "recipe",
 		name = "growth-accelerator",
 		enabled = "false",

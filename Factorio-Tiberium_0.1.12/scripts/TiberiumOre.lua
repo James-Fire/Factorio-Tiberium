@@ -11,7 +11,9 @@ data:extend(
         flags = {},
         subgroup = "a-items",
         order = "a[tiberium-ore]",
-        stack_size = 20
+        stack_size = 20,
+		fuel_value = "2MJ",
+		fuel_category = "growth",
     },
 	{
         type = "item",

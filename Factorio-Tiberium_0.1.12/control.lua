@@ -163,7 +163,7 @@ function PlaceOre(entity, howmany)
 
 	local accelerator = surface.find_entity("growth-accelerator", position)
 	if accelerator then
-		local inventory = accelerator.get_output_inventory()
+		local inventory = accelerator.get_fuel_inventory()
 		local creditCount = math.min(inventory.get_item_count("growth-credit"), GrowthCreditMax)
 		if (creditCount > 0) then
 			howmany = howmany + creditCount
