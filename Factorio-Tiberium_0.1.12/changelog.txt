@@ -1,3 +1,41 @@
+---------------------------------------------------------------------------------------------------1.12
+
+May 29
+
+Prevent ore on top of nodes.
+
+Also support for changing terrain under Tiberium as it grows, but currently leaving it disabled for performance reasons.
+
+Splitting Techs, Simplifying Recipes, Earlier Fuge
+
+Major changes to Tiberium Centrifuge recipes to allow earlier Tiberium Separation and Tiberium Processing.
+
+Tiberium Separation no longer requires Green Science.
+
+Tiberium Processing no longer requires Blue Science.
+
+Minor technology cost adjustments to Molten Tiberium Processing, Liquid Tiberium Power, TCN, Nuclear Testing, EM Testing.
+
+Moved Tiberium Farming from Growth Acceleration to TCN, made Growth Accleration significantly cheaper and no longer require Purple Science or Nuclear Testing.
+
+Split SRF+Node Harvester, Tiberium Armor+Tiberium Magazine, Ion Core+Ion Turret+Tiberium Core Missile, and Tiberium Seed+Tiberium Bomb to be 4 separate techs instead of squished in with unrelated techs.
+
+Recipe changes for Tiberium Spike, TCN Node, Tiberium Magazine, Tiberium Armor, Tiberium Nuclear Fuel, Tiberium Fuel Cells, Ion Core, Ion Beam Projector, and Tiberium Seed.
+
+Tweaked Angels Centrifuging Recipes.
+
+Remove decoratives overlapping with nodes.
+
+Settings reworded.
+
+Added Concrete and Refined Concrete Recipes unlocked at Tiberium Processing.
+
+Missed renaming node harvester in localisation.
+
+Changed the Growth Accelerator to be a furnace, so it flashes the No Fuel if it has no growth credits.
+
+---------------------------------------------------------------------------------------------------
+
 May 24
 
 Fixes ticket 0035: guardrails on settings to reduce crashes
