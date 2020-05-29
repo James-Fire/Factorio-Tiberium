@@ -139,7 +139,7 @@ data:extend {
     subgroup = "a-items",
 	fuel_category = "nuclear",
     burnt_result = "tiberium-dirty-cell",
-	fuel_value = "10GJ",
+	fuel_value = "4GJ",
     stack_size = 50
   },
   {
