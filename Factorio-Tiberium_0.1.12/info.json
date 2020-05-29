@@ -16,6 +16,7 @@
 		"?bobrevamp >=0.17.0",
 		"?bobplates >=0.17.0",
 		"?Mining_Drones",
+		"! Prospector",
 		"LSlib >= 2020.5.11"
 	],
     "description": "Origonaly by Zillo7 fixed by SAH4001, fixed again by Oktabyte. Now being taken on by JamesFire. Adds Tiberium - Harvest it to convert it to other ores."
