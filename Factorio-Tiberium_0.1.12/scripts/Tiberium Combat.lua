@@ -39,7 +39,7 @@ tiberiumArmor.resistances = {
 
 local recipe = table.deepcopy(data.raw.recipe["heavy-armor"])
 recipe.name = "tiberium-armor"
-recipe.ingredients = {{"plastic-bar",50},{"steel-plate",50},{"pipe",2}}
+recipe.ingredients = {{"plastic-bar",50},{"heavy-armor",1},{"pipe",2}}
 recipe.result = "tiberium-armor"
 
 data:extend{tiberiumArmor,recipe}
@@ -101,7 +101,7 @@ data:extend{
     energy_required = 50,
     ingredients =
     {
-      {"steel-plate", 10},
+      {"piercing-rounds-magazine", 1},
     },
     result = "tiberium-magazine"
   }
@@ -428,7 +428,6 @@ data:extend{
     energy_required = 50,
     ingredients =
     {
-      {"explosives", 1},
       {"rocket-control-unit", 10},
       {type = "fluid", name = "liquid-tiberium", amount = 200}
     },
@@ -653,9 +652,8 @@ data:extend{
 	  order = "q",
 	  ingredients =
 	  {
-		{"advanced-circuit", 25},
-		{"iron-gear-wheel", 50},
-		{"iron-plate", 100},
+		{"advanced-circuit", 40},
+		{"steel-plate", 40},
 		{"tiberium-ion-core", 1}
 	  },
 	  result = "ion-turret"
@@ -668,9 +666,8 @@ data:extend{
 	  order = "q",
 	  ingredients =
 	  {
-		{"advanced-circuit", 25},
-		{"iron-gear-wheel", 50},
-		{"iron-plate", 100},
+		{"advanced-circuit", 40},
+		{"steel-plate", 40},
 		{"tiberium-ion-core", 1}
 	  },
 	  result = "ion-turret"

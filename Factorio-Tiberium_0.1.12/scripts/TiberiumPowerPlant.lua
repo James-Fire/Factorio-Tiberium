@@ -24,7 +24,6 @@ data:extend({
         {"steel-plate", 25},
         {"electric-engine-unit", 10},
         {"advanced-circuit", 15},
-        {"pipe", 10},
 		{"chemical-plant", 1}
       },
       result = "tiberium-plant"
@@ -398,15 +397,15 @@ data:extend({
     {
       type = "recipe",
       name = "tiberium-centrifuge",
-      energy_required = 15,
+      energy_required = 10,
       enabled = "false",
 	  subgroup = "a-buildings",
 	  order = "m",
       ingredients = {
-        {"iron-plate", 25},
-		{"engine-unit", 10},
-        {"electronic-circuit", 25},
-        {"concrete", 10}
+        {"steel-plate", 10},
+		{"iron-gear-wheel", 20},
+        {"electronic-circuit", 10},
+        {"stone-brick", 10}
       },
       result = "tiberium-centrifuge"
     },
@@ -749,10 +748,10 @@ data:extend({
       usage_priority = "secondary-input",
       emissions_per_minute = 4
     },
-    energy_usage = "500kW",
+    energy_usage = "300kW",
     module_specification =
     {
-      module_slots = 2
+      module_slots = 0
     },
     allowed_effects = {"consumption", "speed", "productivity", "pollution"},
     water_reflection =
@@ -780,12 +779,13 @@ data:extend({
 	tiberiumcentri2Item.place_result = "tiberium-centrifuge-2"
 	local tiberiumcentri2Entity = util.table.deepcopy(data.raw["assembling-machine"]["tiberium-centrifuge"])
 	tiberiumcentri2Entity.name = "tiberium-centrifuge-2"
-	tiberiumcentri2Entity.crafting_speed = 1.5
+	tiberiumcentri2Entity.energy_usage = "500kW"
+	tiberiumcentri2Entity.crafting_speed = 2
 	tiberiumcentri2Entity.crafting_categories = {"tiberium-centrifuge-1", "tiberium-centrifuge-2"}
 	tiberiumcentri2Entity.minable.result = "tiberium-centrifuge-2"
 	tiberiumcentri2Entity.module_specification =
     {
-      module_slots = 3
+      module_slots = 2
     }
 	tiberiumcentri2Entity.idle_animation =
 	--tint={r=0,g=180/255,b=150/255,a=0.8}, cyan
@@ -932,15 +932,14 @@ data:extend({
 		{
       type = "recipe",
       name = "tiberium-centrifuge-2",
-      energy_required = 15,
+      energy_required = 10,
       enabled = "false",
 	  subgroup = "a-buildings",
 	  order = "m",
       ingredients = {
-        {"concrete", 25},
-		{"copper-plate", 25},
+        {"concrete", 50},
 		{"engine-unit", 10},
-        {"advanced-circuit", 25},
+        {"advanced-circuit", 10},
         {"tiberium-centrifuge", 1}
       },
       result = "tiberium-centrifuge-2"
@@ -955,7 +954,8 @@ data:extend({
 	tiberiumcentri3Item.place_result = "tiberium-centrifuge-3"
 	local tiberiumcentri3Entity = util.table.deepcopy(data.raw["assembling-machine"]["tiberium-centrifuge"])
 	tiberiumcentri3Entity.name = "tiberium-centrifuge-3"
-	tiberiumcentri3Entity.crafting_speed = 2
+	tiberiumcentri3Entity.energy_usage = "700kW"
+	tiberiumcentri3Entity.crafting_speed = 3
 	tiberiumcentri3Entity.crafting_categories = {"tiberium-centrifuge-1", "tiberium-centrifuge-2", "tiberium-centrifuge-3"}
 	tiberiumcentri3Entity.minable.result = "tiberium-centrifuge-3"
 	tiberiumcentri3Entity.module_specification =
@@ -1109,15 +1109,14 @@ data:extend({
 	{
       type = "recipe",
       name = "tiberium-centrifuge-3",
-      energy_required = 15,
+      energy_required = 10,
       enabled = "false",
 	  subgroup = "a-buildings",
 	  order = "m",
       ingredients = {
-        {"refined-concrete", 25},
-		{"steel-plate", 25},
+        {"refined-concrete", 50},
 		{"electric-engine-unit", 10},
-        {"processing-unit", 25},
+        {"processing-unit", 5},
         {"tiberium-centrifuge-2", 1}
       },
       result = "tiberium-centrifuge-3"

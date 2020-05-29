@@ -139,8 +139,8 @@ data:extend {
     subgroup = "a-items",
 	fuel_category = "nuclear",
     burnt_result = "tiberium-dirty-cell",
-	fuel_value = "1GJ",
-    stack_size = 5
+	fuel_value = "4GJ",
+    stack_size = 50
   },
   {
     type = "item",
@@ -184,8 +184,8 @@ data:extend {
 }
 
 data:extend(
---Science stuff. Making data, turning it into science, learning from farming tib
   {
+--Science stuff. Making data, turning it into science, learning from farming tib
 	{
       type = "recipe",
       name = "tiberium-farming",
@@ -683,9 +683,9 @@ data:extend(
 	{
       type = "recipe",
       name = "tiberium-sludge-to-stone-brick",
-      category = "chemistry",
+      category = "crafting-with-fluid",
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 4,
+      energy_required = 2,
       enabled = false,
       ingredients = {
         {type = "fluid", name = "tiberium-sludge", amount = 1}
@@ -698,6 +698,46 @@ data:extend(
       subgroup = "a-direct",
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
+	  always_show_made_in = true,
+      order = "x"
+    },
+	{
+      type = "recipe",
+      name = "tiberium-sludge-to-concrete",
+      category = "crafting-with-fluid",
+	  crafting_machine_tint = TibCraftingTint,
+      energy_required = 10,
+      enabled = false,
+      ingredients = {
+        {type = "fluid", name = "tiberium-sludge", amount = 5}
+      },
+      results = {
+        {type = "item", name = "concrete", amount = 10}
+      },
+      subgroup = "a-direct",
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
+	  always_show_made_in = true,
+      order = "y"
+    },
+	{
+      type = "recipe",
+      name = "tiberium-slurry-to-refined-concrete",
+      category = "crafting-with-fluid",
+	  crafting_machine_tint = TibCraftingTint,
+      energy_required = 10,
+      enabled = false,
+      ingredients = {
+        {type = "fluid", name = "tiberium-slurry", amount = 20},
+        {type = "item", name = "steel-plate", amount = 2}		
+      },
+      results = {
+        {type = "item", name = "refined-concrete", amount = 10}
+      },
+      subgroup = "a-direct",
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
+	  always_show_made_in = true,
       order = "z"
     },
 	{
@@ -717,6 +757,7 @@ data:extend(
       icon = "__Factorio-Tiberium__/graphics/icons/tiberium-recycling.png",
       icon_size = 32,
       subgroup = "a-refining",
+	  allow_decomposition = false,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
 --Direct Recipes
@@ -735,60 +776,9 @@ data:extend(
       subgroup = "a-direct",
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
+	  always_show_made_in = true,
       order = "c"
     },
-    {
-      type = "recipe",
-      name = "tiberium-molten-to-stone",
-      category = "chemistry",
-	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 4,
-      enabled = false,
-      ingredients = {
-      },
-      results = {
-      },
-      icon_size = 32,
-      subgroup = "a-direct",
-	  allow_as_intermediate = false,
-	  allow_decomposition = false,
-      order = "c"
-    },
-    {
-      type = "recipe",
-      name = "tiberium-molten-to-coal",
-      category = "chemistry",
-	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 4,
-      enabled = false,
-      ingredients = {
-      },
-      results = {
-      },
-      icon_size = 32,
-      subgroup = "a-direct",
-	  allow_as_intermediate = false,
-	  allow_decomposition = false,
-      order = "d"
-    },
-    {
-      type = "recipe",
-      name = "tiberium-molten-to-crude-oil",
-      category = "chemistry",
-	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 4,
-      enabled = false,
-      ingredients = {
-      },
-      results = {
-      },
-      icon_size = 32,
-      subgroup = "a-direct",
-	  allow_as_intermediate = false,
-	  allow_decomposition = false,
-      order = "e"
-    },
-	
 --Centrifuging Recipes
     {
       type = "recipe",
@@ -806,6 +796,7 @@ data:extend(
       icon_size = 32,
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
+	  always_show_made_in = true,
       order = "a[fluid-chemistry]-f[heavy-oil-cracking]"
     },
     {
@@ -813,7 +804,7 @@ data:extend(
       name = "tiberium-slurry-centrifuging",
       category = "tiberium-centrifuge-2",
 	  subgroup = "a-centrifuging",
-      energy_required = 8,
+      energy_required = 15,
       enabled = false,
       ingredients = {
       },
@@ -823,6 +814,7 @@ data:extend(
       icon_size = 32,
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
+	  always_show_made_in = true,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
     {
@@ -830,7 +822,7 @@ data:extend(
       name = "tiberium-molten-centrifuging",
       category = "tiberium-centrifuge-3",
 	  subgroup = "a-centrifuging",
-      energy_required = 6,
+      energy_required = 20,
       enabled = false,
       ingredients = {
       },
@@ -840,6 +832,7 @@ data:extend(
       icon_size = 32,
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
+	  always_show_made_in = true,
       order = "c[fluid-chemistry]-f[heavy-oil-cracking]"
     },
 	{
@@ -858,6 +851,7 @@ data:extend(
       icon_size = 32,
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
+	  always_show_made_in = true,
       order = "d"
     },
     {
@@ -865,7 +859,7 @@ data:extend(
       name = "tiberium-slurry-sludge-centrifuging",
       category = "tiberium-centrifuge-2",
 	  subgroup = "a-centrifuging",
-      energy_required = 8,
+      energy_required = 15,
       enabled = false,
       ingredients = {
       },
@@ -875,6 +869,7 @@ data:extend(
       icon_size = 32,
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
+	  always_show_made_in = true,
       order = "e"
     },
     {
@@ -882,7 +877,7 @@ data:extend(
       name = "tiberium-molten-sludge-centrifuging",
       category = "tiberium-centrifuge-3",
 	  subgroup = "a-centrifuging",
-      energy_required = 6,
+      energy_required = 20,
       enabled = false,
       ingredients = {
       },
@@ -892,6 +887,7 @@ data:extend(
       icon_size = 32,
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
+	  always_show_made_in = true,
       order = "f"
     },
 --Growth Credits
@@ -937,19 +933,15 @@ data:extend(
 --Power recipes
 	{
       type = "recipe",
-      name = "liquid-tiberium-cell",
+      name = "tiberium-nuclear-fuel",
 	  crafting_machine_tint = TibCraftingTint,
       category = "chemistry",
 	  subgroup = "a-items",
       energy_required = 20,
       enabled = false,
       ingredients = {
-		{type = "fluid", name = "liquid-tiberium", amount = 25},
-		{type = "item", name = "steel-plate", amount = 2},
-		{type = "item", name = "copper-plate", amount = 2},
-        {type = "item", name = "electric-engine-unit", amount = 1},
-        {type = "item", name = "processing-unit", amount = 2},
-        {type = "item", name = "pipe", amount = 1},
+		{type = "item", name = "solid-fuel", amount = 10},
+		{type = "fluid", name = "liquid-tiberium", amount = 10},
       },
       results = {
         {type = "item", name = "nuclear-fuel", amount = 1},
@@ -997,6 +989,7 @@ data:extend(
       },
       icon_size = 64,
 	  icon = "__Factorio-Tiberium__/graphics/icons/dirty-fuel-cell.png",
+	  allow_decomposition = false,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
 	
@@ -1010,7 +1003,7 @@ data:extend(
       enabled = false,
       ingredients = {
 		{type = "item", name = "tiberium-empty-cell", amount = 1},
-		{type = "fluid", name = "liquid-tiberium", amount = 10},
+		{type = "fluid", name = "liquid-tiberium", amount = 40},
       },
       results = {
         {type = "item", name = "tiberium-fuel-cell", amount = 1},
@@ -1018,7 +1011,6 @@ data:extend(
       icon_size = 64,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
-	
 	
 --Intermediate Products
 	{
@@ -1030,11 +1022,9 @@ data:extend(
       energy_required = 20,
       enabled = false,
       ingredients = {
-		{type = "fluid", name = "liquid-tiberium", amount = 1},
-		{type = "item", name = "steel-plate", amount = 2},
-		{type = "item", name = "copper-plate", amount = 2},
-        {type = "item", name = "processing-unit", amount = 2},
-        {type = "item", name = "pipe", amount = 1},
+		{type = "fluid", name = "liquid-tiberium", amount = 10},
+		{type = "item", name = "steel-plate", amount = 5},
+        {type = "item", name = "pipe", amount = 5},
       },
       results = {
         {type = "item", name = "tiberium-ion-core", amount = 1},

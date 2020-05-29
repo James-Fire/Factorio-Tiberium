@@ -86,7 +86,6 @@ tiberiumSpikeEntity.radius_visualisation_picture = data.raw["mining-drill"]["pum
 tiberiumSpikeEntity.mining_speed = 5
 tiberiumSpikeEntity.subgroup = "a-buildings"
 tiberiumSpikeEntity.order = "m"
-tiberiumGrowthNodeEntity.energy_usage = "20000kW"
 tiberiumSpikeEntity.resource_categories = {}
 tiberiumSpikeEntity.minable.result = "tib-spike"
 
@@ -110,11 +109,10 @@ data:extend{tiberiumSpikeItem, tiberiumSpikeEntity,
 	  order = "e",
 	  ingredients =
 	  {
-		{"processing-unit", 25},
-		{"iron-gear-wheel", 50},
-		{"electric-mining-drill", 5},
-		{"steel-plate", 100},
-		{"CnC_SonicWall_Hub", 2}
+		{"processing-unit", 20},
+		{"pumpjack", 5},
+		{"solar-panel", 10},
+		{"CnC_SonicWall_Hub", 4}
 	  },
 	  result = "tib-spike"
 	},
@@ -126,11 +124,10 @@ data:extend{tiberiumSpikeItem, tiberiumSpikeEntity,
 	  order = "e",
 	  ingredients =
 	  {
-		{"processing-unit", 25},
-		{"iron-gear-wheel", 50},
-		{"electric-mining-drill", 5},
-		{"steel-plate", 100},
-		{"CnC_SonicWall_Hub", 2}
+		{"processing-unit", 50},
+		{"pumpjack", 10},
+		{"solar-panel", 20},
+		{"CnC_SonicWall_Hub", 4}
 	  },
 	  result = "tib-spike"
 	}
@@ -150,7 +147,7 @@ tiberiumNetworkNodeEntity.name = "tiberium-network-node"
 tiberiumNetworkNodeEntity.energy_usage = "25000kW"
 tiberiumNetworkNodeEntity.mining_speed = 10
 tiberiumNetworkNodeEntity.subgroup = "a-buildings"
-tiberiumNetworkNodeItem.order = "b"
+tiberiumNetworkNodeEntity.order = "b"
 tiberiumNetworkNodeEntity.resource_searching_radius = 50
 tiberiumNetworkNodeEntity.resource_categories = {}
 tiberiumNetworkNodeEntity.minable.result = "tiberium-network-node"
@@ -165,7 +162,6 @@ data:extend({tiberiumNetworkNodeItem,tiberiumNetworkNodeEntity,tibcat,
   {
     type = "recipe",
     name = "tiberium-network-node",
-	
     normal =
     {
       energy_required = 20,
@@ -174,12 +170,10 @@ data:extend({tiberiumNetworkNodeItem,tiberiumNetworkNodeEntity,tibcat,
 	  order = "b",
       ingredients =
       {
-        {"processing-unit", 25},
-        {"iron-gear-wheel", 50},
-		{"electric-engine-unit", 10},
-		{"electric-mining-drill", 5},
+        {"processing-unit", 20},
+		{"electric-engine-unit", 20},
+		{"electric-mining-drill", 20},
 		{"pipe", 100},
-        {"steel-plate", 100}
       },
       result = "tiberium-network-node"
     },
@@ -191,9 +185,10 @@ data:extend({tiberiumNetworkNodeItem,tiberiumNetworkNodeEntity,tibcat,
 	  order = "b",
       ingredients =
       {
-        {"advanced-circuit", 25},
-		{"iron-gear-wheel", 50},
-		{"iron-plate", 100}
+        {"processing-unit", 50},
+		{"electric-engine-unit", 20},
+		{"electric-mining-drill", 20},
+		{"pipe", 400},
       },
       result = "tiberium-network-node"
     }
