@@ -8,13 +8,13 @@ local function Contains(tab, val)
 end
 
 local tiberiumGrowthNodeItem = table.deepcopy(data.raw.item["pumpjack"])
-tiberiumGrowthNodeItem.name = "tib-pumpjack"
+tiberiumGrowthNodeItem.name = "node-harvester"
 tiberiumGrowthNodeItem.subgroup = "a-buildings"
 tiberiumGrowthNodeItem.order = "e"
-tiberiumGrowthNodeItem.place_result = "tib-pumpjack"
+tiberiumGrowthNodeItem.place_result = "node-harvester"
 
 local tiberiumGrowthNodeEntity = table.deepcopy(data.raw["mining-drill"]["electric-mining-drill"])
-tiberiumGrowthNodeEntity.name = "tib-pumpjack"
+tiberiumGrowthNodeEntity.name = "node-harvester"
 tiberiumGrowthNodeEntity.icon = data.raw["mining-drill"]["pumpjack"].icon
 tiberiumGrowthNodeEntity.base_picture = data.raw["mining-drill"]["pumpjack"].base_picture
 tiberiumGrowthNodeEntity.radius_visualisation_picture = data.raw["mining-drill"]["pumpjack"].radius_visualisation_picture
@@ -24,7 +24,7 @@ tiberiumGrowthNodeEntity.subgroup = "a-buildings"
 tiberiumGrowthNodeEntity.order = "e"
 tiberiumGrowthNodeEntity.energy_usage = "20000kW"
 tiberiumGrowthNodeEntity.resource_categories = {}
-tiberiumGrowthNodeEntity.minable.result = "tib-pumpjack"
+tiberiumGrowthNodeEntity.minable.result = "node-harvester"
 
 tiberiumGrowthNodeEntity.resource_searching_radius = 0.49
 table.insert(tiberiumGrowthNodeEntity.resource_categories, "advanced-solid-tiberium")
@@ -36,7 +36,7 @@ tiberiumGrowthNodeEntity.energy_source = {
 data:extend{tiberiumGrowthNodeItem, tiberiumGrowthNodeEntity,
   {
 	type = "recipe",
-	name = "tib-pumpjack",
+	name = "node-harvester",
 	normal =
 	{
 	  energy_required = 20,
@@ -50,7 +50,7 @@ data:extend{tiberiumGrowthNodeItem, tiberiumGrowthNodeEntity,
 		{"iron-gear-wheel", 50},
 		{"iron-plate", 100}
 	  },
-	  result = "tib-pumpjack"
+	  result = "node-harvester"
 	},
 	expensive =
 	{
@@ -65,7 +65,7 @@ data:extend{tiberiumGrowthNodeItem, tiberiumGrowthNodeEntity,
 		{"iron-gear-wheel", 50},
 		{"iron-plate", 100}
 	  },
-	  result = "tib-pumpjack"
+	  result = "node-harvester"
 	}
   }
 }
@@ -203,7 +203,7 @@ for _, drill in pairs(data.raw["mining-drill"]) do
 	end
 end
 
-local growthSpikeEntity = table.deepcopy(data.raw["mining-drill"]["tib-pumpjack"])
+local growthSpikeEntity = table.deepcopy(data.raw["mining-drill"]["node-harvester"])
 growthSpikeEntity.name = "growth-accelerator-node"
 local growthSpikeItem = table.deepcopy(data.raw.item["pumpjack"])
 growthSpikeItem.name = "growth-accelerator-node"

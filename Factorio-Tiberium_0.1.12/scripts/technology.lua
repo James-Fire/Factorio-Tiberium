@@ -120,7 +120,7 @@ data:extend
 			},
 			{
 				type = "unlock-recipe",
-				recipe =	"tiberium-molten-to-crude-oil"
+				recipe = "tiberium-molten-to-crude-oil"
 			},
 		},
 		prerequisites = {"tiberium-processing-tech", "tiberium-thermal-research"},
@@ -196,7 +196,7 @@ data:extend
 			},
 			{
 				type = "unlock-recipe",
-				recipe = "tib-pumpjack"
+				recipe = "node-harvester"
 			},
 		},
 		prerequisites = {"tiberium-processing-tech", "battery"},
