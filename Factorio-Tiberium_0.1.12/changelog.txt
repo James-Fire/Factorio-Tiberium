@@ -1,0 +1,593 @@
+---------------------------------------------------------------------------------------------------1.12
+
+May 29
+
+Prevent ore on top of nodes.
+
+Also support for changing terrain under Tiberium as it grows, but currently leaving it disabled for performance reasons.
+
+Splitting Techs, Simplifying Recipes, Earlier Fuge
+
+Major changes to Tiberium Centrifuge recipes to allow earlier Tiberium Separation and Tiberium Processing.
+
+Tiberium Separation no longer requires Green Science.
+
+Tiberium Processing no longer requires Blue Science.
+
+Minor technology cost adjustments to Molten Tiberium Processing, Liquid Tiberium Power, TCN, Nuclear Testing, EM Testing.
+
+Moved Tiberium Farming from Growth Acceleration to TCN, made Growth Accleration significantly cheaper and no longer require Purple Science or Nuclear Testing.
+
+Split SRF+Node Harvester, Tiberium Armor+Tiberium Magazine, Ion Core+Ion Turret+Tiberium Core Missile, and Tiberium Seed+Tiberium Bomb to be 4 separate techs instead of squished in with unrelated techs.
+
+Recipe changes for Tiberium Spike, TCN Node, Tiberium Magazine, Tiberium Armor, Tiberium Nuclear Fuel, Tiberium Fuel Cells, Ion Core, Ion Beam Projector, and Tiberium Seed.
+
+Tweaked Angels Centrifuging Recipes.
+
+Remove decoratives overlapping with nodes.
+
+Settings reworded.
+
+Added Concrete and Refined Concrete Recipes unlocked at Tiberium Processing.
+
+Missed renaming node harvester in localisation.
+
+Changed the Growth Accelerator to be a furnace, so it flashes the No Fuel if it has no growth credits.
+
+---------------------------------------------------------------------------------------------------
+
+May 24
+
+Fixes ticket 0035: guardrails on settings to reduce crashes
+
+Minimum damage of 0 means that players can disable Tiberium damage
+
+Fixes ticket 0036: added setting to prevent biters from dying to Tiberium
+
+Additional entity types are exempt from growth damage (so you can power your miners and transport molten Tiberium from your spikes)
+
+Continuing refactor of recipe_autogeneration (removed another 60 lines of redundancy)
+
+Fixed "quartz-ore" crash for Bob's-NoAngel's
+
+Fixes biters attacking invincible Tiberium nodes
+
+Added tooltips for spiked Tiberium nodes
+
+Fixes script_raised_revive crash reported by cvl
+
+---------------------------------------------------------------------------------------------------1.11
+
+May 23
+
+Fixes tickets 0028, 0031, and 0032: Multiplayer games no longer crash when someone who joined the server before you disconnects
+
+Players no longer take proximity-based Tiberium damage while inside of vehicles
+
+Fixed Molten Tiberium crafting time being quadrupled
+
+---------------------------------------------------------------------------------------------------1.10
+
+May 22
+
+Fixes ticket 0001: Using Angels mods with no Bob's mods now has recipe support
+
+Fixes ticket 0029: Angels chem plants can now produce Tiberium Science
+
+Fixes recipe typo from previous commit
+
+Refactored recipe_autogeneration to reduce repitition
+
+Prevented Tiberium nodes from spawning in the starting area
+
+---------------------------------------------------------------------------------------------------
+
+May 20
+
+Fixed Tiberium Power Plant for use with Angel's Petrochem.
+
+Fixed bots placing the wrong Growth Accelerator.
+
+Fixed bots not converting the Node for Tib Spikes.
+
+Juggled recipe order in my tab some more.
+
+---------------------------------------------------------------------------------------------------
+
+May 17
+
+Added minimum version requirement for the Library.
+
+Infinite techs now use all science packs.
+
+Tiberium Science Pack no longer "replaces" Automation and Logistics. Any technology that uses vanilla packs uses all the ones below too.
+
+Tech costs rebalanced.
+
+---------------------------------------------------------------------------------------------------
+
+May 15
+
+Taco's Notes:
+
+Improved tooltips so they don't show funky stuff that has no bearing on how it would actually be made.
+
+Added main_products so the Direct Sludge Waste setting can be used.
+
+Expanded support for Tiberium Growth so it scales growth credit and farming recipes.
+
+Added edge case support so choosing certain Tiberium Values won't crash your game.
+
+Added Stone Growth Credit icon.
+
+Some formatting cleanup. (Not that this affects the end users most of the time, but appreciated nonetheless.)
+
+Standardized Refining Times.
+
+Fixes ticket-0009: Tiberium growth now scales up regardless of which direction you go from the origin.
+
+Fixes ticket-0009: Tiberium growth now scales with the Tiberium Growth setting.
+
+Fixes ticket-0010: Tiberium no longer destroys/passes through cliffs.
+
+Fixes ticket-0013: Tiberium nodes now have a minimum distance between them when spawn by Liquid Tiberium Seed rockets.
+
+Fixes ticket-0014: Tiberium no longer naturally exceeds the maximum Max Tiberium Per Tile setting.
+
+Tiberium Ore now destroys other resources when it spreads instead of just growing over them.
+
+James' notes:
+
+Working on Automation! In the mod, not in-game.
+
+---------------------------------------------------------------------------------------------------
+
+May 12
+
+Fixed autogeneration math stuff, so Tiberium Value isn't backwards.
+
+Fully commented out 'setMainResult'
+
+Tiberium immune Power Armour.*
+
+Added more fallback within having Bob's Ores.*
+
+Gave up on coding growth to not damage poles, and just made them immune to tib damage. Fuck it.*
+
+The nearest tib field should now be fully grown, so you don't need to run into the damage zone to harvest it.*
+
+---------------------------------------------------------------------------------------------------
+
+May 12
+
+Fixed a debug thing.
+
+Fixed autogeneration setting usage.
+
+Reduced range of node damage from 10% more than growth radius to 60% of growth radius.
+
+Added an exponent to the node damage formula, so each added node is less effective than the previous.
+
+---------------------------------------------------------------------------------------------------
+
+May 11
+
+Fixed the Tiberium Value setting. Tiberium Value now only affects Refining recipes and growth credit recipes.
+
+Fixed the usage of the wrong setting for autogeneration.
+
+Fixed a debug thing.
+
+Fixed growth not scaling to the North and West.
+
+---------------------------------------------------------------------------------------------------
+
+May 9
+
+Added to description of SRF hub with power upkeep requirements.
+
+Changes to the recipe autogeneration to fix several bugs.
+
+Disabled setting to add sludge waste to direct recipes, until the library is fixed.
+
+Uranium Growth Credits are now scaled to the direct recipe.
+
+Moved sludge to brick to earlier.
+
+Moved Liquid Tib Bomb to later.
+
+---------------------------------------------------------------------------------------------------
+
+May 8
+
+Fixed growth accelerator description being different for the item and entity.
+
+Fixed another literally unplayable typo.
+
+Removed the patch notes file, so you don't have to download 5kb of useless text.
+
+Reverted the removal of Oil specific mult for the direct recipe.
+
+Fixed the Direct Uranium recipe for Angel's only.
+
+Correctly set the minimum values for settings, so that weird things don't happen.
+
+Reintroduced setting to give direct recipes sludge waste.
+
+---------------------------------------------------------------------------------------------------
+
+May 6
+
+Added chemical science pack prereq to Advanced Tiberium Processing.
+
+Appropriately locked the No Mine and Place Mine debug message behind the debug setting.
+
+Fixed Centrifuge recipes not being better than the direct recipes. Ish. They're not actually better, in a way?
+
+Fixed literally unplayable typos.
+
+Made Growth credits more energy intensive to make. Non-energy ones take 66% more, and the Energy one is now based on 3x the value of the non-energy ones.
+
+Removed some extra math for the Direct Oil recipe.
+
+Fixed the RecipeMult being allowed to be way too low.
+
+Increased the time requirements of the direct recipes to 2.5x.
+
+Reduced how much tib Farming gives you, and reduced data output.
+
+Doubled time of farming.
+
+Increased time requirements for refining.
+
+Reduced the relative time required to make Liquid Tiberium.
+
+Reduced efficiency of Direct Recipes.
+
+Added Infinite researches so you don't have to dismantle all Tiberium Data Production.
+
+--------------------------------------------------------------------------------------------------- 1.9
+
+May 1 (Third of his name)
+
+Upped Tiberium Fuel value.
+
+Fixed a missing 'end'.
+
+---------------------------------------------------------------------------------------------------
+
+May 1 (Second verse, just like the first.)
+
+Fixed tiberium fuel stuff.
+
+Fixed a missing parenthesis, because they don't like me.
+
+---------------------------------------------------------------------------------------------------
+
+May 1
+
+Fixed inventory products not damaging the player.
+
+Fixed SRF hubs not being properly tracked.
+
+Added SRF hub updating to the rebuild command.
+
+Fixed recipe autogeneration for bob's alone.
+
+Added a fuel value and pollution multiplier to tiberium. You can burn it, and destroy the entire planet by doing so.
+
+---------------------------------------------------------------------------------------------------
+
+April 8
+
+Something got lost in the portal update. Fixed.
+
+---------------------------------------------------------------------------------------------------
+
+April 3
+
+Fixed arrangement of recipes creation. Again.
+
+Attempted a fix to Sonic Wall stuff. Construction Drones, not working with Bots.
+
+---------------------------------------------------------------------------------------------------
+
+March 27
+
+Fixed damage from Tiberium Ore working across surfaces.
+
+Redid damage from tiberium ore to be more efficient.
+
+Fixed tiberium magazines having a cost of 0 if you do fun stuff.
+
+---------------------------------------------------------------------------------------------------
+
+March 25
+
+Fixed a character is nil error.
+
+Complete rebuild of the Node damage code, thanks to Klonan.
+
+Localized the seeting that wasn't.
+
+Removed selectability of node mines, and localized it just in case.
+
+---------------------------------------------------------------------------------------------------
+
+March 24
+
+Fixed Node mines placement. This means it should be compatible with existing saves.
+
+Reordered the changelog so the new stuff is at the top.
+
+---------------------------------------------------------------------------------------------------
+
+March 17
+
+Fixed recipe icon scaling.
+
+Fixed Tib Power Plant not making any pollution.
+
+Bob's Thorium can now be gotten and eaten by tib...
+
+Upped damage on mines, by 20x.
+
+Angel's Refining Compatibility
+
+Tib data and science chain, Ore testing is unlocked by each tech for it, others are unlocked by their refining tech, for any of the testing techs it requires, more advanced testing is unlocked by the respective tech.*
+
+Moved Tib Nuclear Fuel Cells to Tiberium Nuclear Physics, which also unlocks the direct recipes.*
+
+Tib tech overhaul, including icons*
+
+Changed the order of fluid input/output on the refining recipes, so they line up better.
+
+Moved all tiberium items over to the tiberium tab. When setting things like filters, this is now where you'll find them.
+
+Fixed Bob's Centrifuging ratios to be nice and perfect. Each cycle now gives 100x as much, but takes 100x as long as well.
+
+Fixed a literally unplayable typo.
+
+Mines should now be immune to all damage types.
+
+Integrated recipe tinting for Chemical Plants, thanks to Hannah97Gamer
+
+Fixed Tiberium Liquid Processing to be able to have productivity.
+
+Added a setting for max tib per tile. tiberium is 1000, down from the 10000 it was. Tib fields will no longer be capable of storing many many millions of ore. This setting also affects how much the Seed makes, and how much is required to make a node.
+
+---------------------------------------------------------------------------------------------------
+
+Feb 17
+
+Fixed mine placement, so they do not get repeatedly placed.
+
+Added a command to remove all mines, to reset it. /tibFixMineLag 
+
+---------------------------------------------------------------------------------------------------
+
+Feb 16
+
+Fixed up node damage system. Nodes now only damage the player, and entities belonging to non-player forces.
+
+Fixed tib spikes apparently being unable to collide with the mines.
+
+Sonic fences now go over rails.
+
+Fixed fluid icons.
+
+---------------------------------------------------------------------------------------------------
+
+Feb 16
+
+Removed Centrifuge editing to add fluid boxes, as they aren't needed.
+
+Removed Direct Recipe Waste setting, pending crash fixes.
+
+Fixed a crash because it doesn't have the correct variables.
+
+Fixed variables for vanilla not being generated if bobs isn't active at all.
+
+---------------------------------------------------------------------------------------------------
+
+Feb 12
+
+Added an option to choose how much ore is created per growth cycle. All recipes automatically adjust to changed value of tib. (Recipe multiplier, basically.)
+
+Added option to change how much each tib ore is worth. Recipes that use tib ore auto adjust.
+
+Removed vanilla Centrifuge unlock from Tiberium Processing Tech.
+
+Reduced the Logistics science pack cost of Tiberium Processing.
+
+Reduced mining area on Tiberium Control Node to 100x100.
+
+Refinery recipes times decreased to 2.5 seconds, from 6.
+
+Fixed damage hitbox of tib ore. No more walking over fields with no damage.
+
+Nodes now do some damage over the whole field, and a little beyond the max growth radius.
+
+Centrifuges are now fast replace with each other.
+
+Halved the mining time and depletion speed of the Tib Spike node.
+
+Linked Tib Spike node richness to normal node richness.
+
+Change direct ore output to be based on the centrifuge outputs.
+
+Bob's integrated.
+
+Tiberium derived Nuclear Fuel cells. Stack size 5, because you don't want too many of them in one place, lest bad things happen.
+
+Liquid Tiberium Seed missile.
+
+Node values reduced by 5x, and 2 million base.
+
+Adjusted Nuclear fuel from tib recipe, so it doesn't require more than double the liquid tib energy equivalent.
+
+Overhauled damage system, so now nodes use landmines. Which means they damage biters too.
+
+Spaced out the ore transitioning, so it doesn't cap out at 1000.
+
+Increased node growth radius. Testing showed we can go higher without adversly affecting UPS.
+
+---------------------------------------------------------------------------------------------------
+
+Feb 2 (Again)
+
+Automated tiberium resitance application to armour. Compatibility with other mods is (hopefully) assured.
+
+---------------------------------------------------------------------------------------------------
+
+Feb 2
+
+Tiered Tiberium centrifuges.
+
+Switched around the products in the centrifuges to promote faster working.
+
+Increased charging speed of Sonic Walls. Reduced required charge. Increased constant drain.
+
+Changed stack size of Growth Credits to 20. Each Growth Accelerator can store 200, which is enough for 2 full growth cycles at max amount in the settings.
+
+Added setting to change how many growth credits can be consumed each cycle. tiberium 50.
+
+Added setting to change how much damage tiberium does in the various cases. tiberium 10.
+
+Added setting to add sludge to direct recipes. tiberium off.
+
+Recipe Updates:
+
+Iron plate upgraded to steel in:Tiberium Node Harvester, Tiberium Spike, Tiberium Control Node.
+
+Electric Mining Drill added to:Tiberium Node Harvester, Tiberium Spike, Tiberium Control Node.
+
+Electric Engine Units added to Tiberium Control Node.
+
+Iron Pipe added to Tiberium Control Node.
+
+Copper Plate added to Sonic Walls.
+
+Advanced Circuits upgraded to processing units in Tiberium Control Node.
+
+Removed Chemical Plant and Electric Engine Unit from Growth Accelerator.
+
+Copper plate exchanged for plastic in Tiberium Armour.
+
+Added Iron Pipe to Tiberium Armour.
+
+---------------------------------------------------------------------------------------------------
+
+Jan 28 2020
+
+Fully updated to 0.18
+
+We now have a Tiberium Damage type. Tiberium inflicts this dmage type now.
+
+Tiberium Armour protects from Tiberium damage.
+
+Tiberium Bullets.
+
+Upped damage from the Ion Projector. Now 4x the vanilla laser turret.
+
+Growth Accelerators now can only be placed on nodes.
+
+Growth Accelerator is immune to tiberium damage.
+
+Tiberium Core missiles. Explosive missiles, with a little bit of liquid tib to give some extra oomph.
+
+Liquid Tiberium bomb is no longer just a nuke. It's a BIG nuke.
+
+Changed Tiberium Ore stack size to 50, to be in line with other ores.
+
+Automated recipe system allows for much more flexible recipes.
+
+---------------------------------------------------------------------------------------------------
+
+Jan 8 2020
+
+Fix Node Harvester using 20x power of mining drill for equivalent tib.
+
+Commented out debug info printing to the console.
+
+Removed Tiberium Brick recipes.
+
+Added Tiberium Spikes. They slowly, and forever, produce molten tiberium from nodes, and block growth on them.
+
+Changed Growth Accelerator entity over to centrifuge.
+
+Fixed localization for Sonic Wall Hubs to include distance they work at.
+
+Added Ion Beam turrets, including unique component. The Orbital Ion Cannon uses this unique component instead of laser turrets if you have both mods active.
+
+Moved Sonic walls to using the proper tech, instead of a renamed tech from the orginal mod.
+
+It now takes more time and energy to produce liquid tiberium for your power needs.
+
+All tiberium refining recipes now double the pollution output of the machine.
+
+Redid refining chains, so that refining is aways denser and more valuable.
+
+Waste Processing takes much longer for a single cycle.
+
+---------------------------------------------------------------------------------------------------
+
+2019.19.07
+
+Changes Node harvesting recipe, to smooth out production from it. Increased richness of nodes to compensate, since each cycle of the Node harvester harvests one "unit" from the node, regardless of how much it produces.
+
+Added stone growth credit recipe.
+
+Added pollution modifier to molten tib. If ya burn it, the trees will not thank you.
+
+Made growth credit image.
+
+Made icons for each growth credit recipe.
+
+Made icon for Waste recycling recipe.
+
+Changed order of outputs in centrifuging, hopefully to reduce wasted inserter swings. Also removed uranium and oil from output. Direct from slurry only now.
+
+Water recipes commented out. They're largely useless.
+
+Made different icons for the centrifuging recipes.
+
+Added recipe/icon to make stone bricks/concrete out of tiberium waste.
+
+Made new icons for direct recipes.
+
+Fully redid the recipe balancing.
+
+Added a sonic gate.
+
+Removed "Crystal" from localized tib name.
+
+Fully changed liquid tib over to molten.
+
+Added liquid tib fluid.
+
+Fully made the growth accelerator.
+
+Added liquid tib production to make power out of.
+
+Nuclear fuel production from liquid tib, expensive to be efficient.
+
+---------------------------------------------------------------------------------------------------
+
+2019.12.05 
+	[Art] -Ax
+	-Implemented placeholder Tiberium Ore art + glow (Based on Tiberian Sun sprites.)
+		* Disabled 'HR rendering' of sprites for now, since there is only the 64px version.
+		* 12 variations, 12 growth steps from 1-1000 ore units. For 'smoother' visual spread.
+		
+---------------------------------------------------------------------------------------------------
+		
+Changed recipe balancing. Uranium is no longer a product of basic ore centrifuging. Uranium tibeirum cost cut in half (5 liquid per ore).
+
+Fixed Tiberium brick to coal using 2 bricks, instead of 1.
+
+Localised various items.
+
+Fixed Node Harvester and Control Network being unlocked at the start *
+
+Made Growth Credit recipes. Added recipes to technologies.
