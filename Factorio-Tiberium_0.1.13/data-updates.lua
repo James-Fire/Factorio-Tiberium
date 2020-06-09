@@ -52,6 +52,9 @@ for _,TS in pairs(TibScience) do
 end
 --table.insert(data.raw["assembling-machine"][entity].crafting_categories, "tiberium-science")
 
+if (mods["omnimatter"]) then
+	LSlib.recipe.editIngredient("tib-spike", "pumpjack", "offshore-pump", 1)
+end
 
 --[[if (mods["bobassembly"]) then
 		for _,chemicalName in pairs{

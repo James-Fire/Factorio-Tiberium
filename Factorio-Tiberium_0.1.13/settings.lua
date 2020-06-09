@@ -21,12 +21,6 @@ data:extend(
     default_value = false,
 	order = "b3",
   },
-  -- {
-    -- type = "bool-setting",
-    -- name = "waste-recycling",
-    -- setting_type = "startup",
-    -- default_value = true,
-  -- },
   {
     type = "bool-setting",
     name = "tiberium-byproduct-direct",
@@ -50,19 +44,11 @@ data:extend(
   {
     type = "int-setting",
     name = "growth-credit",
-    setting_type = "runtime-global",
+    setting_type = "startup",
     default_value = 20,
     minimum_value = 1,
     maximum_value = 100,
   },
-  -- {
-    -- type = "int-setting",
-    -- name = "tiberium-max-per-tile",
-    -- setting_type = "startup",
-    -- default_value = 1000,
-    -- minimum_value = 100,
-    -- maximum_value = 10000,
-  -- },
   {
     type = "int-setting",
     name = "tiberium-damage",
@@ -72,22 +58,6 @@ data:extend(
 	maximum_value = 50,
 	order = "a4",
   },
-  -- {
-    -- type = "int-setting",
-    -- name = "tiberium-radius",
-    -- setting_type = "startup",
-    -- default_value = 30,
-    -- minimum_value = 5,
-	-- maximum_value = 100,
-  -- },
-  -- { 
-    -- type = "int-setting",
-    -- name = "tiberium-growth",
-    -- setting_type = "startup",
-    -- default_value = 100,
-    -- minimum_value = 1,
-	-- maximum_value = 1000,
-  -- },
   {
     type = "int-setting",
     name = "tiberium-value",

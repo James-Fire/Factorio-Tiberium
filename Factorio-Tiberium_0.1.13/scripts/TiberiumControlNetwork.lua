@@ -7,33 +7,33 @@ local function Contains(tab, val)
     return false
 end
 
-local tiberiumGrowthNodeItem = table.deepcopy(data.raw.item["pumpjack"])
-tiberiumGrowthNodeItem.name = "node-harvester"
-tiberiumGrowthNodeItem.subgroup = "a-buildings"
-tiberiumGrowthNodeItem.order = "e"
-tiberiumGrowthNodeItem.place_result = "node-harvester"
+local tiberiumNodeHarvesterItem = table.deepcopy(data.raw.item["pumpjack"])
+tiberiumNodeHarvesterItem.name = "node-harvester"
+tiberiumNodeHarvesterItem.subgroup = "a-buildings"
+tiberiumNodeHarvesterItem.order = "e"
+tiberiumNodeHarvesterItem.place_result = "node-harvester"
 
-local tiberiumGrowthNodeEntity = table.deepcopy(data.raw["mining-drill"]["electric-mining-drill"])
-tiberiumGrowthNodeEntity.name = "node-harvester"
-tiberiumGrowthNodeEntity.icon = data.raw["mining-drill"]["pumpjack"].icon
-tiberiumGrowthNodeEntity.base_picture = data.raw["mining-drill"]["pumpjack"].base_picture
-tiberiumGrowthNodeEntity.radius_visualisation_picture = data.raw["mining-drill"]["pumpjack"].radius_visualisation_picture
-tiberiumGrowthNodeEntity.animations = data.raw["mining-drill"]["pumpjack"].animations
-tiberiumGrowthNodeEntity.mining_speed = 5
-tiberiumGrowthNodeEntity.subgroup = "a-buildings"
-tiberiumGrowthNodeEntity.order = "e"
-tiberiumGrowthNodeEntity.energy_usage = "20000kW"
-tiberiumGrowthNodeEntity.resource_categories = {}
-tiberiumGrowthNodeEntity.minable.result = "node-harvester"
+local tiberiumNodeHarvesterEntity = table.deepcopy(data.raw["mining-drill"]["electric-mining-drill"])
+tiberiumNodeHarvesterEntity.name = "node-harvester"
+tiberiumNodeHarvesterEntity.icon = data.raw["mining-drill"]["pumpjack"].icon
+tiberiumNodeHarvesterEntity.base_picture = data.raw["mining-drill"]["pumpjack"].base_picture
+tiberiumNodeHarvesterEntity.radius_visualisation_picture = data.raw["mining-drill"]["pumpjack"].radius_visualisation_picture
+tiberiumNodeHarvesterEntity.animations = data.raw["mining-drill"]["pumpjack"].animations
+tiberiumNodeHarvesterEntity.mining_speed = 5
+tiberiumNodeHarvesterEntity.subgroup = "a-buildings"
+tiberiumNodeHarvesterEntity.order = "e"
+tiberiumNodeHarvesterEntity.energy_usage = "20000kW"
+tiberiumNodeHarvesterEntity.resource_categories = {}
+tiberiumNodeHarvesterEntity.minable.result = "node-harvester"
 
-tiberiumGrowthNodeEntity.resource_searching_radius = 0.49
-table.insert(tiberiumGrowthNodeEntity.resource_categories, "advanced-solid-tiberium")
-tiberiumGrowthNodeEntity.energy_source = {
+tiberiumNodeHarvesterEntity.resource_searching_radius = 0.49
+table.insert(tiberiumNodeHarvesterEntity.resource_categories, "advanced-solid-tiberium")
+tiberiumNodeHarvesterEntity.energy_source = {
         type = "electric",
         usage_priority = "secondary-input",
-        emissions = 20 / 20000
+        emissions_per_minute = 100
     },
-data:extend{tiberiumGrowthNodeItem, tiberiumGrowthNodeEntity,
+data:extend{tiberiumNodeHarvesterItem, tiberiumNodeHarvesterEntity,
   {
 	type = "recipe",
 	name = "node-harvester",
@@ -95,7 +95,7 @@ table.insert(tiberiumSpikeEntity.resource_categories, "advanced-solid-tiberium")
 tiberiumSpikeEntity.energy_source = {
         type = "void",
         usage_priority = "secondary-input",
-        emissions = 2
+        emissions_per_minute = 20
     },
 data:extend{tiberiumSpikeItem, tiberiumSpikeEntity,
   {
@@ -152,10 +152,10 @@ tiberiumNetworkNodeEntity.resource_searching_radius = 50
 tiberiumNetworkNodeEntity.resource_categories = {}
 tiberiumNetworkNodeEntity.minable.result = "tiberium-network-node"
 table.insert(tiberiumNetworkNodeEntity.resource_categories, tibcat.name)
-tiberiumGrowthNodeEntity.energy_source = {
+tiberiumNetworkNodeEntity.energy_source = {
         type = "electric",
         usage_priority = "secondary-input",
-        emissions = 10 / 25000
+        emissions_per_minute = 200
     },
 
 data:extend({tiberiumNetworkNodeItem,tiberiumNetworkNodeEntity,tibcat,
@@ -203,16 +203,72 @@ for _, drill in pairs(data.raw["mining-drill"]) do
 	end
 end
 
-local growthSpikeEntity = table.deepcopy(data.raw["mining-drill"]["node-harvester"])
-growthSpikeEntity.name = "growth-accelerator-node"
-local growthSpikeItem = table.deepcopy(data.raw.item["pumpjack"])
-growthSpikeItem.name = "growth-accelerator-node"
+local growthAcceleratorItem = table.deepcopy(data.raw.item["pumpjack"])
+growthAcceleratorItem.name = "growth-accelerator-node"
+local growthAcceleratorEntity = table.deepcopy(data.raw["mining-drill"]["node-harvester"])
+growthAcceleratorEntity.name = "growth-accelerator-node"
 
-data:extend({growthSpikeItem,growthSpikeEntity})
+data:extend({growthAcceleratorItem,growthAcceleratorEntity})
+
+local acceleratorSprite = {
+	-- Centrifuge A
+	filename = "__base__/graphics/entity/centrifuge/centrifuge-C.png",
+	priority = "high",
+	line_length = 8,
+	width = 119,
+	height = 107,
+	frame_count = 64,
+	shift = util.by_pixel(-0.5, -26.5),
+	hr_version = {
+		filename = "__base__/graphics/entity/centrifuge/hr-centrifuge-C.png",
+		priority = "high",
+		scale = 0.5,
+		line_length = 8,
+		width = 237,
+		height = 214,
+		frame_count = 64,
+		shift = util.by_pixel(-0.25, -26.5)
+	}
+}
+
+local GrowthCreditMax = settings.startup["growth-credit"].value
 
 data:extend({
+	--Void recipe for consuming energy credits
 	{
-		type = "furnace",
+		type = "recipe",
+		name = "tiberium-growth",
+		enabled = "false",
+		category = "growth",
+		ingredients = {{"growth-credit", 1}},
+		energy_required = 300 / GrowthCreditMax,
+		results = {
+			{
+				name = "growth-credit-void",
+				amount = 1,
+				probability = 0
+			}
+		},
+    },
+	{
+		type = "item",
+		name = "growth-credit-void",
+		icon = "__Factorio-Tiberium__/graphics/icons/tiberium-ore.png",
+		icon_size = 32,
+		flags = {"hidden"},
+		subgroup = "a-items",
+		stack_size = 200
+	},
+	--Floating text for displaying growth amount
+	{
+		type = "flying-text",
+		name = "growth-accelerator-text",
+		flags = {"not-on-map", "placeable-off-grid"},
+		time_to_live = 180,
+		speed = 1 / 60,
+	},
+	{
+		type = "assembling-machine",
 		name = "growth-accelerator",
 		icon = "__Factorio-Tiberium__/graphics/icons/growth-accelerator.png",
 		icon_size = 64,
@@ -221,15 +277,13 @@ data:extend({
 		max_health = 250,
 		corpse = "centrifuge-remnants",
 		dying_explosion = "medium-explosion",
-		result_inventory_size = 1,
-		energy_usage = "90kW",
+		energy_usage = "1kW",
 		crafting_speed = 1,
-		source_inventory_size = 1,
+		fixed_recipe = "tiberium-growth",
 		open_sound = { filename = "__base__/sound/machine-open.ogg", volume = 0.85 },
 		close_sound = { filename = "__base__/sound/machine-close.ogg", volume = 0.75 },
 		vehicle_impact_sound = { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
-		resistances =
-		{
+		resistances = {
 			{
 				type = "fire",
 				percent = 90
@@ -242,77 +296,91 @@ data:extend({
 		collision_box = {{-1.2, -1.2}, {1.2, 1.2}},
 		selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
 		always_draw_idle_animation = true,
-    idle_animation =
-    {
-      layers =
-      {
-        -- Centrifuge A
-        {
-          filename = "__base__/graphics/entity/centrifuge/centrifuge-C.png",
-          priority = "high",
-          line_length = 8,
-          width = 119,
-          height = 107,
-          frame_count = 64,
-          shift = util.by_pixel(-0.5, -26.5),
-          hr_version =
-          {
-            filename = "__base__/graphics/entity/centrifuge/hr-centrifuge-C.png",
-            priority = "high",
-            scale = 0.5,
-            line_length = 8,
-            width = 237,
-            height = 214,
-            frame_count = 64,
-            shift = util.by_pixel(-0.25, -26.5)
-          }
-        },
-        {
-          filename = "__base__/graphics/entity/centrifuge/centrifuge-C-shadow.png",
-          draw_as_shadow = true,
-          priority = "high",
-          line_length = 8,
-          width = 132,
-          height = 74,
-          frame_count = 64,
-          shift = util.by_pixel(20, -10),
-          hr_version =
-          {
-            filename = "__base__/graphics/entity/centrifuge/hr-centrifuge-C-shadow.png",
-            draw_as_shadow = true,
-            priority = "high",
-            scale = 0.5,
-            line_length = 8,
-            width = 279,
-            height = 152,
-            frame_count = 64,
-            shift = util.by_pixel(16.75, -10)
-          }
-        },
+		animation = {
+			layers = {
+				{
+					blend_mode = "additive",
+					filename = "__base__/graphics/entity/centrifuge/centrifuge-C-light.png",
+					frame_count = 64,
+					height = 104,
+					hr_version = {
+						blend_mode = "additive",
+						filename = "__base__/graphics/entity/centrifuge/hr-centrifuge-C-light.png",
+						frame_count = 64,
+						height = 207,
+						line_length = 8,
+						priority = "high",
+						scale = 0.5,
+						shift = {0, -0.8515625},
+						width = 190
+					},
+					line_length = 8,
+					priority = "high",
+					shift = {0, -0.84375},
+					width = 96
+				},
+			},
 		},
-	},
+		idle_animation = {
+			layers = {
+				{
+					-- Centrifuge A
+					filename = "__base__/graphics/entity/centrifuge/centrifuge-C.png",
+					priority = "high",
+					line_length = 8,
+					width = 119,
+					height = 107,
+					frame_count = 64,
+					shift = util.by_pixel(-0.5, -26.5),
+					hr_version = {
+						filename = "__base__/graphics/entity/centrifuge/hr-centrifuge-C.png",
+						priority = "high",
+						scale = 0.5,
+						line_length = 8,
+						width = 237,
+						height = 214,
+						frame_count = 64,
+						shift = util.by_pixel(-0.25, -26.5)
+					}
+				},
+				{
+					filename = "__base__/graphics/entity/centrifuge/centrifuge-C-shadow.png",
+					draw_as_shadow = true,
+					priority = "high",
+					line_length = 8,
+					width = 132,
+					height = 74,
+					frame_count = 64,
+					shift = util.by_pixel(20, -10),
+					hr_version = {
+						filename = "__base__/graphics/entity/centrifuge/hr-centrifuge-C-shadow.png",
+						draw_as_shadow = true,
+						priority = "high",
+						scale = 0.5,
+						line_length = 8,
+						width = 279,
+						height = 152,
+						frame_count = 64,
+						shift = util.by_pixel(16.75, -10)
+					}
+				},
+			},
+		},
 		circuit_wire_max_distance = 7.5,
-		circuit_wire_connection_point =
-		{
-			shadow =
-			{
+		circuit_wire_connection_point = {
+			shadow = {
 				red = {0.56, -0.6},
 				green = {0.26, -0.6}
 			},
-			wire =
-			{
+			wire = {
 				red = {0.16, -0.9},
 				green = {-0.16, -0.9}
 			}
 		},
 		crafting_categories = {"growth"},
-		energy_source =
-		{
-		  type = "burner",
-		  fuel_category = "growth",
-		  effectivity = 1,
-		  fuel_inventory_size = 5,
-		  emissions_per_minute = 2,
+		energy_source =	{
+			type = "void",
+			emissions_per_minute = 2,
 		},
 	},
 	{
@@ -350,7 +418,7 @@ data:extend({
 		place_result = "growth-accelerator",
 		stack_size = 15,
 	},
-	})
+})
 
 local centrifuge = table.deepcopy(data.raw["assembling-machine"]["centrifuge"])
 
@@ -397,7 +465,6 @@ local wall_segment_cross = {
 
 
 --Sonic Projection Walls
-
 
 data:extend({
     {
