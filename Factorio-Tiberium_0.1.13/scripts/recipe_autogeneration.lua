@@ -320,7 +320,7 @@ if (mods["bobores"]) then
 				local OilPerCycle    = 70
 				local TotalCentOutput = OilPerCycle+StonePerCycle+CoalPerCycle+CopperPerCycle+IronPerCycle
 				local DirectRecipeOutput = TotalCentOutput*DirectRecipeMult
-				local DirectUraniumOutput = math.floor(DirectRecipeOutput/4 +.5)
+				local DirectUraniumOutput = math.floor(DirectRecipeOutput/10 +.5)
 				local CreditCost = (OrePerCredit/DirectRecipeOutput)*(MoltenPerCycle/SlurrytoMolten*OretoSlurry)/CreditEfficiency
 				local SludgePerCycle = StonePerCycle
 				
@@ -354,7 +354,7 @@ elseif (mods["angelsrefining"] and mods["angelspetrochem"]) then
 	local TotalCentOutput = OilPerCycle+StonePerCycle+CoalPerCycle+CopperPerCycle+IronPerCycle
 	local DirectRecipeOutput = TotalCentOutput*DirectRecipeMult
 	local DirectOilOutput     = math.floor(DirectRecipeOutput * (OilPerCycle / IronPerCycle))
-	local DirectUraniumOutput = math.floor(DirectRecipeOutput/4 +.5)
+	local DirectUraniumOutput = math.floor(DirectRecipeOutput/10 +.5)
 	local CreditCost = (OrePerCredit/DirectRecipeOutput)*(MoltenPerCycle/SlurrytoMolten*OretoSlurry)/CreditEfficiency
 
 	--Angel's Centrifuging Recipe generation
@@ -420,7 +420,7 @@ else
 	local OilPerCycle    = 70
 	local TotalCentOutput = OilPerCycle+StonePerCycle+CoalPerCycle+CopperPerCycle+IronPerCycle
 	local DirectRecipeOutput = TotalCentOutput*DirectRecipeMult
-	local DirectUraniumOutput = math.floor(DirectRecipeOutput/4 +.5)
+	local DirectUraniumOutput = math.floor(DirectRecipeOutput/10 +.5)
 	local CreditCost = (OrePerCredit/DirectRecipeOutput)*(MoltenPerCycle/SlurrytoMolten*OretoSlurry)/CreditEfficiency
 	local SludgePerCycle = StonePerCycle
 

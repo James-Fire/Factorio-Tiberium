@@ -92,8 +92,4 @@ data:extend({
     type = "recipe-category",
     name = "growth"
   },
-  {
-    type = "fuel-category",
-    name = "growth"
-  },
 })
