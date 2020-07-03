@@ -1,3 +1,19 @@
+July 3
+
+Updated Growth Accelerator UI to show credits being consumed
+
+Growth Accelerator now has an working animation
+
+Added flying text to show Growth Credits contributing to Tiberium growth
+
+Fixed TCN, Node Harvester, and Spike not producing pollution
+
+Added descriptions for remaining entities
+
+Tiberium growth now resumes when Spikes are removed
+
+More consistency with surfaces
+
 ---------------------------------------------------------------------------------------------------1.12
 
 May 29
