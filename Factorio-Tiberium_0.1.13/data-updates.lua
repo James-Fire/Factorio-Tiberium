@@ -56,6 +56,42 @@ if (mods["omnimatter"]) then
 	LSlib.recipe.editIngredient("tib-spike", "pumpjack", "offshore-pump", 1)
 end
 
+--Helper function
+--Returns the key for a given value in a given table or false if it doesn't exist
+function find_value_in_table(list, value)
+	if not list then return false end
+	if not value then return false end
+	for k, v in pairs(list) do
+		if v == value then return k end
+	end
+	return false
+end
+
+--Adding Tib Science to all labs
+local tibComboPacks = {}  -- List of packs that need to be processed in the same lab as Tib Science
+for _, tech in pairs({"tiberium-control-network-tech", "tiberium-explosives"}) do
+	for _, ingredient in pairs(data.raw.technology[tech].unit.ingredients) do
+		local pack = ingredient[1]
+		if pack == "tiberium-science" then -- Don't add Tib Science
+		elseif not find_value_in_table(tibComboPacks, pack) then  -- Don't add duplicates
+			table.insert(tibComboPacks, pack)
+		end
+	end
+end
+
+for labName, labData in pairs(data.raw.lab) do
+	local addTib = false
+	if not find_value_in_table(labData.inputs, "tiberium-science") then -- Must not already allow Tib Science
+		for _, pack in pairs(tibComboPacks) do  -- Must use packs from combo list so we don't hit things like module labs
+			if find_value_in_table(labData.inputs, pack) then
+				addTib = true
+				break
+			end
+		end
+	end
+	if addTib then table.insert(data.raw.lab[labName].inputs, "tiberium-science") end
+end
+
 --[[if (mods["bobassembly"]) then
 		for _,chemicalName in pairs{
 			"chemical-plant",
