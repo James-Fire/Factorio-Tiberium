@@ -5,6 +5,7 @@ local TiberiumGrowth = settings.startup["tiberium-growth"].value * 10
 local TiberiumMaxPerTile = settings.startup["tiberium-growth"].value * 100 --Force 10:1 ratio with growth
 local TiberiumRadius = 20 + settings.startup["tiberium-spread"].value * 0.4 --Translates to 20-60 range
 local TiberiumSpread = settings.startup["tiberium-spread"].value
+local bitersImmune = settings.startup["biters-immune-to-tiberium-damage"]
 local debugText = settings.startup["debug-text"].value
 --In order to make something debug only, use "if settings.startup["debug-text"].value == true then", and activate the debug-setting startup option.
 
@@ -72,6 +73,20 @@ script.on_init(
   end
 )
 
+script.on_configuration_changed(function(data)
+	-- tib 0.1.13 conversion for registering entities for the base 0.18.28 change
+	if data["mod_changes"]["Factorio-Tiberium"]["old_version"] < "0.1.13" and
+			data["mod_changes"]["Factorio-Tiberium"]["new_version"] >= "0.1.13" then
+		for _, entity in pairs(global.world.find_entities_filtered({type = "mining-drill"})) do
+			script.register_on_entity_destroyed(entity)
+		end
+		for _, entity in pairs(global.world.find_entities_filtered({name = {"CnC_SonicWall_Hub", "tib-spike"}})) do
+			script.register_on_entity_destroyed(entity)
+		end
+	end
+end
+)
+
 function AddOre(surface, position, growthRate)
 	local area = {
 			{x = math.floor(position.x), y = math.floor(position.y)},
@@ -117,6 +132,11 @@ end
 function CheckPoint(surface, position, lastValidPosition, growthRate)
 	-- These checks are in roughly the order of guessed expense
 	local tile = surface.get_tile(position)
+	
+	if not tile or not tile.valid then
+		AddOre(surface, lastValidPosition, growthRate)
+		return true
+	end
 	
 	if (not tile.collides_with("ground-tile")) then
 		AddOre(surface, lastValidPosition, growthRate)
@@ -489,21 +509,23 @@ script.on_event(defines.events.on_tick, function(event)
 			PlaceOre(global.tibGrowthNodeList[global.tibGrowthNodeListIndex], 10)
 		end
 	end
-	local i = (event.tick % 60) + 1  --Loop through 1/60th of the nodes every tick
-	while i <= #global.tibGrowthNodeList do
-		local node = global.tibGrowthNodeList[i]
-		if node.valid then
-			local enemies = node.surface.find_entities_filtered{position = node.position, radius = TiberiumRadius, force = game.forces.enemy}
-			for _, enemy in pairs(enemies) do
-				if enemy.valid then
-					enemy.damage(TiberiumDamage * 6, game.forces.tiberium, "tiberium")
+	if not bitersImmune then
+		local i = (event.tick % 60) + 1  --Loop through 1/60th of the nodes every tick
+		while i <= #global.tibGrowthNodeList do
+			local node = global.tibGrowthNodeList[i]
+			if node.valid then
+				local enemies = node.surface.find_entities_filtered{position = node.position, radius = TiberiumRadius, force = game.forces.enemy}
+				for _, enemy in pairs(enemies) do
+					if enemy.valid and enemy.health and enemy.health > 0 then
+						enemy.damage(TiberiumDamage * 6, game.forces.tiberium, "tiberium")
+					end
 				end
+			else
+				game.print("Invalid Tiberium node in list position #"..i)
+				game.print("Send save to Tiberium mod developers and then use /tibRebuildLists to fix it")
 			end
-		else
-			game.print("Invalid Tiberium node in list position #"..i)
-			game.print("Send save to Tiberium mod developers and then use /tibRebuildLists to fix it")
+			i = i + 60
 		end
-		i = i + 60
 	end
 end
 )
@@ -542,6 +564,7 @@ local on_new_entity = function(event)
 	local new_entity = event.created_entity or event.entity --Handle multiple event types
 	local surface = new_entity.surface
 	if (new_entity.type == "mining-drill") then
+		script.register_on_entity_destroyed(new_entity)
 		local duplicate = false
 		for _, drill in pairs(global.drills) do
 			if drill == new_entity then	duplicate = true break end
@@ -549,8 +572,10 @@ local on_new_entity = function(event)
 		if not duplicate then table.insert(global.drills, new_entity) end
 	end
 	if (new_entity.name == "CnC_SonicWall_Hub") then
+		script.register_on_entity_destroyed(new_entity)
 		CnC_SonicWall_AddNode(new_entity, event.tick)
 	elseif (new_entity.name == "tib-spike") then
+		script.register_on_entity_destroyed(new_entity)
 		local position = new_entity.position
 		local area = {
 			{x = math.floor(position.x), y = math.floor(position.y)},

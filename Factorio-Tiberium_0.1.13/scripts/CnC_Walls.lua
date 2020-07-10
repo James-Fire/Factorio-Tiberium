@@ -157,7 +157,7 @@ function CnC_SonicWall_WallDamage(surf, pos, tick)
 					mark_death = true
 				end
 				CnC_SonicWall_DisableNode(node)
-				table.insert(global.SRF_node_ticklist, {node, tick + ceil(node.electric_buffer_size / node.electric_input_flow_limit)})
+				table.insert(global.SRF_node_ticklist, {emitter = node, tick = tick + ceil(node.electric_buffer_size / node.electric_input_flow_limit)})
 			end
 		end
 		if not mark_death then
