@@ -43,3 +43,5 @@ if settings.startup["tiberium-advanced-start"].value then
 		end
 	--end
 end
+
+require("science")
