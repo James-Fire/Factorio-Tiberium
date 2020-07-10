@@ -12,8 +12,6 @@ data:extend(
         subgroup = "a-items",
         order = "a[tiberium-ore]",
         stack_size = 20,
-		fuel_value = "2MJ",
-		fuel_category = "growth",
     },
 	{
         type = "item",
@@ -165,7 +163,7 @@ data:extend(
     normal = 3000000,
     infinite_depletion_amount = 10,
     resource_patch_search_radius = 12,
-    tree_removal_probability = 0.7,
+    tree_removal_probability = 0.8,
     tree_removal_max_distance = 32 * 32,
     minable =
     {
@@ -176,7 +174,7 @@ data:extend(
           type = "item",
           name = "tiberium-ore",
           amount_min = 1,
-          amount_max = 2,
+          amount_max = 1,
           probability = 1
         }
       }

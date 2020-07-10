@@ -501,7 +501,7 @@ data:extend
 				recipe = "tiberium-armor"
 			},
 		},
-		prerequisites = {"tiberium-separation-tech", "military-science-pack"},
+		prerequisites = {"tiberium-separation-tech", "military-science-pack", "heavy-armor"},
 		unit =
 		{
 			count = 100,
@@ -535,7 +535,7 @@ data:extend
 				recipe = "tiberium-rocket"
 			},
 		},
-		prerequisites = {"tiberium-military-1", "tiberium-power-tech", "rocketry"},
+		prerequisites = {"tiberium-military-1", "tiberium-power-tech", "rocketry", "laser"},
 		unit =
 		{
 			count = 300,
