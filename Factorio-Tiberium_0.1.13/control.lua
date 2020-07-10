@@ -9,6 +9,7 @@ local TiberiumSpread = settings.startup["tiberium-spread"].value
 local debugText = settings.startup["debug-text"].value
 --In order to make something debug only, use "if settings.startup["debug-text"].value == true then", and activate the debug-setting startup option.
 
+
 script.on_init(
   function()
     global.tibGrowthNodeListIndex = 0
@@ -294,7 +295,7 @@ end
 --Liquid Seed trigger
 local on_script_trigger_effect = function(event)
   if event.effect_id == "seed-launch" then
-	LiquidBomb(game.surfaces[event.surface_index], event.target_position, "tiberium-ore", TiberiumMaxPerTile)
+	LiquidBomb(game.get_surface[event.surface_index], event.target_position, "tiberium-ore", TiberiumMaxPerTile)
     return
   end
 end
@@ -315,19 +316,19 @@ commands.add_command(
   "tibRebuildLists",
   "update lists of mining drills and tiberium nodes",
   function()
-    local allnodes = game.surfaces[1].find_entities_filtered {name = "tibGrowthNode"}
+    local allnodes = game.get_surface[1].find_entities_filtered {name = "tibGrowthNode"}
     global.tibGrowthNodeList = {}
     for i = 1, #allnodes, 1 do
       table.insert(global.tibGrowthNodeList, allnodes[i])
     end
-	local allmines = game.surfaces[1].find_entities_filtered {name = "node-land-mine"}
+	local allmines = game.get_surface[1].find_entities_filtered {name = "node-land-mine"}
     global.tibMineNodeList = {}
     for i = 1, #allmines, 1 do
       table.insert(global.tibMineNodeList, allmines[i])
     end
     game.print("Found " .. #global.tibGrowthNodeList .. " nodes")
 	game.print("Found " .. #global.tibMineNodeList .. " mines")
-	local allsrfhubs = game.surfaces[1].find_entities_filtered {name = "CnC_SonicWall_Hub"}
+	local allsrfhubs = game.get_surface[1].find_entities_filtered {name = "CnC_SonicWall_Hub"}
     global.SRF_nodes = {}
     for i = 1, #allsrfhubs, 1 do
       table.insert(global.SRF_nodes, allsrfhubs[i])
@@ -335,7 +336,7 @@ commands.add_command(
     game.print("Found " .. #global.tibGrowthNodeList .. " nodes")
 	game.print("Found " .. #global.tibMineNodeList .. " mines")
 
-    local alldrills = game.surfaces[1].find_entities_filtered {type = "mining-drill"}
+    local alldrills = game.get_surface[1].find_entities_filtered {type = "mining-drill"}
     global.drills = {}
     for i = 1, #alldrills, 1 do
       table.insert(global.drills, alldrills[i])
@@ -595,3 +596,43 @@ script.on_event(defines.events.script_raised_destroy, on_remove_entity)
 script.on_event(defines.events.on_pre_player_mined_item, on_remove_entity)
 script.on_event(defines.events.on_robot_pre_mined, on_remove_entity)
 script.on_event(defines.events.on_entity_died, on_remove_entity)
+
+
+--Starting items, if the option is ticked.
+
+local function give_player_items(player, items) 
+	for i, v in pairs(items) do
+		player.insert{name = v[1], count = v[2]}
+	end
+end
+
+script.on_event(defines.events.on_player_created, function(event)
+	local tiberium_start
+
+	tiberium_start = {
+		{"tiberium-centrifuge-3", 3},
+		{"iron-plate", 92},
+		{"copper-plate", 100},
+		{"transport-belt", 100},
+		{"underground-belt", 10},
+		{"splitter", 10},
+		{"burner-inserter", 20},
+		{"wooden-chest", 10},
+		{"small-electric-pole", 50},
+		{"stone-furnace", 1},
+		{"burner-mining-drill", 5},
+		{"boiler", 1},
+		{"steam-engine", 2},
+		{"pipe-to-ground", 10},
+		{"pipe", 20},
+		{"offshore-pump", 1}
+	}
+
+	local player = game.players[event.player_index]
+
+	if settings.startup["tiberium-advanced-start"].value then
+		give_player_items(player, tiberium_start)
+		player.force.technologies["tiberium-mechanical-research"].researched = true
+		player.force.technologies["tiberium-separation-tech"].researched = true
+	end
+end)
