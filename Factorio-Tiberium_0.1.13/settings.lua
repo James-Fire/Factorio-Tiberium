@@ -86,5 +86,12 @@ data:extend(
 	maximum_value = 50,
 	order = "a4",
   },
+  {
+    type = "bool-setting",
+    name = "tiberium-advanced-start",
+    setting_type = "startup",
+    default_value = false,
+	order = "z",
+  },
 }
 )
