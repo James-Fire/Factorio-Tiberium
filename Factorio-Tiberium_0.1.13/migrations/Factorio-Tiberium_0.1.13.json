@@ -1,0 +1,14 @@
+{
+  "technology":
+  [
+    ["advanced-tiberium-transmutation-tech", "tiberium-transmutation-tech"]
+  ],
+  "item":
+  [
+	["tiberium-magazine", "tiberium-rounds-magazine"]
+  ],
+  "recipe":
+  [
+	["tiberium-magazine", "tiberium-rounds-magazine"]
+  ]
+}

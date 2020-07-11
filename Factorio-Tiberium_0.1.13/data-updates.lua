@@ -9,6 +9,48 @@ if (mods["Orbital Ion Cannon"]) then
 	end
 end
 
+
+if mods["Krastorio2"] then
+	-- Make Krastorio stop removing Tiberium Science Packs from our techs
+	for technology_name, technology in pairs(data.raw.technology) do
+		if string.sub(technology_name, 1, 9) == "tiberium-" then
+			technology.check_science_packs_incompatibilities = false
+		end
+	end
+	
+	-- Make Tiberium Magazines usable with rifles again
+	LSlib.recipe.editIngredient("tiberium-rounds-magazine", "piercing-rounds-magazine", "rifle-magazine", 1)
+	local oldTibRounds = data.raw.ammo["tiberium-rounds-magazine"]
+	local newTibRounds = table.deepcopy(data.raw.ammo["uranium-rifle-magazine"])
+	--newTibRounds.icon = oldTibRounds.icon  -- I guess we'll keep the Krastorio icon to blend in
+	newTibRounds.name = oldTibRounds.name
+	newTibRounds.order = oldTibRounds.order
+	newTibRounds.subgroup = "a-items"
+	local oldProjectile
+	for _, action in pairs(newTibRounds.ammo_type.action[1].action_delivery) do -- This is probably bad, but supporting optionally nested tables is annoying
+		if action.type == "projectile" then
+			oldProjectile = action.projectile
+			action.projectile = "tiberium-ammo"
+			break
+		end
+	end
+	data.raw.ammo["tiberium-rounds-magazine"] = newTibRounds
+	-- Update projectile to do Tiberium damage
+	if oldProjectile then
+		local tibProjectile = table.deepcopy(data.raw.projectile[oldProjectile])
+		tibProjectile.name = "tiberium-ammo"
+		local tibRoundsDamage = 0
+		for _, effect in pairs(tibProjectile.action.action_delivery.target_effects) do
+			if effect.type == "damage" then
+				tibRoundsDamage = tibRoundsDamage + effect.damage.amount
+				effect.damage.amount = 0
+			end
+		end
+		table.insert(tibProjectile.action.action_delivery.target_effects, {type = "damage", damage = {amount = tibRoundsDamage, type = "tiberium"}})
+		data.raw.projectile["tiberium-ammo"] = tibProjectile
+	end
+end
+
 TibBasicScience = {"chemical-plant", "assembling-machine-1", "assembling-machine-2", "assembling-machine-3"}
 if (mods["bobassembly"]) then
 	table.insert(TibBasicScience, "chemical-plant-2")
