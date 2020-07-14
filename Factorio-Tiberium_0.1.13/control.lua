@@ -76,7 +76,7 @@ script.on_init(
 
 script.on_configuration_changed(function(data)
 	-- tib 0.1.13 conversion for registering entities for the base 0.18.28 change
-	if data["mod_changes"]["Factorio-Tiberium"]["old_version"] < "0.1.13" and
+	if data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["old_version"] < "0.1.13" and
 			data["mod_changes"]["Factorio-Tiberium"]["new_version"] >= "0.1.13" then
 		for _, entity in pairs(global.world.find_entities_filtered({type = "mining-drill"})) do
 			script.register_on_entity_destroyed(entity)

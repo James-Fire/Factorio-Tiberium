@@ -20,7 +20,7 @@ local CreditEfficiency = 0.75 --How much of the ore should be converted into tib
 local DirectRecipeMult = 0.6 --The Efficiency of using Direct recipes over the Centrifuge recipes. All centrifuge outputs are added together and multiplied by this to get the Direct output.
 local DirectRecipeTime = 12
 
-LSlib.recipe.addIngredient("tiberium-magazine", "tiberium-ore", math.max(10/RecipeMult, 1), "item") --So it doesn't crash for large RecipeMults
+LSlib.recipe.addIngredient("tiberium-rounds-magazine", "tiberium-ore", math.max(10/RecipeMult, 1), "item") --So it doesn't crash for large RecipeMults
 LSlib.recipe.setEngergyRequired("tiberium-ore-processing", RefineEnergyRequired)
 LSlib.recipe.setEngergyRequired("molten-tiberium-processing", RefineEnergyRequired)
 LSlib.recipe.setEngergyRequired("tiberium-liquid-processing", RefineEnergyRequired*24)
@@ -35,7 +35,7 @@ function addDirectRecipe(recipeName, ore, oreAmount, options)
 	if not options then options = {} end
 	energy = options.energy and options.energy or DirectRecipeTime
 	order = options.order
-	tech = options.tech and options.tech or "advanced-tiberium-transmutation-tech"
+	tech = options.tech and options.tech or "tiberium-transmutation-tech"
 	tibType = options.tibType and tibType or "molten-tiberium"
 	tibAmount = options.tibAmount and options.tibAmount or MoltenPerCycle
 	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"

@@ -215,7 +215,7 @@ data:extend
 	},
 	{
 		type = "technology",
-		name = "advanced-tiberium-transmutation-tech",
+		name = "tiberium-transmutation-tech",
 		icon = "__Factorio-Tiberium__/graphics/technology/tiberium-processing-tech.png",
 		icon_size = 128,
 		effects =
@@ -494,7 +494,7 @@ data:extend
 		{
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-magazine"
+				recipe = "tiberium-rounds-magazine"
 			},
 			{
 				type = "unlock-recipe",
