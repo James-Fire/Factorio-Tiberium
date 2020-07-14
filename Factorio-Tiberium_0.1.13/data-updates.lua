@@ -154,6 +154,7 @@ for _, armor in pairs(data.raw.armor) do
 	for _, resistance in pairs (armor.resistances) do
 		if resistance.type == "acid" then
 			if armor==data.raw.armor["tiberium-armor"] then
+			elseif armor==data.raw.armor["tiberium-power-armor"] then
 			else
 				log("has acid")
 				table.insert(armor.resistances, {type= "tiberium", decrease = resistance.decrease, percent = resistance.percent})

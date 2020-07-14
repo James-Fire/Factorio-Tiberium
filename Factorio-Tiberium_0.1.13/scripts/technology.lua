@@ -565,6 +565,10 @@ data:extend
 				type = "unlock-recipe",
 				recipe = "tiberium-seed"
 			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-power-armor"
+			},
 		},
 		prerequisites = {"tiberium-military-2", "rocket-control-unit", "tiberium-control-network-tech"},
 		unit =
