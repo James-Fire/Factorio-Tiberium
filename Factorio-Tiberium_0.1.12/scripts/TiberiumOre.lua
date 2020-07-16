@@ -201,7 +201,7 @@ data:extend(
     {
       sheet =
       {
-        filename = "__base__/graphics/entity/crude-oil/crude-oil.png",
+        filename = "__Factorio-Tiberium__/graphics/entity/crude-oil/crude-oil.png",
         priority = "extra-high",
         width = 75,
         height = 61,
@@ -253,7 +253,7 @@ data:extend(
     {
       sheet =
       {
-        filename = "__base__/graphics/entity/crude-oil/crude-oil.png",
+        filename = "__Factorio-Tiberium__/graphics/entity/crude-oil/crude-oil.png",
         priority = "extra-high",
         width = 75,
         height = 61,
