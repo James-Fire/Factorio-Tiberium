@@ -11,10 +11,68 @@ end
 
 
 if mods["Krastorio2"] then
+	-- Balance changes to match Krastorio
+	data.raw["electric-turret"]["ion-turret"]["energy_source"]["drain"] = "100kW"
+	data.raw["electric-turret"]["ion-turret"]["attack_parameters"]["cooldown"] = 30 -- Ion Turret to 2 APS
+	data.raw["electric-turret"]["ion-turret"]["attack_parameters"]["damage_modifier"] = 12 -- Damage to 120
+	
+	-- Fix our infinites to match
+	local techPairs = {{tib = "tiberium-explosives", copy = "stronger-explosives-7", max_level = 4},
+					   {tib = "tiberium-energy-weapons-damage", copy = "energy-weapons-damage-7", max_level = 4},
+					   {tib = "tiberium-explosives-5", copy = "stronger-explosives-11", max_level = 9},
+					   {tib = "tiberium-energy-weapons-damage-5", copy = "energy-weapons-damage-11", max_level = 9},
+					   {tib = "tiberium-explosives-10", copy = "stronger-explosives-16", max_level = "infinite"},
+					   {tib = "tiberium-energy-weapons-damage-10", copy = "energy-weapons-damage-16", max_level = "infinite"}}
+	
+	data.raw["technology"]["tiberium-explosives-5"] = table.deepcopy(data.raw["technology"]["tiberium-explosives"])
+	data.raw["technology"]["tiberium-explosives-5"].prerequisites = {"tiberium-explosives"}
+	data.raw["technology"]["tiberium-explosives-10"] = table.deepcopy(data.raw["technology"]["tiberium-explosives"])
+	data.raw["technology"]["tiberium-explosives-10"].prerequisites = {"tiberium-explosives-5"}
+	data.raw["technology"]["tiberium-energy-weapons-damage-5"] = table.deepcopy(data.raw["technology"]["tiberium-energy-weapons-damage"])
+	data.raw["technology"]["tiberium-energy-weapons-damage-5"].prerequisites = {"tiberium-energy-weapons-damage"}
+	data.raw["technology"]["tiberium-energy-weapons-damage-10"] = table.deepcopy(data.raw["technology"]["tiberium-energy-weapons-damage"])
+	data.raw["technology"]["tiberium-energy-weapons-damage-10"].prerequisites = {"tiberium-energy-weapons-damage-5"}
+	
+	for _, techs in pairs(techPairs) do
+		local level, _ = string.gsub(techs.tib, "%D", "")
+		level = tonumber(level) or 1
+		data.raw["technology"][techs.tib].unit.count_formula = "((L-"..tostring(level - 1)..")^2)*3000"
+		data.raw["technology"][techs.tib].unit.ingredients = table.deepcopy(data.raw["technology"][techs.copy].unit.ingredients)
+		table.insert(data.raw["technology"][techs.tib].unit.ingredients, {"tiberium-science", 1})
+		data.raw["technology"][techs.tib].max_level = techs.max_level
+		data.raw["technology"][techs.tib].effects = table.deepcopy(data.raw["technology"][techs.copy].effects)
+		data.raw["technology"][techs.tib].name = techs.tib
+	end
+	
 	-- Make Krastorio stop removing Tiberium Science Packs from our techs
+	local science_pack_incompatibilities = {
+			["basic-tech-card"] = true,
+			["automation-science-pack"] = true,
+			["logistic-science-pack"] = true,
+			["military-science-pack"] = true,
+			["chemical-science-pack"] = true
+		}
 	for technology_name, technology in pairs(data.raw.technology) do
 		if string.sub(technology_name, 1, 9) == "tiberium-" then
 			technology.check_science_packs_incompatibilities = false
+			-- Do a version of pack incompatibilities
+			local ingredients = technology.unit.ingredients
+			if ingredients and #ingredients > 1 then
+				local has_space = false
+				for i = 1, #ingredients do
+					if ingredients[i][1] == "space-science-pack" then
+						has_space = true
+						break
+					end
+				end
+				if has_space then
+					for i = #ingredients, 1, -1 do
+						if science_pack_incompatibilities[ingredients[i][1]] then
+							table.remove(ingredients, i)
+						end
+					end
+				end
+			end
 		end
 	end
 	
@@ -48,6 +106,24 @@ if mods["Krastorio2"] then
 		end
 		table.insert(tibProjectile.action.action_delivery.target_effects, {type = "damage", damage = {amount = tibRoundsDamage, type = "tiberium"}})
 		data.raw.projectile["tiberium-ammo"] = tibProjectile
+	end
+end
+
+if mods["MoreScience"] then
+	-- Update tech costs to use advanced science packs
+	for technology_name, technology in pairs(data.raw.technology) do
+		if string.sub(technology_name, 1, 9) == "tiberium-" then
+		
+		end
+		-- Take our repeatable techs
+		if technology.max_level and technology.max_level == "infinite" then
+			-- and swap them to infused packs
+			for _, pack in pairs(technology.unit.ingredients) do
+				if data.raw.item["infused-"..pack[1]] then
+					pack[1] = "infused-"..pack[1]
+				end
+			end
+		end
 	end
 end
 
@@ -192,12 +268,12 @@ end]]
 end]]
 
 for _, armor in pairs(data.raw.armor) do
-	log("found armor")
-	for _, resistance in pairs (armor.resistances) do
+	--log("found armor")
+	for _, resistance in pairs (armor.resistances or {}) do
 		if resistance.type == "acid" then
 			if armor==data.raw.armor["tiberium-armor"] then
 			else
-				log("has acid")
+				--log("has acid")
 				table.insert(armor.resistances, {type= "tiberium", decrease = resistance.decrease, percent = resistance.percent})
 			end
 		end
