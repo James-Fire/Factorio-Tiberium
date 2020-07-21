@@ -460,13 +460,24 @@ data:extend({
 			secondary_draw_orders = { north = -1 }
 		},
 		{
+			production_type = "output",
+			pipe_picture = assembler2pipepictures(),
+			pipe_covers = pipecoverspictures(),
+			base_area = 10,
+			base_level = 1,
+			pipe_connections = {
+				{ type="output", position = {-1, 2} }				
+			},
+			secondary_draw_orders = { north = -1 }
+		},
+		{
 			production_type = "input",
 			pipe_picture = assembler2pipepictures(),
 			pipe_covers = pipecoverspictures(),
 			base_area = 10,
 			base_level = -1,
 			pipe_connections = {
-				{ type="input", position = {0, 2} }
+				{ type="input", position = {1, 2} }
 			},
 			secondary_draw_orders = { south = -1 }
 		},
@@ -611,7 +622,7 @@ data:extend({
           }
         },
 		--[[{
-		  filename = util.multiplystripes(64, "__Factorio-Tiberium__/graphics/entity/centrifuge/Rank-bar.png"),
+		  filename = util.multiplystripes(64, "__Factorio-Tiberium-Beta__/graphics/entity/centrifuge/Rank-bar.png"),
 		  priority = "high",
 		  line_length = 1,
 		  width = 64,
@@ -620,7 +631,7 @@ data:extend({
 		  shift = {0, 0}, --util.by_pixel(-0.5, -26.5),
 		  hr_version =
 		  {
-			filename = util.multiplystripes(64, "__Factorio-Tiberium__/graphics/entity/centrifuge/Rank-bar.png"),
+			filename = util.multiplystripes(64, "__Factorio-Tiberium-Beta__/graphics/entity/centrifuge/Rank-bar.png"),
 			priority = "high",
 			line_length = 1,
 			scale = 0.5,

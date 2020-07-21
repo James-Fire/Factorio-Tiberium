@@ -72,7 +72,7 @@ data:extend{tiberiumNodeHarvesterItem, tiberiumNodeHarvesterEntity,
 
 local tiberiumSpikeItem = table.deepcopy(data.raw.item["pumpjack"])
 tiberiumSpikeItem.name = "tib-spike"
-tiberiumSpikeItem.icon = "__Factorio-Tiberium__/graphics/icons/tiberium-spike.png"
+tiberiumSpikeItem.icon = "__Factorio-Tiberium-Beta__/graphics/icons/tiberium-spike.png"
 tiberiumSpikeItem.icon_mipmaps = nil
 tiberiumSpikeItem.subgroup = "a-buildings"
 tiberiumSpikeItem.order = "e"
@@ -80,7 +80,7 @@ tiberiumSpikeItem.place_result = "tib-spike"
 
 local tiberiumSpikeEntity = table.deepcopy(data.raw["mining-drill"]["pumpjack"])
 tiberiumSpikeEntity.name = "tib-spike"
-tiberiumSpikeEntity.icon = "__Factorio-Tiberium__/graphics/icons/tiberium-spike.png"
+tiberiumSpikeEntity.icon = "__Factorio-Tiberium-Beta__/graphics/icons/tiberium-spike.png"
 tiberiumSpikeEntity.icon_mipmaps = nil
 tiberiumSpikeEntity.radius_visualisation_picture = data.raw["mining-drill"]["pumpjack"].radius_visualisation_picture
 tiberiumSpikeEntity.mining_speed = 5
@@ -253,7 +253,7 @@ data:extend({
 	{
 		type = "item",
 		name = "growth-credit-void",
-		icon = "__Factorio-Tiberium__/graphics/icons/tiberium-ore.png",
+		icon = "__Factorio-Tiberium-Beta__/graphics/icons/tiberium-ore.png",
 		icon_size = 32,
 		flags = {"hidden"},
 		subgroup = "a-items",
@@ -270,7 +270,7 @@ data:extend({
 	{
 		type = "assembling-machine",
 		name = "growth-accelerator",
-		icon = "__Factorio-Tiberium__/graphics/icons/growth-accelerator.png",
+		icon = "__Factorio-Tiberium-Beta__/graphics/icons/growth-accelerator.png",
 		icon_size = 64,
 		flags = {"placeable-neutral", "placeable-player", "player-creation"},
 		minable = {mining_time = 2, result = "growth-accelerator"},
@@ -280,6 +280,7 @@ data:extend({
 		energy_usage = "1kW",
 		crafting_speed = 1,
 		fixed_recipe = "tiberium-growth",
+		allowed_effects = { "speed", "consumption" },
 		open_sound = { filename = "__base__/sound/machine-open.ogg", volume = 0.85 },
 		close_sound = { filename = "__base__/sound/machine-close.ogg", volume = 0.75 },
 		vehicle_impact_sound = { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
@@ -401,7 +402,7 @@ data:extend({
 	{
 		type = "item",
 		name = "growth-accelerator",
-		icon = "__Factorio-Tiberium__/graphics/icons/growth-accelerator.png",
+		icon = "__Factorio-Tiberium-Beta__/graphics/icons/growth-accelerator.png",
 		icon_size = 64,
 		subgroup = "a-buildings",
 		order = "g",
@@ -411,20 +412,88 @@ data:extend({
 	{
 		type = "item",
 		name = "growth-accelerator-node",
-		icon = "__Factorio-Tiberium__/graphics/icons/growth-accelerator.png",
+		icon = "__Factorio-Tiberium-Beta__/graphics/icons/growth-accelerator.png",
 		icon_size = 64,
 		subgroup = "a-buildings",
 		order = "g",
 		place_result = "growth-accelerator",
 		stack_size = 15,
 	},
+	{
+    type = "beacon",
+    name = "growth-accelerator-beacon",
+    energy_usage = "10W",
+    -- 0.17 supports "no-automated-item-removal", "no-automated-item-insertion"
+    flags = { "hide-alt-info", "not-blueprintable", "not-deconstructable", "placeable-off-grid", "not-on-map", "no-automated-item-removal", "no-automated-item-insertion" },
+    collision_mask = { "resource-layer" }, -- disable collision
+	resistances = {
+		{
+			type = "fire",
+			percent = 90
+		},
+		{
+			type = "tiberium",
+			percent = 100
+		}
+	},
+    animation = {
+      filename =  "__core__/graphics/empty.png",
+      width = 1,
+      height = 1,
+      line_length = 1,
+      frame_count = 1,
+    },
+    animation_shadow = {
+        filename = "__core__/graphics/empty.png",
+        width = 1,
+        height = 1,
+        line_length = 1,
+        frame_count = 1,
+    },
+    -- 0.17 supports 0W entities
+    energy_source = {type="void"},
+    base_picture =
+    {
+      filename = "__core__/graphics/empty.png",
+      width = 1,
+      height = 1,
+    },
+    supply_area_distance = 0,
+    radius_visualisation_picture =
+    {
+      filename = "__core__/graphics/empty.png",
+      width = 1,
+      height = 1
+    },
+    distribution_effectivity = 1,
+    module_specification =
+    {
+      module_slots = 65535,
+    },
+    allowed_effects = { "speed", "consumption" },
+    selection_box = {{0, 0}, {0, 0}},
+    collision_box = {{-0.4, -0.4}, {0.4, 0.4}}, -- reduce size preventing inserters from picking modules, will not power unless center is covered
+  },
+  -- hidden speed modules matching infinite tech bonus size
+  {
+    type = "module",
+    name = "growth-accelerator-speed-module",
+    icon = "__core__/graphics/empty.png",
+    icon_size = 1,
+    flags = { "hidden" },
+    subgroup = "module",
+    category = "speed",
+    tier = 0,
+    stack_size = 1,
+    effect = { speed = {bonus = 0.1}, consumption = {bonus = 0.1}},
+  },
 })
 
 local centrifuge = table.deepcopy(data.raw["assembling-machine"]["centrifuge"])
 
 -- CnC Walls local var setup
 local nullimg = {
-    filename = "__Factorio-Tiberium__/graphics/sonic wall/empty.png",
+    filename = "__Factorio-Tiberium-Beta__/graphics/sonic wall/empty.png",
     frame_count = 1,
     axially_symmetrical = false,
     direction_count = 1,
@@ -433,7 +502,7 @@ local nullimg = {
 }
 
 local wall_segment_horz = {
-    filename = "__Factorio-Tiberium__/graphics/sonic wall/wall horz.png",
+    filename = "__Factorio-Tiberium-Beta__/graphics/sonic wall/wall horz.png",
     priority = "extra-high",
     frame_count = 1,
     axially_symmetrical = false,
@@ -443,7 +512,7 @@ local wall_segment_horz = {
     scale = 0.188
 }
 local wall_segment_vert = {
-    filename = "__Factorio-Tiberium__/graphics/sonic wall/wall vert.png",
+    filename = "__Factorio-Tiberium-Beta__/graphics/sonic wall/wall vert.png",
     priority = "extra-high",
     frame_count = 1,
     axially_symmetrical = false,
@@ -453,7 +522,7 @@ local wall_segment_vert = {
     scale = 0.125
 }
 local wall_segment_cross = {
-    filename = "__Factorio-Tiberium__/graphics/sonic wall/wall cross.png",
+    filename = "__Factorio-Tiberium-Beta__/graphics/sonic wall/wall cross.png",
     priority = "extra-high",
     frame_count = 1,
     axially_symmetrical = false,
@@ -470,7 +539,7 @@ data:extend({
     {
         type = "item",
         name = "CnC_SonicWall_Hub",
-        icon = "__Factorio-Tiberium__/graphics/sonic wall/node icon.png",
+        icon = "__Factorio-Tiberium-Beta__/graphics/sonic wall/node icon.png",
 		icon_size = 32,
         subgroup = "a-buildings",
         order = "a[stone-wall]-b[hardlight]",
@@ -483,7 +552,7 @@ data:extend({
     {
         type = "electric-energy-interface",
         name = "CnC_SonicWall_Hub",
-        icon = "__Factorio-Tiberium__/graphics/sonic wall/node icon.png",
+        icon = "__Factorio-Tiberium-Beta__/graphics/sonic wall/node icon.png",
 		icon_size = 32,
         flags = {"placeable-neutral", "player-creation"},
         collision_box = {{-0.4, -0.4}, {0.4, 0.4}},
@@ -510,7 +579,7 @@ data:extend({
             layers =
             {
                 {
-                    filename = "__Factorio-Tiberium__/graphics/sonic wall/node.png",
+                    filename = "__Factorio-Tiberium-Beta__/graphics/sonic wall/node.png",
                     priority = "extra-high",
                     frame_count = 1,
                     axially_symmetrical = false,
@@ -520,7 +589,7 @@ data:extend({
                     scale = 0.25
                 },
                 {
-                    filename = "__Factorio-Tiberium__/graphics/sonic wall/node shadow.png",
+                    filename = "__Factorio-Tiberium-Beta__/graphics/sonic wall/node shadow.png",
                     priority = "extra-high",
                     frame_count = 1,
                     axially_symmetrical = false,
@@ -567,7 +636,7 @@ data:extend({
     {
         type = "simple-entity",
         name = "CnC_SonicWall_Wall",
-        icon = "__Factorio-Tiberium__/graphics/sonic wall/wall icon.png",
+        icon = "__Factorio-Tiberium-Beta__/graphics/sonic wall/wall icon.png",
 		icon_size = 32,
         flags = {"placeable-neutral", "player-creation", "not-repairable"},
         subgroup = "remnants",
@@ -632,7 +701,7 @@ data:extend({
     {
         type = "tree",
         name = "CnC_SonicWall_Wall-damage",
-        icon = "__Factorio-Tiberium__/graphics/sonic wall/empty.png",
+        icon = "__Factorio-Tiberium-Beta__/graphics/sonic wall/empty.png",
 		icon_size = 32,
         flags = {"placeable-neutral", "not-on-map", "placeable-off-grid"},
         subgroup = "remnants",
