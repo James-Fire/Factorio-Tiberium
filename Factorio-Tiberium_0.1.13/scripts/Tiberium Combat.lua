@@ -118,7 +118,7 @@ data:extend{
   {
     type = "ammo",
     name = "tiberium-rocket",
-    icon = "__Factorio-Tiberium-Beta__/graphics/icons/tiberium-rocket.png",
+    icon = "__Factorio-Tiberium__/graphics/icons/tiberium-rocket.png",
     icon_size = 64, icon_mipmaps = 4,
     ammo_type = {
       category = "rocket",
@@ -627,7 +627,7 @@ data:extend({
   {
     type = "land-mine",
     name = "ore-land-mine",
-    icon = "__Factorio-Tiberium-Beta__/graphics/entity/null-sprite.png",
+    icon = "__Factorio-Tiberium__/graphics/entity/null-sprite.png",
     collision_mask = {"object-layer"},
     force_die_on_attack = false,
     max_health = 10000,
@@ -639,19 +639,19 @@ data:extend({
     minable = nil,
     damaged_trigger_effect = hit_effects.entity(),    
     picture_safe = {
-      filename = "__Factorio-Tiberium-Beta__/graphics/entity/null-sprite.png",
+      filename = "__Factorio-Tiberium__/graphics/entity/null-sprite.png",
       priority = "medium",
       width = 1,
       height = 1
     },
     picture_set = {
-      filename = "__Factorio-Tiberium-Beta__/graphics/entity/null-sprite.png",
+      filename = "__Factorio-Tiberium__/graphics/entity/null-sprite.png",
       priority = "medium",
       width = 1,
       height = 1
     },
     picture_set_enemy = {
-      filename = "__Factorio-Tiberium-Beta__/graphics/entity/null-sprite.png",
+      filename = "__Factorio-Tiberium__/graphics/entity/null-sprite.png",
       priority = "medium",
       width = 1,
       height = 1
@@ -687,7 +687,7 @@ data:extend({
   {
     type = "land-mine",
     name = "node-land-mine",
-    icon = "__Factorio-Tiberium-Beta__/graphics/entity/null-sprite.png",
+    icon = "__Factorio-Tiberium__/graphics/entity/null-sprite.png",
     dying_explosion = "land-mine-explosion",
     icon_size = 1,
     force_die_on_attack = false,
@@ -701,19 +701,19 @@ data:extend({
     minable = nil,
     damaged_trigger_effect = hit_effects.entity(),
     picture_safe = {
-      filename = "__Factorio-Tiberium-Beta__/graphics/entity/null-sprite.png",
+      filename = "__Factorio-Tiberium__/graphics/entity/null-sprite.png",
       priority = "medium",
       width = 1,
       height = 1
     },
     picture_set = {
-      filename = "__Factorio-Tiberium-Beta__/graphics/entity/null-sprite.png",
+      filename = "__Factorio-Tiberium__/graphics/entity/null-sprite.png",
       priority = "medium",
       width = 1,
       height = 1
     },
     picture_set_enemy = {
-      filename = "__Factorio-Tiberium-Beta__/graphics/entity/null-sprite.png",
+      filename = "__Factorio-Tiberium__/graphics/entity/null-sprite.png",
       priority = "medium",
       width = 1,
       height = 1

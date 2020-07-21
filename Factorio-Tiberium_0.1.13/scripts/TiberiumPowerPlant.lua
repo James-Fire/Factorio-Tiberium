@@ -622,7 +622,7 @@ data:extend({
           }
         },
 		--[[{
-		  filename = util.multiplystripes(64, "__Factorio-Tiberium-Beta__/graphics/entity/centrifuge/Rank-bar.png"),
+		  filename = util.multiplystripes(64, "__Factorio-Tiberium__/graphics/entity/centrifuge/Rank-bar.png"),
 		  priority = "high",
 		  line_length = 1,
 		  width = 64,
@@ -631,7 +631,7 @@ data:extend({
 		  shift = {0, 0}, --util.by_pixel(-0.5, -26.5),
 		  hr_version =
 		  {
-			filename = util.multiplystripes(64, "__Factorio-Tiberium-Beta__/graphics/entity/centrifuge/Rank-bar.png"),
+			filename = util.multiplystripes(64, "__Factorio-Tiberium__/graphics/entity/centrifuge/Rank-bar.png"),
 			priority = "high",
 			line_length = 1,
 			scale = 0.5,

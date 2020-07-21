@@ -79,14 +79,14 @@ function addCreditRecipe(recipeName, ore, oreAmount, options)
 	LSlib.technology.addRecipeUnlock(tech, recipeName)
 	if energy then LSlib.recipe.setEngergyRequired(recipeName, energy) end
 	if order then LSlib.recipe.setOrderstring(recipeName, order) end
-	if icon then LSlib.recipe.changeIcon(recipeName, "__Factorio-Tiberium-Beta__/graphics/icons/"..icon, 32) end
+	if icon then LSlib.recipe.changeIcon(recipeName, "__Factorio-Tiberium__/graphics/icons/"..icon, 32) end
 end
 
 --Because we use this everywhere
 function doCentrifugeRecipeSplit(StonePerCycle)
 	for _, type in pairs({"ore", "slurry", "molten"}) do
 		LSlib.recipe.duplicate("tiberium-"..type.."-centrifuging", "tiberium-"..type.."-sludge-centrifuging")
-		LSlib.recipe.changeIcon("tiberium-"..type.."-sludge-centrifuging", "__Factorio-Tiberium-Beta__/graphics/icons/"..type.."-sludge-centrifuging.png", 32)
+		LSlib.recipe.changeIcon("tiberium-"..type.."-sludge-centrifuging", "__Factorio-Tiberium__/graphics/icons/"..type.."-sludge-centrifuging.png", 32)
 		LSlib.recipe.addResult("tiberium-"..type.."-sludge-centrifuging", "tiberium-sludge", StonePerCycle, "fluid")
 		LSlib.recipe.addResult("tiberium-"..type.."-centrifuging", "stone", StonePerCycle, "item")
 	end
@@ -495,4 +495,4 @@ if settings.startup["tiberium-byproduct-2"].value == true then  -- Refining Sulf
 end
 
 --Needs an icon since it has no output, idk how to delete it
-LSlib.recipe.changeIcon("template-direct", "__Factorio-Tiberium-Beta__/graphics/icons/tiberium-brick.png", 32)
+LSlib.recipe.changeIcon("template-direct", "__Factorio-Tiberium__/graphics/icons/tiberium-brick.png", 32)
