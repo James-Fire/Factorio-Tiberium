@@ -1,5 +1,79 @@
 require "scripts/CnC_Walls" --Note, to make SonicWalls work / be passable,
 
+
+local MOD_NAME = "Factorio-Tiberium-Beta"
+local Mine_Names = {
+  ["growth-accelerator-node"] = true,
+  ["growth-accelerator"] = true,
+}
+local Beacon_Name = "growth-accelerator-beacon"
+local Speed_Module_Name = "growth-accelerator-speed-module"
+local Speed_Module_Bonus = 0.1 -- 0.17.6 changed productivity to 10% increments
+
+-- set modules in hidden beacons to match mining productivity bonus
+function UpdateBeaconSpeed(beacon, total_modules)
+  local module_inventory = beacon.get_module_inventory()
+  if module_inventory then
+    -- module_inventory.clear() -- much slower than counting existing modules
+    local added_modules = total_modules - module_inventory.get_item_count(Speed_Module_Name)
+    if added_modules >= 1 then
+      module_inventory.insert( {name = Speed_Module_Name, count = added_modules} )
+    end
+  end
+end
+
+function OnResearchFinished(event)
+  -- TODO: delay execution when event.by_script == true
+  local force = event.research.force
+  if force and force.get_entity_count(Beacon_Name) > 0 then -- only update when beacons exist for force
+    local module_count = force.technologies["tiberium-growth-acceleration-acceleration"].level		
+        for _, surface in pairs(game.surfaces) do
+          local beacons = surface.find_entities_filtered { name = Beacon_Name, force = force }
+          for _, beacon in pairs(beacons) do
+            UpdateBeaconSpeed(beacon, module_count)
+        return
+      end
+    end
+  end
+end
+
+function OnForceReset(event)
+  local force = event.force or event.destination
+  if force and force.get_entity_count(Beacon_Name) > 0 then -- only update when beacons exist for force
+    local module_count = entity.force.technologies["tiberium-growth-acceleration-acceleration"].level
+    for _, surface in pairs(game.surfaces) do
+      local beacons = surface.find_entities_filtered { name = Beacon_Name, force = force }
+      for _, beacon in pairs(beacons) do
+        UpdateBeaconSpeed(beacon, module_count)
+      end
+    end
+  end
+end
+function OnEntityMoved(event)
+  local entity = event.moved_entity
+
+  if entity and Mine_Names[entity.name] then
+    local beacons = entity.surface.find_entities_filtered { name = Beacon_Name, position = event.start_pos }
+    for _, beacon in pairs(beacons) do
+      beacon.teleport(entity.position)
+    end
+  end
+
+end
+
+---- Initialize ----
+
+function init_events()
+  --register to PickerExtended
+  if remote.interfaces["picker"] and remote.interfaces["picker"]["dolly_moved_entity_id"] then
+    script.on_event(remote.call("picker", "dolly_moved_entity_id"), OnEntityMoved)
+  end
+  --register to PickerDollies
+  if remote.interfaces["PickerDollies"] and remote.interfaces["PickerDollies"]["dolly_moved_entity_id"] then
+    script.on_event(remote.call("PickerDollies", "dolly_moved_entity_id"), OnEntityMoved)
+  end
+end
+
 local TiberiumDamage = settings.startup["tiberium-damage"].value
 local TiberiumGrowth = settings.startup["tiberium-growth"].value * 10
 local TiberiumMaxPerTile = settings.startup["tiberium-growth"].value * 100 --Force 10:1 ratio with growth
@@ -9,9 +83,13 @@ local bitersImmune = settings.startup["biters-immune-to-tiberium-damage"]
 local debugText = settings.startup["debug-text"].value
 --In order to make something debug only, use "if settings.startup["debug-text"].value == true then", and activate the debug-setting startup option.
 
+script.on_load(function()
+  init_events()
+end)
 
 script.on_init(
   function()
+  init_events()
     global.tibGrowthNodeListIndex = 0
     global.tibGrowthNodeList = {}
 	global.tibMineNodeListIndex = 0
@@ -85,6 +163,35 @@ script.on_configuration_changed(function(data)
 			script.register_on_entity_destroyed(entity)
 		end
 	end
+	--Stuff From deep mine, not looking too hard at it
+	if data.mod_changes[MOD_NAME] and data.mod_changes[MOD_NAME].old_version then
+    game.print("[Deep Mine] old version: "..data.mod_changes[MOD_NAME].old_version..", updating mining productivity beacons.")
+    for _, surface in pairs(game.surfaces) do
+      entities = surface.find_entities_filtered { name = Beacon_Name }
+      for _, entity in pairs(entities) do
+        entity.destroy()
+      end
+
+      local entities = surface.find_entities_filtered { name = {"growth-accelerator"} }
+      for _, entity in pairs(entities) do
+        local beacon = entity.surface.create_entity{name = Beacon_Name, position = entity.position, force = entity.force}
+        beacon.destructible = false
+        beacon.minable = false
+        local module_count = entity.force.technologies["tiberium-growth-acceleration-acceleration"].level
+        UpdateBeaconSpeed(beacon, module_count)
+      end
+    end
+  else
+    -- update beacons and productivity in case other mods changed something
+    for _, surface in pairs(game.surfaces) do
+      entities = surface.find_entities_filtered { name = Beacon_Name }
+      for _, beacon in pairs(entities) do
+        local module_count = entity.force.technologies["tiberium-growth-acceleration-acceleration"].level
+        UpdateBeaconSpeed(beacon, module_count)
+      end
+    end
+  end
+  --end of stuff from deep mine
 end
 )
 
@@ -319,7 +426,7 @@ end
 --Liquid Seed trigger
 local on_script_trigger_effect = function(event)
   if event.effect_id == "seed-launch" then
-	LiquidBomb(game.get_surface[event.surface_index], event.target_position, "tiberium-ore", TiberiumMaxPerTile)
+	LiquidBomb(game.get_surface(1), event.target_position, "tiberium-ore", TiberiumMaxPerTile)
     return
   end
 end
@@ -575,7 +682,8 @@ local on_new_entity = function(event)
 	if (new_entity.name == "CnC_SonicWall_Hub") then
 		script.register_on_entity_destroyed(new_entity)
 		CnC_SonicWall_AddNode(new_entity, event.tick)
-	elseif (new_entity.name == "tib-spike") then
+	end
+	if (new_entity.name == "tib-spike") then
 		script.register_on_entity_destroyed(new_entity)
 		local position = new_entity.position
 		local area = {
@@ -606,7 +714,9 @@ local on_new_entity = function(event)
 				}
 		end
 		global.intervalBetweenNodeUpdates = math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
-	elseif (new_entity.name == "growth-accelerator-node") then
+	end
+	if (new_entity.name == "growth-accelerator-node") then
+		local entity = event.created_entity
 		local position = new_entity.position
 		local area = {
 			{x = math.floor(position.x), y = math.floor(position.y)},
@@ -622,6 +732,14 @@ local on_new_entity = function(event)
 				position = position,
 				force = force,
 				}
+			if entity.surface.count_entities_filtered { name = Beacon_Name, position = position } == 0 then
+				local beacon = entity.surface.create_entity{name = Beacon_Name, position = position, force = entity.force}
+				beacon.destructible = false
+				beacon.minable = false
+				local module_count = entity.force.technologies["tiberium-growth-acceleration-acceleration"].level
+				UpdateBeaconSpeed(beacon, module_count)
+			end
+			
 		end
 	end
 end
@@ -665,12 +783,20 @@ local on_remove_entity = function(event)
 			end
 		end
 	end
+	if Mine_Names[entity.name] then
+		local beacons = entity.surface.find_entities_filtered { name = Beacon_Name, position = entity.position }
+		for _, beacon in pairs(beacons) do
+			beacon.destroy()
+		end
+	end
 end
 
 script.on_event(defines.events.on_pre_player_mined_item, on_remove_entity)
 script.on_event(defines.events.on_robot_pre_mined, on_remove_entity)
 script.on_event(defines.events.script_raised_destroy, on_remove_entity)
 script.on_event(defines.events.on_entity_died, on_remove_entity)
+script.on_event({defines.events.on_technology_effects_reset, defines.events.on_forces_merging}, OnForceReset)
+script.on_event({defines.events.on_research_finished}, OnResearchFinished)
 
 
 --Starting items, if the option is ticked.

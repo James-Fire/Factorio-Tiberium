@@ -136,7 +136,7 @@ data:extend(
         stack_size = 50,
 	    fuel_value = "2MJ",
 		fuel_category = "chemical",
-		emissions_multiplier = 100,
+		fuel_emissions_multiplier = 5,
     },
     }
     )
@@ -199,7 +199,7 @@ data:extend(
     {
       sheet =
       {
-        filename = "__base__/graphics/entity/crude-oil/crude-oil.png",
+        filename = "__Factorio-Tiberium__/graphics/entity/crude-oil/crude-oil.png",
         priority = "extra-high",
         width = 75,
         height = 61,
@@ -251,7 +251,7 @@ data:extend(
     {
       sheet =
       {
-        filename = "__base__/graphics/entity/crude-oil/crude-oil.png",
+        filename = "__Factorio-Tiberium__/graphics/entity/crude-oil/crude-oil.png",
         priority = "extra-high",
         width = 75,
         height = 61,
