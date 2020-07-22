@@ -118,10 +118,6 @@ data:extend
 				type = "unlock-recipe",
 				recipe = "tiberium-molten-thermal-data"
 			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-molten-to-crude-oil"
-			},
 		},
 		prerequisites = {"tiberium-processing-tech", "tiberium-thermal-research"},
 		unit =
