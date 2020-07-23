@@ -89,7 +89,6 @@ data:extend{
             },
             {
               type = "damage",
-              damage = {amount = 2 , type = "physical"},
               damage = {amount = 15 , type = "tiberium"}
             }
           }
