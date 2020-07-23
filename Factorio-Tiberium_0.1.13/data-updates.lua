@@ -259,12 +259,6 @@ end]]
 	--data.raw["unit"][bot_name].icon = 
 end]]
 -- Add Tiberium resistance to armors
-for name, armor in pairs(data.raw.armor) do
-	if name ~= "tiberium-armor" then
-		for _, resistance in pairs (armor.resistances or {}) do
-			if resistance.type == "acid" then
-
-
 for _, armor in pairs(data.raw.armor) do
 	log("found armor")
 	for _, resistance in pairs (armor.resistances) do
