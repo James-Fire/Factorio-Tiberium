@@ -202,12 +202,77 @@ for labName, labData in pairs(data.raw.lab) do
 	end
 	if addTib then table.insert(data.raw.lab[labName].inputs, "tiberium-science") end
 end
+--[[if (mods["bobassembly"]) then
+		for _,chemicalName in pairs{
+			"chemical-plant",
+			"chemical-plant-2",
+		    "chemical-plant-3",
+			"chemical-plant-4",
+		} do
+		  table.insert(data.raw["assembling-machine"][chemicalName].crafting_categories, "tiberium-science")
+		end
+end]]
 
+--[[if (mods["Mining_Drones"]) then
+	data.raw["assembling-machine"][names.mining_depot].animation = make_4way_animation_from_spritesheet{
+    {
+      layers =
+      {
+        {
+          filename = "__Factorio-Tiberium__/graphics/entity/Refinery/Refinery.png",
+          width = 450,
+          height = 450,
+          frame_count = 1,
+          --shift = {2.515625, 0.484375},
+          hr_version =
+          {
+            filename = "__Factorio-Tiberium__/graphics/entity/Refinery/Refinery.png",
+            width = 450,
+			height = 450,
+            frame_count = 1,
+          --  shift = util.by_pixel(0, -7.5),
+            scale = 0.5
+          }
+        },
+        {
+          filename = "__Factorio-Tiberium__/graphics/entity/Refinery/RefineryShadow.png",
+          width = 450,
+          height = 450,
+          frame_count = 1,
+         -- shift = util.by_pixel(82.5, 26.5),
+          draw_as_shadow = true,
+          hr_version =
+          {
+            filename = "__Factorio-Tiberium__/graphics/entity/Refinery/RefineryShadow.png",
+			width = 450,
+			height = 450,
+            frame_count = 1,
+           -- shift = util.by_pixel(82.5, 26.5),
+            draw_as_shadow = true,
+            force_hr_shadow = true,
+            scale = 0.5
+          }
+        }
+      }
+    }
+	}
+	--data.raw["unit"][bot_name].icon = 
+end]]
 -- Add Tiberium resistance to armors
 for name, armor in pairs(data.raw.armor) do
 	if name ~= "tiberium-armor" then
 		for _, resistance in pairs (armor.resistances or {}) do
 			if resistance.type == "acid" then
+
+
+for _, armor in pairs(data.raw.armor) do
+	log("found armor")
+	for _, resistance in pairs (armor.resistances) do
+		if resistance.type == "acid" then
+			if armor==data.raw.armor["tiberium-armor"] then
+			elseif armor==data.raw.armor["tiberium-power-armor"] then
+			else
+				log("has acid")
 				table.insert(armor.resistances, {type= "tiberium", decrease = resistance.decrease, percent = resistance.percent})
 			end
 		end

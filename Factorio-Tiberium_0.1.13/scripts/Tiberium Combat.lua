@@ -22,6 +22,47 @@ recipe.result = "tiberium-armor"
 
 data:extend{tiberiumArmor, recipe}
 
+local tiberiumPowerArmor = table.deepcopy(data.raw.armor["power-armor-mk2"])
+
+tiberiumPowerArmor.name = "tiberium-power-armor"
+tiberiumPowerArmor.subgroup = "a-items"
+tiberiumPowerArmor.icons= {
+   {
+      icon=tiberiumPowerArmor.icon,
+      tint={r=0.2,g=0.8,b=0.2,a=0.9}
+   },
+}
+
+tiberiumPowerArmor.resistances = {
+   {
+      type = "physical",
+      decrease = 6,
+      percent = 10
+   },
+   {
+      type = "explosion",
+      decrease = 10,
+      percent = 10
+   },
+   {
+      type = "tiberium",
+      decrease = 0,
+      percent = 100
+   },
+   {
+      type = "acid",
+      decrease = 0,
+      percent = 40
+   }
+}
+
+local recipe = table.deepcopy(data.raw.recipe["power-armor-mk2"])
+recipe.name = "tiberium-power-armor"
+recipe.ingredients = {{"plastic-bar",50},{"power-armor-mk2",1},{"pipe",2}}
+recipe.result = "tiberium-power-armor"
+
+data:extend{tiberiumPowerArmor,recipe}
+
 data:extend{
   {
     type = "ammo",

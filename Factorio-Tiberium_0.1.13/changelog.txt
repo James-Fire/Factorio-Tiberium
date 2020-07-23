@@ -1,4 +1,28 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.13
+  Bugfixes:
+    - Fixes tickets 0054 and 0055
+	- Fixed TCN, Node Harvester, and Spike not producing pollution
+	- More consistency with surfaces
+	- Fixed ticket 0057 and 0058
+	- Fixed crash due to changed textures from base game 18.36 update
+	- Fixed Tiberium Ore not having an emissions multiplier
+	- Fixed an on cofig thing so you should be able to switch from main branch to the beta without issue in an ongoing save.
+  Changes:	
+	- Updated minimum base game version to 18.27
+	- Added descriptions for remaining entities
+	- Updated Growth Accelerator UI to show credits being consumed
+	- Growth Accelerator now has an working animation
+	- Added flying text to show Growth Credits contributing to Tiberium growth
+	- Tiberium growth now resumes when Spikes are removed
+	- Added a Third output fluidbox for some mod compatibility.
+	- Put an incompatibility between Beta and the Main Mod.
+  Features:
+    - We now have a Tib only starting option.
+	- Automated recipe breakdown method, for compatibility with basically every mod that adds new science packs or resources.
+	- Tib Power Armour
+	- Growth Accelerator Crafting Speed tech
+---------------------------------------------------------------------------------------------------
 Version: 0.1.12
   Bugfixes:
     - Prevent ore on top of nodes.

@@ -561,6 +561,10 @@ data:extend
 				type = "unlock-recipe",
 				recipe = "tiberium-seed"
 			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-power-armor"
+			},
 		},
 		prerequisites = {"tiberium-military-2", "rocket-control-unit", "tiberium-control-network-tech"},
 		unit =
@@ -579,6 +583,35 @@ data:extend
 		}
 	},
 	--Repeatables
+	{
+		type = "technology",
+		name = 	"tiberium-growth-acceleration-acceleration",
+		icon = "__Factorio-Tiberium__/graphics/technology/growth-accelerator.png",
+		icon_size = 128,
+		effects =
+		{
+		},
+		prerequisites = {"tiberium-growth-acceleration"},
+		unit =
+		{
+			count_formula = "2^(L-2)*1000",
+			ingredients =
+			{
+				{"tiberium-science", 1},
+				{"automation-science-pack", 1},
+				{"logistic-science-pack", 1},
+				{"chemical-science-pack", 1},
+				{"military-science-pack", 1},
+				{"production-science-pack", 1},
+				{"utility-science-pack", 1},
+				{"space-science-pack", 1}
+			},
+			time = 30
+		},
+		max_level = "10",
+		upgrade = true,
+		order = "e-l-f"
+	},
 	{
 		type = "technology",
 		name = "tiberium-explosives",

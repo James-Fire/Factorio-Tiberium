@@ -280,6 +280,7 @@ data:extend({
 		energy_usage = "1kW",
 		crafting_speed = 1,
 		fixed_recipe = "tiberium-growth",
+		allowed_effects = { "speed", "consumption" },
 		open_sound = { filename = "__base__/sound/machine-open.ogg", volume = 0.85 },
 		close_sound = { filename = "__base__/sound/machine-close.ogg", volume = 0.75 },
 		vehicle_impact_sound = { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
@@ -418,6 +419,74 @@ data:extend({
 		place_result = "growth-accelerator",
 		stack_size = 15,
 	},
+	{
+    type = "beacon",
+    name = "growth-accelerator-beacon",
+    energy_usage = "10W",
+    -- 0.17 supports "no-automated-item-removal", "no-automated-item-insertion"
+    flags = { "hide-alt-info", "not-blueprintable", "not-deconstructable", "placeable-off-grid", "not-on-map", "no-automated-item-removal", "no-automated-item-insertion" },
+    collision_mask = { "resource-layer" }, -- disable collision
+	resistances = {
+		{
+			type = "fire",
+			percent = 90
+		},
+		{
+			type = "tiberium",
+			percent = 100
+		}
+	},
+    animation = {
+      filename =  "__core__/graphics/empty.png",
+      width = 1,
+      height = 1,
+      line_length = 1,
+      frame_count = 1,
+    },
+    animation_shadow = {
+        filename = "__core__/graphics/empty.png",
+        width = 1,
+        height = 1,
+        line_length = 1,
+        frame_count = 1,
+    },
+    -- 0.17 supports 0W entities
+    energy_source = {type="void"},
+    base_picture =
+    {
+      filename = "__core__/graphics/empty.png",
+      width = 1,
+      height = 1,
+    },
+    supply_area_distance = 0,
+    radius_visualisation_picture =
+    {
+      filename = "__core__/graphics/empty.png",
+      width = 1,
+      height = 1
+    },
+    distribution_effectivity = 1,
+    module_specification =
+    {
+      module_slots = 65535,
+    },
+    allowed_effects = { "speed", "consumption" },
+    selection_box = {{0, 0}, {0, 0}},
+    collision_box = {{-0.4, -0.4}, {0.4, 0.4}}, -- reduce size preventing inserters from picking modules, will not power unless center is covered
+  },
+  -- hidden speed modules matching infinite tech bonus size
+  {
+    type = "module",
+    name = "growth-accelerator-speed-module",
+    icon = "__core__/graphics/empty.png",
+    icon_size = 1,
+    flags = { "hidden" },
+    subgroup = "module",
+    category = "speed",
+    tier = 0,
+    stack_size = 1,
+    effect = { speed = {bonus = 0.1}, consumption = {bonus = 0.1}},
+  },
 })
 
 local centrifuge = table.deepcopy(data.raw["assembling-machine"]["centrifuge"])
