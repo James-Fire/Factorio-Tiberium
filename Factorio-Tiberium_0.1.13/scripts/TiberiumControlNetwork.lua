@@ -231,8 +231,6 @@ local acceleratorSprite = {
 	}
 }
 
-local GrowthCreditMax = settings.startup["growth-credit"].value
-
 data:extend({
 	--Void recipe for consuming energy credits
 	{
@@ -241,7 +239,7 @@ data:extend({
 		enabled = "false",
 		category = "growth",
 		ingredients = {{"growth-credit", 1}},
-		energy_required = 300 / GrowthCreditMax,
+		energy_required = 15,  -- 20 credits every 5 minutes
 		results = {
 			{
 				name = "growth-credit-void",

@@ -19,6 +19,8 @@ for _, pre in pairs(data.raw["map-gen-presets"].default) do
 	end
 end]]
 
+require("science")
+
 if settings.startup["tiberium-advanced-start"].value then
 	--for _, ore in pairs(data.raw["autoplace-control"]) do
 	for _, gen in pairs(data.raw["resource"]) do
@@ -47,5 +49,3 @@ if settings.startup["tiberium-advanced-start"].value then
 		end
 	end
 end
-
-require("science")
