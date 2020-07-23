@@ -118,10 +118,6 @@ data:extend
 				type = "unlock-recipe",
 				recipe = "tiberium-molten-thermal-data"
 			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-molten-to-crude-oil"
-			},
 		},
 		prerequisites = {"tiberium-processing-tech", "tiberium-thermal-research"},
 		unit =
@@ -639,7 +635,7 @@ data:extend
 				modifier = 0.2
 			}
 		},
-		prerequisites = {"stronger-explosives-6", "space-science-pack"},
+		prerequisites = {"tiberium-military-2", "stronger-explosives-6", "space-science-pack"},
 		unit =
 		{
 			count_formula = "2^(L-2)*1000",
@@ -682,7 +678,7 @@ data:extend
 				modifier = 0.3
 			}
 		},
-		prerequisites = {"energy-weapons-damage-6", "space-science-pack"},
+		prerequisites = {"tiberium-military-2", "energy-weapons-damage-6", "space-science-pack"},
 		unit =
 		{
 			count_formula = "2^(L-2)*1000",

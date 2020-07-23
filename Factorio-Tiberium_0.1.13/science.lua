@@ -1,19 +1,14 @@
 
 --TODO:
---Support custom science packs (programmatically assign packs to each fuge tier)
---Support enrichment/catalyst recipes?
 --Support for generic boilers?
---Recipe selection to consider other products and look for multiple matches?
 
 --Set these manually
 local free = {["water"] = true, ["wood"] = true, ["steam"] = true}
+if mods["Krastorio2"] then free["matter"] = false end
 local excludedCrafting = {["barreling-pump"] = true} --Rigorous way to do this?
 --Debugging for findRecipe
 local unreachable = {}
 local multipleRecipes = {}
---Caching used by depthFirst
---local recipeTable = {}
---local cachedBreakdown = {}
 
 --Defined by giantSetupFunction
 local availableRecipes = {}
@@ -24,6 +19,10 @@ local recipeDepth = {}
 local ingredientDepth = {}
 local catalyst = {}
 local resultIndex = {}
+
+local science = {{}, {}, {}}
+local allPacks = {}
+local oreMult = {}
 
 -- Assumes: excludedCrafting
 -- Modifies: rawResources, availableRecipes, free, ingredientIndex, resultIndex, catalyst, ingredientDepth, recipeDepth
@@ -49,9 +48,15 @@ function giantSetupFunction()
 		end
 	end
 	for tech, techData in pairs(data.raw.technology) do
-		for _, effect in pairs(techData.effects or {}) do
-			if effect.recipe then
-				availableRecipes[effect.recipe] = true
+		if (techData.enabled == nil) or (techData.enabled == true) then  -- Only use enabled recipes
+			for _, effect in pairs(techData.effects or {}) do
+				if effect.recipe then
+					if data.raw.recipe[effect.recipe] then
+						availableRecipes[effect.recipe] = true
+					else
+						log(tech.." tried to unlock recipe "..effect.recipe.." which does not exist?")
+					end
+				end
 			end
 		end
 	end
@@ -59,9 +64,9 @@ function giantSetupFunction()
 		local recipe = data.raw.recipe[recipeName]
 		if excludedCrafting[recipe.category] then
 			availableRecipes[recipeName] = nil
-		elseif recipe.subgroup == "empty-barrel" then
+		elseif recipe.subgroup and (string.find(recipe.subgroup, "empty%-barrel") or string.find(recipe.subgroup, "barrel%-empty")) then -- Hope other mods have good naming
 			availableRecipes[recipeName] = nil
-		elseif string.find(recipeName, "tiberium") or string.find(recipeName, "coal-liquefaction") then  -- Want non-tib recipes only for fuge stuff
+		elseif string.find(recipeName, "tiberium") or string.find(recipeName, "coal%-liquefaction") then  -- Want non-tib recipes only for fuge stuff
 			availableRecipes[recipeName] = nil
 		end
 	end
@@ -88,7 +93,7 @@ function giantSetupFunction()
 			end
 		end
 	end
-	local newFreeItems = shallowCopy(free)
+	local newFreeItems = table.deepcopy(free)
 	local countFreeLoops = 0
 	while next(newFreeItems) do
 		countFreeLoops = countFreeLoops + 1
@@ -105,7 +110,7 @@ function giantSetupFunction()
 				end
 				if actuallyFree then
 					for result in pairs(normalResults(recipeName)) do
-						if not free[result] then
+						if free[result] == nil then
 							free[result] = true
 							nextLoopFreeItems[result] = true
 							--log(result.." is free via "..recipeName.." since "..freeItem.." is free")
@@ -117,15 +122,15 @@ function giantSetupFunction()
 		newFreeItems = nextLoopFreeItems
 	end
 	-- Setup for depth calculations
-	for item in pairs(free) do
-		ingredientDepth[item] = 0
+	for item, bool in pairs(free) do
+		if bool then ingredientDepth[item] = 0 end
 	end
 	for material in pairs(rawResources) do -- Sanity check
 		ingredientDepth[material] = 0 -- But not free, idk if that means they should be 1 and free should be 0?
 		if free[material] then log("^^^ You have a free resource: "..material) end
 	end
 	-- Now iteratively build up recipes starting from raw resources
-	local basicMaterials = shallowCopy(rawResources)
+	local basicMaterials = table.deepcopy(rawResources)
 	local checkedRockets = false
 	while next(basicMaterials) do
 		local nextMaterials = {}
@@ -197,78 +202,6 @@ function giantSetupFunction()
 	end
 end
 
-
---[[function depthFirst(item, itemCount, depth, parentRecipe)
--- Assumes: rawResources, free
--- Modifies: cachedBreakdown, recipeTable
-	-- itemCount = itemCount or 1
-	-- depth = depth or 1
-	-- log(string.rep("  ", depth - 1)..itemCount.." "..item)
-	
-	-- --Stopping conditions
-	-- if free[item] then
-		-- --log("}")
-		-- return {}
-	-- end
-	-- if rawResources[item] then 
-		-- --log("}")
-		-- return {[item] = itemCount}
-	-- end
-	-- if depth > 20 then
-		-- log("!!!Hit maximum depth, check that recipes aren't looping")
-		-- return {[item] = itemCount}
-	-- end
-	-- --Check cache
-	-- if cachedBreakdown[item] then
-		-- --log("}")
-		-- return makeScaledList(cachedBreakdown[item], itemCount)
-	-- end
-	-- --Find recipes
-	-- local recipeName, recipeCount, rocketLaunch
-	-- if not recipeTable[item] then  --Table for caching recipes
-		-- recipeName, recipeCount, rocketLaunch = findRecipe(item)
-		-- recipeTable[item] = {name = recipeName, count = recipeCount, rocket = rocketLaunch}
-	-- else
-		-- recipeName   = recipeTable[item].name
-		-- recipeCount  = recipeTable[item].count
-		-- rocketLaunch = recipeTable[item].rocket
-	-- end
-	-- recipeCount = recipeCount or 1
-	
-	-- if not recipeName then
-		-- log("Couldn't find a recipe for "..item)
-		-- --log("}")
-		-- return {[item] = itemCount}
-	-- elseif recipeName == parentRecipe then --Don't use same recipe as the one we're refunding
-		-- --log("}")
-		-- return {[item] = itemCount}
-	-- end
-	
-	-- --Recurse through ingredients
-	-- local sumIngredients = {}
-	-- for ingredient, ingredientAmount in pairs(normalIngredients(recipeName)) do
-		-- local ingredientParts = depthFirst(ingredient, ingredientAmount / recipeCount, depth + 1)
-		-- sumDicts(sumIngredients, ingredientParts)
-		-- if next(ingredientParts) == nil then free[ingredient] = true end
-	-- end
-	-- if rocketLaunch then
-		-- local numParts = data.raw["rocket-silo"]["rocket-silo"].rocket_parts_required or 1
-		-- local ingredientParts = depthFirst(rocketLaunch, 1 / (recipeCount * numParts), depth + 1)
-		-- sumDicts(sumIngredients, ingredientParts)
-	-- elseif next(sumIngredients) ~= nil then  --If recipe isn't free, we need to discount the other results
-		-- for result, resultAmount in pairs(normalResults(recipeName)) do
-			-- if result ~= item then
-				-- local resultParts = depthFirst(result, -1 * resultAmount / recipeCount, depth + 1, recipeName)
-				-- sumDicts(sumIngredients, resultParts)
-				-- if next(resultParts) == nil then free[result] = true end
-			-- end
-		-- end
-	-- end
-	-- cachedBreakdown[item] = sumIngredients
-	-- --log("}")
-	-- return makeScaledList(sumIngredients, itemCount)
--- end]]
-
 -- Assumes: free, recipeDepth
 -- Modifies: unreachable, multipleRecipes
 function findRecipe(item, itemList)
@@ -277,32 +210,35 @@ function findRecipe(item, itemList)
 		local resultList = normalResults(recipeName)
 		if resultList[item] then
 			-- Score the recipes so we can choose the best
-			local score = 0
+			local penalty = 0
 			local ingredientList = normalIngredients(recipeName)
 			for ingredient in pairs(ingredientList) do
 				if (ingredient ~= item) and not free[ingredient] then
 					-- Less bad if it uses something we already have extra of?
 					if itemList and itemList[ingredient] and itemList[ingredient] > 0 then
-						score = score - 12
+						penalty = penalty - 8
 					else
-						score = score + 10
+						penalty = penalty + 10
 					end
 				end
 			end
-			if score > 0 then -- Only penalize byproducts if recipe isn't free
+			if penalty > 0 then -- Only penalize byproducts if recipe isn't free
 				for result in pairs(resultList) do
 					if (result ~= item) and not free[result] then
 						if itemList and itemList[result] and itemList[result] > 0 then  -- Bonus if other output is useful
-							score = score - 20
+							penalty = penalty - 20
 						else
-							score = score - 5  -- Penalize or reward excess products?
+							penalty = penalty - 5  -- Penalize or reward excess products?
 						end
 					end
 				end
 			end
 			if recipeDepth[recipeName] then
-				score = score + 10 * recipeDepth[recipeName]
-				table.insert(recipes, {name=recipeName, count=resultList[item], score=score})
+				if recipeDepth[recipeName] > ingredientDepth[item] then
+					penalty = penalty + 1000000  -- Avoid recipes that don't reduce overall complexity
+				end
+				penalty = penalty + 10 * recipeDepth[recipeName]
+				table.insert(recipes, {name=recipeName, count=resultList[item], penalty=penalty})
 			else  -- If it isn't reachable, don't use it.  Since we won't be able to break it down
 				table.insert(unreachable, recipeName)
 			end
@@ -312,136 +248,41 @@ function findRecipe(item, itemList)
 	--Fall back to rocket silo recipes if needed (just space science in vanilla)
 	if #recipes == 0 and not data.raw.fluid[item] then
 		for satellite, satelliteData in pairs(data.raw.item) do
-			if satelliteData.rocket_launch_product then
-				local numParts = data.raw["rocket-silo"]["rocket-silo"].rocket_parts_required or 1
-				local partName = next(normalResults(data.raw["rocket-silo"]["rocket-silo"].fixed_recipe))
-				if satelliteData.rocket_launch_product[1] == item then
-					return partName, satelliteData.rocket_launch_product[2] / numParts, satellite
-				elseif satelliteData.rocket_launch_product.name == item then
-					return partName, satelliteData.rocket_launch_product.amount / numParts, satellite
-				end
+			if satelliteData.rocket_launch_product and ((satelliteData.rocket_launch_product[1] or satelliteData.rocket_launch_product.name) == item) then
+				local recipeName = "dummy-recipe-launching-"..satellite
+				local recipeCount = availableRecipes[recipeName]["result"][item]
+				return recipeName, recipeCount
 			elseif satelliteData.burnt_result == item then -- Mainly for fuel cell shennanigans
-				return findRecipe(satellite)
+				local recipeName = "dummy-recipe-burning-"..satellite
+				return recipeName, 1
 			end
 		end
 	end
 	
 	if #recipes > 1 then
 		-- Name as tiebreaker because otherwise it's not deterministic >.<
-		table.sort(recipes, function(a,b) return (a.score == b.score) and (a.name < b.name) or (a.score < b.score) end)
+		table.sort(recipes, function(a,b) return (a.penalty == b.penalty) and (a.name < b.name) or (a.penalty < b.penalty) end)
 		--log("Found "..#recipes.." recipes for "..item..". Defaulting to "..recipes[1]["name"])
 		local recipeNames = {}
 		for i = 1, #recipes do
-			table.insert(recipeNames, {recipes[i].name, recipes[i].score})
+			table.insert(recipeNames, {recipes[i].name, recipes[i].penalty})
 		end
 		multipleRecipes[item] = recipeNames
+		-- log("multiple recipes for "..item)
+		-- for _,v in pairs(recipeNames) do
+			-- log(v[1].." "..v[2])
+		-- end
 	end
 	if recipes[1] then
 		if catalyst[recipes[1]] then  -- Scale properly for catalyst/enrichment
 			local itemIn = normalIngredients(recipeName)[item] or 0
-			return recipes[1]["name"], recipes[1]["count"] - itemIn, false
+			return recipes[1]["name"], recipes[1]["count"] - itemIn
 		else
-			return recipes[1]["name"], recipes[1]["count"], false
+			return recipes[1]["name"], recipes[1]["count"]
 		end
 	else
-		return nil, nil, false
+		return nil, nil
 	end
-end
-
-function sumDicts(dict1, dict2, logging)
-	if type(dict1) ~= "table" then dict1 = {} end
-	if type(dict2) == "table" then 
-		for k, v in pairs(dict2) do
-			dict1[k] = v + (dict1[k] or 0)
-			if logging then
-				local sign = v >= 0 and "+" or ""
-				--log(logging..sign..v.." "..k)
-			end
-		end
-	end
-	return dict1
-end
-
-function makeScaledList(list, scalar)
-	if not scalar then log("bad scalar") return {} end
-	if type(list) ~= "table" then log("bad list") return {} end
-
-	local scaledList = {}
-	for k, v in pairs(list) do
-		scaledList[k] = v * scalar
-	end
-	return scaledList
-end
-
-function normalIngredients(recipeName)
-	if fakeRecipes[recipeName] then
-		return availableRecipes[recipeName]["ingredient"]
-	end
-	local recipe = data.raw["recipe"][recipeName]
-	local ingredients = recipe.normal and recipe.normal.ingredients or recipe.ingredients
-	if not ingredients then
-		log("#######Could not find ingredients for "..recipeName)
-		return {}
-	end
-	local ingredientTable = {}
-	for _, ingredient in pairs(ingredients) do
-		if ingredient[1] then
-			ingredientTable[ingredient[1]] = ingredient[2]
-		elseif ingredient.name then
-			ingredientTable[ingredient.name] = ingredient.amount
-		end
-	end
-	return ingredientTable
-end
-
-function normalResults(recipeName)
-	if fakeRecipes[recipeName] then
-		return availableRecipes[recipeName]["result"]
-	end
-	local recipe = data.raw["recipe"][recipeName]
-	local result = recipe.normal and recipe.normal.result or recipe.result
-	if result then
-		resultAmount = recipe.normal and recipe.normal.result_count or recipe.result_count or 1
-		return {[result] = resultAmount}
-	end
-	local results = recipe.normal and recipe.normal.results or recipe.results
-	if not results then
-		log("#######Could not find results for "..recipeName)
-		return {}
-	end
-	local resultTable = {}
-	for _, result in pairs(results) do
-		if result[1] then
-			resultTable[result[1]] = result[2]
-		elseif result.name then
-			resultTable[result.name] = (result.amount or (result.amount_min + result.amount_max) / 2) * (result.probability or 1)
-		end
-	end
-	return resultTable
-end
-
-function shallowCopy(list)  -- Lua, why is this not standard
-	local copy
-	if type(list) ~= "table" then
-		copy = list
-	else
-		copy = {}
-		for k, v in pairs(list) do
-			copy[k] = v
-		end
-	end
-	return copy
-end
-
-function listLength(list)
-	local count = 0
-	for _ in pairs(list) do count = count + 1 end
-	return count
-end
-
-function round(num, numDecimalPlaces)
-  local mult = 10^(numDecimalPlaces or 0)
-  return math.floor(num * mult + 0.5) / mult
 end
 
 -- Assumes: ingredientDepth
@@ -455,7 +296,6 @@ function breadthFirst(itemList, recipesUsed, intermediates)
 			log("@@@ Missing depth for "..item)
 		end
 	end
-	--log("Max depth: "..maxDepth)
 	if maxDepth == 0 then -- Done
 		return itemList
 	end
@@ -467,35 +307,28 @@ function breadthFirst(itemList, recipesUsed, intermediates)
 		end
 	end
 	local targetAmount = itemList[targetItem]
+	--log("depth:"..maxDepth.." "..targetAmount.." "..targetItem)
 	
-	recipeName, recipeCount, rocketLaunch = findRecipe(targetItem, itemList) -- No point caching with breadthFirst
+	local recipeName, recipeCount = findRecipe(targetItem, itemList) -- No point caching with breadthFirst
 	if not recipeName then
 		log("%%% Couldn't find a recipe for "..targetItem)
 		itemList[targetItem] = -1 * targetAmount -- Lazy way to avoid infinite loops
+		return breadthFirst(itemList, recipesUsed, intermediates)
 	end
 	local recipeTimes = targetAmount / recipeCount
-	--log("Using recipe "..recipeName.." "..recipeTimes.." times")
+	--log("Using recipe "..recipeName.." "..recipeTimes.." times to get "..targetAmount.." "..targetItem)
 	if recipesUsed then
 		recipesUsed[recipeName] = (recipesUsed[recipeName] or 0) + recipeTimes
 	end
 	
 	sumDicts(itemList, makeScaledList(normalIngredients(recipeName), recipeTimes), "  ")
-	if rocketLaunch then
-		local numParts = data.raw["rocket-silo"]["rocket-silo"].rocket_parts_required or 1
-		sumDicts(itemList, {[rocketLaunch] = recipeTimes / numParts}, "  ")
-		sumDicts(itemList, {[targetItem] = -1 * targetAmount}, "  ")  -- Deduct item since it isn't a direct result of the recipe
-	else
-		sumDicts(itemList, makeScaledList(normalResults(recipeName), -1 * recipeTimes), "  ")
-	end
+	sumDicts(itemList, makeScaledList(normalResults(recipeName), -1 * recipeTimes), "  ")
 
 	if intermediates then
 		for ingredient in pairs(normalIngredients(recipeName)) do
 			if not free[ingredient] and not rawResources[ingredient] then
 				intermediates[ingredient] = true
 			end
-		end
-		if rocketLaunch then
-			intermediates[rocketLaunch] = true
 		end
 	end
 
@@ -505,215 +338,23 @@ function breadthFirst(itemList, recipesUsed, intermediates)
 	return breadthFirst(itemList, recipesUsed, intermediates)
 end
 
-function finalFormatting()
-	--try breadthFirst
-	--if all entries are positive, call it good enough
-
-	--call inner function
-	--strip negatives
-	--rounding and liquids
-	--something with scaling for large rounding errors
-end
-
-function solveRecipeLP(targetList) --Temporarily abandoned
-	--Take all recipes for all targets+all intermediates
-	local recipeList = {}
-	local intermediateList = {}
-	local rawList = {}
-	local itemList = shallowCopy(targetList)
-	while next(itemList) do
-		local nextItemList = {}
-		for item in pairs(itemList) do
-			if not free[item] then
-				--log("Looking at recipes that give "..item)
-				for recipe in pairs(resultIndex[item] or {}) do
-					if not recipeList[recipe] then
-						--log("  Found that "..recipe.." gives "..item)
-						recipeList[recipe] = 0
-						for ingredient in pairs(availableRecipes[recipe]["ingredient"]) do
-							if not free[ingredient] then
-								if not rawResources[ingredient] and not intermediateList[ingredient] then
-									--log("    Ingredient found: "..ingredient)
-									intermediateList[ingredient] = 0
-									nextItemList[ingredient] = true
-								elseif rawResources[ingredient] and not rawList[ingredient] then
-									rawList[ingredient] = 0
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-		itemList = nextItemList
-	end
-	log("There are "..listLength(recipeList).." recipes")
-	log("There are "..listLength(intermediateList).." intermediates")
-	if true then return	end
-	-- Determine row order
-	local resourceOrderList = {}
-	local rows = 1  -- Objective function row plus 1 row per item
-	for item in pairs(rawList) do
-		if not targetList[item] then
-			rows = rows + 1
-			resourceOrderList[item] = rows
-		end
-	end
-	for item in pairs(intermediateList) do
-		if not targetList[item] then
-			rows = rows + 1
-			resourceOrderList[item] = rows
-		end
-	end
-	for item in pairs(targetList) do
-		rows = rows + 1
-		resourceOrderList[item] = rows
-	end
-
-	local matrix = matrixZeroes(rows, 1)
-	matrix[1][1] = 1
-	--Build A and -c
-	for recipe in pairs(recipeList) do
-		local recipeMatrix = matrixZeroes(rows, 1)
-		for ingredient, amount in pairs(availableRecipes[recipe]["ingredient"]) do
-			if not free[ingredient] then
-				local row = resourceOrderList[ingredient]
-				recipeMatrix[row][1] = recipeMatrix[row][1] + amount  -- A
-				if rawList[ingredient] then
-					recipeMatrix[1][1] = recipeMatrix[1][1] + amount  -- -c
-				end
-			end
-		end
-		for result, amount in pairs(availableRecipes[recipe]["result"]) do
-			if not free[result] then
-				local row = resourceOrderList[result]
-				if row then  -- For now, ignoring byproducts not used by other recipes
-					recipeMatrix[row][1] = recipeMatrix[row][1] - amount  -- A
-					if rawList[result] then
-						recipeMatrix[1][1] = recipeMatrix[1][1] - amount  -- -c
-					end
-				end
-			end
-		end
-		matrixHorzAppend(matrix, recipeMatrix)
-	end
-	for item in pairs(rawList) do
-		local row = resourceOrderList[item]
-		matrixScaleRow(matrix, row, -1)  -- Flipping inequality so slack variables are consistent
-	end
-	
-	local slackMatrix = matrixZeroes(1, rows - 1)
-	matrixVertAppend(slackMatrix, matrixIdentity(rows - 1))
-	matrixHorzAppend(matrix, slackMatrix)
-	
-	local bMatrix = matrixZeroes(rows, 1)
-	for item, amount in pairs(targetList) do
-		local row = resourceOrderList[item]
-		bMatrix[row][1] = -1 * amount
-	end
-	matrixHorzAppend(matrix, bMatrix)
-	-- Standard matrix done, now make it canonical so we can start pivoting
-	-- Make b non-negative
-	local nonIdentityRows = {}
-	for i = 2, #matrix do
-		if matrix[i][#matrix[1]] < 0 then
-			matrixScaleRow(matrix, i, -1)
-			table.insert(nonIdentityRows, i)  -- I don't trust using numeric keys to iterate correctly
-		end
-	end
-	
-	local bVector = {}
-	for i = 1, #matrix do
-		bVector[i] = matrix[i][#matrix[1]]
-	end
-	log("B vector before: "..serpent.block(bVector))
-	
-	while next(nonIdentityRows) do  -- Is this going to infinite loop?
-		for _, i in pairs(nonIdentityRows) do
-			log("Trying to fix missing identity on row "..i)
-			for j = 1, #matrix[1] - 1 do
-				if matrix[i][j] > 0.00000001 then
-					-- local pivotConfirmed = true
-					-- for row = 2, #matrix do
-						-- if (row ~= i) and (matrix[row][j] > 0) then
-							-- pivotConfirmed = false
-							-- break
-						-- end
-					-- end
-					-- if pivotConfirmed then  -- Idk what my plan is if these conditions aren't met
-						log("Successfully found pivot on "..i..", "..j.." with value of "..matrix[i][j])
-						matrixDoPivot2(matrix, i, j)
-						if matrix[i][j] ~= 1 then log("*** Precision error, lua stahp") end
-						break
-					--end
-				end
-			end
-		end
-		if matrix[1][#matrix[1]] ~= matrix[1][#matrix[1]] then log("&&& We fucked up the objective at this point") end
-		nonIdentityRows = {}
-		for i = 2, #matrix do
-			if matrix[i][#matrix[1]] < 0 then
-				matrixScaleRow(matrix, i, -1)
-				table.insert(nonIdentityRows, i)
-			end
-		end
-	end
-	--detect if already canon
-	--choose pivot that moves us towards feasible solution
-	-- local identityMapping = {}
-	-- while (not matrixIsCanonical(matrix, identityMapping)) do
-		-- for i = 1, #matrix do
-			-- if not identityMapping[i] then
-				
-	
-	-- end
-
-	
-	log("Relevant recipes: "..serpent.block(recipeList))
-	log("Intermediates: "..serpent.block(intermediateList))
-	log("Raw: "..serpent.block(rawList))
-	
-	local bVector = {}
-	for i = 1, #matrix do
-		bVector[i] = matrix[i][#matrix[1]]
-	end
-	log("B vector after: "..serpent.block(bVector))
-	
-	-- local i, j = matrixFindPivot(matrix)
-	-- log("Pivot on "..tostring(i)..", "..tostring(j))
-	--convert recipes to matrix (no free items in matrix)
-	--[[1 -c 0]
-	-- [0  A b]] --Building standard form matrix from recipes
-	--positive slack for intermediates (<=0) negative slack for targets (>=target amount)
-	--objective function is to minimize resources
-	
-	--simplex: convert to canonical
-	--  pivot if valid pivot exists
-	--pivotSimplex(matrix)
-	--log("Matrix "..serpent.block(matrix))
-	--  take end solution and convert back to something usable
-end
-
 function hybridSolve(targetList)
 	local recipesUsed = {}
 	local intermediates = {}
-	local initialSolve = shallowCopy(targetList)
+	local initialSolve = table.deepcopy(targetList)
 	breadthFirst(initialSolve, recipesUsed, intermediates) --Already removes frees
 	local excess = false
 	local rawList = {}
 	
-	log("target:"..serpent.block(targetList))
+	--log("target:"..serpent.block(targetList))
 	log("initial solve:"..serpent.block(initialSolve))
 	--Look for ways to use excess ingredients productively
 	for item, amount in pairs(initialSolve) do
 		if amount < 0 then
 			excess = true
 			for recipeName in pairs(ingredientIndex[item]) do
-				--log("checking if "..recipeName.." is a good way to use our extra "..item)
 				for result in pairs(normalResults(recipeName)) do
-					--log("result: "..result)
 					if intermediates[result] or targetList[result] then
-						--log("looks good")
 						recipesUsed[recipeName] = 0
 					end
 				end
@@ -777,7 +418,8 @@ function hybridSolve(targetList)
 				if row then  -- For now, ignoring byproducts not used by other recipes
 					recipeMatrix[row][1] = recipeMatrix[row][1] - amount  -- A
 					if rawList[result] then
-						recipeMatrix[1][1] = recipeMatrix[1][1] - amount  -- -c
+						local fluidMultiplier = data.raw.fluid[result] and 0.25 or 1  -- Reflect that liquids are cheaper
+						recipeMatrix[1][1] = recipeMatrix[1][1] - (amount * fluidMultiplier)  -- -c
 					end
 				end
 			end
@@ -822,7 +464,7 @@ function hybridSolve(targetList)
 			--log("Trying to fix missing identity on row "..i)
 			for j = 1, #matrix[1] - 1 do
 				if matrix[i][j] > 0.00000001 then
-					log("Successfully found pivot on "..i..", "..j.." with value of "..matrix[i][j])
+					--log("Successfully found pivot on "..i..", "..j.." with value of "..matrix[i][j])
 					matrixDoPivot2(matrix, i, j)
 					pivotsToFeasible = pivotsToFeasible + 1
 					if matrix[i][j] ~= 1 then log("*** Precision error, lua stahp") end
@@ -839,9 +481,10 @@ function hybridSolve(targetList)
 			end
 		end
 	end
-	log("Took "..pivotsToFeasible.." pivots to reach a feasible solution, there's got to be a better way!")
+	log("Took "..pivotsToFeasible.." pivots to reach a feasible solution")
 	log("Initial score: "..matrix[1][#matrix[1]])
 	--log("Available recipes: "..serpent.block(recipesUsed))
+	--log("Resource order list: "..serpent.block(resourceOrderList))
 	--log("Current matrix: "..serpent.block(matrix))
 	--Now we pivot simplex
 	pivotSimplex(matrix)
@@ -876,34 +519,94 @@ function hybridSolve(targetList)
 			end
 		end
 	end
+	log("final solve:"..serpent.block(finalSolve))
 	return finalSolve
 end
 
-function matrixIsCanonical(matrix, identityMapping) --unused
-	--the i-th element of identity mapping will give the column that only contains 1 on i-th row
-	identityMapping = {}  --wipe out on purpose?
-	for row = 1, #matrix do
-		for col = 1, #matrix[1] - 1 do  -- Don't include b column
-			if matrix[row][col] == 1 then
-				local identity = true
-				for i = 1, #matrix do
-					if (i ~= row) and (matrix[i][col] ~= 0) then
-						identity = false
-						break
-					end
-				end
-				if identity then
-					identityMapping[row] = col
-				end
+function normalIngredients(recipeName)
+	if fakeRecipes[recipeName] then
+		return availableRecipes[recipeName]["ingredient"]
+	end
+	local recipe = data.raw["recipe"][recipeName]
+	local ingredients = recipe.normal and recipe.normal.ingredients or recipe.ingredients
+	if not ingredients then
+		log("#######Could not find ingredients for "..recipeName)
+		return {}
+	end
+	local ingredientTable = {}
+	for _, ingredient in pairs(ingredients) do
+		if ingredient[1] then
+			ingredientTable[ingredient[1]] = ingredient[2]
+		elseif ingredient.name then
+			ingredientTable[ingredient.name] = ingredient.amount
+		end
+	end
+	return ingredientTable
+end
+
+function normalResults(recipeName)
+	if fakeRecipes[recipeName] then
+		return availableRecipes[recipeName]["result"]
+	end
+	local recipe = data.raw["recipe"][recipeName]
+	local result = recipe.normal and recipe.normal.result or recipe.result
+	if result then
+		resultAmount = recipe.normal and recipe.normal.result_count or recipe.result_count or 1
+		return {[result] = resultAmount}
+	end
+	local results = recipe.normal and recipe.normal.results or recipe.results
+	if not results then
+		log("#######Could not find results for "..recipeName)
+		return {}
+	end
+	local resultTable = {}
+	for _, result in pairs(results) do
+		if result[1] then
+			resultTable[result[1]] = result[2]
+		elseif result.name then
+			resultTable[result.name] = (result.amount or (result.amount_min + result.amount_max) / 2) * (result.probability or 1)
+		end
+	end
+	return resultTable
+end
+
+function sumDicts(dict1, dict2, logging)
+	if type(dict1) ~= "table" then dict1 = {} end
+	if type(dict2) == "table" then 
+		for k, v in pairs(dict2) do
+			dict1[k] = v + (dict1[k] or 0)
+			if logging then
+				local sign = v >= 0 and "+" or ""
+				--log(logging..sign..v.." "..k)
 			end
 		end
 	end
-	for i = 1, #matrix do
-		if not identityMapping[i] then
-			return false
+	return dict1
+end
+
+function makeScaledList(list, scalar)
+	if not scalar then log("bad scalar") return {} end
+	if type(list) ~= "table" then log("bad list") return {} end
+
+	local scaledList = {}
+	for k, v in pairs(list) do
+		scaledList[k] = v * scalar
+	end
+	return scaledList
+end
+
+function listLength(list)
+	local count = 0
+	for _ in pairs(list) do count = count + 1 end
+	return count
+end
+
+function addPacksToTier(ingredients, collection)
+	for _, pack in pairs(ingredients or {}) do
+		if not collection[pack[1]] and (pack[1] ~= "tiberium-science") then
+			collection[pack[1]] = true
 		end
 	end
-	return true
 end
 
 function pivotSimplex(matrix)
@@ -911,7 +614,7 @@ function pivotSimplex(matrix)
 	local pivotNumber = 0
 	while (pivotRow and pivotColumn) do
 		pivotNumber = pivotNumber + 1
-		--log("Pivot #"..pivotNumber.." on "..pivotRow..", "..pivotColumn.." with objective function "..matrix[1][#matrix[1]])
+		log("Pivot #"..pivotNumber.." on "..pivotRow..", "..pivotColumn.." with objective function "..matrix[1][#matrix[1]])
 		matrixDoPivot2(matrix, pivotRow, pivotColumn)
 		pivotRow, pivotColumn = matrixFindPivot(matrix)
 	end
@@ -921,12 +624,6 @@ end
 function matrixScaleRow(matrix, row, scalar)
 	for i = 1, #matrix[row] do
 		matrix[row][i] = matrix[row][i] * scalar
-	end
-end
-
-function matrixAddRow(matrix, target, source, scalar)
-	for i = 1, #matrix[target] do
-		matrix[target][i] = matrix[target][i] + (matrix[source][i] * scalar)
 	end
 end
 
@@ -949,17 +646,7 @@ function matrixFindPivot(matrix)
 	return pivotRow, pivotColumn
 end
 
-function matrixDoPivot(matrix, row, column)
-	if matrix[row][column] == 0 then return end
-	matrixScaleRow(matrix, row, 1 / matrix[row][column])
-	for i = 1, #matrix do
-		if i ~= row then
-			matrixAddRow(matrix, i, row, -1 * matrix[i][column])
-		end
-	end
-end
-
-function matrixDoPivot2(matrix, row, column) --Trying handling it all in one function
+function matrixDoPivot2(matrix, row, column) -- All in one function to avoid float issues
 	if matrix[row][column] == 0 then return end
 	matrixScaleRow(matrix, row, 1 / matrix[row][column])
 	for i = 1, #matrix do
@@ -1040,48 +727,216 @@ function matrixZeroes(rows, cols)
 	return matrix
 end
 
+function fugeTierSetup()
+	local tibComboPacks = {}
+	for tech, techData in pairs(data.raw.technology) do
+		-- Also store data for centrifuge tiers
+		if techData.max_level and techData.max_level == "infinite" then
+			addPacksToTier(techData.unit.ingredients, science[3])
+		elseif (tech == "rocket-silo") or (tech == "space-science-pack") then
+			addPacksToTier(techData.unit.ingredients, science[2])
+		end
+	end
+	
+	-- Since we are calling this during data-final-fixes, we have already added tib science to labs
+	for labName, labData in pairs(data.raw.lab) do
+		if LSlib.utils.table.hasValue(labData.inputs, "tiberium-science") then
+			for _, pack in pairs(labData.inputs) do
+				if pack ~= "tiberium-science" then
+					tibComboPacks[pack] = true
+				end
+			end
+		end
+	end
+	
+	for pack in pairs(tibComboPacks) do
+		if not allPacks[pack] then
+			--log("decomposing combo pack "..pack)
+			allPacks[pack] = breadthFirst({[pack] = 1})
+			local tier1 = true
+			for ingredient in pairs(allPacks[pack]) do
+				if data.raw["fluid"][ingredient] then
+					tier1 = false
+					break
+				end
+			end
+			if tier1 then
+				science[1][pack] = true
+			end
+		end
+	end
+	for pack in pairs(science[2]) do
+		if not allPacks[pack] then
+			allPacks[pack] = breadthFirst({[pack] = 1})
+		end
+	end
+	for pack in pairs(science[3]) do
+		if not allPacks[pack] then
+			allPacks[pack] = breadthFirst({[pack] = 1})
+		end
+	end
+end
+
+function fugeRecipeTier(tier)
+	local resources, fluids = {}, {}
+	local smallResources = 0
+	local recipeMult = 1
+	local foundRecipeMult = false
+	local material = (tier == 1) and "ore" or (tier == 2) and "slurry" or "molten"
+	local item = (tier == 1) and "tiberium-ore" or (tier == 2) and "tiberium-slurry" or "molten-tiberium"
+	local targetAmount = (tier == 1) and 50 or (tier == 2) and 75 or 100
+	local totalOre = 0
+	local CentEnergyRequired = 10 / math.floor(settings.startup["tiberium-value"].value + 0.5)
+	-- Total all resources for the tier
+	for pack in pairs(science[tier]) do
+		sumDicts(resources, allPacks[pack])
+	end
+	-- Check number of fluids and weighted sum the resources
+	for res, amount in pairs(resources) do
+		if amount > 0 then
+			if data.raw.fluid[res] then
+				fluids[res] = amount
+				totalOre = totalOre + (amount * 0.25)
+			else
+				totalOre = totalOre + amount
+			end
+		end
+	end
+	if listLength(fluids) > 1 then
+		log("Uh oh, your tier "..tier.." recipe has "..listLength(fluids).." fluids")
+		--idk what my plan is for handling this case
+	end
+	resources = makeScaledList(resources, targetAmount / math.max(totalOre, 1)) --Scale resources to match tier target amounts
+	
+	for resource, amount in pairs(resources) do
+		if amount < 1 / 128 then  -- Cutoff for amounts too small to scale up
+			resources[resource] = nil
+		elseif amount < 1 then
+			smallResources = smallResources + 1
+		end
+	end
+	--Find recipe multiplier to mitigate impact of later rounding
+	while (smallResources > 1) or (smallResources > 0.2 * listLength(resources)) or (recipeMult == 2048) do
+		recipeMult = 2 * recipeMult
+		smallResources = 0
+		for _, amount in pairs(resources) do
+			if (amount * recipeMult) < 1 then
+				smallResources = smallResources + 1
+			elseif (amount * recipeMult) > 32000 then  -- Don't double if it would put us over stack limit
+				smallResources = 0
+				break
+			end
+		end
+	end
+	-- log("tier "..tier..serpent.block(science[tier]))
+	-- log("multiplier="..recipeMult..serpent.block(resources))
+	--Make actual recipe changes
+	LSlib.recipe.editEngergyRequired("tiberium-"..material.."-centrifuging", CentEnergyRequired * recipeMult)
+	LSlib.recipe.addIngredient("tiberium-"..material.."-centrifuging", item, 16 * recipeMult, (tier > 1) and "fluid" or "item")
+	for resource, amount in pairs(resources) do
+		if (resource ~= "stone") and (amount > 1 / 128) then
+			local rounded = math.ceil(amount * recipeMult)
+			LSlib.recipe.addResult("tiberium-"..material.."-centrifuging", resource, rounded, fluids[resource] and "fluid" or "item")
+		end
+	end
+	if resources["stone"] then
+		local stone = math.ceil(resources["stone"] * recipeMult)
+		LSlib.recipe.duplicate("tiberium-"..material.."-centrifuging", "tiberium-"..material.."-sludge-centrifuging")
+		LSlib.recipe.changeIcon("tiberium-"..material.."-sludge-centrifuging", "__Factorio-Tiberium__/graphics/icons/"..material.."-sludge-centrifuging.png", 32)
+		LSlib.recipe.addResult("tiberium-"..material.."-sludge-centrifuging", "tiberium-sludge", stone, "fluid")
+		LSlib.recipe.addResult("tiberium-"..material.."-centrifuging", "stone", stone, "item")
+	else  -- Don't need sludge recipe if there is no stone to convert
+		data.raw["recipe"]["tiberium-"..material.."-sludge-centrifuging"] = nil
+		local tech = (tier == 1) and "tiberium-separation-tech" or (tier == 2) and "tiberium-processing-tech" or "tiberium-molten-processing"
+		for i, effect in pairs(data.raw["technology"][tech]["effects"]) do
+			if effect.recipe == "tiberium-"..material.."-sludge-centrifuging" then
+				table.remove(data.raw["technology"][tech]["effects"], i)
+				break
+			end
+		end
+	end
+end
+
+function singletonRecipes()
+	-- Lazy insert for rare ores
+	for _, ore in pairs({"uranium-ore", "thorium-ore", "raw-immersite"}) do
+		oreMult[ore] = 1 / 8
+	end
+	for resourceName, resourceData in pairs(data.raw.resource) do
+		if resourceData.autoplace and resourceData.minable then
+			local minableResults = {}
+			if resourceData.minable.result then
+				minableResults[resourceData.minable.result] = true
+			elseif resourceData.minable.results then --For fluids/multiple results
+				for _, result in pairs(resourceData.minable.results) do
+					if result.name then
+						minableResults[result.name] = true
+						if (result.type == "fluid") and not oreMult[result.name] then
+							oreMult[result.name] = 4
+						end
+					end
+				end
+			end
+			for ore in pairs(minableResults) do
+				if ore ~= "tiberium-ore" then
+					addDirectRecipe(ore)
+					addCreditRecipe(ore)
+				end
+			end
+		end
+	end
+end
+
+--Creates recipes to turn Molten Tiberium directly into raw materials
+--Assumes oreMult
+function addDirectRecipe(ore)
+	local recipeName = "tiberium-molten-to-"..ore
+	local oreAmount = math.floor(64 * (oreMult[ore] and oreMult[ore] or 1) + 0.5)
+	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"
+	local tech = data.raw.fluid[ore] and "tiberium-molten-processing" or "tiberium-transmutation-tech"
+	local energy = 12
+	local order = (not oreMult[ore] and "a-" or oreMult[ore] > 1 and "b-" or "c-")..ore
+	
+	LSlib.recipe.duplicate("template-direct", recipeName)
+	LSlib.recipe.addIngredient(recipeName, "molten-tiberium", 16, "fluid")
+	LSlib.recipe.addResult(recipeName, ore, oreAmount, itemOrFluid)
+	LSlib.recipe.setMainResult(recipeName, ore)
+	if settings.startup["tiberium-byproduct-direct"].value then  -- Direct Sludge Waste setting
+		local WastePerCycle = math.max(settings.startup["tiberium-value"].value / 100, 1)
+		LSlib.recipe.addResult(recipeName, "tiberium-sludge", WastePerCycle, "fluid")
+	end
+	LSlib.technology.addRecipeUnlock(tech, recipeName)
+	LSlib.recipe.setEngergyRequired(recipeName, energy)
+	LSlib.recipe.setOrderstring(recipeName, order)
+end
+
+--Creates recipes to turn raw materials into Growth Credits
+--Assumes oreMult
+function addCreditRecipe(ore)
+	local recipeName = ore.."-growth-credit"
+	local oreAmount = settings.startup["tiberium-value"].value * settings.startup["tiberium-growth"].value * (oreMult[ore] and oreMult[ore] or 1)
+	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"
+	local energy = settings.startup["tiberium-growth"].value * settings.startup["tiberium-value"].value
+	local order = (not oreMult[ore] and "a-" or oreMult[ore] > 1 and "b-" or "c-")..ore
+
+	LSlib.recipe.duplicate("template-growth-credit", recipeName)
+	LSlib.recipe.addIngredient(recipeName, ore, oreAmount, itemOrFluid)
+	LSlib.technology.addRecipeUnlock("tiberium-growth-acceleration", recipeName)
+	LSlib.recipe.setEngergyRequired(recipeName, energy)
+	LSlib.recipe.setOrderstring(recipeName, order)
+	if (ore == "coal") or (ore == "copper-ore") or (ore == "iron-ore") or (ore == "stone") or (ore == "crude-oil") or (ore == "uranium-ore") then
+		LSlib.recipe.changeIcon(recipeName, "__Factorio-Tiberium__/graphics/icons/growth-credit-"..ore..".png", 32)
+	end
+end
+
 giantSetupFunction()
+singletonRecipes()
 log("%%% Setup complete beginning recipe parse")
-log("Simplex: "..serpent.block(hybridSolve({["production-science-pack"]=1, ["chemical-science-pack"]=1})))
+fugeTierSetup()
+fugeRecipeTier(1)
+fugeRecipeTier(2)
+fugeRecipeTier(3)
 
--- local fuge1 = {}
--- sumDicts(fuge1, depthFirst("automation-science-pack", 1))
--- sumDicts(fuge1, depthFirst("logistic-science-pack", 1))
--- sumDicts(fuge1, depthFirst("military-science-pack", 1))
-
--- local fuge2 = shallowCopy(fuge1)
--- sumDicts(fuge2, depthFirst("chemical-science-pack", 1))
--- sumDicts(fuge2, depthFirst("production-science-pack", 1))
-
--- local fuge3 = shallowCopy(fuge2)
--- sumDicts(fuge3, depthFirst("utility-science-pack", 1))
--- sumDicts(fuge3, depthFirst("space-science-pack", 1))
-
--- log("Old red sci: "..serpent.block(depthFirst("automation-science-pack", 1)))
--- log("New red sci: "..serpent.block(breadthFirst({["automation-science-pack"]=1})))
-
--- log("Old green sci: "..serpent.block(depthFirst("logistic-science-pack", 1)))
--- log("New green sci: "..serpent.block(breadthFirst({["logistic-science-pack"]=1})))
-
--- log("Old blue sci: "..serpent.block(depthFirst("chemical-science-pack", 1)))
--- log("New blue sci: "..serpent.block(breadthFirst({["chemical-science-pack"]=1})))
-
--- log("Old space sci: "..serpent.block(depthFirst("space-science-pack", 1)))
--- log("New space sci: "..serpent.block(breadthFirst({["space-science-pack"]=1})))
-
---log("Old space sci: "..serpent.block(depthFirst("rocket-fuel", 1)))
--- local fuelRecipesUsed = {}
--- local fuelIntermediates = {}
--- log("New fuel: "..serpent.block(breadthFirst({["rocket-fuel"]=1}, fuelRecipesUsed, fuelIntermediates)))
--- log("Fuel intermediates: "..listLength(fuelIntermediates))
--- log("Fuel recipes: "..listLength(fuelRecipesUsed))
-
---solveRecipeLP({["rocket-fuel"]=1})
--- log("Fuge Level 2: "..serpent.block(fuge2))
--- log("Fuge Level 3: "..serpent.block(fuge3))
-
---log("Free recipes: "..serpent.block(free))
--- log("Multiple recipes: "..serpent.block(multipleRecipes))
---log("Depths: "..serpent.block(ingredientDepth))
---log("Multiple recipe table: "..serpent.block(multipleRecipes))
---log("Raw resources: "..serpent.block(rawResources))
+-- Clean up templates
+data.raw.recipe["template-direct"] = nil
+data.raw.recipe["template-growth-credit"] = nil

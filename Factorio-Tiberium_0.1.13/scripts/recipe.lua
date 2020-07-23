@@ -797,6 +797,7 @@ data:extend(
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
 	  always_show_made_in = true,
+	  always_show_products = true,
       order = "a[fluid-chemistry]-f[heavy-oil-cracking]"
     },
     {
@@ -815,6 +816,7 @@ data:extend(
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
 	  always_show_made_in = true,
+	  always_show_products = true,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
     {
@@ -833,6 +835,7 @@ data:extend(
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
 	  always_show_made_in = true,
+	  always_show_products = true,
       order = "c[fluid-chemistry]-f[heavy-oil-cracking]"
     },
 	{
@@ -852,6 +855,7 @@ data:extend(
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
 	  always_show_made_in = true,
+	  always_show_products = true,
       order = "d"
     },
     {
@@ -870,6 +874,7 @@ data:extend(
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
 	  always_show_made_in = true,
+	  always_show_products = true,
       order = "e"
     },
     {
@@ -888,6 +893,7 @@ data:extend(
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
 	  always_show_made_in = true,
+	  always_show_products = true,
       order = "f"
     },
 --Growth Credits

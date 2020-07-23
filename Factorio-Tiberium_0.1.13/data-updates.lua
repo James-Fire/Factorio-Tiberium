@@ -1,20 +1,76 @@
 --Orbital Ion Cannon
-if (mods["Orbital Ion Cannon"]) then
-	log("found Ion Cannon")
-	LSlib.technology.addPrerequisite("orbital-ion-cannon", "tiberium-power-tech")
-	if (mods["bobwarfare"]) then
+if mods["Orbital Ion Cannon"] then
+	LSlib.technology.addPrerequisite("orbital-ion-cannon", "tiberium-military-2")
+	if mods["bobwarfare"] then
 		LSlib.recipe.editIngredient("orbital-ion-cannon", "bob-laser-turret-5", "tiberium-ion-core", 1)
 	else
 		LSlib.recipe.editIngredient("orbital-ion-cannon", "laser-turret", "tiberium-ion-core", 1)
 	end
 end
 
-
 if mods["Krastorio2"] then
+	-- Balance changes to match Krastorio
+	data.raw["electric-turret"]["ion-turret"]["energy_source"]["drain"] = "100kW"
+	data.raw["electric-turret"]["ion-turret"]["attack_parameters"]["cooldown"] = 30 -- Ion Turret to 2 APS
+	data.raw["electric-turret"]["ion-turret"]["attack_parameters"]["damage_modifier"] = 12 -- Damage to 120
+	
+	-- Fix our infinites to match
+	local techPairs = {{tib = "tiberium-explosives", copy = "stronger-explosives-7", max_level = 4},
+					   {tib = "tiberium-energy-weapons-damage", copy = "energy-weapons-damage-7", max_level = 4},
+					   {tib = "tiberium-explosives-5", copy = "stronger-explosives-11", max_level = 9},
+					   {tib = "tiberium-energy-weapons-damage-5", copy = "energy-weapons-damage-11", max_level = 9},
+					   {tib = "tiberium-explosives-10", copy = "stronger-explosives-16", max_level = "infinite"},
+					   {tib = "tiberium-energy-weapons-damage-10", copy = "energy-weapons-damage-16", max_level = "infinite"}}
+	
+	data.raw["technology"]["tiberium-explosives-5"] = table.deepcopy(data.raw["technology"]["tiberium-explosives"])
+	data.raw["technology"]["tiberium-explosives-5"].prerequisites = {"tiberium-explosives"}
+	data.raw["technology"]["tiberium-explosives-10"] = table.deepcopy(data.raw["technology"]["tiberium-explosives"])
+	data.raw["technology"]["tiberium-explosives-10"].prerequisites = {"tiberium-explosives-5"}
+	data.raw["technology"]["tiberium-energy-weapons-damage-5"] = table.deepcopy(data.raw["technology"]["tiberium-energy-weapons-damage"])
+	data.raw["technology"]["tiberium-energy-weapons-damage-5"].prerequisites = {"tiberium-energy-weapons-damage"}
+	data.raw["technology"]["tiberium-energy-weapons-damage-10"] = table.deepcopy(data.raw["technology"]["tiberium-energy-weapons-damage"])
+	data.raw["technology"]["tiberium-energy-weapons-damage-10"].prerequisites = {"tiberium-energy-weapons-damage-5"}
+	
+	for _, techs in pairs(techPairs) do
+		local level, _ = string.gsub(techs.tib, "%D", "")
+		level = tonumber(level) or 1
+		data.raw["technology"][techs.tib].unit.count_formula = "((L-"..tostring(level - 1)..")^2)*3000"
+		data.raw["technology"][techs.tib].unit.ingredients = table.deepcopy(data.raw["technology"][techs.copy].unit.ingredients)
+		table.insert(data.raw["technology"][techs.tib].unit.ingredients, {"tiberium-science", 1})
+		data.raw["technology"][techs.tib].max_level = techs.max_level
+		data.raw["technology"][techs.tib].effects = table.deepcopy(data.raw["technology"][techs.copy].effects)
+		data.raw["technology"][techs.tib].name = techs.tib
+	end
+	
 	-- Make Krastorio stop removing Tiberium Science Packs from our techs
+	local science_pack_incompatibilities = {
+			["basic-tech-card"] = true,
+			["automation-science-pack"] = true,
+			["logistic-science-pack"] = true,
+			["military-science-pack"] = true,
+			["chemical-science-pack"] = true
+		}
 	for technology_name, technology in pairs(data.raw.technology) do
 		if string.sub(technology_name, 1, 9) == "tiberium-" then
 			technology.check_science_packs_incompatibilities = false
+			-- Do a version of pack incompatibilities
+			local ingredients = technology.unit.ingredients
+			if ingredients and #ingredients > 1 then
+				local has_space = false
+				for i = 1, #ingredients do
+					if ingredients[i][1] == "space-science-pack" then
+						has_space = true
+						break
+					end
+				end
+				if has_space then
+					for i = #ingredients, 1, -1 do
+						if science_pack_incompatibilities[ingredients[i][1]] then
+							table.remove(ingredients, i)
+						end
+					end
+				end
+			end
 		end
 	end
 	
@@ -51,71 +107,84 @@ if mods["Krastorio2"] then
 	end
 end
 
-TibBasicScience = {"chemical-plant", "assembling-machine-1", "assembling-machine-2", "assembling-machine-3"}
-if (mods["bobassembly"]) then
-	table.insert(TibBasicScience, "chemical-plant-2")
-	table.insert(TibBasicScience, "chemical-plant-3")
-	table.insert(TibBasicScience, "chemical-plant-4")
+if mods["MoreScience"] then
+	for techName, techData in pairs(data.raw.technology) do
+		if string.sub(techName, 1, 9) == "tiberium-" then
+			-- Most techs have the new science packs added to them
+			if (techName ~= "tiberium-mechanical-research") and (techName ~= "tiberium-separation-tech")
+					and (techName ~= "tiberium-military-1") and (techName ~= "tiberium-thermal-research") then
+				table.insert(techData.unit.ingredients, {"electric-power-science-pack", 1})
+			end
+			if (techName ~= "tiberium-mechanical-research") and (techName ~= "tiberium-separation-tech") then
+				table.insert(techData.unit.ingredients, {"advanced-automation-science-pack", 1})
+			end
+			-- Take our repeatable techs and swap them to infused packs
+			if techData.max_level and (techData.max_level == "infinite") then
+				for key, pack in pairs(techData.unit.ingredients) do
+					if data.raw.tool["infused-"..pack[1]] then
+						pack[1] = "infused-"..pack[1]
+						if data.raw.technology[pack[1]] then
+							log("add prereq "..pack[1])
+							table.insert(techData.prerequisites, pack[1])
+						end
+					end
+				end
+			end
+		end
+	end
 end
 
-if (mods["angelspetrochem"]) then
+if mods["omnimatter"] then
+	LSlib.recipe.editIngredient("tib-spike", "pumpjack", "offshore-pump", 1)
+end
+
+local TibBasicScience = {"chemical-plant", "assembling-machine-1", "assembling-machine-2", "assembling-machine-3"}
+local TibScience = {"chemical-plant"}
+
+if mods["angelspetrochem"] then	
 	table.insert(TibBasicScience, "angels-chemical-plant")
 	table.insert(TibBasicScience, "angels-chemical-plant-2")
 	table.insert(TibBasicScience, "angels-chemical-plant-3")
 	table.insert(TibBasicScience, "angels-chemical-plant-4")
 	table.insert(TibBasicScience, "advanced-chemical-plant")
 	table.insert(TibBasicScience, "advanced-chemical-plant-2")
-end
-
-for i, name in pairs(TibBasicScience) do
-	LSlib.entity.addCraftingCategory("assembling-machine", name, "basic-tiberium-science")
-end
-
---table.insert(data.raw["assembling-machine"][entity].crafting_categories, "basic-tiberium-science")
-TibScience = {"chemical-plant"}
-
-if (mods["bobassembly"]) then
-	table.insert(TibScience, "chemical-plant-2")
-	table.insert(TibScience, "chemical-plant-3")
-	table.insert(TibScience, "chemical-plant-4")
-end
-
-if (mods["angelspetrochem"]) then
+	
 	table.insert(TibScience, "angels-chemical-plant")
 	table.insert(TibScience, "angels-chemical-plant-2")
 	table.insert(TibScience, "angels-chemical-plant-3")
 	table.insert(TibScience, "angels-chemical-plant-4")
 	table.insert(TibScience, "advanced-chemical-plant")
 	table.insert(TibScience, "advanced-chemical-plant-2")
+	--Replace the vanilla Chemical Plant with one of Angel's, cause apparently it's too hard to simply use the vanilla one.
+	LSlib.recipe.editIngredient("tiberium-plant", "chemical-plant", "angels-chemical-plant-2", 1)
 end
 
-for _,TS in pairs(TibScience) do
-	LSlib.entity.addCraftingCategory("assembling-machine", TS, "tiberium-science")
-end
---table.insert(data.raw["assembling-machine"][entity].crafting_categories, "tiberium-science")
-
-if (mods["omnimatter"]) then
-	LSlib.recipe.editIngredient("tib-spike", "pumpjack", "offshore-pump", 1)
-end
-
---Helper function
---Returns the key for a given value in a given table or false if it doesn't exist
-function find_value_in_table(list, value)
-	if not list then return false end
-	if not value then return false end
-	for k, v in pairs(list) do
-		if v == value then return k end
-	end
-	return false
+if mods["bobassembly"] then
+	table.insert(TibBasicScience, "chemical-plant-2")
+	table.insert(TibBasicScience, "chemical-plant-3")
+	table.insert(TibBasicScience, "chemical-plant-4")
+	
+	table.insert(TibScience, "chemical-plant-2")
+	table.insert(TibScience, "chemical-plant-3")
+	table.insert(TibScience, "chemical-plant-4")
 end
 
---Adding Tib Science to all labs
+for _, assembler in pairs(TibBasicScience) do
+	LSlib.entity.addCraftingCategory("assembling-machine", assembler, "basic-tiberium-science")
+end
+for _, assembler in pairs(TibScience) do
+	LSlib.entity.addCraftingCategory("assembling-machine", assembler, "tiberium-science")
+end
+
+-- Below code isn't specific to any single mod
+
+-- Adding Tib Science to all labs
 local tibComboPacks = {}  -- List of packs that need to be processed in the same lab as Tib Science
 for _, tech in pairs({"tiberium-control-network-tech", "tiberium-explosives"}) do
 	for _, ingredient in pairs(data.raw.technology[tech].unit.ingredients) do
 		local pack = ingredient[1]
 		if pack == "tiberium-science" then -- Don't add Tib Science
-		elseif not find_value_in_table(tibComboPacks, pack) then  -- Don't add duplicates
+		elseif not LSlib.utils.table.hasValue(tibComboPacks, pack) then  -- Don't add duplicates
 			table.insert(tibComboPacks, pack)
 		end
 	end
@@ -123,9 +192,9 @@ end
 
 for labName, labData in pairs(data.raw.lab) do
 	local addTib = false
-	if not find_value_in_table(labData.inputs, "tiberium-science") then -- Must not already allow Tib Science
+	if not LSlib.utils.table.hasValue(labData.inputs or {}, "tiberium-science") then -- Must not already allow Tib Science
 		for _, pack in pairs(tibComboPacks) do  -- Must use packs from combo list so we don't hit things like module labs
-			if find_value_in_table(labData.inputs, pack) then
+			if LSlib.utils.table.hasValue(labData.inputs or {}, pack) then
 				addTib = true
 				break
 			end
@@ -133,7 +202,6 @@ for labName, labData in pairs(data.raw.lab) do
 	end
 	if addTib then table.insert(data.raw.lab[labName].inputs, "tiberium-science") end
 end
-
 --[[if (mods["bobassembly"]) then
 		for _,chemicalName in pairs{
 			"chemical-plant",
@@ -190,6 +258,12 @@ end]]
 	}
 	--data.raw["unit"][bot_name].icon = 
 end]]
+-- Add Tiberium resistance to armors
+for name, armor in pairs(data.raw.armor) do
+	if name ~= "tiberium-armor" then
+		for _, resistance in pairs (armor.resistances or {}) do
+			if resistance.type == "acid" then
+
 
 for _, armor in pairs(data.raw.armor) do
 	log("found armor")
@@ -204,7 +278,3 @@ for _, armor in pairs(data.raw.armor) do
 		end
 	end
 end
-
---[[for _, poles in pairs(data.raw.electric-pole) do
-	table.insert(electric-pole.resistances, {type= "tiberium", decrease = 10, percent = 50})
-end]]
