@@ -10,5 +10,10 @@
   "recipe":
   [
 	["tiberium-magazine", "tiberium-rounds-magazine"]
+  ],
+  "mod-setting":
+  [
+	["debug-text", "tiberium-debug-text"],
+	["biters-immune-to-tiberium-damage", "tiberium-wont-damage-biters"]
   ]
 }

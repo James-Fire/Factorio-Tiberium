@@ -23,6 +23,15 @@ local resultIndex = {}
 local science = {{}, {}, {}}
 local allPacks = {}
 local oreMult = {}
+-- Lazy insert for rare ores
+oreMult["uranium-ore"] = 1 / 8
+if mods["bobores"] then
+	oreMult["thorium-ore"] = 1 / 8
+end
+if mods["Krastorio2"] then
+	oreMult["raw-imersite"] = 1 / 8
+	oreMult["raw-rare-metals"] = 1 / 8
+end
 
 -- Assumes: excludedCrafting
 -- Modifies: rawResources, availableRecipes, free, ingredientIndex, resultIndex, catalyst, ingredientDepth, recipeDepth
@@ -839,13 +848,13 @@ function fugeRecipeTier(tier)
 			LSlib.recipe.addResult("tiberium-"..material.."-centrifuging", resource, rounded, fluids[resource] and "fluid" or "item")
 		end
 	end
-	if resources["stone"] then
+	if resources["stone"] and (listLength(fluids) < 2) then
 		local stone = math.ceil(resources["stone"] * recipeMult)
 		LSlib.recipe.duplicate("tiberium-"..material.."-centrifuging", "tiberium-"..material.."-sludge-centrifuging")
 		LSlib.recipe.changeIcon("tiberium-"..material.."-sludge-centrifuging", "__Factorio-Tiberium__/graphics/icons/"..material.."-sludge-centrifuging.png", 32)
 		LSlib.recipe.addResult("tiberium-"..material.."-sludge-centrifuging", "tiberium-sludge", stone, "fluid")
 		LSlib.recipe.addResult("tiberium-"..material.."-centrifuging", "stone", stone, "item")
-	else  -- Don't need sludge recipe if there is no stone to convert
+	else  -- Don't create sludge recipe if there is no stone to convert or we don't have enough fluid boxes
 		data.raw["recipe"]["tiberium-"..material.."-sludge-centrifuging"] = nil
 		local tech = (tier == 1) and "tiberium-separation-tech" or (tier == 2) and "tiberium-processing-tech" or "tiberium-molten-processing"
 		for i, effect in pairs(data.raw["technology"][tech]["effects"]) do
@@ -858,10 +867,6 @@ function fugeRecipeTier(tier)
 end
 
 function singletonRecipes()
-	-- Lazy insert for rare ores
-	for _, ore in pairs({"uranium-ore", "thorium-ore", "raw-immersite"}) do
-		oreMult[ore] = 1 / 8
-	end
 	for resourceName, resourceData in pairs(data.raw.resource) do
 		if resourceData.autoplace and resourceData.minable then
 			local minableResults = {}

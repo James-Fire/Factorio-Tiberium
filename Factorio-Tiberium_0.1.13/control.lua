@@ -79,9 +79,8 @@ local TiberiumGrowth = settings.startup["tiberium-growth"].value * 10
 local TiberiumMaxPerTile = settings.startup["tiberium-growth"].value * 100 --Force 10:1 ratio with growth
 local TiberiumRadius = 20 + settings.startup["tiberium-spread"].value * 0.4 --Translates to 20-60 range
 local TiberiumSpread = settings.startup["tiberium-spread"].value
-local bitersImmune = settings.startup["biters-immune-to-tiberium-damage"]
-local debugText = settings.startup["debug-text"].value
---In order to make something debug only, use "if settings.startup["debug-text"].value == true then", and activate the debug-setting startup option.
+local bitersImmune = settings.startup["tiberium-wont-damage-biters"].value
+local debugText = settings.startup["tiberium-debug-text"].value
 
 script.on_load(function()
   init_events()
