@@ -291,7 +291,7 @@ data:extend
 			},
 			{
 				type = "unlock-recipe",
-				recipe = "energy-growth-credit"
+				recipe = "tiberium-growth-credit-from-energy"
 			},
 			{
 				type = "unlock-recipe",

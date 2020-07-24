@@ -24,7 +24,7 @@ LSlib.recipe.addIngredient("tiberium-rounds-magazine", "tiberium-ore", math.max(
 LSlib.recipe.setEngergyRequired("tiberium-ore-processing", RefineEnergyRequired)
 LSlib.recipe.setEngergyRequired("molten-tiberium-processing", RefineEnergyRequired)
 LSlib.recipe.setEngergyRequired("tiberium-liquid-processing", RefineEnergyRequired * 24)
-LSlib.recipe.setEngergyRequired("energy-growth-credit", EnergyCreditCost)
+LSlib.recipe.setEngergyRequired("tiberium-growth-credit-from-energy", EnergyCreditCost)
 LSlib.recipe.addResult("tiberium-farming", "tiberium-ore", 100 + (OrePerCredit * 0.5), "item") --Changed this so the 100 base tiberium ore isn't multiplied
 LSlib.recipe.addResult("tiberium-farming", "tiberium-data", OrePerCredit * 0.1, "item")
 

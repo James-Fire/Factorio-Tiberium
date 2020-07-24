@@ -4,7 +4,7 @@
 
 --Set these manually
 local free = {["water"] = true, ["wood"] = true, ["steam"] = true}
-if mods["Krastorio2"] then free["matter"] = false end
+local fromThinAir = {}
 local excludedCrafting = {["barreling-pump"] = true} --Rigorous way to do this?
 --Debugging for findRecipe
 local unreachable = {}
@@ -31,6 +31,12 @@ end
 if mods["Krastorio2"] then
 	oreMult["raw-imersite"] = 1 / 8
 	oreMult["raw-rare-metals"] = 1 / 8
+end
+if mods["dark-matter-replicators-18"] then
+	oreMult["dmr18-tenemut"] = 1 / 32
+end
+if mods["dark-matter-replicators-18-patch"] then
+	oreMult["tenemut"] = 1 / 32
 end
 
 -- Assumes: excludedCrafting
@@ -75,7 +81,7 @@ function giantSetupFunction()
 			availableRecipes[recipeName] = nil
 		elseif recipe.subgroup and (string.find(recipe.subgroup, "empty%-barrel") or string.find(recipe.subgroup, "barrel%-empty")) then -- Hope other mods have good naming
 			availableRecipes[recipeName] = nil
-		elseif string.find(recipeName, "tiberium") or string.find(recipeName, "coal%-liquefaction") then  -- Want non-tib recipes only for fuge stuff
+		elseif string.find(recipeName, "tiberium") then  -- Want only non-tib recipes for fuge stuff
 			availableRecipes[recipeName] = nil
 		end
 	end
@@ -83,6 +89,8 @@ function giantSetupFunction()
 	for _, pump in pairs(data.raw["offshore-pump"]) do
 		if pump.fluid then free[pump.fluid] = true end
 	end
+	local cachedFree = table.deepcopy(free)  -- Cache list in case we encounter transmutation degeneracy
+	
 	for recipeName in pairs(availableRecipes) do
 		local ingredientList = normalIngredients(recipeName)
 		local resultList     = normalResults(recipeName)
@@ -92,6 +100,7 @@ function giantSetupFunction()
 				if not free[result] then
 					free[result] = true
 					--log(result.." is free because there are no ingredients for "..recipeName)
+					fromThinAir[result] = recipeName
 				end
 			end
 		else
@@ -103,9 +112,9 @@ function giantSetupFunction()
 		end
 	end
 	local newFreeItems = table.deepcopy(free)
-	local countFreeLoops = 0
+	--local countFreeLoops = 0
 	while next(newFreeItems) do
-		countFreeLoops = countFreeLoops + 1
+		--countFreeLoops = countFreeLoops + 1
 		--log("On loop#"..countFreeLoops.." there were "..listLength(newFreeItems).." new free items")
 		local nextLoopFreeItems = {}
 		for freeItem in pairs(newFreeItems) do
@@ -131,16 +140,29 @@ function giantSetupFunction()
 		newFreeItems = nextLoopFreeItems
 	end
 	-- Setup for depth calculations
+	local basicMaterials = table.deepcopy(rawResources)
+	local checkedRockets = false
+	local checkedTranmutation = true
+	local freeResources = 0
+	for material in pairs(rawResources) do -- Sanity check
+		ingredientDepth[material] = 0 -- idk if resources should be 1 and only free should be 0?
+		if free[material] then
+			freeResources = freeResources + 1
+			log("^^^ You have a free resource: "..material)
+		end
+	end
+	if freeResources > (listLength(rawResources) - 1) * 0.6 then  --Excluding tib
+		log(freeResources.."/"..listLength(rawResources).." resources are free, other transmutation mod suspected")
+		checkedTransmutation = false
+		free = table.deepcopy(cachedFree)
+		for item in pairs(cachedFree) do  -- Include in first level of recipe tree building, since we no longer have free tree
+			basicMaterials[item] = true
+		end
+	end
 	for item, bool in pairs(free) do
 		if bool then ingredientDepth[item] = 0 end
 	end
-	for material in pairs(rawResources) do -- Sanity check
-		ingredientDepth[material] = 0 -- But not free, idk if that means they should be 1 and free should be 0?
-		if free[material] then log("^^^ You have a free resource: "..material) end
-	end
 	-- Now iteratively build up recipes starting from raw resources
-	local basicMaterials = table.deepcopy(rawResources)
-	local checkedRockets = false
 	while next(basicMaterials) do
 		local nextMaterials = {}
 		for material in pairs(basicMaterials) do
@@ -169,11 +191,11 @@ function giantSetupFunction()
 								if data.raw.item[result] then
 									local burntResult = data.raw.item[result].burnt_result
 									if burntResult then -- Fake recipe for burning fuel
-										fakeRecipes["dummy-recipe-burning-"..result] = true
-										availableRecipes["dummy-recipe-burning-"..result] = {ingredient = {[result] = 1},
-																							 result = {[burntResult] = 1}}
+										local fakeRecipeName = "dummy-recipe-burning-"..result
+										fakeRecipes[fakeRecipeName] = true
+										availableRecipes[fakeRecipeName] = {ingredient = {[result] = 1}, result = {[burntResult] = 1}}
 										if not resultIndex[burntResult] then resultIndex[burntResult] = {} end
-										resultIndex[burntResult]["dummy-recipe-burning-"..result] = true
+										resultIndex[burntResult][fakeRecipeName] = true
 										if not ingredientDepth[burntResult] then
 											ingredientDepth[burntResult] = maxIngredientLevel + 2
 											nextMaterials[burntResult] = true
@@ -192,18 +214,28 @@ function giantSetupFunction()
 				if satelliteData.rocket_launch_product then
 					local partName = next(normalResults(data.raw["rocket-silo"]["rocket-silo"].fixed_recipe))
 					local numParts = data.raw["rocket-silo"]["rocket-silo"].rocket_parts_required or 1
-					local depth = math.max(ingredientDepth[satellite] or 99, ingredientDepth[partName] or 99)
+					local depth = math.max(ingredientDepth[satellite] or 999, ingredientDepth[partName] or 999)
 					local launchProduct = satelliteData.rocket_launch_product[1] or satelliteData.rocket_launch_product.name
 					local launchAmount  = satelliteData.rocket_launch_product[2] or satelliteData.rocket_launch_product.amount
 					if launchProduct then  -- Fake recipe for rockets
+						local fakeRecipeName = "dummy-recipe-launching-"..satellite
 						ingredientDepth[launchProduct] = depth + 1
+						recipeDepth[fakeRecipeName] = depth + 1
 						nextMaterials[launchProduct] = true
-						fakeRecipes["dummy-recipe-launching-"..satellite] = true
-						availableRecipes["dummy-recipe-launching-"..satellite] = {ingredient = {[satellite] = 1, [partName] = numParts},
-																				  result = {[launchProduct] = launchAmount}}
+						fakeRecipes[fakeRecipeName] = true
+						availableRecipes[fakeRecipeName] = {ingredient = {[satellite] = 1, [partName] = numParts}, result = {[launchProduct] = launchAmount}}
 						if not resultIndex[launchProduct] then resultIndex[launchProduct] = {} end
-						resultIndex[launchProduct]["dummy-recipe-launching-"..satellite] = true
+						resultIndex[launchProduct][fakeRecipeName] = true
 					end
+				end
+			end
+		elseif not next(nextMaterials) and not checkedTransmutation then
+			checkedTransmutation = true
+			for item in pairs(fromThinAir) do  -- Repopulate with items that have no normal recipes
+				if not resultIndex[item] and not rawResources[item] then
+					free[item] = true
+					ingredientDepth[item] = 0
+					nextMaterials[item] = true
 				end
 			end
 		end
@@ -237,7 +269,7 @@ function findRecipe(item, itemList)
 						if itemList and itemList[result] and itemList[result] > 0 then  -- Bonus if other output is useful
 							penalty = penalty - 20
 						else
-							penalty = penalty - 5  -- Penalize or reward excess products?
+							penalty = penalty + 5  -- Penalize or reward excess products?
 						end
 					end
 				end
@@ -250,20 +282,6 @@ function findRecipe(item, itemList)
 				table.insert(recipes, {name=recipeName, count=resultList[item], penalty=penalty})
 			else  -- If it isn't reachable, don't use it.  Since we won't be able to break it down
 				table.insert(unreachable, recipeName)
-			end
-		end
-	end
-
-	--Fall back to rocket silo recipes if needed (just space science in vanilla)
-	if #recipes == 0 and not data.raw.fluid[item] then
-		for satellite, satelliteData in pairs(data.raw.item) do
-			if satelliteData.rocket_launch_product and ((satelliteData.rocket_launch_product[1] or satelliteData.rocket_launch_product.name) == item) then
-				local recipeName = "dummy-recipe-launching-"..satellite
-				local recipeCount = availableRecipes[recipeName]["result"][item]
-				return recipeName, recipeCount
-			elseif satelliteData.burnt_result == item then -- Mainly for fuel cell shennanigans
-				local recipeName = "dummy-recipe-burning-"..satellite
-				return recipeName, 1
 			end
 		end
 	end
@@ -918,7 +936,7 @@ end
 --Creates recipes to turn raw materials into Growth Credits
 --Assumes oreMult
 function addCreditRecipe(ore)
-	local recipeName = ore.."-growth-credit"
+	local recipeName = "tiberium-growth-credit-from-"..ore
 	local oreAmount = settings.startup["tiberium-value"].value * settings.startup["tiberium-growth"].value * (oreMult[ore] and oreMult[ore] or 1)
 	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"
 	local energy = settings.startup["tiberium-growth"].value * settings.startup["tiberium-value"].value
