@@ -80,6 +80,7 @@ local TiberiumMaxPerTile = settings.startup["tiberium-growth"].value * 100 --For
 local TiberiumRadius = 20 + settings.startup["tiberium-spread"].value * 0.4 --Translates to 20-60 range
 local TiberiumSpread = settings.startup["tiberium-spread"].value
 local bitersImmune = settings.startup["tiberium-wont-damage-biters"].value
+local ItemDamageScale = settings.startup["tiberium-item-damage-scale"].value
 local debugText = settings.startup["tiberium-debug-text"].value
 
 script.on_load(function()
@@ -642,7 +643,7 @@ script.on_nth_tick(10, function(event) --Player damage 6 times per second
 		if not player.valid or not player.character then break end
 		--Damage players that are standing on Tiberium Ore and not in vehicles
 		local nearby_ore_count = player.surface.count_entities_filtered{name = "tiberium-ore", position = player.position, radius = 1.5}
-		if nearby_ore_count > 0 and not player.character.vehicle then
+		if nearby_ore_count > 0 and not player.character.vehicle and not player.character.name == "jetpack-flying" then
 			player.character.damage(TiberiumDamage * nearby_ore_count * 0.1, game.forces.tiberium, "tiberium")
 		end
 		--Damage players with unsafe Tiberium products in their inventory
@@ -650,8 +651,13 @@ script.on_nth_tick(10, function(event) --Player damage 6 times per second
 		if inventory then
 			for p = 1, #global.tiberiumProducts do
 				if inventory.get_item_count(global.tiberiumProducts[p]) > 0 then
-					player.character.damage(TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")
-					break
+					if ItemDamageScale then
+						local tiberium_item_count = inventory.get_item_count(global.tiberiumProducts[p])
+						player.character.damage(tiberium_item_count * TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")	
+						else inventory.get_item_count(global.tiberiumProducts[p]) > 0 then
+							player.character.damage(TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")
+							break
+					end
 				end
 			end
 		end
@@ -830,7 +836,7 @@ script.on_event(defines.events.on_player_created, function(event)
 
 	local player = game.players[event.player_index]
 
-	if settings.startup["tiberium-advanced-start"].value then
+	if settings.startup["tiberium-advanced-start"].value or settings.startup["tiberium-ore-removal"].value then
 		give_player_items(player, tiberium_start)
 		player.force.technologies["tiberium-mechanical-research"].researched = true
 		player.force.technologies["tiberium-separation-tech"].researched = true

@@ -21,7 +21,7 @@ end]]
 
 require("science")
 
-if settings.startup["tiberium-advanced-start"].value then
+if settings.startup["tiberium-ore-removal"].value then
 	--for _, ore in pairs(data.raw["autoplace-control"]) do
 	for _, gen in pairs(data.raw["resource"]) do
 		if gen.name == "tibGrowthNode" then
