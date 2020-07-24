@@ -85,5 +85,19 @@ data:extend(
     default_value = false,
 	order = "z",
   },
+  {
+    type = "bool-setting",
+    name = "tiberium-ore-removal",
+    setting_type = "startup",
+    default_value = false,
+	order = "z",
+  },
+  {
+    type = "bool-setting",
+    name = "tiberium-item-damage-scale",
+    setting_type = "startup",
+    default_value = false,
+	order = "z",
+  },
 }
 )
