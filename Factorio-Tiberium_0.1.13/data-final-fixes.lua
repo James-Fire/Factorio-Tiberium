@@ -19,7 +19,9 @@ for _, pre in pairs(data.raw["map-gen-presets"].default) do
 	end
 end]]
 
-if settings.startup["tiberium-advanced-start"].value then
+require("science")
+
+if settings.startup["tiberium-ore-removal"].value then
 	--for _, ore in pairs(data.raw["autoplace-control"]) do
 	for _, gen in pairs(data.raw["resource"]) do
 		if gen.name == "tibGrowthNode" then
@@ -47,5 +49,3 @@ if settings.startup["tiberium-advanced-start"].value then
 		end
 	end
 end
-
-require("science")

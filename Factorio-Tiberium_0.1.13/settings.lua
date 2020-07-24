@@ -2,7 +2,7 @@ data:extend(
 {
   {
     type = "bool-setting",
-    name = "debug-text",
+    name = "tiberium-debug-text",
     setting_type = "startup",
     default_value = false,
 	order = "c1",
@@ -16,7 +16,7 @@ data:extend(
   },
   {
     type = "bool-setting",
-    name = "biters-immune-to-tiberium-damage",
+    name = "tiberium-wont-damage-biters",
     setting_type = "startup",
     default_value = true,
 	order = "b2",
@@ -41,14 +41,6 @@ data:extend(
     setting_type = "startup",
     default_value = false,
 	order = "b5",
-  },
-  {
-    type = "int-setting",
-    name = "growth-credit",
-    setting_type = "startup",
-    default_value = 20,
-    minimum_value = 1,
-    maximum_value = 100,
   },
   {
     type = "int-setting",
@@ -89,6 +81,20 @@ data:extend(
   {
     type = "bool-setting",
     name = "tiberium-advanced-start",
+    setting_type = "startup",
+    default_value = false,
+	order = "z",
+  },
+  {
+    type = "bool-setting",
+    name = "tiberium-ore-removal",
+    setting_type = "startup",
+    default_value = false,
+	order = "z",
+  },
+  {
+    type = "bool-setting",
+    name = "tiberium-item-damage-scale",
     setting_type = "startup",
     default_value = false,
 	order = "z",
