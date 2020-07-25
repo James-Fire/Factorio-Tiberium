@@ -80,7 +80,7 @@ local TiberiumMaxPerTile = settings.startup["tiberium-growth"].value * 100 --For
 local TiberiumRadius = 20 + settings.startup["tiberium-spread"].value * 0.4 --Translates to 20-60 range
 local TiberiumSpread = settings.startup["tiberium-spread"].value
 local bitersImmune = settings.startup["tiberium-wont-damage-biters"].value
-local ItemDamageScale = settings.startup["tiberium-item-damage-scale"].value
+local ItemDamageScale = settings.global["tiberium-item-damage-scale"].value
 local debugText = settings.startup["tiberium-debug-text"].value
 
 script.on_load(function()
@@ -653,10 +653,10 @@ script.on_nth_tick(10, function(event) --Player damage 6 times per second
 				if inventory.get_item_count(global.tiberiumProducts[p]) > 0 then
 					if ItemDamageScale then
 						local tiberium_item_count = inventory.get_item_count(global.tiberiumProducts[p])
-						player.character.damage(tiberium_item_count * TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")	
-						else inventory.get_item_count(global.tiberiumProducts[p]) > 0 then
-							player.character.damage(TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")
-							break
+						player.character.damage(math.ceil(tiberium_item_count/50) * TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")	
+					elseif inventory.get_item_count(global.tiberiumProducts[p]) > 0 then
+						player.character.damage(TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")
+						break
 					end
 				end
 			end

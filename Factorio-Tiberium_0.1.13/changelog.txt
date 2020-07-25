@@ -10,6 +10,7 @@ Version: 0.1.13
 	- Fixed an on cofig thing so you should be able to switch from main branch to the beta without issue in an ongoing save.
 	- Earendel's Jetpack Character is not damaged when flying over tiberium.
 	- Fixed the Tib only start breaking fuge recipes
+	- Temp fix infinite nodes being deleted.
   Changes:	
 	- Updated minimum base game version to 18.27
 	- Added descriptions for remaining entities
