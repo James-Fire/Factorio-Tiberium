@@ -910,7 +910,7 @@ data:extend(
       results = {
         {type = "item", name = "growth-credit", amount = 1},
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/energy-growth-credit.png",
+      icon = "__Factorio-Tiberium__/graphics/icons/growth-credit.png",
       icon_size = 32,
 	  allow_decomposition = false,
       order = "c",
@@ -918,7 +918,7 @@ data:extend(
     },
 	{
       type = "recipe",
-      name = "energy-growth-credit",
+      name = "tiberium-growth-credit-from-energy",
       category = "chemistry",
 	  subgroup = "a-growth-credits",
 	  crafting_machine_tint = TibCraftingTint,
@@ -929,7 +929,7 @@ data:extend(
       results = {
         {type = "item", name = "growth-credit", amount = 1},
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/energy-growth-credit.png",
+      icon = "__Factorio-Tiberium__/graphics/icons/growth-credit.png",
       icon_size = 32,
 	  allow_decomposition = false,
       order = "z",

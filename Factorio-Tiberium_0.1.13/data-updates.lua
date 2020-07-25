@@ -124,7 +124,6 @@ if mods["MoreScience"] then
 					if data.raw.tool["infused-"..pack[1]] then
 						pack[1] = "infused-"..pack[1]
 						if data.raw.technology[pack[1]] then
-							log("add prereq "..pack[1])
 							table.insert(techData.prerequisites, pack[1])
 						end
 					end
