@@ -152,7 +152,7 @@ data:extend(
   {
     type = "resource",
     name = "tibGrowthNode",
-    icon = "__base__/graphics/icons/crude-oil-resource.png",
+    icon = "__Factorio-Tiberium__/graphics/entity/nodes/tiberium_blossom_tree.png",
     icon_size = 32,
     flags = {"placeable-neutral"},
     category = "advanced-solid-tiberium",
@@ -199,11 +199,11 @@ data:extend(
     {
       sheet =
       {
-        filename = "__Factorio-Tiberium__/graphics/entity/crude-oil/crude-oil.png",
+        filename = "__Factorio-Tiberium__/graphics/entity/nodes/tiberium_blossom_tree.png",
         priority = "extra-high",
-        width = 75,
-        height = 61,
-        frame_count = 4,
+        width = 320,
+        height = 251,
+        frame_count = 1,
         variation_count = 1
       }
     },
@@ -217,7 +217,7 @@ data:extend(
   {
     type = "resource",
     name = "tibGrowthNode_infinite",
-    icon = "__base__/graphics/icons/crude-oil-resource.png",
+    icon = "__Factorio-Tiberium__/graphics/entity/nodes/tiberium_blossom_tree.png",
     icon_size = 32,
     flags = {"placeable-neutral"},
     category = "advanced-liquid-tiberium",
@@ -251,11 +251,11 @@ data:extend(
     {
       sheet =
       {
-        filename = "__Factorio-Tiberium__/graphics/entity/crude-oil/crude-oil.png",
+        filename = "__Factorio-Tiberium__/graphics/entity/nodes/tiberium_blossom_tree.png",
         priority = "extra-high",
-        width = 75,
-        height = 61,
-        frame_count = 4,
+        width = 320,
+        height = 251,
+        frame_count = 1,
         variation_count = 1
       }
     },

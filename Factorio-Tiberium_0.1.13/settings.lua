@@ -95,7 +95,7 @@ data:extend(
   {
     type = "bool-setting",
     name = "tiberium-item-damage-scale",
-    setting_type = "startup",
+    setting_type = "runtime-global",
     default_value = false,
 	order = "z",
   },
