@@ -23,9 +23,12 @@ Version: 0.1.13
 	- Split the Tiberium Equipment and other ore removal into separate settings.
 	- Retired growth-credit setting, since we have the tech now.
 	- Updated internal setting names to avoid name collisions with other mods
+	- Growth credit recipe internal names standardized
+    - Migration added for growth credit name changes
   Features:
     - We now have a Tib only starting option.
 	- Automated recipe breakdown method, for compatibility with basically every mod that adds new science packs or resources.
+	- Add centrifuge recipe compatibility with all transmutation mods
 	- Tib Power Armour
 	- Growth Accelerator Crafting Speed tech
 	- Setting to have damage from tiberium in inventory scale with the number. Default off, since it's already pretty heavy.
