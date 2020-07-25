@@ -23,8 +23,17 @@ require("science")
 
 if settings.startup["tiberium-ore-removal"].value then
 	--for _, ore in pairs(data.raw["autoplace-control"]) do
+	 --[[if data.raw["recipe"][recipeName].result then
+      data.raw["recipe"][recipeName].results = {{
+        name = data.raw["recipe"][recipeName].result,
+        amount = data.raw["recipe"][recipeName].result_count or 1,
+      }}
+      data.raw["recipe"][recipeName].result = nil
+      data.raw["recipe"][recipeName].result_count = nil
+    end]]
 	for _, gen in pairs(data.raw["resource"]) do
 		if gen.name == "tibGrowthNode" then
+		elseif gen.name == "tibGrowthNode_infinite" then
 		elseif gen.name == "tiberium-ore" then
 		else
 			data.raw.resource[gen.name] = nil
@@ -35,6 +44,7 @@ if settings.startup["tiberium-ore-removal"].value then
 				if pre.basic_settings.autoplace_controls then
 					if pre.basic_settings.autoplace_controls["tibGrowthNode"] then
 					elseif pre.basic_settings.autoplace_controls["tiberium-ore"] then
+					elseif pre.basic_settings.autoplace_controls["tibGrowthNode_infinite"] then
 					else
 					pre.basic_settings.autoplace_controls[gen.name] = nil
 					--pre.basic_settings.autoplace_controls["crude-oil"] = nil
