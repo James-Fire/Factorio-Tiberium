@@ -28,6 +28,7 @@ Version: 0.1.13
 	- Tib Power Armour
 	- Growth Accelerator Crafting Speed tech
 	- Setting to have damage from tiberium in inventory scale with the number. Default off, since it's already pretty heavy.
+	- Nodes are now a blossom tree, instead of the oil patch.
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.12
   Bugfixes:
