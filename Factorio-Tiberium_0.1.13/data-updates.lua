@@ -179,12 +179,13 @@ end
 
 -- Adding Tib Science to all labs
 local tibComboPacks = {}  -- List of packs that need to be processed in the same lab as Tib Science
-for _, tech in pairs({"tiberium-control-network-tech", "tiberium-explosives"}) do
-	for _, ingredient in pairs(data.raw.technology[tech].unit.ingredients) do
-		local pack = ingredient[1]
-		if pack == "tiberium-science" then -- Don't add Tib Science
-		elseif not LSlib.utils.table.hasValue(tibComboPacks, pack) then  -- Don't add duplicates
-			table.insert(tibComboPacks, pack)
+for name, technology in pairs(data.raw.technology) do
+	if string.sub(name, 1, 9) == "tiberium-" then
+		for _, ingredient in pairs(technology.unit.ingredients) do
+			local pack = ingredient[1] and ingredient[1] or ingredient.name
+			if pack ~= "tiberium-science" then -- Don't add Tib Science
+				tibComboPacks[pack] = true
+			end
 		end
 	end
 end
@@ -192,7 +193,7 @@ end
 for labName, labData in pairs(data.raw.lab) do
 	local addTib = false
 	if not LSlib.utils.table.hasValue(labData.inputs or {}, "tiberium-science") then -- Must not already allow Tib Science
-		for _, pack in pairs(tibComboPacks) do  -- Must use packs from combo list so we don't hit things like module labs
+		for pack in pairs(tibComboPacks) do  -- Must use packs from combo list so we don't hit things like module labs
 			if LSlib.utils.table.hasValue(labData.inputs or {}, pack) then
 				addTib = true
 				break
