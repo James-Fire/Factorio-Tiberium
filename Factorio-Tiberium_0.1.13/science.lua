@@ -1,9 +1,8 @@
 
 --TODO:
---Support for generic boilers?
+-- Make matrix solver more reliable
 
 local debugText = settings.startup["tiberium-debug-text"].value
-
 local free = {}
 local fromThinAir = {}
 local excludedCrafting = {["barreling-pump"] = true} --Rigorous way to do this?
