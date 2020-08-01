@@ -643,7 +643,7 @@ script.on_nth_tick(10, function(event) --Player damage 6 times per second
 		if not player.valid or not player.character then break end
 		--Damage players that are standing on Tiberium Ore and not in vehicles
 		local nearby_ore_count = player.surface.count_entities_filtered{name = "tiberium-ore", position = player.position, radius = 1.5}
-		if nearby_ore_count > 0 and not player.character.vehicle and not player.character.name == "jetpack-flying" then
+		if nearby_ore_count > 0 and not player.character.vehicle and player.character.name ~= "jetpack-flying" then
 			player.character.damage(TiberiumDamage * nearby_ore_count * 0.1, game.forces.tiberium, "tiberium")
 		end
 		--Damage players with unsafe Tiberium products in their inventory
