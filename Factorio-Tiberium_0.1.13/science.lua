@@ -101,7 +101,9 @@ function giantSetupFunction()
 	end
 	-- Build a more comprehensive list of free items and ingredient index for later
 	for _, pump in pairs(data.raw["offshore-pump"]) do
-		if pump.fluid then free[pump.fluid] = true end
+		if pump.fluid then
+			free[pump.fluid] = true
+		end
 	end
 	for _, tree in pairs(data.raw["tree"]) do
 		if tree.autoplace and tree.minable and tree.minable.result then
@@ -874,7 +876,7 @@ function fugeRecipeTier(tier)
 			end
 		end
 	end
-	if listLength(fluids) > 1 then
+	if listLength(fluids) > 2 then
 		log("Uh oh, your tier "..tier.." recipe has "..listLength(fluids).." fluids")
 		--idk what my plan is for handling this case
 	end
@@ -909,7 +911,7 @@ function fugeRecipeTier(tier)
 			LSlib.recipe.addResult("tiberium-"..material.."-centrifuging", resource, rounded, fluids[resource] and "fluid" or "item")
 		end
 	end
-	if resources["stone"] and (listLength(fluids) < 2) then
+	if resources["stone"] and (listLength(fluids) < 3) then
 		local stone = math.ceil(resources["stone"] * recipeMult)
 		LSlib.recipe.duplicate("tiberium-"..material.."-centrifuging", "tiberium-"..material.."-sludge-centrifuging")
 		LSlib.recipe.changeIcon("tiberium-"..material.."-sludge-centrifuging", "__Factorio-Tiberium__/graphics/icons/"..material.."-sludge-centrifuging.png", 32)
@@ -923,6 +925,10 @@ function fugeRecipeTier(tier)
 				table.remove(data.raw["technology"][tech]["effects"], i)
 				break
 			end
+		end
+		if resources["stone"] then
+			local stone = math.ceil(resources["stone"] * recipeMult)
+			LSlib.recipe.addResult("tiberium-"..material.."-centrifuging", "stone", stone, "item")
 		end
 	end
 end

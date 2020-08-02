@@ -487,8 +487,6 @@ data:extend({
   },
 })
 
-local centrifuge = table.deepcopy(data.raw["assembling-machine"]["centrifuge"])
-
 -- CnC Walls local var setup
 local nullimg = {
     filename = "__Factorio-Tiberium__/graphics/sonic wall/empty.png",
