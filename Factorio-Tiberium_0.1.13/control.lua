@@ -648,6 +648,7 @@ script.on_nth_tick(10, function(event) --Player damage 6 times per second
 		end
 		--Damage players with unsafe Tiberium products in their inventory
 		local inventory = player.get_inventory(defines.inventory.item_main)
+		local trash = player.get_inventory(defines.inventory.trash)
 		if inventory then
 			for p = 1, #global.tiberiumProducts do
 				if inventory.get_item_count(global.tiberiumProducts[p]) > 0 then
@@ -655,6 +656,19 @@ script.on_nth_tick(10, function(event) --Player damage 6 times per second
 						local tiberium_item_count = inventory.get_item_count(global.tiberiumProducts[p])
 						player.character.damage(math.ceil(tiberium_item_count/50) * TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")	
 					elseif inventory.get_item_count(global.tiberiumProducts[p]) > 0 then
+						player.character.damage(TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")
+						break
+					end
+				end
+			end
+		end
+		if trash then
+			for p = 1, #global.tiberiumProducts do
+				if trash.get_item_count(global.tiberiumProducts[p]) > 0 then
+					if ItemDamageScale then
+						local tiberium_item_count = trash.get_item_count(global.tiberiumProducts[p])
+						player.character.damage(math.ceil(tiberium_item_count/50) * TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")	
+					elseif trash.get_item_count(global.tiberiumProducts[p]) > 0 then
 						player.character.damage(TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")
 						break
 					end
