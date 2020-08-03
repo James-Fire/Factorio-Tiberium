@@ -619,6 +619,45 @@ data:extend{
   }
 }
 
+local marvItem = table.deepcopy(data.raw["item-with-entity-data"]["tank"])
+marvItem.name = "tiberium-marv"
+marvItem.place_result = "tiberium-marv"
+marvItem.subgroup = "a-items"
+marvItem.icon = "__Factorio-Tiberium__/graphics/icons/tiberium-marv.png"
+marvItem.icon_size = 128
+
+local marvEntity = table.deepcopy(data.raw.car["tank"])
+marvEntity.name = "tiberium-marv"
+marvEntity.guns = nil
+marvEntity.max_health = 5000
+table.insert(marvEntity.resistances, {type = "tiberium", decrease = 0, percent = 100})
+marvEntity.consumption = "1200kW"
+marvEntity.braking_power = "1000kW"
+marvEntity.friction = 0.02
+marvEntity.rotation_speed = 0.002
+marvEntity.minable.result = "tiberium-marv"
+marvEntity.turret_animation = nil
+marvEntity.turret_return_timeout = nil
+marvEntity.turret_rotation_speed = nil
+marvEntity.weight = 50000
+
+data:extend{marvItem, marvEntity,
+	{
+		type = "recipe",
+		name = "tiberium-marv",
+		enabled = false,
+		energy_required = 40,
+		ingredients = {
+			{"engine-unit", 100},
+			{"steel-plate", 100},
+			{"iron-gear-wheel", 100},
+			{"node-harvester", 4},
+		},
+		result = "tiberium-marv",
+		subgroup = "a-items",
+	}
+}
+
 --Moving away from land mines for performance reasons, probably need it uncommented for backwards compatibility
 local TiberiumDamage = settings.startup["tiberium-damage"].value
 local TiberiumRadius = 20 + settings.startup["tiberium-spread"].value * 0.3

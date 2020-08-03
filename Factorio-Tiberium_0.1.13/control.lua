@@ -104,16 +104,6 @@ script.on_init(
     --global.contactDamageTime = 30 --how long (in ticks) should players be damaged after contacting tiberium?
     --global.vehicleDamage = TiberiumDamage --how much damage should be applied to vehicles players are in?
     --global.tiberiumLevel = 0 --The level of tiberium; affects growth/damage patterns
-    -- global.giveStartingItems = true
-    -- global.startingItems = {
-      -- {name = "oil-refinery", count = 1},
-      -- {name = "solar-panel", count = 10},
-      -- {name = "chemical-plant", count = 5},
-      -- {name = "pipe", count = 50},
-      -- {name = "small-electric-pole", count = 10},
-      -- {name = "electric-mining-drill", count = 5},
-      -- {name = "assembling-machine-2", count = 1}
-    -- }
 
     -- Each node should spawn tiberium once every 5 minutes (give or take a handful of ticks rounded when dividing)
     -- Currently allowing this to potentially update every tick but to keep things under control minUpdateInterval
@@ -121,11 +111,12 @@ script.on_init(
     -- will stagnate instead of increasing with each new node found but updates will continue to happen for all fields.
     global.minUpdateInterval = 1
     global.intervalBetweenNodeUpdates = math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
-    global.damageForceName = "tiberium"
-    global.oreType = "tiberium-ore"
     global.world = game.surfaces[1]
 	global.tiberiumTerrain = nil --"dirt-4" --Performance is awful, disabling this
-	
+    global.oreType = "tiberium-ore"
+	global.tiberiumProducts = {"tiberium-bar", global.oreType}
+    global.liquidTiberiumProducts = {"liquid-tiberium", "tiberium-sludge", "tiberium-waste"}
+	global.damageForceName = "tiberium"
     if not game.forces[global.damageForceName] then
       game.create_force(global.damageForceName)
     end
@@ -143,10 +134,6 @@ script.on_init(
 	  ["unit-spawner"] = true,  --Biters immune until both performance and evo factor are fixed
 	  ["turret"] = true
 	}
-	
-    global.tiberiumProducts = {"tiberium-bar", global.oreType}
-    global.liquidTiberiumProducts = {"liquid-tiberium", "tiberium-sludge", "tiberium-waste"}
-	
 	-- CnC SonicWalls Init
 	CnC_SonicWall_OnInit(event)
   end
@@ -536,17 +523,6 @@ commands.add_command(
 	end
   end
 )
-
---[[gives incoming players some starting items
---script.on_event(defines.events.on_player_joined_game, function(event)
---  if global.giveStartingItems then
---    local playerInventory = game.players[event.player_index].get_inventory(defines.inventory.player_main)
---	game.players[event.player_index].force.technologies["fluid-handling"].researched = true
---	for i=1,#global.startingItems,1 do
---	  playerInventory.insert({name=global.startingItems[i].name, count=global.startingItems[i].count})
---	end
---  end
---end)]]
 commands.add_command(
   "tibFixMineLag",
   "Deletes all the tib mines on the map",
@@ -560,9 +536,7 @@ commands.add_command(
 
 
 --initial chunk scan
-script.on_event(
-  defines.events.on_chunk_generated,
-  function(event)
+script.on_event(defines.events.on_chunk_generated, function(event)
     local entities = game.surfaces[1].find_entities_filtered {area = event.area, name = "tibGrowthNode"}
     for i = 1, #entities, 1 do
       table.insert(global.tibGrowthNodeList, entities[i])
@@ -659,6 +633,18 @@ script.on_nth_tick(10, function(event) --Player damage 6 times per second
 						break
 					end
 				end
+			end
+		end
+		--MARV ore deletion
+		if player.character.vehicle and (player.character.vehicle.name == "tiberium-marv") then
+			local deleted_ore = player.surface.find_entities_filtered{name = "tiberium-ore", position = player.position, radius = 4}
+			local harvested_amount = 0
+			for _, ore in pairs(deleted_ore) do
+				harvested_amount = harvested_amount + ore.amount * 0.01
+				ore.destroy()
+			end
+			if harvested_amount >= 1 then
+				player.character.vehicle.insert{name = "tiberium-ore", count = math.floor(harvested_amount)}
 			end
 		end
 	end
