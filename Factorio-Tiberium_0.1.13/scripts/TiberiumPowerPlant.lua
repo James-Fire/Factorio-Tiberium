@@ -414,7 +414,8 @@ data:extend({
 				pipe_connections = {
 					{type = "output", position = {1, -2}},
 				},
-				secondary_draw_orders = {north = -1}
+				secondary_draw_orders = {north = -1},
+				render_layer = "lower-object-above-shadow",
 			},
 			{
 				production_type = "output",
@@ -425,7 +426,8 @@ data:extend({
 				pipe_connections = {
 					{type = "output", position = {-1, -2}}				
 				},
-				secondary_draw_orders = {north = -1}
+				secondary_draw_orders = {north = -1},
+				render_layer = "lower-object-above-shadow",
 			},
 			{
 				production_type = "output",
@@ -436,7 +438,8 @@ data:extend({
 				pipe_connections = {
 					{type = "output", position = {-1, 2}}				
 				},
-				secondary_draw_orders = {north = -1}
+				secondary_draw_orders = {north = -1},
+				render_layer = "lower-object-above-shadow",
 			},
 			{
 				production_type = "input",
@@ -447,7 +450,8 @@ data:extend({
 				pipe_connections = {
 					{type = "input", position = {1, 2}}
 				},
-				secondary_draw_orders = {south = -1}
+				secondary_draw_orders = {south = -1},
+				render_layer = "lower-object-above-shadow",
 			},
 			off_when_no_fluid_recipe = true
 		},
@@ -756,7 +760,7 @@ centrifuge3Entity.crafting_categories = {"tiberium-centrifuge-1", "tiberium-cent
 centrifuge3Entity.energy_source.emissions_per_minute = 12
 centrifuge3Entity.minable.result = "tiberium-centrifuge-3"
 centrifuge3Entity.module_specification.module_slots = 4
-for k, v in pairs(centrifuge2Entity.idle_animation.layers) do
+for k, v in pairs(centrifuge3Entity.idle_animation.layers) do
 	if v.filename == "__base__/graphics/entity/centrifuge/centrifuge-A.png" then
 		v.tint = greenFugeTint
 		if v.hr_version then
