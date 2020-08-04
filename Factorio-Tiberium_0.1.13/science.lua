@@ -1,6 +1,7 @@
 
 --TODO:
 -- Make matrix solver more reliable
+-- Support alternate rocket silos (Py)
 
 local debugText = settings.startup["tiberium-debug-text"].value
 local free = {}

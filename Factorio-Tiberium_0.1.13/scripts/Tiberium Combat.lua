@@ -650,7 +650,7 @@ data:extend{marvItem, marvEntity,
 		ingredients = {
 			{"engine-unit", 100},
 			{"steel-plate", 100},
-			{"iron-gear-wheel", 100},
+			{"iron-gear-wheel", 50},
 			{"node-harvester", 4},
 		},
 		result = "tiberium-marv",

@@ -8,7 +8,7 @@ local Mine_Names = {
 }
 local Beacon_Name = "growth-accelerator-beacon"
 local Speed_Module_Name = "growth-accelerator-speed-module"
-local Speed_Module_Bonus = 0.1 -- 0.17.6 changed productivity to 10% increments
+local Speed_Module_Bonus = 0.25
 
 -- set modules in hidden beacons to match mining productivity bonus
 function UpdateBeaconSpeed(beacon, total_modules)
