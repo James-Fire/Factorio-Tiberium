@@ -5,7 +5,7 @@
 local debugText = settings.startup["tiberium-debug-text"].value
 local free = {}
 local fromThinAir = {}
-local excludedCrafting = {["barreling-pump"] = true} --Rigorous way to do this?
+local excludedCrafting = {["barreling-pump"] = true, ["transport-drone-request"] = true} --Rigorous way to do this?
 --Debugging for findRecipe
 local unreachable = {}
 local multipleRecipes = {}
@@ -334,10 +334,12 @@ function findRecipe(item, itemList)
 			table.insert(recipeNames, {recipes[i].name, recipes[i].penalty})
 		end
 		multipleRecipes[item] = recipeNames
-		-- log("multiple recipes for "..item)
-		-- for _,v in pairs(recipeNames) do
-			-- log(v[1].." "..v[2])
-		-- end
+		if debugText then
+			log("  multiple recipes for "..item)
+			for _,v in pairs(recipeNames) do
+				log("    "..v[1].." penalty: "..v[2])
+			end
+		end
 	end
 	if recipes[1] then
 		if catalyst[recipes[1]] then  -- Scale properly for catalyst/enrichment
@@ -806,6 +808,7 @@ function fugeTierSetup()
 	
 	for pack in pairs(tibComboPacks or {}) do
 		if not allPacks[pack] then
+			if debugText then log(">"..pack) end
 			allPacks[pack] = breadthFirst({[pack] = 1})
 			local tier1 = true
 			for ingredient in pairs(allPacks[pack]) do
@@ -841,11 +844,13 @@ function fugeTierSetup()
 	end
 	for pack in pairs(science[2] or {}) do
 		if not allPacks[pack] then
+			if debugText then log(">"..pack) end
 			allPacks[pack] = breadthFirst({[pack] = 1})
 		end
 	end
 	for pack in pairs(science[3] or {}) do
 		if not allPacks[pack] then
+			if debugText then log(">"..pack) end
 			allPacks[pack] = breadthFirst({[pack] = 1})
 		end
 	end
