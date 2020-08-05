@@ -19,36 +19,8 @@ for _, pre in pairs(data.raw["map-gen-presets"].default) do
 	end
 end]]
 
-require("science")
+--require("science")
 
---[[if settings.startup["tiberium-ore-removal"].value then
-	--for _, ore in pairs(data.raw["autoplace-control"]) do
-	 --[[if data.raw["recipe"][recipeName].result then
-      data.raw["recipe"][recipeName].results = {{
-        name = data.raw["recipe"][recipeName].result,
-        amount = data.raw["recipe"][recipeName].result_count or 1,
-      }}
-      data.raw["recipe"][recipeName].result = nil
-      data.raw["recipe"][recipeName].result_count = nil
-    end]]
-	for _, gen in pairs(data.raw["resource"]) do
-		for _, pre in pairs(data.raw["map-gen-presets"].default) do
-			if pre.basic_settings then
-				if pre.basic_settings.autoplace_controls then
-					if pre.basic_settings.autoplace_controls["tibGrowthNode"] then
-					elseif pre.basic_settings.autoplace_controls["tiberium-ore"] then
-					elseif pre.basic_settings.autoplace_controls["tibGrowthNode_infinite"] then
-					else
-					pre.basic_settings.autoplace_controls[gen.name] = nil
-					--pre.basic_settings.autoplace_controls["crude-oil"] = nil
-					--pre.basic_settings.autoplace_controls["uranium-ore"] = nil
-					--pre.basic_settings.autoplace_controls["copper-ore"] = nil
-					--pre.basic_settings.autoplace_controls["iron-ore"] = nil
-					--pre.basic_settings.autoplace_controls["coal"] = nil
-					--pre.basic_settings.autoplace_controls["sulfur"] = nil
-					end
-				end
-			end
-		end
-	end
-end]]
+
+--Game complains about recipe not having an icon, so set it last. Game gets icon, it's not in our way.
+LSlib.recipe.changeIcon("template-direct", "__Factorio-Tiberium__/graphics/icons/tiberium-recycling.png", 32)
