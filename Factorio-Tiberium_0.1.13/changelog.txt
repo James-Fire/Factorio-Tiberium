@@ -11,8 +11,8 @@ Version: 0.1.13
 	- Earendel's Jetpack Character is not damaged when flying over tiberium.
 	- Fixed the Tib only start breaking fuge recipes
 	- Temp fix infinite nodes being deleted.
-	- Fixed tiberium in trash slots not damaging you.
-  Changes:	
+	-Fixed tib in trash slots not damaging.
+  Changes:
 	- Updated minimum base game version to 18.27
 	- Added descriptions for remaining entities
 	- Updated Growth Accelerator UI to show credits being consumed
@@ -162,4 +162,3 @@ Version: 0.1.9
     - Added SRF hub updating to the rebuild command.
   Features:
     - Added a fuel value and pollution multiplier to tiberium. You can burn it, and destroy the entire planet by doing so.
----------------------------------------------------------------------------------------------------

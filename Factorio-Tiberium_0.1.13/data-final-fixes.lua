@@ -32,13 +32,6 @@ if settings.startup["tiberium-ore-removal"].value then
       data.raw["recipe"][recipeName].result_count = nil
     end]]
 	for _, gen in pairs(data.raw["resource"]) do
-		if gen.name == "tibGrowthNode" then
-		elseif gen.name == "tibGrowthNode_infinite" then
-		elseif gen.name == "tiberium-ore" then
-		else
-			data.raw.resource[gen.name] = nil
-			data.raw["autoplace-control"][gen.name] = nil
-		end
 		for _, pre in pairs(data.raw["map-gen-presets"].default) do
 			if pre.basic_settings then
 				if pre.basic_settings.autoplace_controls then

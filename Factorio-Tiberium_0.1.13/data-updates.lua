@@ -209,14 +209,14 @@ end
       layers =
       {
         {
-          filename = "__Factorio-Tiberium__/graphics/entity/Refinery/Refinery.png",
+          filename = "__Factorio-Tiberium-Beta__/graphics/entity/Refinery/Refinery.png",
           width = 450,
           height = 450,
           frame_count = 1,
           --shift = {2.515625, 0.484375},
           hr_version =
           {
-            filename = "__Factorio-Tiberium__/graphics/entity/Refinery/Refinery.png",
+            filename = "__Factorio-Tiberium-Beta__/graphics/entity/Refinery/Refinery.png",
             width = 450,
 			height = 450,
             frame_count = 1,
@@ -225,7 +225,7 @@ end
           }
         },
         {
-          filename = "__Factorio-Tiberium__/graphics/entity/Refinery/RefineryShadow.png",
+          filename = "__Factorio-Tiberium-Beta__/graphics/entity/Refinery/RefineryShadow.png",
           width = 450,
           height = 450,
           frame_count = 1,
@@ -233,7 +233,7 @@ end
           draw_as_shadow = true,
           hr_version =
           {
-            filename = "__Factorio-Tiberium__/graphics/entity/Refinery/RefineryShadow.png",
+            filename = "__Factorio-Tiberium-Beta__/graphics/entity/Refinery/RefineryShadow.png",
 			width = 450,
 			height = 450,
             frame_count = 1,
