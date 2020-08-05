@@ -413,7 +413,7 @@ end
 --Liquid Seed trigger
 local on_script_trigger_effect = function(event)
   if event.effect_id == "seed-launch" then
-	LiquidBomb(game.get_surface(1), event.target_position, "tiberium-ore", TiberiumMaxPerTile)
+	LiquidBomb(game.surfaces[event.surface_index], event.target_position, "tiberium-ore", TiberiumMaxPerTile)
     return
   end
 end
@@ -434,31 +434,27 @@ commands.add_command(
   "tibRebuildLists",
   "update lists of mining drills and tiberium nodes",
   function()
-    local allnodes = game.get_surface[1].find_entities_filtered {name = "tibGrowthNode"}
     global.tibGrowthNodeList = {}
-    for i = 1, #allnodes, 1 do
-      table.insert(global.tibGrowthNodeList, allnodes[i])
-    end
-	local allmines = game.get_surface[1].find_entities_filtered {name = "node-land-mine"}
     global.tibMineNodeList = {}
-    for i = 1, #allmines, 1 do
-      table.insert(global.tibMineNodeList, allmines[i])
-    end
+	global.SRF_nodes = {}
+	global.drills = {}
+	for _, surface in pairs(game.surfaces) do
+		for _, node in pairs(surface.find_entities_filtered {name = "tibGrowthNode"}) do
+			table.insert(global.tibGrowthNodeList, node)
+		end
+		for _, mine in pairs(surface.find_entities_filtered {name = "node-land-mine"}) do
+			table.insert(global.tibMineNodeList, mine)
+		end
+		for _, srf in pairs(surface.find_entities_filtered {name = "CnC_SonicWall_Hub"}) do
+			table.insert(global.SRF_nodes, srf)
+		end
+		for _, drill in pairs(surface.find_entities_filtered {type = "mining-drill"}) do
+			table.insert(global.drills, drill)
+		end
+	end
     game.print("Found " .. #global.tibGrowthNodeList .. " nodes")
 	game.print("Found " .. #global.tibMineNodeList .. " mines")
-	local allsrfhubs = game.get_surface[1].find_entities_filtered {name = "CnC_SonicWall_Hub"}
-    global.SRF_nodes = {}
-    for i = 1, #allsrfhubs, 1 do
-      table.insert(global.SRF_nodes, allsrfhubs[i])
-    end
-    game.print("Found " .. #global.tibGrowthNodeList .. " nodes")
-	game.print("Found " .. #global.tibMineNodeList .. " mines")
-
-    local alldrills = game.get_surface[1].find_entities_filtered {type = "mining-drill"}
-    global.drills = {}
-    for i = 1, #alldrills, 1 do
-      table.insert(global.drills, alldrills[i])
-    end
+	game.print("Found " .. #global.SRF_nodes .. " SRF hubs")
     game.print("Found " .. #global.drills .. " drills")
   end
 )
@@ -491,9 +487,10 @@ commands.add_command(
   "tibDeleteOre",
   "Deletes all the tib ore on the map",
   function()
-    local tibOres = global.tibGrowthNodeList[1].surface.find_entities_filtered({name = "tiberium-ore"})
-    for i = 1, #tibOres, 1 do
-      tibOres[i].destroy()
+	for _, surface in pairs(game.surfaces) do
+		for _, ore in pairs(surface.find_entities_filtered{name = "tiberium-ore"}) do
+			ore.destroy()
+		end
     end
   end
 )
@@ -505,9 +502,10 @@ commands.add_command(
 	--if not terrain then game.print("Not a valid tile name: "..terrain) break end
 	global.tiberiumTerrain = terrain
 	--Ore
-    local tibOres = global.tibGrowthNodeList[1].surface.find_entities_filtered({name = "tiberium-ore"})
-	for _, ore in pairs(tibOres) do
-	  ore.surface.set_tiles({{name = terrain, position = ore.position}}, true, false)
+	for _, surface in pairs(game.surfaces) do
+		for _, ore in pairs(surface.find_entities_filtered{name = "tiberium-ore"}) do
+			ore.surface.set_tiles({{name = terrain, position = ore.position}}, true, false)
+		end
 	end
 	--Nodes
 	for _, node in pairs(global.tibGrowthNodeList) do
@@ -527,9 +525,10 @@ commands.add_command(
   "tibFixMineLag",
   "Deletes all the tib mines on the map",
   function()
-    local entities = game.get_surface(1).find_entities_filtered{name = "node-land-mine"}
-    for i = 1, #entities, 1 do
-      entities[i].destroy()
+	for _, surface in pairs(game.surfaces) do
+		for _, mine in pairs(surface.find_entities_filtered{name = "node-land-mine"}) do
+			mine.destroy()
+		end
     end
   end
 )
@@ -537,14 +536,14 @@ commands.add_command(
 
 --initial chunk scan
 script.on_event(defines.events.on_chunk_generated, function(event)
-    local entities = game.surfaces[1].find_entities_filtered {area = event.area, name = "tibGrowthNode"}
+	local surface = event.surface
+    local entities = surface.find_entities_filtered {area = event.area, name = "tibGrowthNode"}
     for i = 1, #entities, 1 do
       table.insert(global.tibGrowthNodeList, entities[i])
 	  local position = entities[i].position
 	  local howManyOre = math.min(math.max(10, (math.abs(position.x) + math.abs(position.y)) / 25), 200) --Start further nodes with more ore
       PlaceOre(entities[i], howManyOre)
 	  --Cosmetic stuff
-	  local surface = event.surface
 	  local tileArea = {{x = math.floor(position.x) - 0.9, y = math.floor(position.y) - 0.9},
 						{x = math.floor(position.x) + 1.9, y = math.floor(position.y) + 1.9}}
 	  surface.destroy_decoratives{area = tileArea}

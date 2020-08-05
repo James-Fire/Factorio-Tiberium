@@ -248,8 +248,8 @@ data:extend({
 	{
 		type = "assembling-machine",
 		name = "growth-accelerator",
-		icon = "__Factorio-Tiberium__/graphics/icons/growth-accelerator.png",
-		icon_size = 64,
+		icon = "__Factorio-Tiberium__/graphics/technology/growth-accelerator.png",
+		icon_size = 128,
 		flags = {"placeable-neutral", "placeable-player", "player-creation"},
 		minable = {mining_time = 2, result = "growth-accelerator"},
 		max_health = 250,
@@ -380,8 +380,8 @@ data:extend({
 	{
 		type = "item",
 		name = "growth-accelerator",
-		icon = "__Factorio-Tiberium__/graphics/icons/growth-accelerator.png",
-		icon_size = 64,
+		icon = "__Factorio-Tiberium__/graphics/technology/growth-accelerator.png",
+		icon_size = 128,
 		subgroup = "a-buildings",
 		order = "g",
 		place_result = "growth-accelerator-node",
@@ -390,8 +390,8 @@ data:extend({
 	{
 		type = "item",
 		name = "growth-accelerator-node",
-		icon = "__Factorio-Tiberium__/graphics/icons/growth-accelerator.png",
-		icon_size = 64,
+		icon = "__Factorio-Tiberium__/graphics/technology/growth-accelerator.png",
+		icon_size = 128,
 		subgroup = "a-buildings",
 		order = "g",
 		place_result = "growth-accelerator",
