@@ -286,7 +286,7 @@ function CnC_SonicWall_OnTick(event)
 	if cur_tick % 60 == 0 then --Check for all emitters for low power once per second
 		for _, emitter in pairs(global.SRF_nodes) do
 			local ticks_rem = emitter.energy / emitter.electric_drain
-			if ticks_rem > 0 and ticks_rem <= 60 then
+			if ticks_rem > 5 and ticks_rem <= 65 then
 				if not find_value_in_table(global.SRF_low_power_ticklist, emitter, "emitter") then
 					table.insert(global.SRF_low_power_ticklist, {emitter = emitter, tick = cur_tick + ceil(ticks_rem)})
 				end
@@ -298,7 +298,7 @@ function CnC_SonicWall_OnTick(event)
 		local low = global.SRF_low_power_ticklist[i]
 		if low.tick <= cur_tick and low.emitter then
 			local ticks_rem = low.emitter.energy / low.emitter.electric_drain
-			if ticks_rem <= 0 then
+			if ticks_rem <= 5 then
 				CnC_SonicWall_DeleteNode(low.emitter, cur_tick)  --Removes it from low power ticklist as well
 				CnC_SonicWall_AddNode(low.emitter, cur_tick)
 			else
