@@ -5,7 +5,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-separation-tech",
-		icon = "__Factorio-Tiberium__/graphics/technology/tiberium-separation-tech.png",
+		icon = tiberiumInternalName.."/graphics/technology/tiberium-separation-tech.png",
 		icon_size = 128,
 		effects =
 		{
@@ -41,7 +41,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-processing-tech",
-		icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-waste.png",
+		icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-waste.png",
 		icon_size = 64,
 		effects =
 		{
@@ -90,7 +90,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-molten-processing",
-		icon = "__Factorio-Tiberium__/graphics/icons/fluid/molten-tiberium.png",
+		icon = tiberiumInternalName.."/graphics/icons/fluid/molten-tiberium.png",
 		icon_size = 64,
 		effects =
 		{
@@ -136,7 +136,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-power-tech",
-		icon = "__Factorio-Tiberium__/graphics/technology/tiberium-processing-tech.png",
+		icon = tiberiumInternalName.."/graphics/technology/tiberium-processing-tech.png",
 		icon_size = 128,
 		effects =
 		{
@@ -182,7 +182,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-containment-tech",
-		icon = "__Factorio-Tiberium__/graphics/sonic wall/node icon.png",
+		icon = tiberiumInternalName.."/graphics/sonic wall/node icon.png",
 		icon_size = 32,
 		effects =
 		{
@@ -212,7 +212,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-transmutation-tech",
-		icon = "__Factorio-Tiberium__/graphics/technology/tiberium-processing-tech.png",
+		icon = tiberiumInternalName.."/graphics/technology/tiberium-processing-tech.png",
 		icon_size = 128,
 		effects =
 		{
@@ -247,7 +247,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-growth-acceleration",
-		icon = "__Factorio-Tiberium__/graphics/technology/growth-accelerator.png",
+		icon = tiberiumInternalName.."/graphics/technology/growth-accelerator.png",
 		icon_size = 128,
 		effects =
 		{
@@ -273,7 +273,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-control-network-tech",
-		icon = "__Factorio-Tiberium__/graphics/technology/tiberium-control-network-tech.png",
+		icon = tiberiumInternalName.."/graphics/technology/tiberium-control-network-tech.png",
 		icon_size = 128,
 		effects =
 		{
@@ -318,7 +318,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-mechanical-research",
-		icon = "__Factorio-Tiberium__/graphics/icons/tiberium-mechanical.png",
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-mechanical.png",
 		icon_size = 128,
 		effects =
 		{
@@ -345,7 +345,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-thermal-research",
-		icon = "__Factorio-Tiberium__/graphics/icons/Tiberium-thermal.png",
+		icon = tiberiumInternalName.."/graphics/icons/Tiberium-thermal.png",
 		icon_size = 128,
 		effects =
 		{
@@ -373,7 +373,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-chemical-research",
-		icon = "__Factorio-Tiberium__/graphics/icons/tiberium-chemistry.png",
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-chemistry.png",
 		icon_size = 128,
 		effects =
 		{
@@ -406,7 +406,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-nuclear-research",
-		icon = "__Factorio-Tiberium__/graphics/icons/tiberium-nuclear.png",
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-nuclear.png",
 		icon_size = 128,
 		effects =
 		{
@@ -444,7 +444,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-electromagnetic-research",
-		icon = "__Factorio-Tiberium__/graphics/icons/Tiberium-EM.png",
+		icon = tiberiumInternalName.."/graphics/icons/Tiberium-EM.png",
 		icon_size = 128,
 		effects =
 		{
@@ -484,7 +484,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-military-1",
-		icon = "__Factorio-Tiberium__/graphics/technology/tiberium-military.png",
+		icon = tiberiumInternalName.."/graphics/technology/tiberium-military.png",
 		icon_size = 128,
 		effects =
 		{
@@ -514,7 +514,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-military-2",
-		icon = "__Factorio-Tiberium__/graphics/technology/tiberium-military.png",
+		icon = tiberiumInternalName.."/graphics/technology/tiberium-military.png",
 		icon_size = 128,
 		effects =
 		{
@@ -549,7 +549,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-military-3",
-		icon = "__Factorio-Tiberium__/graphics/technology/tiberium-military.png",
+		icon = tiberiumInternalName.."/graphics/technology/tiberium-military.png",
 		icon_size = 128,
 		effects =
 		{
@@ -590,7 +590,7 @@ data:extend
 	{
 		type = "technology",
 		name = 	"tiberium-growth-acceleration-acceleration",
-		icon = "__Factorio-Tiberium__/graphics/technology/growth-accelerator-research.png",
+		icon = tiberiumInternalName.."/graphics/technology/growth-accelerator-research.png",
 		icon_size = 128,
 		effects =
 		{

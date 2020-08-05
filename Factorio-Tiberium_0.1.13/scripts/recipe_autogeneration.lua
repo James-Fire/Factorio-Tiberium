@@ -32,7 +32,7 @@ LSlib.recipe.addResult("tiberium-farming", "tiberium-data", OrePerCredit * 0.1, 
 function doCentrifugeRecipeSplit(StonePerCycle)
 	for _, type in pairs({"ore", "slurry", "molten"}) do
 		LSlib.recipe.duplicate("tiberium-"..type.."-centrifuging", "tiberium-"..type.."-sludge-centrifuging")
-		LSlib.recipe.changeIcon("tiberium-"..type.."-sludge-centrifuging", "__Factorio-Tiberium__/graphics/icons/"..type.."-sludge-centrifuging.png", 32)
+		LSlib.recipe.changeIcon("tiberium-"..type.."-sludge-centrifuging", tiberiumInternalName.."/graphics/icons/"..type.."-sludge-centrifuging.png", 32)
 		LSlib.recipe.addResult("tiberium-"..type.."-sludge-centrifuging", "tiberium-sludge", StonePerCycle, "fluid")
 		LSlib.recipe.addResult("tiberium-"..type.."-centrifuging", "stone", StonePerCycle, "item")
 	end

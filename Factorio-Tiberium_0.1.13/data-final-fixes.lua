@@ -19,8 +19,4 @@ for _, pre in pairs(data.raw["map-gen-presets"].default) do
 	end
 end]]
 
---require("science")
-
-
---Game complains about recipe not having an icon, so set it last. Game gets icon, it's not in our way.
-LSlib.recipe.changeIcon("template-direct", "__Factorio-Tiberium__/graphics/icons/tiberium-recycling.png", 32)
+require("scripts/DynamicOreRecipes")

@@ -36,7 +36,7 @@ data:extend {
     },
     flow_to_energy_ratio = 0.3,
     heat_capacity = "1KJ",
-    icon = "__Factorio-Tiberium__/graphics/icons/fluid/liquid-tiberium.png",
+    icon = tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png",
     icon_size = 64,
     max_temperature = 1000,
     name = "liquid-tiberium",
@@ -60,7 +60,7 @@ data:extend {
     },
     flow_to_energy_ratio = 0.3,
     heat_capacity = "1KJ",
-    icon = "__Factorio-Tiberium__/graphics/icons/fluid/molten-tiberium.png",
+    icon = tiberiumInternalName.."/graphics/icons/fluid/molten-tiberium.png",
     icon_size = 64,
     max_temperature = 1000,
     name = "molten-tiberium",
@@ -82,7 +82,7 @@ data:extend {
     },
     flow_to_energy_ratio = 0.2,
     heat_capacity = "1KJ",
-    icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-sludge.png",
+    icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-sludge.png",
     icon_size = 64,
     max_temperature = 1000,
     name = "tiberium-sludge",
@@ -104,7 +104,7 @@ data:extend {
     },
     flow_to_energy_ratio = 0.5,
     heat_capacity = "1KJ",
-    icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-waste.png",
+    icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-waste.png",
     icon_size = 64,
     max_temperature = 1000,
     name = "tiberium-slurry",
@@ -115,7 +115,7 @@ data:extend {
   {
     type = "item",
     name = "tiberium-empty-cell",
-    icon = "__Factorio-Tiberium__/graphics/icons/empty-fuel-cell.png",
+    icon = tiberiumInternalName.."/graphics/icons/empty-fuel-cell.png",
     icon_size = 64,
     flags = {},
     subgroup = "a-items",
@@ -124,7 +124,7 @@ data:extend {
   {
     type = "item",
     name = "tiberium-dirty-cell",
-    icon = "__Factorio-Tiberium__/graphics/icons/dirty-fuel-cell.png",
+    icon = tiberiumInternalName.."/graphics/icons/dirty-fuel-cell.png",
     icon_size = 64,
     flags = {},
     subgroup = "a-items",
@@ -145,7 +145,7 @@ data:extend {
   {
     type = "item",
     name = "tiberium-bar",
-    icon = "__Factorio-Tiberium__/graphics/icons/tiberium-bar.png",
+    icon = tiberiumInternalName.."/graphics/icons/tiberium-bar.png",
     icon_size = 32,
     flags = {},
     subgroup = "a-items",
@@ -154,7 +154,7 @@ data:extend {
   {
     type = "item",
     name = "tiberium-data",
-    icon = "__Factorio-Tiberium__/graphics/icons/tiberium-bar.png",
+    icon = tiberiumInternalName.."/graphics/icons/tiberium-bar.png",
     icon_size = 32,
     flags = {},
     subgroup = "a-items",
@@ -163,7 +163,7 @@ data:extend {
   {
     type = "tool",
     name = "tiberium-science",
-    icon = "__Factorio-Tiberium__/graphics/icons/Tacitus.png",
+    icon = tiberiumInternalName.."/graphics/icons/Tacitus.png",
     icon_size = 32,
     flags = {},
     subgroup = "a-items",
@@ -175,7 +175,7 @@ data:extend {
   {
     type = "item",
     name = "tiberium-brick",
-    icon = "__Factorio-Tiberium__/graphics/icons/tiberium-bar.png",
+    icon = tiberiumInternalName.."/graphics/icons/tiberium-bar.png",
     icon_size = 32,
     flags = {},
     subgroup = "intermediate-product",
@@ -200,7 +200,7 @@ data:extend(
       },
       results = {
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/Tiberium-farming.png",
+      icon = tiberiumInternalName.."/graphics/icons/Tiberium-farming.png",
       icon_size = 64,
 	  allow_decomposition = false,
       subgroup = "a-science",
@@ -239,7 +239,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 1}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/ore-mechanical.png",
+      icon = tiberiumInternalName.."/graphics/icons/ore-mechanical.png",
       icon_size = 64,
       subgroup = "a-science",
       order = "b"
@@ -258,7 +258,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 2}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/ore-thermal.png",
+      icon = tiberiumInternalName.."/graphics/icons/ore-thermal.png",
       icon_size = 64,
       subgroup = "a-science",
       order = "c"
@@ -278,7 +278,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 3}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/ore-chemical.png",
+      icon = tiberiumInternalName.."/graphics/icons/ore-chemical.png",
       icon_size = 64,
       subgroup = "a-science",
       order = "d"
@@ -298,7 +298,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 4}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/ore-nuclear.png",
+      icon = tiberiumInternalName.."/graphics/icons/ore-nuclear.png",
       icon_size = 64,
       subgroup = "a-science",
       order = "e"
@@ -318,7 +318,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 5}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/ore-EM.png",
+      icon = tiberiumInternalName.."/graphics/icons/ore-EM.png",
       icon_size = 64,
       subgroup = "a-science",
       order = "f"
@@ -338,7 +338,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 2}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/slurry-mechanical.png",
+      icon = tiberiumInternalName.."/graphics/icons/slurry-mechanical.png",
       icon_size = 64,
       subgroup = "a-slurry-science",
       order = "a"
@@ -357,7 +357,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 4}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/slurry-thermal.png",
+      icon = tiberiumInternalName.."/graphics/icons/slurry-thermal.png",
       icon_size = 64,
       subgroup = "a-slurry-science",
       order = "b"
@@ -377,7 +377,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 6}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/slurry-chemical.png",
+      icon = tiberiumInternalName.."/graphics/icons/slurry-chemical.png",
       icon_size = 64,
       subgroup = "a-slurry-science",
       order = "c"
@@ -397,7 +397,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 8}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/slurry-nuclear.png",
+      icon = tiberiumInternalName.."/graphics/icons/slurry-nuclear.png",
       icon_size = 64,
       subgroup = "a-slurry-science",
       order = "d"
@@ -417,7 +417,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 10}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/slurry-EM.png",
+      icon = tiberiumInternalName.."/graphics/icons/slurry-EM.png",
       icon_size = 64,
       subgroup = "a-slurry-science",
       order = "e"
@@ -437,7 +437,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 4}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/molten-mechanical.png",
+      icon = tiberiumInternalName.."/graphics/icons/molten-mechanical.png",
       icon_size = 64,
       subgroup = "a-molten-science",
       order = "a"
@@ -456,7 +456,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 8}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/molten-thermal.png",
+      icon = tiberiumInternalName.."/graphics/icons/molten-thermal.png",
       icon_size = 64,
       subgroup = "a-molten-science",
       order = "b"
@@ -476,7 +476,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 12}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/molten-chemical.png",
+      icon = tiberiumInternalName.."/graphics/icons/molten-chemical.png",
       icon_size = 64,
       subgroup = "a-molten-science",
       order = "c"
@@ -496,7 +496,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 16}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/molten-nuclear.png",
+      icon = tiberiumInternalName.."/graphics/icons/molten-nuclear.png",
       icon_size = 64,
       subgroup = "a-molten-science",
       order = "d"
@@ -516,7 +516,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 20}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/molten-EM.png",
+      icon = tiberiumInternalName.."/graphics/icons/molten-EM.png",
       icon_size = 64,
       subgroup = "a-molten-science",
       order = "e"
@@ -536,7 +536,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 14}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/liquid-mechanical.png",
+      icon = tiberiumInternalName.."/graphics/icons/liquid-mechanical.png",
       icon_size = 64,
       subgroup = "a-liquid-science",
       order = "a"
@@ -555,7 +555,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 28}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/liquid-thermal.png",
+      icon = tiberiumInternalName.."/graphics/icons/liquid-thermal.png",
       icon_size = 64,
       subgroup = "a-liquid-science",
       order = "b"
@@ -575,7 +575,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 42}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/liquid-chemical.png",
+      icon = tiberiumInternalName.."/graphics/icons/liquid-chemical.png",
       icon_size = 64,
       subgroup = "a-liquid-science",
       order = "c"
@@ -595,7 +595,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 56}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/liquid-nuclear.png",
+      icon = tiberiumInternalName.."/graphics/icons/liquid-nuclear.png",
       icon_size = 64,
       subgroup = "a-liquid-science",
       order = "d"
@@ -615,7 +615,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-data", amount = 70}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/liquid-EM.png",
+      icon = tiberiumInternalName.."/graphics/icons/liquid-EM.png",
       icon_size = 64,
       subgroup = "a-liquid-science",
       order = "e"
@@ -636,7 +636,7 @@ data:extend(
       results = {
         {type = "fluid", name = "tiberium-slurry", amount = 6}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/fluid/tiberium-waste.png",
+      icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-waste.png",
       icon_size = 64,
       subgroup = "a-refining",
       order = "a"
@@ -656,7 +656,7 @@ data:extend(
       results = {
         {type = "fluid", name = "molten-tiberium", amount = 6}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/fluid/molten-tiberium.png",
+      icon = tiberiumInternalName.."/graphics/icons/fluid/molten-tiberium.png",
       icon_size = 64,
       subgroup = "a-refining",
       order = "b"
@@ -675,7 +675,7 @@ data:extend(
       results = {
         {type = "fluid", name = "liquid-tiberium", amount = 3}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/fluid/liquid-tiberium.png",
+      icon = tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png",
       icon_size = 64,
       subgroup = "a-refining",
       order = "m"
@@ -693,7 +693,7 @@ data:extend(
       results = {
         {type = "item", name = "stone-brick", amount = 1}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-sludge-to-stone-brick.png",
+      icon = tiberiumInternalName.."/graphics/icons/tiberium-sludge-to-stone-brick.png",
       icon_size = 32,
       subgroup = "a-direct",
 	  allow_as_intermediate = false,
@@ -754,7 +754,7 @@ data:extend(
       results = {
         {type = "fluid", name = "molten-tiberium", amount = 23}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-recycling.png",
+      icon = tiberiumInternalName.."/graphics/icons/tiberium-recycling.png",
       icon_size = 32,
       subgroup = "a-refining",
 	  allow_decomposition = false,
@@ -792,7 +792,7 @@ data:extend(
       },
       results = {
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/ore-centrifuging.png",
+      icon = tiberiumInternalName.."/graphics/icons/ore-centrifuging.png",
       icon_size = 32,
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
@@ -811,7 +811,7 @@ data:extend(
       },
       results = {
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/slurry-centrifuging.png",
+      icon = tiberiumInternalName.."/graphics/icons/slurry-centrifuging.png",
       icon_size = 32,
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
@@ -830,7 +830,7 @@ data:extend(
       },
       results = {
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/molten-centrifuging.png",
+      icon = tiberiumInternalName.."/graphics/icons/molten-centrifuging.png",
       icon_size = 32,
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
@@ -850,7 +850,7 @@ data:extend(
       },
       results = {
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/ore-sludge-centrifuging.png",
+      icon = tiberiumInternalName.."/graphics/icons/ore-sludge-centrifuging.png",
       icon_size = 32,
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
@@ -869,7 +869,7 @@ data:extend(
       },
       results = {
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/slurry-sludge-centrifuging.png",
+      icon = tiberiumInternalName.."/graphics/icons/slurry-sludge-centrifuging.png",
       icon_size = 32,
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
@@ -888,7 +888,7 @@ data:extend(
       },
       results = {
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/molten-sludge-centrifuging.png",
+      icon = tiberiumInternalName.."/graphics/icons/molten-sludge-centrifuging.png",
       icon_size = 32,
 	  allow_as_intermediate = false,
 	  allow_decomposition = false,
@@ -910,7 +910,7 @@ data:extend(
       results = {
         {type = "item", name = "growth-credit", amount = 1},
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/growth-credit.png",
+      icon = tiberiumInternalName.."/graphics/icons/growth-credit.png",
       icon_size = 32,
 	  allow_decomposition = false,
       order = "c",
@@ -929,7 +929,7 @@ data:extend(
       results = {
         {type = "item", name = "growth-credit", amount = 1},
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/growth-credit.png",
+      icon = tiberiumInternalName.."/graphics/icons/growth-credit.png",
       icon_size = 32,
 	  allow_decomposition = false,
       order = "z",
@@ -994,7 +994,7 @@ data:extend(
 		{type = "fluid", name = "tiberium-sludge", amount = 1},
       },
       icon_size = 64,
-	  icon = "__Factorio-Tiberium__/graphics/icons/dirty-fuel-cell.png",
+	  icon = tiberiumInternalName.."/graphics/icons/dirty-fuel-cell.png",
 	  allow_decomposition = false,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
@@ -1068,7 +1068,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-brick", amount = 1}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick.png",
+      icon = tiberiumInternalName.."/graphics/icons/tiberium-brick.png",
       icon_size = 32,
       subgroup = "a-refining",
       order = "h"
@@ -1085,7 +1085,7 @@ data:extend(
       results = {
         {type = "item", name = "iron-ore", amount = 4}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick-to-iron.png",
+      icon = tiberiumInternalName.."/graphics/icons/tiberium-brick-to-iron.png",
       icon_size = 32,
       subgroup = "a-direct",
       order = "b[oil-processing]-e[advanced-oil-processing]"
@@ -1102,7 +1102,7 @@ data:extend(
       results = {
         {type = "item", name = "copper-ore", amount = 4}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick-to-copper.png",
+      icon = tiberiumInternalName.."/graphics/icons/tiberium-brick-to-copper.png",
       icon_size = 32,
       subgroup = "a-direct",
       order = "b[oil-processing]-f[advanced-oil-processing]"
@@ -1119,7 +1119,7 @@ data:extend(
       results = {
         {type = "item", name = "coal", amount = 4}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick-to-coal.png",
+      icon = tiberiumInternalName.."/graphics/icons/tiberium-brick-to-coal.png",
       icon_size = 32,
       subgroup = "a-direct",
       order = "b[oil-processing]-g[advanced-oil-processing]"
@@ -1136,7 +1136,7 @@ data:extend(
       results = {
         {type = "item", name = "stone", amount = 4}
       },
-      icon = "__Factorio-Tiberium__/graphics/icons/tiberium-brick-to-stone.png",
+      icon = tiberiumInternalName.."/graphics/icons/tiberium-brick-to-stone.png",
       icon_size = 32,
       subgroup = "a-direct",
       order = "b[oil-processing]-d[petroleum-gas-processing]"

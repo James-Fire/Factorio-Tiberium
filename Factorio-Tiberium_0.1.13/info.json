@@ -17,6 +17,7 @@
 		"?bobrevamp >=0.17.0",
 		"?bobplates >=0.17.0",
 		"?Mining_Drones",
+		"?Krastorio2",
 		"! Prospector",
 		"LSlib >= 2020.5.11"
 	],

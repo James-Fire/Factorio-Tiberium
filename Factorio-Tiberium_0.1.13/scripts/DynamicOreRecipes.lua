@@ -920,7 +920,7 @@ function fugeRecipeTier(tier)
 	if resources["stone"] and (listLength(fluids) < 3) then
 		local stone = math.ceil(resources["stone"] * recipeMult)
 		LSlib.recipe.duplicate("tiberium-"..material.."-centrifuging", "tiberium-"..material.."-sludge-centrifuging")
-		LSlib.recipe.changeIcon("tiberium-"..material.."-sludge-centrifuging", "__Factorio-Tiberium__/graphics/icons/"..material.."-sludge-centrifuging.png", 32)
+		LSlib.recipe.changeIcon("tiberium-"..material.."-sludge-centrifuging", tiberiumInternalName.."/graphics/icons/"..material.."-sludge-centrifuging.png", 32)
 		LSlib.recipe.addResult("tiberium-"..material.."-sludge-centrifuging", "tiberium-sludge", stone, "fluid")
 		LSlib.recipe.addResult("tiberium-"..material.."-centrifuging", "stone", stone, "item")
 	else  -- Don't create sludge recipe if there is no stone to convert or we don't have enough fluid boxes
@@ -1003,7 +1003,7 @@ function addCreditRecipe(ore)
 	LSlib.recipe.setEngergyRequired(recipeName, energy)
 	LSlib.recipe.setOrderstring(recipeName, order)
 	if (ore == "coal") or (ore == "copper-ore") or (ore == "iron-ore") or (ore == "stone") or (ore == "crude-oil") or (ore == "uranium-ore") then
-		LSlib.recipe.changeIcon(recipeName, "__Factorio-Tiberium__/graphics/icons/growth-credit-"..ore..".png", 32)
+		LSlib.recipe.changeIcon(recipeName, tiberiumInternalName.."/graphics/icons/growth-credit-"..ore..".png", 32)
 	end
 end
 
