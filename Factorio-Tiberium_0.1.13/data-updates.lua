@@ -35,11 +35,16 @@ if mods["Krastorio2"] then
 		local level, _ = string.gsub(techs.tib, "%D", "")
 		level = tonumber(level) or 1
 		data.raw["technology"][techs.tib].unit.count_formula = "((L-"..tostring(level - 1)..")^2)*3000"
-		data.raw["technology"][techs.tib].unit.ingredients = table.deepcopy(data.raw["technology"][techs.copy].unit.ingredients)
-		table.insert(data.raw["technology"][techs.tib].unit.ingredients, {"tiberium-science", 1})
-		data.raw["technology"][techs.tib].max_level = techs.max_level
-		data.raw["technology"][techs.tib].effects = table.deepcopy(data.raw["technology"][techs.copy].effects)
 		data.raw["technology"][techs.tib].name = techs.tib
+		data.raw["technology"][techs.tib].max_level = techs.max_level
+		
+		if not data.raw["technology"][techs.copy] then 
+			log("missing tech "..techs.copy)
+		else
+			data.raw["technology"][techs.tib].unit.ingredients = table.deepcopy(data.raw["technology"][techs.copy].unit.ingredients)
+			table.insert(data.raw["technology"][techs.tib].unit.ingredients, {"tiberium-science", 1})
+			data.raw["technology"][techs.tib].effects = table.deepcopy(data.raw["technology"][techs.copy].effects)
+		end
 	end
 	
 	-- Make Krastorio stop removing Tiberium Science Packs from our techs
@@ -78,32 +83,34 @@ if mods["Krastorio2"] then
 	LSlib.recipe.editIngredient("tiberium-rounds-magazine", "piercing-rounds-magazine", "rifle-magazine", 1)
 	local oldTibRounds = data.raw.ammo["tiberium-rounds-magazine"]
 	local newTibRounds = table.deepcopy(data.raw.ammo["uranium-rifle-magazine"])
-	--newTibRounds.icon = oldTibRounds.icon  -- I guess we'll keep the Krastorio icon to blend in
-	newTibRounds.name = oldTibRounds.name
-	newTibRounds.order = oldTibRounds.order
-	newTibRounds.subgroup = "a-items"
-	local oldProjectile
-	for _, action in pairs(newTibRounds.ammo_type.action[1].action_delivery) do -- This is probably bad, but supporting optionally nested tables is annoying
-		if action.type == "projectile" then
-			oldProjectile = action.projectile
-			action.projectile = "tiberium-ammo"
-			break
-		end
-	end
-	data.raw.ammo["tiberium-rounds-magazine"] = newTibRounds
-	-- Update projectile to do Tiberium damage
-	if oldProjectile then
-		local tibProjectile = table.deepcopy(data.raw.projectile[oldProjectile])
-		tibProjectile.name = "tiberium-ammo"
-		local tibRoundsDamage = 0
-		for _, effect in pairs(tibProjectile.action.action_delivery.target_effects) do
-			if effect.type == "damage" then
-				tibRoundsDamage = tibRoundsDamage + effect.damage.amount
-				effect.damage.amount = 0
+	if newTibRounds then
+		--newTibRounds.icon = oldTibRounds.icon  -- I guess we'll keep the Krastorio icon to blend in
+		newTibRounds.name = oldTibRounds.name
+		newTibRounds.order = oldTibRounds.order
+		newTibRounds.subgroup = "a-items"
+		local oldProjectile
+		for _, action in pairs(newTibRounds.ammo_type.action[1].action_delivery) do -- This is probably bad, but supporting optionally nested tables is annoying
+			if action.type == "projectile" then
+				oldProjectile = action.projectile
+				action.projectile = "tiberium-ammo"
+				break
 			end
 		end
-		table.insert(tibProjectile.action.action_delivery.target_effects, {type = "damage", damage = {amount = tibRoundsDamage, type = "tiberium"}})
-		data.raw.projectile["tiberium-ammo"] = tibProjectile
+		data.raw.ammo["tiberium-rounds-magazine"] = newTibRounds
+		-- Update projectile to do Tiberium damage
+		if oldProjectile then
+			local tibProjectile = table.deepcopy(data.raw.projectile[oldProjectile])
+			tibProjectile.name = "tiberium-ammo"
+			local tibRoundsDamage = 0
+			for _, effect in pairs(tibProjectile.action.action_delivery.target_effects) do
+				if effect.type == "damage" then
+					tibRoundsDamage = tibRoundsDamage + effect.damage.amount
+					effect.damage.amount = 0
+				end
+			end
+			table.insert(tibProjectile.action.action_delivery.target_effects, {type = "damage", damage = {amount = tibRoundsDamage, type = "tiberium"}})
+			data.raw.projectile["tiberium-ammo"] = tibProjectile
+		end
 	end
 end
 

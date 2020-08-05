@@ -1,12 +1,12 @@
 
 --TODO:
---Support for generic boilers?
+-- Make matrix solver more reliable
+-- Support alternate rocket silos (Py)
 
 local debugText = settings.startup["tiberium-debug-text"].value
-
 local free = {}
 local fromThinAir = {}
-local excludedCrafting = {["barreling-pump"] = true} --Rigorous way to do this?
+local excludedCrafting = {["barreling-pump"] = true, ["transport-drone-request"] = true} --Rigorous way to do this?
 --Debugging for findRecipe
 local unreachable = {}
 local multipleRecipes = {}
@@ -102,7 +102,9 @@ function giantSetupFunction()
 	end
 	-- Build a more comprehensive list of free items and ingredient index for later
 	for _, pump in pairs(data.raw["offshore-pump"]) do
-		if pump.fluid then free[pump.fluid] = true end
+		if pump.fluid then
+			free[pump.fluid] = true
+		end
 	end
 	for _, tree in pairs(data.raw["tree"]) do
 		if tree.autoplace and tree.minable and tree.minable.result then
@@ -333,10 +335,12 @@ function findRecipe(item, itemList)
 			table.insert(recipeNames, {recipes[i].name, recipes[i].penalty})
 		end
 		multipleRecipes[item] = recipeNames
-		-- log("multiple recipes for "..item)
-		-- for _,v in pairs(recipeNames) do
-			-- log(v[1].." "..v[2])
-		-- end
+		if debugText then
+			log("  multiple recipes for "..item)
+			for _,v in pairs(recipeNames) do
+				log("    "..v[1].." penalty: "..v[2])
+			end
+		end
 	end
 	if recipes[1] then
 		if catalyst[recipes[1]] then  -- Scale properly for catalyst/enrichment
@@ -805,6 +809,7 @@ function fugeTierSetup()
 	
 	for pack in pairs(tibComboPacks or {}) do
 		if not allPacks[pack] then
+			if debugText then log(">"..pack) end
 			allPacks[pack] = breadthFirst({[pack] = 1})
 			local tier1 = true
 			for ingredient in pairs(allPacks[pack]) do
@@ -840,11 +845,13 @@ function fugeTierSetup()
 	end
 	for pack in pairs(science[2] or {}) do
 		if not allPacks[pack] then
+			if debugText then log(">"..pack) end
 			allPacks[pack] = breadthFirst({[pack] = 1})
 		end
 	end
 	for pack in pairs(science[3] or {}) do
 		if not allPacks[pack] then
+			if debugText then log(">"..pack) end
 			allPacks[pack] = breadthFirst({[pack] = 1})
 		end
 	end
@@ -875,7 +882,7 @@ function fugeRecipeTier(tier)
 			end
 		end
 	end
-	if listLength(fluids) > 1 then
+	if listLength(fluids) > 2 then
 		log("Uh oh, your tier "..tier.." recipe has "..listLength(fluids).." fluids")
 		--idk what my plan is for handling this case
 	end
@@ -910,7 +917,7 @@ function fugeRecipeTier(tier)
 			LSlib.recipe.addResult("tiberium-"..material.."-centrifuging", resource, rounded, fluids[resource] and "fluid" or "item")
 		end
 	end
-	if resources["stone"] and (listLength(fluids) < 2) then
+	if resources["stone"] and (listLength(fluids) < 3) then
 		local stone = math.ceil(resources["stone"] * recipeMult)
 		LSlib.recipe.duplicate("tiberium-"..material.."-centrifuging", "tiberium-"..material.."-sludge-centrifuging")
 		LSlib.recipe.changeIcon("tiberium-"..material.."-sludge-centrifuging", "__Factorio-Tiberium__/graphics/icons/"..material.."-sludge-centrifuging.png", 32)
@@ -924,6 +931,10 @@ function fugeRecipeTier(tier)
 				table.remove(data.raw["technology"][tech]["effects"], i)
 				break
 			end
+		end
+		if resources["stone"] then
+			local stone = math.ceil(resources["stone"] * recipeMult)
+			LSlib.recipe.addResult("tiberium-"..material.."-centrifuging", "stone", stone, "item")
 		end
 	end
 end

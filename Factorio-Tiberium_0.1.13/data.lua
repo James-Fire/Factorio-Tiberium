@@ -1,3 +1,4 @@
+require("__LSlib__/LSlib")
 require("scripts/item-groups")
 require("scripts/TiberiumOre")
 require("scripts/TiberiumWall")

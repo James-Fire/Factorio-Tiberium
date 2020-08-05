@@ -565,6 +565,10 @@ data:extend
 				type = "unlock-recipe",
 				recipe = "tiberium-power-armor"
 			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-marv"
+			},
 		},
 		prerequisites = {"tiberium-military-2", "rocket-control-unit", "tiberium-control-network-tech"},
 		unit =
@@ -586,29 +590,28 @@ data:extend
 	{
 		type = "technology",
 		name = 	"tiberium-growth-acceleration-acceleration",
-		icon = "__Factorio-Tiberium__/graphics/technology/growth-accelerator.png",
+		icon = "__Factorio-Tiberium__/graphics/technology/growth-accelerator-research.png",
 		icon_size = 128,
 		effects =
 		{
 		},
-		prerequisites = {"tiberium-growth-acceleration"},
+		prerequisites = {"tiberium-growth-acceleration", "space-science-pack"},
 		unit =
 		{
-			count_formula = "2^(L-2)*1000",
+			count_formula = "2^(L-1)*1000",
 			ingredients =
 			{
 				{"tiberium-science", 1},
 				{"automation-science-pack", 1},
 				{"logistic-science-pack", 1},
 				{"chemical-science-pack", 1},
-				{"military-science-pack", 1},
 				{"production-science-pack", 1},
 				{"utility-science-pack", 1},
 				{"space-science-pack", 1}
 			},
 			time = 30
 		},
-		max_level = "10",
+		max_level = "8",
 		upgrade = true,
 		order = "e-l-f"
 	},
