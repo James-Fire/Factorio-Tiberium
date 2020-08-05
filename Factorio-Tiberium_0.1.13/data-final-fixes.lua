@@ -21,7 +21,7 @@ end]]
 
 require("science")
 
-if settings.startup["tiberium-ore-removal"].value then
+--[[if settings.startup["tiberium-ore-removal"].value then
 	--for _, ore in pairs(data.raw["autoplace-control"]) do
 	 --[[if data.raw["recipe"][recipeName].result then
       data.raw["recipe"][recipeName].results = {{
@@ -51,4 +51,4 @@ if settings.startup["tiberium-ore-removal"].value then
 			end
 		end
 	end
-end
+end]]
