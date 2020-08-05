@@ -3,7 +3,7 @@ require("scripts/CnC_Walls") --Note, to make SonicWalls work / be passable,
 
 
 local MOD_NAME = "Factorio-Tiberium"
-local Mine_Names = {
+local Accelerator_Names = {
   ["growth-accelerator-node"] = true,
   ["growth-accelerator"] = true,
 }
