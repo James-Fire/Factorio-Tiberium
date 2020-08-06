@@ -118,7 +118,7 @@ data:extend {
     icon = tiberiumInternalName.."/graphics/icons/empty-fuel-cell.png",
     icon_size = 64,
     flags = {},
-    subgroup = "a-items",
+    subgroup = "a-intermediates",
     stack_size = 100
   },
   {
@@ -127,7 +127,7 @@ data:extend {
     icon = tiberiumInternalName.."/graphics/icons/dirty-fuel-cell.png",
     icon_size = 64,
     flags = {},
-    subgroup = "a-items",
+    subgroup = "a-intermediates",
     stack_size = 5
   },
   {
@@ -136,7 +136,7 @@ data:extend {
     icon = "__base__/graphics/icons/uranium-fuel-cell.png",
     icon_size = 64,
     flags = {},
-    subgroup = "a-items",
+    subgroup = "a-intermediates",
 	fuel_category = "nuclear",
     burnt_result = "tiberium-dirty-cell",
 	fuel_value = "4GJ",
@@ -203,8 +203,8 @@ data:extend(
       icon = tiberiumInternalName.."/graphics/icons/Tiberium-farming.png",
       icon_size = 64,
 	  allow_decomposition = false,
-      subgroup = "a-science",
-      order = "a-1"
+      subgroup = "a-refining",
+      order = "d"
     },
 	{
       type = "recipe",
@@ -221,8 +221,8 @@ data:extend(
         {type = "item", name = "tiberium-science", amount = 1}
       },
       icon_size = 64,
-      subgroup = "a-science",
-      order = "a"
+      subgroup = "a-refining",
+      order = "e"
     },
 	--Ore Data
 	{
@@ -678,7 +678,26 @@ data:extend(
       icon = tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png",
       icon_size = 64,
       subgroup = "a-refining",
-      order = "m"
+      order = "c"
+    },
+	{
+      type = "recipe",
+      name = "tiberium-sludge-from-slurry",
+      category = "chemistry",
+	  crafting_machine_tint = TibCraftingTint,
+      energy_required = 2,
+      enabled = false,
+      ingredients = {
+        {type = "fluid", name = "tiberium-slurry", amount = 10},
+		{type = "item", name = "stone", amount = 10},
+      },
+      results = {
+        {type = "fluid", name = "tiberium-sludge", amount = 10}
+      },
+      icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-sludge.png",
+      icon_size = 64,
+      subgroup = "a-refining",
+      order = "a-2"
     },
 	{
       type = "recipe",
@@ -739,6 +758,25 @@ data:extend(
 	  allow_decomposition = false,
 	  always_show_made_in = true,
       order = "z"
+    },
+	{
+      type = "recipe",
+      name = "tiberium-sludge-to-landfill",
+      category = "crafting-with-fluid",
+	  crafting_machine_tint = TibCraftingTint,
+      energy_required = 2,
+      enabled = false,
+      ingredients = {
+        {type = "fluid", name = "tiberium-sludge", amount = 20}
+      },
+      results = {
+        {type = "item", name = "landfill", amount = 1}
+      },
+      subgroup = "a-direct",
+	  allow_as_intermediate = false,
+	  allow_decomposition = false,
+	  always_show_made_in = true,
+      order = "z-2"
     },
 	{
       type = "recipe",
@@ -942,7 +980,7 @@ data:extend(
       name = "tiberium-nuclear-fuel",
 	  crafting_machine_tint = TibCraftingTint,
       category = "chemistry",
-	  subgroup = "a-items",
+	  subgroup = "a-intermediates",
       energy_required = 20,
       enabled = false,
       ingredients = {
@@ -961,7 +999,7 @@ data:extend(
       name = "tiberium-empty-cell",
 	  crafting_machine_tint = TibCraftingTint,
       category = "chemistry",
-	  subgroup = "a-items",
+	  subgroup = "a-intermediates",
       energy_required = 20,
       enabled = false,
       ingredients = {
@@ -980,7 +1018,7 @@ data:extend(
       name = "tiberium-cell-cleaning",
 	  crafting_machine_tint = TibCraftingTint,
       category = "chemistry",
-	  subgroup = "a-items",
+	  subgroup = "a-intermediates",
       energy_required = 20,
       enabled = false,
       ingredients = {
@@ -1004,7 +1042,7 @@ data:extend(
       name = "tiberium-fuel-cell",
 	  crafting_machine_tint = TibCraftingTint,
       category = "chemistry",
-	  subgroup = "a-items",
+	  subgroup = "a-intermediates",
       energy_required = 20,
       enabled = false,
       ingredients = {
@@ -1024,7 +1062,7 @@ data:extend(
       name = "tiberium-ion-core",
 	  crafting_machine_tint = TibCraftingTint,
       category = "chemistry",
-	  subgroup = "a-items",
+	  subgroup = "a-intermediates",
       energy_required = 20,
       enabled = false,
       ingredients = {

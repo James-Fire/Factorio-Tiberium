@@ -67,11 +67,19 @@ data:extend
 			},
 			{
 				type = "unlock-recipe",
+				recipe = "tiberium-sludge-from-slurry"
+			},
+			{
+				type = "unlock-recipe",
 				recipe = "tiberium-sludge-to-concrete"
 			},
 			{
 				type = "unlock-recipe",
 				recipe = "tiberium-slurry-to-refined-concrete"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-sludge-to-landfill"
 			},
 		},
 		prerequisites = {"tiberium-separation-tech", "advanced-electronics", "concrete"},
@@ -570,7 +578,7 @@ data:extend
 				recipe = "tiberium-marv"
 			},
 		},
-		prerequisites = {"tiberium-military-2", "rocket-control-unit", "tiberium-control-network-tech"},
+		prerequisites = {"tiberium-military-2", "rocket-control-unit", "tiberium-control-network-tech", "power-armor-mk2"},
 		unit =
 		{
 			count = 500,

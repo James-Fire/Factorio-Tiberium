@@ -19,6 +19,7 @@ local recipe = table.deepcopy(data.raw.recipe["heavy-armor"])
 recipe.name = "tiberium-armor"
 recipe.ingredients = {{"plastic-bar", 50}, {"heavy-armor", 1}, {"pipe", 2}}
 recipe.result = "tiberium-armor"
+recipe.order = "c[tiberium-armor]"
 
 data:extend{tiberiumArmor, recipe}
 
@@ -60,6 +61,7 @@ local recipe = table.deepcopy(data.raw.recipe["power-armor-mk2"])
 recipe.name = "tiberium-power-armor"
 recipe.ingredients = {{"plastic-bar",50},{"power-armor-mk2",1},{"pipe",2}}
 recipe.result = "tiberium-power-armor"
+recipe.order = "d[tiberium-power-armor]"
 
 data:extend{tiberiumPowerArmor,recipe}
 
@@ -135,7 +137,7 @@ data:extend{
       }
     },
     subgroup = "a-items",
-    order = "d[rocket-launcher]-a[basic]",
+    order = "b[rocket-launcher]-a[basic]",
     stack_size = 200
   },
   {
@@ -264,7 +266,7 @@ data:extend{
       }
     },
     subgroup = "a-items",
-    order = "d[rocket-launcher]-c[atomic-bomb]",
+    order = "b[rocket-launcher]-b[atomic-bomb]",
     stack_size = 10
   },
   {
@@ -391,7 +393,7 @@ data:extend{
       }
     },
     subgroup = "a-items",
-    order = "d[rocket-launcher]-c[atomic-bomb]",
+    order = "b[rocket-launcher]-c[seed-missile]",
     stack_size = 10
   },
   {
@@ -654,6 +656,7 @@ data:extend{marvItem, marvEntity,
 			{"node-harvester", 4},
 		},
 		result = "tiberium-marv",
+		order = "e[personal-transport]-a[marv]",
 		subgroup = "a-items",
 	}
 }
