@@ -4,9 +4,9 @@ local hit_effects = require ("__base__/prototypes/entity/demo-hit-effects")
 local sounds = require("__base__/prototypes/entity/demo-sounds")
 
 local tiberiumArmor = table.deepcopy(data.raw.armor["heavy-armor"])
-
 tiberiumArmor.name = "tiberium-armor"
 table.insert(tiberiumArmor.resistances, {type = "tiberium", decrease = 10, percent = 99})
+tiberiumArmor.order = "c[tiberium-armor]"
 tiberiumArmor.subgroup = "a-items"
 tiberiumArmor.icons = {
    {
@@ -19,13 +19,13 @@ local recipe = table.deepcopy(data.raw.recipe["heavy-armor"])
 recipe.name = "tiberium-armor"
 recipe.ingredients = {{"plastic-bar", 50}, {"heavy-armor", 1}, {"pipe", 2}}
 recipe.result = "tiberium-armor"
-recipe.order = "c[tiberium-armor]"
 
 data:extend{tiberiumArmor, recipe}
 
 local tiberiumPowerArmor = table.deepcopy(data.raw.armor["power-armor-mk2"])
 
 tiberiumPowerArmor.name = "tiberium-power-armor"
+tiberiumPowerArmor.order = "d[tiberium-power-armor]"
 tiberiumPowerArmor.subgroup = "a-items"
 tiberiumPowerArmor.icons= {
    {
@@ -61,7 +61,6 @@ local recipe = table.deepcopy(data.raw.recipe["power-armor-mk2"])
 recipe.name = "tiberium-power-armor"
 recipe.ingredients = {{"plastic-bar",50},{"power-armor-mk2",1},{"pipe",2}}
 recipe.result = "tiberium-power-armor"
-recipe.order = "d[tiberium-power-armor]"
 
 data:extend{tiberiumPowerArmor,recipe}
 
@@ -245,7 +244,7 @@ data:extend{
   {
     type = "ammo",
     name = "tiberium-nuke",
-    icon = "__base__/graphics/icons/atomic-bomb.png",
+    icon = tiberiumInternalName.."/graphics/icons/tiberium-nuke.png",
     icon_size = 64,
     ammo_type = {
       range_modifier = 5,
@@ -372,7 +371,7 @@ data:extend{
   {
     type = "ammo",
     name = "tiberium-seed",
-    icon = "__base__/graphics/icons/atomic-bomb.png",
+    icon = tiberiumInternalName.."/graphics/icons/tiberium-seed-rocket.png",
     icon_size = 64,
     ammo_type = {
       range_modifier = 5,
@@ -587,7 +586,7 @@ data:extend{
     icon = "__base__/graphics/icons/laser-turret.png",
     icon_size = 64,
     subgroup = "a-buildings",
-    order = "b[turret]-b[laser-turret]",
+    order = "f[ion-turret]",
     place_result = "ion-turret",
     stack_size = 50
   },
@@ -598,7 +597,6 @@ data:extend{
       energy_required = 20,
       enabled = false,
       subgroup = "a-buildings",
-      order = "q",
       ingredients = {
         {"advanced-circuit", 40},
         {"steel-plate", 40},
@@ -610,7 +608,6 @@ data:extend{
       energy_required = 30,
       enabled = false,
       subgroup = "a-buildings",
-      order = "q",
       ingredients = {
         {"advanced-circuit", 40},
         {"steel-plate", 40},
@@ -624,6 +621,7 @@ data:extend{
 local marvItem = table.deepcopy(data.raw["item-with-entity-data"]["tank"])
 marvItem.name = "tiberium-marv"
 marvItem.place_result = "tiberium-marv"
+marvItem.order = "e[personal-transport]-a[marv]"
 marvItem.subgroup = "a-items"
 marvItem.icon = tiberiumInternalName.."/graphics/icons/tiberium-marv.png"
 marvItem.icon_size = 128
@@ -656,7 +654,6 @@ data:extend{marvItem, marvEntity,
 			{"node-harvester", 4},
 		},
 		result = "tiberium-marv",
-		order = "e[personal-transport]-a[marv]",
 		subgroup = "a-items",
 	}
 }

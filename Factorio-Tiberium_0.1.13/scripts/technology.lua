@@ -190,8 +190,8 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-containment-tech",
-		icon = tiberiumInternalName.."/graphics/sonic wall/node icon.png",
-		icon_size = 32,
+		icon = tiberiumInternalName.."/graphics/technology/tiberium-containment.png",
+		icon_size = 256,
 		effects =
 		{
 			{
@@ -220,7 +220,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-transmutation-tech",
-		icon = tiberiumInternalName.."/graphics/technology/tiberium-processing-tech.png",
+		icon = tiberiumInternalName.."/graphics/technology/tiberium-transmutation.png",
 		icon_size = 128,
 		effects =
 		{
@@ -522,7 +522,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-military-2",
-		icon = tiberiumInternalName.."/graphics/technology/tiberium-military.png",
+		icon = tiberiumInternalName.."/graphics/technology/tiberium-military-2.png",
 		icon_size = 128,
 		effects =
 		{
@@ -557,7 +557,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-military-3",
-		icon = tiberiumInternalName.."/graphics/technology/tiberium-military.png",
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-marv.png",
 		icon_size = 128,
 		effects =
 		{

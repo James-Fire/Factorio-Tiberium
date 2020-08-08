@@ -1,7 +1,7 @@
 local tiberiumNodeHarvesterItem = table.deepcopy(data.raw.item["pumpjack"])
 tiberiumNodeHarvesterItem.name = "node-harvester"
 tiberiumNodeHarvesterItem.subgroup = "a-buildings"
-tiberiumNodeHarvesterItem.order = "e"
+tiberiumNodeHarvesterItem.order = "c[node-harvester]"
 tiberiumNodeHarvesterItem.place_result = "node-harvester"
 
 local tiberiumNodeHarvesterEntity = table.deepcopy(data.raw["mining-drill"]["electric-mining-drill"])
@@ -32,7 +32,6 @@ data:extend{tiberiumNodeHarvesterItem, tiberiumNodeHarvesterEntity,
 	  energy_required = 20,
 	  enabled = false,
 	  subgroup = "a-buildings",
-	  order = "e",
 	  ingredients = {
 		{"advanced-circuit", 25},
 		{"electric-mining-drill", 5},
@@ -45,7 +44,6 @@ data:extend{tiberiumNodeHarvesterItem, tiberiumNodeHarvesterEntity,
 	  energy_required = 30,
 	  enabled = false,
 	  subgroup = "a-buildings",
-	  order = "e",
 	  ingredients = {
 		{"advanced-circuit", 25},
 		{"electric-mining-drill", 5},
@@ -62,7 +60,7 @@ tiberiumSpikeItem.name = "tib-spike"
 tiberiumSpikeItem.icon = tiberiumInternalName.."/graphics/icons/tiberium-spike.png"
 tiberiumSpikeItem.icon_mipmaps = nil
 tiberiumSpikeItem.subgroup = "a-buildings"
-tiberiumSpikeItem.order = "e"
+tiberiumSpikeItem.order = "g[tib-spike]"
 tiberiumSpikeItem.place_result = "tib-spike"
 
 local tiberiumSpikeEntity = table.deepcopy(data.raw["mining-drill"]["pumpjack"])
@@ -72,7 +70,7 @@ tiberiumSpikeEntity.icon_mipmaps = nil
 tiberiumSpikeEntity.radius_visualisation_picture = data.raw["mining-drill"]["pumpjack"].radius_visualisation_picture
 tiberiumSpikeEntity.mining_speed = 5
 tiberiumSpikeEntity.subgroup = "a-buildings"
-tiberiumSpikeEntity.order = "m"
+tiberiumSpikeEntity.order = "g[tib-spike]"
 tiberiumSpikeEntity.resource_categories = {}
 tiberiumSpikeEntity.minable.result = "tib-spike"
 tiberiumSpikeEntity.resource_searching_radius = 0.49
@@ -92,7 +90,6 @@ data:extend{tiberiumSpikeItem, tiberiumSpikeEntity,
 	  energy_required = 20,
 	  enabled = false,
 	  subgroup = "a-buildings",
-	  order = "e",
 	  ingredients = {
 		{"processing-unit", 20},
 		{"pumpjack", 5},
@@ -105,7 +102,6 @@ data:extend{tiberiumSpikeItem, tiberiumSpikeEntity,
 	  energy_required = 30,
 	  enabled = false,
 	  subgroup = "a-buildings",
-	  order = "e",
 	  ingredients = {
 		{"processing-unit", 50},
 		{"pumpjack", 10},
@@ -120,7 +116,7 @@ data:extend{tiberiumSpikeItem, tiberiumSpikeEntity,
 local tiberiumNetworkNodeItem = table.deepcopy(data.raw.item["electric-mining-drill"])
 tiberiumNetworkNodeItem.name = "tiberium-network-node"
 tiberiumNetworkNodeItem.subgroup = "a-buildings"
-tiberiumNetworkNodeItem.order = "b"
+tiberiumNetworkNodeItem.order = "h[tiberium-network-node]"
 tiberiumNetworkNodeItem.place_result = "tiberium-network-node"
 
 local tibcat = data.raw["resource-category"]["basic-solid-tiberium"]
@@ -130,7 +126,7 @@ tiberiumNetworkNodeEntity.name = "tiberium-network-node"
 tiberiumNetworkNodeEntity.energy_usage = "25000kW"
 tiberiumNetworkNodeEntity.mining_speed = 10
 tiberiumNetworkNodeEntity.subgroup = "a-buildings"
-tiberiumNetworkNodeEntity.order = "b"
+tiberiumNetworkNodeEntity.order = "h[tiberium-network-node]"
 tiberiumNetworkNodeEntity.resource_searching_radius = 50
 tiberiumNetworkNodeEntity.resource_categories = {}
 tiberiumNetworkNodeEntity.minable.result = "tiberium-network-node"
@@ -149,7 +145,6 @@ data:extend({tiberiumNetworkNodeItem,tiberiumNetworkNodeEntity,tibcat,
       energy_required = 20,
 	  enabled = false,
 	  subgroup = "a-buildings",
-	  order = "b",
       ingredients = {
         {"processing-unit", 20},
 		{"electric-engine-unit", 20},
@@ -162,7 +157,6 @@ data:extend({tiberiumNetworkNodeItem,tiberiumNetworkNodeEntity,tibcat,
       energy_required = 30,
 	  enabled = false,
 	  subgroup = "a-buildings",
-	  order = "b",
       ingredients = {
         {"processing-unit", 50},
 		{"electric-engine-unit", 20},
@@ -185,6 +179,7 @@ end
 
 local growthAcceleratorItem = table.deepcopy(data.raw.item["pumpjack"])
 growthAcceleratorItem.name = "growth-accelerator-node"
+growthAcceleratorItem.order = "d[growth-accelerator]"
 local growthAcceleratorEntity = table.deepcopy(data.raw["mining-drill"]["node-harvester"])
 growthAcceleratorEntity.name = "growth-accelerator-node"
 
@@ -367,7 +362,6 @@ data:extend({
 		name = "growth-accelerator",
 		enabled = "false",
 		subgroup = "a-buildings",
-		order = "g",
 		ingredients =
 		{
 			{"steel-plate", 25},
@@ -383,7 +377,7 @@ data:extend({
 		icon = tiberiumInternalName.."/graphics/technology/growth-accelerator.png",
 		icon_size = 128,
 		subgroup = "a-buildings",
-		order = "g",
+		order = "d[growth-accelerator]",
 		place_result = "growth-accelerator-node",
 		stack_size = 15,
 	},
@@ -393,7 +387,7 @@ data:extend({
 		icon = tiberiumInternalName.."/graphics/technology/growth-accelerator.png",
 		icon_size = 128,
 		subgroup = "a-buildings",
-		order = "g",
+		order = "d[growth-accelerator]",
 		place_result = "growth-accelerator",
 		stack_size = 15,
 	},
@@ -518,7 +512,7 @@ data:extend({
         icon = tiberiumInternalName.."/graphics/sonic wall/node icon.png",
 		icon_size = 32,
         subgroup = "a-buildings",
-        order = "a[stone-wall]-b[hardlight]",
+        order = "b[srf]",
         place_result = "CnC_SonicWall_Hub",
         stack_size = 50
     }

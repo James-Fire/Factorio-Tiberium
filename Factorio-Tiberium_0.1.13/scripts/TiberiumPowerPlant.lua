@@ -11,7 +11,7 @@ data:extend({
 		icon_size = 64,
 		flags = {},
 		subgroup = "a-buildings",
-		order = "m",
+		order = "e[tiberium-plant]",
 		place_result = "tiberium-plant",
 		stack_size = 20
 	},
@@ -21,7 +21,6 @@ data:extend({
 		energy_required = 15,
 		enabled = "false",
 		subgroup = "a-buildings",
-		order = "m",
 		ingredients = {
 			{"steel-plate", 25},
 			{"electric-engine-unit", 10},
@@ -360,7 +359,7 @@ data:extend({
 		icon_size = 64,
 		flags = {},
 		subgroup = "a-buildings",
-		order = "a",
+		order = "a[tiberium-centrifuge]-1",
 		place_result = "tiberium-centrifuge",
 		stack_size = 20
 	},
@@ -370,7 +369,6 @@ data:extend({
 		energy_required = 10,
 		enabled = "false",
 		subgroup = "a-buildings",
-		order = "m",
 		ingredients = {
 			{"steel-plate", 10},
 			{"iron-gear-wheel", 20},
@@ -709,7 +707,7 @@ data:extend({
 	
 local centrifuge2Item = table.deepcopy(data.raw.item["tiberium-centrifuge"])
 centrifuge2Item.name = "tiberium-centrifuge-2"
-centrifuge2Item.order = "b"
+centrifuge2Item.order = "a[tiberium-centrifuge]-2"
 centrifuge2Item.place_result = "tiberium-centrifuge-2"
 
 local centrifuge2Entity = util.table.deepcopy(data.raw["assembling-machine"]["tiberium-centrifuge"])
@@ -736,7 +734,6 @@ data:extend({centrifuge2Item, centrifuge2Entity,
 		energy_required = 10,
 		enabled = "false",
 		subgroup = "a-buildings",
-		order = "m",
 		ingredients = {
 			{"concrete", 50},
 			{"engine-unit", 10},
@@ -749,7 +746,7 @@ data:extend({centrifuge2Item, centrifuge2Entity,
 
 local centrifuge3Item = table.deepcopy(data.raw.item["tiberium-centrifuge-2"])
 centrifuge3Item.name = "tiberium-centrifuge-3"
-centrifuge3Item.order = "c"
+centrifuge3Item.order = "a[tiberium-centrifuge]-3"
 centrifuge3Item.place_result = "tiberium-centrifuge-3"
 
 local centrifuge3Entity = util.table.deepcopy(data.raw["assembling-machine"]["tiberium-centrifuge-2"])
@@ -776,7 +773,6 @@ data:extend({centrifuge3Item, centrifuge3Entity,
 		energy_required = 10,
 		enabled = "false",
 		subgroup = "a-buildings",
-		order = "m",
 		ingredients = {
 			{"refined-concrete", 50},
 			{"electric-engine-unit", 10},

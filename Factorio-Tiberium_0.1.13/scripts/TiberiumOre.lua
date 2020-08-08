@@ -19,7 +19,7 @@ data:extend({
 		icon = "__base__/graphics/icons/nuclear-reactor.png",
 		icon_size = 64,
 		flags = {},
-		subgroup = "a-items",
+		subgroup = "a-intermediates",
 		order = "a[tiberium-ore]",
 		stack_size = 200
 	},

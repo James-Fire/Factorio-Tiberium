@@ -23,6 +23,8 @@ TibCraftingTint = {
 
 data:extend {
   {
+    type = "fluid",
+    name = "liquid-tiberium",
     base_color = {
       b = 0,
       g = 1,
@@ -39,14 +41,14 @@ data:extend {
     icon = tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png",
     icon_size = 64,
     max_temperature = 1000,
-    name = "liquid-tiberium",
     order = "a[fluid]-c[crude-oil]",
     fuel_value = "25MJ",
 	emissions_multiplier = 3,
     pressure_to_speed_ratio = 0.4,
-    type = "fluid"
   },
   {
+    type = "fluid",
+    name = "molten-tiberium",
     base_color = {
       b = 0,
       g = 1,
@@ -63,12 +65,12 @@ data:extend {
     icon = tiberiumInternalName.."/graphics/icons/fluid/molten-tiberium.png",
     icon_size = 64,
     max_temperature = 1000,
-    name = "molten-tiberium",
     order = "a[fluid]-c[crude-oil]",
     pressure_to_speed_ratio = 0.4,
-    type = "fluid"
   },
   {
+    type = "fluid",
+    name = "tiberium-sludge",
     base_color = {
       b = 0.3,
       g = 0.5,
@@ -85,12 +87,12 @@ data:extend {
     icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-sludge.png",
     icon_size = 64,
     max_temperature = 1000,
-    name = "tiberium-sludge",
     order = "a[fluid]-d[crude-oil]",
     pressure_to_speed_ratio = 0.2,
-    type = "fluid"
   },
   {
+    type = "fluid",
+    name = "tiberium-slurry",
     base_color = {
       b = 0,
       g = 0.7,
@@ -107,10 +109,8 @@ data:extend {
     icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-waste.png",
     icon_size = 64,
     max_temperature = 1000,
-    name = "tiberium-slurry",
     order = "a[fluid]-d[crude-oil]",
     pressure_to_speed_ratio = 0.05,
-    type = "fluid"
   },
   {
     type = "item",
@@ -118,6 +118,7 @@ data:extend {
     icon = tiberiumInternalName.."/graphics/icons/empty-fuel-cell.png",
     icon_size = 64,
     flags = {},
+	order = "c[tiberium-fuel-cell]-a[empty-cell]",
     subgroup = "a-intermediates",
     stack_size = 100
   },
@@ -127,6 +128,7 @@ data:extend {
     icon = tiberiumInternalName.."/graphics/icons/dirty-fuel-cell.png",
     icon_size = 64,
     flags = {},
+	order = "c[tiberium-fuel-cell]-c[dirty-cell]",
     subgroup = "a-intermediates",
     stack_size = 5
   },
@@ -136,6 +138,7 @@ data:extend {
     icon = "__base__/graphics/icons/uranium-fuel-cell.png",
     icon_size = 64,
     flags = {},
+	order = "c[tiberium-fuel-cell]-b[fuel-cell]",
     subgroup = "a-intermediates",
 	fuel_category = "nuclear",
     burnt_result = "tiberium-dirty-cell",
@@ -981,7 +984,7 @@ data:extend(
 	  crafting_machine_tint = TibCraftingTint,
       category = "chemistry",
 	  subgroup = "a-intermediates",
-      energy_required = 20,
+      energy_required = 30,
       enabled = false,
       ingredients = {
 		{type = "item", name = "solid-fuel", amount = 10},
@@ -992,7 +995,7 @@ data:extend(
       },
       icon = "__base__/graphics/icons/nuclear-fuel.png",
       icon_size = 64,
-      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+      order = "b[tiberium-nuclear-fuel]"
     },
 	{
       type = "recipe",
@@ -1000,7 +1003,7 @@ data:extend(
 	  crafting_machine_tint = TibCraftingTint,
       category = "chemistry",
 	  subgroup = "a-intermediates",
-      energy_required = 20,
+      energy_required = 5,
       enabled = false,
       ingredients = {
 		{type = "item", name = "steel-plate", amount = 2},
@@ -1010,8 +1013,7 @@ data:extend(
       results = {
         {type = "item", name = "tiberium-empty-cell", amount = 10},
       },
-      icon_size = 64,
-      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+      icon_size = 64
     },
 	{
       type = "recipe",
@@ -1019,7 +1021,7 @@ data:extend(
 	  crafting_machine_tint = TibCraftingTint,
       category = "chemistry",
 	  subgroup = "a-intermediates",
-      energy_required = 20,
+      energy_required = 30,
       enabled = false,
       ingredients = {
 		{type = "item", name = "tiberium-dirty-cell", amount = 10},
@@ -1034,7 +1036,7 @@ data:extend(
       icon_size = 64,
 	  icon = tiberiumInternalName.."/graphics/icons/dirty-fuel-cell.png",
 	  allow_decomposition = false,
-      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+      order = "c[tiberium-fuel-cell]-c[cell-cleaning]"
     },
 	
 	{
@@ -1043,17 +1045,16 @@ data:extend(
 	  crafting_machine_tint = TibCraftingTint,
       category = "chemistry",
 	  subgroup = "a-intermediates",
-      energy_required = 20,
+      energy_required = 10,
       enabled = false,
       ingredients = {
 		{type = "item", name = "tiberium-empty-cell", amount = 1},
-		{type = "fluid", name = "liquid-tiberium", amount = 40},
+		{type = "fluid", name = "liquid-tiberium", amount = 160},
       },
       results = {
         {type = "item", name = "tiberium-fuel-cell", amount = 1},
       },
-      icon_size = 64,
-      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+      icon_size = 64
     },
 	
 --Intermediate Products
@@ -1075,7 +1076,7 @@ data:extend(
       },
       icon = "__base__/graphics/icons/nuclear-reactor.png",
       icon_size = 64,
-      order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+      order = "a[tiberium-ion-core]"
     },
 	{
 		type = "recipe",
