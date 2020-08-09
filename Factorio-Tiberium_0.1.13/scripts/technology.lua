@@ -600,8 +600,11 @@ data:extend
 		name = 	"tiberium-growth-acceleration-acceleration",
 		icon = tiberiumInternalName.."/graphics/technology/growth-accelerator-research.png",
 		icon_size = 128,
-		effects =
-		{
+		effects = {
+			{
+				type = "nothing",
+				effect_description = "Growth Accelerator speed: +25%"
+			}
 		},
 		prerequisites = {"tiberium-growth-acceleration", "space-science-pack"},
 		unit =

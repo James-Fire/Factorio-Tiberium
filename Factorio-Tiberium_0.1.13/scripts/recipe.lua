@@ -1,10 +1,33 @@
-
-
-TibProductivity = {}
-table.insert(TibProductivity, "tiberium-science")
-table.insert(TibProductivity, "tiberium-ore-processing")
-table.insert(TibProductivity, "molten-tiberium-processing")
-table.insert(TibProductivity, "tiberium-liquid-processing")
+local TibProductivity = {
+	"tiberium-science",
+	"tiberium-ore-processing",
+	"molten-tiberium-processing",
+	"tiberium-liquid-processing",
+	"tiberium-empty-cell",
+	"tiberium-fuel-cell",
+	"tiberium-ion-core",
+	"tiberium-farming",
+	"tiberium-ore-mechanical-data",
+	"tiberium-ore-thermal-data",
+	"tiberium-ore-chemical-data",
+	"tiberium-ore-nuclear-data",
+	"tiberium-ore-EM-data",
+	"tiberium-slurry-mechanical-data",
+	"tiberium-slurry-thermal-data",
+	"tiberium-slurry-chemical-data",
+	"tiberium-slurry-nuclear-data",
+	"tiberium-slurry-EM-data",
+	"tiberium-molten-mechanical-data",
+	"tiberium-molten-thermal-data",
+	"tiberium-molten-chemical-data",
+	"tiberium-molten-nuclear-data",
+	"tiberium-molten-EM-data",
+	"tiberium-liquid-mechanical-data",
+	"tiberium-liquid-thermal-data",
+	"tiberium-liquid-chemical-data",
+	"tiberium-liquid-nuclear-data",
+	"tiberium-liquid-EM-data"
+}
 
 for km, vm in pairs(data.raw.module) do
   if vm.effect.productivity and vm.limitation then
@@ -14,14 +37,14 @@ for km, vm in pairs(data.raw.module) do
   end
 end
 
-TibCraftingTint = {
-  primary = {r=0.109804,g=0.721567,b=0.231373,a=1},
-  secondary={r=0.098039,g=1,b=0.278431,a=1},
-  tertiary={r=0.156863,g=0.156863,b=0.156863,a=0.235294},
-  quaternary={r=0.160784,g=0.745098,b=0.3058824,a=0.345217},
-},
+local TibCraftingTint = {
+  primary    = {r = 0.109804, g = 0.721567, b = 0.231373,  a = 1},
+  secondary  = {r = 0.098039, g = 1,        b = 0.278431,  a = 1},
+  tertiary   = {r = 0.156863, g = 0.156863, b = 0.156863,  a = 0.235294},
+  quaternary = {r = 0.160784, g = 0.745098, b = 0.3058824, a = 0.345217},
+}
 
-data:extend {
+data:extend{
   {
     type = "fluid",
     name = "liquid-tiberium",
@@ -186,8 +209,7 @@ data:extend {
   }
 }
 
-data:extend(
-  {
+data:extend{
 --Science stuff. Making data, turning it into science, learning from farming tib
 	{
       type = "recipe",
@@ -622,8 +644,11 @@ data:extend(
       icon_size = 64,
       subgroup = "a-liquid-science",
       order = "e"
-    },
---Refining. Taking in a lower product, and turning it into a higher one. 
+    }
+}
+
+data:extend{
+  --Refining. Taking in a lower product, and turning it into a higher one. 
     {
       type = "recipe",
       name = "tiberium-ore-processing",
@@ -634,7 +659,7 @@ data:extend(
       enabled = false,
       ingredients = {
         {type = "fluid", name = "water", amount = 100},
-         {type = "item", name = "tiberium-ore", amount = 10},
+        {type = "item", name = "tiberium-ore", amount = 10},
       },
       results = {
         {type = "fluid", name = "tiberium-slurry", amount = 6}
@@ -1037,8 +1062,7 @@ data:extend(
 	  icon = tiberiumInternalName.."/graphics/icons/dirty-fuel-cell.png",
 	  allow_decomposition = false,
       order = "c[tiberium-fuel-cell]-c[cell-cleaning]"
-    },
-	
+    },	
 	{
       type = "recipe",
       name = "tiberium-fuel-cell",
@@ -1092,125 +1116,4 @@ data:extend(
 		},
 		result = "CnC_SonicWall_Hub"
 	},
-  }
-)
-	--[[{
-      type = "recipe",
-      name = "advanced-tiberium-brick-processing",
-      category = "crafting-with-fluid",
-      energy_required = 4,
-	  emissions_multiplier = 2,
-      enabled = false,
-      ingredients = {
-        {type = "fluid", name = "molten-tiberium", amount = 3}
-      },
-      results = {
-        {type = "item", name = "tiberium-brick", amount = 1}
-      },
-      icon = tiberiumInternalName.."/graphics/icons/tiberium-brick.png",
-      icon_size = 32,
-      subgroup = "a-refining",
-      order = "h"
-    },
-	{
-      type = "recipe",
-      name = "tiberium-brick-to-iron-ore",
-      category = "chemistry",
-      energy_required = 4,
-      enabled = false,
-      ingredients = {
-        {type = "item", name = "tiberium-brick", amount = 1}
-      },
-      results = {
-        {type = "item", name = "iron-ore", amount = 4}
-      },
-      icon = tiberiumInternalName.."/graphics/icons/tiberium-brick-to-iron.png",
-      icon_size = 32,
-      subgroup = "a-direct",
-      order = "b[oil-processing]-e[advanced-oil-processing]"
-    },
-    {
-      type = "recipe",
-      name = "tiberium-brick-to-copper-ore",
-      category = "chemistry",
-      energy_required = 4,
-      enabled = false,
-      ingredients = {
-        {type = "item", name = "tiberium-brick", amount = 1}
-      },
-      results = {
-        {type = "item", name = "copper-ore", amount = 4}
-      },
-      icon = tiberiumInternalName.."/graphics/icons/tiberium-brick-to-copper.png",
-      icon_size = 32,
-      subgroup = "a-direct",
-      order = "b[oil-processing]-f[advanced-oil-processing]"
-    },
-    {
-      type = "recipe",
-      name = "tiberium-brick-to-coal",
-      category = "chemistry",
-      energy_required = 4,
-      enabled = false,
-      ingredients = {
-        {type = "item", name = "tiberium-brick", amount = 1}
-      },
-      results = {
-        {type = "item", name = "coal", amount = 4}
-      },
-      icon = tiberiumInternalName.."/graphics/icons/tiberium-brick-to-coal.png",
-      icon_size = 32,
-      subgroup = "a-direct",
-      order = "b[oil-processing]-g[advanced-oil-processing]"
-    },
-    {
-      type = "recipe",
-      name = "tiberium-brick-to-stone",
-      category = "chemistry",
-      energy_required = 4,
-      enabled = false,
-      ingredients = {
-        {type = "item", name = "tiberium-brick", amount = 1}
-      },
-      results = {
-        {type = "item", name = "stone", amount = 4}
-      },
-      icon = tiberiumInternalName.."/graphics/icons/tiberium-brick-to-stone.png",
-      icon_size = 32,
-      subgroup = "a-direct",
-      order = "b[oil-processing]-d[petroleum-gas-processing]"
-    },
-	{
-      type = "recipe",
-      name = "tiberium-brick-to-water",
-      category = "chemistry",
-      energy_required = 0.1,
-      enabled = false,
-      ingredients = {
-        {type = "item", name = "tiberium-brick", amount = 1}
-      },
-      results = {
-        {type = "fluid", name = "water", amount = 1000}
-      },
-      icon = "__base__/graphics/icons/fluid/water.png",
-      icon_size = 32,
-      subgroup = "a-direct",
-      order = "b[oil-processing]-g[light-oil-processing]"
-    },
-	{
-      type = "recipe",
-      name = "tiberium-molten-to-water",
-      category = "chemistry",
-      energy_required = 0.1,
-      enabled = false,
-      ingredients = {
-        {type = "fluid", name = "molten-tiberium", amount = 1}
-      },
-      results = {
-        {type = "fluid", name = "water", amount = 1000}
-      },
-      icon = "__base__/graphics/icons/fluid/water.png",
-      icon_size = 32,
-      subgroup = "a-direct",
-      order = "b[oil-processing]-g[light-oil-processing]"
-    },]]
+}
