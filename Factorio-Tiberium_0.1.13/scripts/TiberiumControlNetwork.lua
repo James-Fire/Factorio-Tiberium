@@ -137,7 +137,7 @@ tiberiumNetworkNodeEntity.energy_source = {
 	emissions_per_minute = 200
 }
 
-data:extend({tiberiumNetworkNodeItem,tiberiumNetworkNodeEntity,tibcat,
+data:extend{tiberiumNetworkNodeItem,tiberiumNetworkNodeEntity,tibcat,
   {
     type = "recipe",
     name = "tiberium-network-node",
@@ -166,7 +166,7 @@ data:extend({tiberiumNetworkNodeItem,tiberiumNetworkNodeEntity,tibcat,
       result = "tiberium-network-node"
     }
   }
-})
+}
 
 data.raw.resource["tiberium-ore"].category = tibcat.name
 
@@ -183,7 +183,7 @@ growthAcceleratorItem.order = "d[growth-accelerator]"
 local growthAcceleratorEntity = table.deepcopy(data.raw["mining-drill"]["node-harvester"])
 growthAcceleratorEntity.name = "growth-accelerator-node"
 
-data:extend({growthAcceleratorItem, growthAcceleratorEntity})
+data:extend{growthAcceleratorItem, growthAcceleratorEntity}
 
 local acceleratorSprite = {
 	-- Centrifuge A
@@ -206,7 +206,7 @@ local acceleratorSprite = {
 	}
 }
 
-data:extend({
+data:extend{
 	--Void recipe for consuming energy credits
 	{
 		type = "recipe",
@@ -362,8 +362,7 @@ data:extend({
 		name = "growth-accelerator",
 		enabled = "false",
 		subgroup = "a-buildings",
-		ingredients =
-		{
+		ingredients = {
 			{"steel-plate", 25},
 			{"advanced-circuit", 15},
 			{"pipe", 10}
@@ -392,120 +391,82 @@ data:extend({
 		stack_size = 15,
 	},
 	{
-    type = "beacon",
-    name = "growth-accelerator-beacon",
-    energy_usage = "10W",
-    -- 0.17 supports "no-automated-item-removal", "no-automated-item-insertion"
-    flags = { "hide-alt-info", "not-blueprintable", "not-deconstructable", "placeable-off-grid", "not-on-map", "no-automated-item-removal", "no-automated-item-insertion" },
-    collision_mask = { "resource-layer" }, -- disable collision
-	resistances = {
-		{
-			type = "fire",
-			percent = 90
+		type = "beacon",
+		name = "growth-accelerator-beacon",
+		energy_usage = "10W",
+		-- 0.17 supports "no-automated-item-removal", "no-automated-item-insertion"
+		flags = {
+			"hide-alt-info",
+			"not-blueprintable",
+			"not-deconstructable",
+			"placeable-off-grid",
+			"not-on-map",
+			"no-automated-item-removal",
+			"no-automated-item-insertion"
 		},
-		{
-			type = "tiberium",
-			percent = 100
-		}
+		collision_mask = {"resource-layer"}, -- disable collision
+		resistances = {
+			{
+				type = "fire",
+				percent = 90
+			},
+			{
+				type = "tiberium",
+				percent = 100
+			}
+		},
+		animation = {
+			filename =  "__core__/graphics/empty.png",
+			width = 1,
+			height = 1,
+			line_length = 1,
+			frame_count = 1,
+		},
+		animation_shadow = {
+			filename = "__core__/graphics/empty.png",
+			width = 1,
+			height = 1,
+			line_length = 1,
+			frame_count = 1,
+		},
+		-- 0.17 supports 0W entities
+		energy_source = {type="void"},
+		base_picture = {
+			filename = "__core__/graphics/empty.png",
+			width = 1,
+			height = 1,
+		},
+		supply_area_distance = 0,
+		radius_visualisation_picture = {
+			filename = "__core__/graphics/empty.png",
+			width = 1,
+			height = 1
+		},
+		distribution_effectivity = 1,
+		module_specification = {
+			module_slots = 65535,
+		},
+		allowed_effects = {"speed", "consumption"},
+		selection_box = {{0, 0}, {0, 0}},
+		collision_box = {{-0.4, -0.4}, {0.4, 0.4}}, -- reduce size preventing inserters from picking modules, will not power unless center is covered
 	},
-    animation = {
-      filename =  "__core__/graphics/empty.png",
-      width = 1,
-      height = 1,
-      line_length = 1,
-      frame_count = 1,
-    },
-    animation_shadow = {
-        filename = "__core__/graphics/empty.png",
-        width = 1,
-        height = 1,
-        line_length = 1,
-        frame_count = 1,
-    },
-    -- 0.17 supports 0W entities
-    energy_source = {type="void"},
-    base_picture =
-    {
-      filename = "__core__/graphics/empty.png",
-      width = 1,
-      height = 1,
-    },
-    supply_area_distance = 0,
-    radius_visualisation_picture =
-    {
-      filename = "__core__/graphics/empty.png",
-      width = 1,
-      height = 1
-    },
-    distribution_effectivity = 1,
-    module_specification =
-    {
-      module_slots = 65535,
-    },
-    allowed_effects = { "speed", "consumption" },
-    selection_box = {{0, 0}, {0, 0}},
-    collision_box = {{-0.4, -0.4}, {0.4, 0.4}}, -- reduce size preventing inserters from picking modules, will not power unless center is covered
-  },
-  -- hidden speed modules matching infinite tech bonus size
-  {
-    type = "module",
-    name = "growth-accelerator-speed-module",
-    icon = "__core__/graphics/empty.png",
-    icon_size = 1,
-    flags = { "hidden" },
-    subgroup = "module",
-    category = "speed",
-    tier = 0,
-    stack_size = 1,
-    effect = { speed = {bonus = 0.25}, consumption = {bonus = 0.25}},
-  },
-})
-
--- CnC Walls local var setup
-local nullimg = {
-    filename = tiberiumInternalName.."/graphics/sonic wall/empty.png",
-    frame_count = 1,
-    axially_symmetrical = false,
-    direction_count = 1,
-    width = 32,
-    height = 32
+	-- hidden speed modules matching infinite tech bonus size
+	{
+		type = "module",
+		name = "growth-accelerator-speed-module",
+		icon = "__core__/graphics/empty.png",
+		icon_size = 1,
+		flags = {"hidden"},
+		subgroup = "module",
+		category = "speed",
+		tier = 0,
+		stack_size = 1,
+		effect = {speed = {bonus = 0.25}, consumption = {bonus = 0.25}},
+	},
 }
-
-local wall_segment_horz = {
-    filename = tiberiumInternalName.."/graphics/sonic wall/wall horz.png",
-    priority = "extra-high",
-    frame_count = 1,
-    axially_symmetrical = false,
-    direction_count = 1,
-    width = 256,
-    height = 256,
-    scale = 0.188
-}
-local wall_segment_vert = {
-    filename = tiberiumInternalName.."/graphics/sonic wall/wall vert.png",
-    priority = "extra-high",
-    frame_count = 1,
-    axially_symmetrical = false,
-    direction_count = 1,
-    width = 192,
-    height = 640,
-    scale = 0.125
-}
-local wall_segment_cross = {
-    filename = tiberiumInternalName.."/graphics/sonic wall/wall cross.png",
-    priority = "extra-high",
-    frame_count = 1,
-    axially_symmetrical = false,
-    direction_count = 1,
-    width = 256,
-    height = 640,
-    scale = 0.125
-}
-
 
 --Sonic Projection Walls
-
-data:extend({
+data:extend{
     {
         type = "item",
         name = "CnC_SonicWall_Hub",
@@ -516,9 +477,9 @@ data:extend({
         place_result = "CnC_SonicWall_Hub",
         stack_size = 50
     }
-})
+}
 
-data:extend({
+data:extend{
     {
         type = "electric-energy-interface",
         name = "CnC_SonicWall_Hub",
@@ -532,11 +493,10 @@ data:extend({
         max_health = 200,
         repair_speed_modifier = 1.5,
         corpse = "wall-remnants",
-        repair_sound = { filename = "__base__/sound/manual-repair-simple.ogg" },
-        mined_sound = { filename = "__base__/sound/deconstruct-bricks.ogg" },
-        vehicle_impact_sound =    { filename = "__base__/sound/car-stone-impact.ogg", volume = 1.0 },
-        energy_source =
-        {
+        repair_sound = {filename = "__base__/sound/manual-repair-simple.ogg"},
+        mined_sound = {filename = "__base__/sound/deconstruct-bricks.ogg"},
+        vehicle_impact_sound = {filename = "__base__/sound/car-stone-impact.ogg", volume = 1.0},
+        energy_source = {
             type = "electric",
             buffer_capacity = "5MJ",
             usage_priority = "primary-input",
@@ -544,10 +504,8 @@ data:extend({
             output_flow_limit = "0W",
             drain = "500kW"
         },
-        picture =
-        {
-            layers =
-            {
+        picture = {
+            layers = {
                 {
                     filename = tiberiumInternalName.."/graphics/sonic wall/node.png",
                     priority = "extra-high",
@@ -572,8 +530,7 @@ data:extend({
                 }
             }
         },
-        resistances =
-        {
+        resistances = {
             {
                 type = "physical",
                 decrease = 3,
@@ -616,12 +573,38 @@ data:extend({
         collision_box = {{-0.4, -0.4}, {0.4, 0.4}},
 		collision_mask = {"layer-15"},
         pictures = {
-            wall_segment_horz,
-            wall_segment_vert,
-            wall_segment_cross
+            {
+				filename = tiberiumInternalName.."/graphics/sonic wall/wall horz.png",
+				priority = "extra-high",
+				frame_count = 1,
+				axially_symmetrical = false,
+				direction_count = 1,
+				width = 256,
+				height = 256,
+				scale = 0.188
+			},
+			{
+				filename = tiberiumInternalName.."/graphics/sonic wall/wall vert.png",
+				priority = "extra-high",
+				frame_count = 1,
+				axially_symmetrical = false,
+				direction_count = 1,
+				width = 192,
+				height = 640,
+				scale = 0.125
+			},
+			{
+				filename = tiberiumInternalName.."/graphics/sonic wall/wall cross.png",
+				priority = "extra-high",
+				frame_count = 1,
+				axially_symmetrical = false,
+				direction_count = 1,
+				width = 256,
+				height = 640,
+				scale = 0.125
+			}
         },
-        resistances =
-        {
+        resistances = {
             {
                 type = "physical",
                 decrease = 5
@@ -647,18 +630,14 @@ data:extend({
                 percent = 100
             }
         },
-        attack_reaction =
-        {
+        attack_reaction = {
             {
                 range = 99999,
-                action =
-                {
+                action = {
                     type = "direct",
-                    action_delivery =
-                    {
+                    action_delivery = {
                         type = "instant",
-                        source_effects =
-                        {
+                        source_effects = {
                             type = "create-entity",
                             entity_name = "CnC_SonicWall_Wall-damage",
                             trigger_created_entity = true
@@ -680,6 +659,15 @@ data:extend({
         selection_box = {{-0.0, -0.0}, {0.0, 0.0}},
         collision_box = {{-0.0, -0.0}, {0.0, 0.0}},
         collision_mask = {"object-layer"},
-        pictures = {nullimg}
+        pictures = {
+			{
+				filename = tiberiumInternalName.."/graphics/sonic wall/empty.png",
+				frame_count = 1,
+				axially_symmetrical = false,
+				direction_count = 1,
+				width = 32,
+				height = 32
+			}
+		}
     }
-})
+}

@@ -5,7 +5,8 @@
   ],
   "item":
   [
-	["tiberium-magazine", "tiberium-rounds-magazine"]
+	["tiberium-magazine", "tiberium-rounds-magazine"],
+	["tiberium-plant", "tiberium-power-plant"]
   ],
   "recipe":
   [
@@ -36,7 +37,8 @@
 	["quartz-growth-credit", "tiberium-growth-credit-from-quartz"],
 	["bauxite-growth-credit", "tiberium-growth-credit-from-bauxite-ore"],
 	["tin-growth-credit", "tiberium-growth-credit-from-tin-ore"],
-	["thorium-growth-credit", "tiberium-growth-credit-from-thorium-ore"]
+	["thorium-growth-credit", "tiberium-growth-credit-from-thorium-ore"],
+	["tiberium-plant", "tiberium-power-plant"]
   ],
   "mod-setting":
   [

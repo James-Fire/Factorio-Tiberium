@@ -150,7 +150,7 @@ data:extend
 		{
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-plant"
+				recipe = "tiberium-power-plant"
 			},
 			{
 				type = "unlock-recipe",
