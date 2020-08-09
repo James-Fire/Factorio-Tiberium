@@ -266,6 +266,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/ore-mechanical.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-science",
       order = "b"
     },
@@ -285,6 +286,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/ore-thermal.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-science",
       order = "c"
     },
@@ -305,6 +307,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/ore-chemical.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-science",
       order = "d"
     },
@@ -325,6 +328,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/ore-nuclear.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-science",
       order = "e"
     },
@@ -345,6 +349,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/ore-EM.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-science",
       order = "f"
     },
@@ -365,6 +370,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/slurry-mechanical.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-slurry-science",
       order = "a"
     },
@@ -384,6 +390,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/slurry-thermal.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-slurry-science",
       order = "b"
     },
@@ -404,6 +411,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/slurry-chemical.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-slurry-science",
       order = "c"
     },
@@ -424,6 +432,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/slurry-nuclear.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-slurry-science",
       order = "d"
     },
@@ -444,6 +453,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/slurry-EM.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-slurry-science",
       order = "e"
     },
@@ -464,6 +474,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/molten-mechanical.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-molten-science",
       order = "a"
     },
@@ -483,6 +494,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/molten-thermal.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-molten-science",
       order = "b"
     },
@@ -503,6 +515,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/molten-chemical.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-molten-science",
       order = "c"
     },
@@ -523,6 +536,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/molten-nuclear.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-molten-science",
       order = "d"
     },
@@ -543,6 +557,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/molten-EM.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-molten-science",
       order = "e"
     },
@@ -563,6 +578,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/liquid-mechanical.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-liquid-science",
       order = "a"
     },
@@ -582,6 +598,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/liquid-thermal.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-liquid-science",
       order = "b"
     },
@@ -602,6 +619,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/liquid-chemical.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-liquid-science",
       order = "c"
     },
@@ -622,6 +640,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/liquid-nuclear.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-liquid-science",
       order = "d"
     },
@@ -642,6 +661,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/liquid-EM.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-liquid-science",
       order = "e"
     }
@@ -724,6 +744,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-sludge.png",
       icon_size = 64,
+	  main_product = "",
       subgroup = "a-refining",
       order = "a-2"
     },
@@ -822,6 +843,7 @@ data:extend{
       },
       icon = tiberiumInternalName.."/graphics/icons/tiberium-recycling.png",
       icon_size = 32,
+	  main_product = "",
       subgroup = "a-refining",
 	  allow_decomposition = false,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
@@ -1020,6 +1042,7 @@ data:extend{
       },
       icon = "__base__/graphics/icons/nuclear-fuel.png",
       icon_size = 64,
+	  main_product = "",
       order = "b[tiberium-nuclear-fuel]"
     },
 	{

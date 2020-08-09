@@ -10,9 +10,9 @@ tiberiumArmor.order = "c[tiberium-armor]"
 tiberiumArmor.subgroup = "a-items"
 tiberiumArmor.icons = {
    {
-      icon=tiberiumArmor.icon,
-      tint={r = 0.2, g = 0.8, b = 0.2, a = 0.9}
-   },
+      icon = tiberiumArmor.icon,
+      tint = {r = 0.3, g = 0.9, b = 0.3, a = 0.9}
+   }
 }
 
 local recipe = table.deepcopy(data.raw.recipe["heavy-armor"])
@@ -29,33 +29,26 @@ tiberiumPowerArmor.order = "d[tiberium-power-armor]"
 tiberiumPowerArmor.subgroup = "a-items"
 tiberiumPowerArmor.icons= {
    {
-      icon=tiberiumPowerArmor.icon,
-      tint={r=0.2,g=0.8,b=0.2,a=0.9}
-   },
-}
-
-tiberiumPowerArmor.resistances = {
-   {
-      type = "physical",
-      decrease = 6,
-      percent = 10
-   },
-   {
-      type = "explosion",
-      decrease = 10,
-      percent = 10
-   },
-   {
-      type = "tiberium",
-      decrease = 0,
-      percent = 100
-   },
-   {
-      type = "acid",
-      decrease = 0,
-      percent = 40
+      icon = tiberiumInternalName.."/graphics/icons/tiberium-field-suit.png",
+      tint = {r = 0.3, g = 0.9, b = 0.3, a = 0.9}
    }
 }
+
+local updatedResist = false
+for _, resist in pairs(tiberiumPowerArmor.resistances) do
+	if resist.type == "tiberium" then
+		resist.percent = 100
+		updatedResist = true
+		break
+	end
+end
+if not updatedResist then
+	tiberiumPowerArmor.resistances[#tiberiumPowerArmor.resistances + 1] = {
+		type = "tiberium",
+		decrease = 0,
+		percent = 100
+	}
+end
 
 local recipe = table.deepcopy(data.raw.recipe["power-armor-mk2"])
 recipe.name = "tiberium-power-armor"
