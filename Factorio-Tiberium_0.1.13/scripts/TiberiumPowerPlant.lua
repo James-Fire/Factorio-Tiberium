@@ -2,41 +2,41 @@ local hit_effects = require ("__base__.prototypes.entity.demo-hit-effects")
 local sounds = require("__base__.prototypes.entity.demo-sounds")
 local greenFugeTint = {r = 0.3, g = 0.8, b = 0.3, a = 0.8}
 
-data:extend({
+data:extend{
 	--Tiberium Power Plant
 	{
 		type = "item",
-		name = "tiberium-plant",
-		icon = "__base__/graphics/icons/chemical-plant.png",
+		name = "tiberium-power-plant",
+		icon = tiberiumInternalName.."/graphics/icons/td-power-plant.png",
 		icon_size = 64,
 		flags = {},
 		subgroup = "a-buildings",
-		order = "m",
-		place_result = "tiberium-plant",
+		order = "e[tiberium-power-plant]",
+		place_result = "tiberium-power-plant",
 		stack_size = 20
 	},
 	{
 		type = "recipe",
-		name = "tiberium-plant",
+		name = "tiberium-power-plant",
 		energy_required = 15,
 		enabled = "false",
 		subgroup = "a-buildings",
-		order = "m",
 		ingredients = {
 			{"steel-plate", 25},
 			{"electric-engine-unit", 10},
 			{"advanced-circuit", 15},
 			{"chemical-plant", 1}
 		},
-		result = "tiberium-plant"
+		result = "tiberium-power-plant"
 	},
+	--Old power plant kept around for legacy reasons
 	{
 		type = "generator",
 		name = "tiberium-plant",
 		icon = "__base__/graphics/icons/chemical-plant.png",
 		icon_size = 64,
 		flags = {"placeable-neutral","placeable-player", "player-creation"},
-		minable = {mining_time = 0.1, result = "tiberium-plant"},
+		minable = {mining_time = 0.1, result = "tiberium-power-plant"},
 		max_health = 300,
 		corpse = "medium-remnants",
 		dying_explosion = "medium-explosion",
@@ -352,6 +352,69 @@ data:extend({
 			pipe_covers = pipecoverspictures(),
 		},
 	},
+	--New, larger power plant
+	{
+		type = "generator",
+		name = "tiberium-power-plant",
+		icon = tiberiumInternalName.."/graphics/icons/td-power-plant.png",
+		icon_size = 64,
+		flags = {"placeable-neutral","placeable-player", "player-creation"},
+		minable = {mining_time = 0.5, result = "tiberium-power-plant"},
+		max_health = 500,
+		corpse = "medium-remnants",
+		dying_explosion = "medium-explosion",
+		max_power_output = (200 / 60) .. "MJ",
+		effectivity = 2,
+		fluid_usage_per_tick = 4 / 60,
+		maximum_temperature = 1000,
+		burns_fluid = true,
+		scale_fluid_usage = true,
+		collision_box = {{-2.2, -2.2}, {2.2, 2.2}},
+		selection_box = {{-2.5, -2.5}, {2.5, 2.5}},
+		drawing_box = {{-2.5, -2.5}, {2.5, 2.5}},
+		energy_source = {
+			type = "electric",
+			usage_priority = "secondary-output",
+			emissions_per_minute = 1000,
+		},
+		horizontal_animation = {
+			filename = tiberiumInternalName.."/graphics/entity/tiberium-power-plant/power-plant-256.png",
+			width = 256,
+			height = 256,
+			scale = 0.70,
+		},
+		vertical_animation = {
+			filename = tiberiumInternalName.."/graphics/entity/tiberium-power-plant/power-plant-256.png",
+			width = 256,
+			height = 256,
+			scale = 0.70,
+		},
+		vehicle_impact_sound =	{filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65},
+		working_sound = {
+			sound = {
+				{
+					filename = "__base__/sound/chemical-plant.ogg",
+					volume = 0.8
+				}
+			},
+			idle_sound = {filename = "__base__/sound/idle1.ogg", volume = 0.6},
+			apparent_volume = 1.5
+		},
+		fluid_box = {
+			base_area = 1.5,
+			base_level = -1.5,
+			height = 3,
+			pipe_connections = {
+				{type = "input-output", position = {0, 3}},
+				{type = "input-output", position = {0, -3}},
+				{type = "input-output", position = {3, 0}},
+				{type = "input-output", position = {-3, 0}},
+			},
+			filter = "liquid-tiberium",
+			production_type = "input-output",
+			pipe_covers = pipecoverspictures(),
+		},
+	},
 	--Tiberium Centrifuge
 	{
 		type = "item",
@@ -360,7 +423,7 @@ data:extend({
 		icon_size = 64,
 		flags = {},
 		subgroup = "a-buildings",
-		order = "a",
+		order = "a[tiberium-centrifuge]-1",
 		place_result = "tiberium-centrifuge",
 		stack_size = 20
 	},
@@ -370,7 +433,6 @@ data:extend({
 		energy_required = 10,
 		enabled = "false",
 		subgroup = "a-buildings",
-		order = "m",
 		ingredients = {
 			{"steel-plate", 10},
 			{"iron-gear-wheel", 20},
@@ -395,7 +457,7 @@ data:extend({
 				type = "fire",
 				percent = 70
 			},
-		{
+			{
 				type = "tiberium",
 				percent = 70
 			}
@@ -678,7 +740,7 @@ data:extend({
 			fade_in_ticks = 10,
 			fade_out_ticks = 30,
 			max_sounds_per_type = 2,
-			--idle_sound = { filename = "__base__/sound/idle1.ogg", volume = 0.3 },
+			--idle_sound = {filename = "__base__/sound/idle1.ogg", volume = 0.3},
 			apparent_volume = 1.5
 		},
 		crafting_speed = 1,
@@ -705,11 +767,11 @@ data:extend({
 			orientation_to_variation = false
 		}
 	},
-})
+}
 	
 local centrifuge2Item = table.deepcopy(data.raw.item["tiberium-centrifuge"])
 centrifuge2Item.name = "tiberium-centrifuge-2"
-centrifuge2Item.order = "b"
+centrifuge2Item.order = "a[tiberium-centrifuge]-2"
 centrifuge2Item.place_result = "tiberium-centrifuge-2"
 
 local centrifuge2Entity = util.table.deepcopy(data.raw["assembling-machine"]["tiberium-centrifuge"])
@@ -736,7 +798,6 @@ data:extend({centrifuge2Item, centrifuge2Entity,
 		energy_required = 10,
 		enabled = "false",
 		subgroup = "a-buildings",
-		order = "m",
 		ingredients = {
 			{"concrete", 50},
 			{"engine-unit", 10},
@@ -749,7 +810,7 @@ data:extend({centrifuge2Item, centrifuge2Entity,
 
 local centrifuge3Item = table.deepcopy(data.raw.item["tiberium-centrifuge-2"])
 centrifuge3Item.name = "tiberium-centrifuge-3"
-centrifuge3Item.order = "c"
+centrifuge3Item.order = "a[tiberium-centrifuge]-3"
 centrifuge3Item.place_result = "tiberium-centrifuge-3"
 
 local centrifuge3Entity = util.table.deepcopy(data.raw["assembling-machine"]["tiberium-centrifuge-2"])
@@ -776,7 +837,6 @@ data:extend({centrifuge3Item, centrifuge3Entity,
 		energy_required = 10,
 		enabled = "false",
 		subgroup = "a-buildings",
-		order = "m",
 		ingredients = {
 			{"refined-concrete", 50},
 			{"electric-engine-unit", 10},
