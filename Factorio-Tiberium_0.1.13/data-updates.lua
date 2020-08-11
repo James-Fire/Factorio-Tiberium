@@ -170,6 +170,10 @@ if mods["bobassembly"] then
 	table.insert(TibBasicScience, "chemical-plant-3")
 	table.insert(TibBasicScience, "chemical-plant-4")
 	
+	table.insert(TibBasicScience, "assembling-machine-4")
+	table.insert(TibBasicScience, "assembling-machine-5")
+	table.insert(TibBasicScience, "assembling-machine-6")
+	
 	table.insert(TibScience, "chemical-plant-2")
 	table.insert(TibScience, "chemical-plant-3")
 	table.insert(TibScience, "chemical-plant-4")

@@ -13,14 +13,9 @@ for _, pre in pairs(data.raw["map-gen-presets"].default) do
 	if pre.basic_settings then
 		if pre.basic_settings.autoplace_controls then
 			pre.basic_settings.autoplace_controls[ore.name] = nil
-			pre.basic_settings.autoplace_controls["sulfur"] = nil
-			pre.basic_settings.autoplace_controls["infinite-"..ore.name] = nil
 		end
 	end
 end]]
 
---require("science")
-
-
---Game complains about recipe not having an icon, so set it last. Game gets icon, it's not in our way.
-LSlib.recipe.changeIcon("template-direct", "__Factorio-Tiberium__/graphics/icons/tiberium-recycling.png", 32)
+require("science")
+require("scripts/tib-map-gen-presets")
