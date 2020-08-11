@@ -106,7 +106,21 @@ script.on_configuration_changed(function(data)
 		for _, entity in pairs(global.world.find_entities_filtered({name = {"CnC_SonicWall_Hub", "tib-spike"}})) do
 			script.register_on_entity_destroyed(entity)
 		end
+		--Place Blossom trees on all the now bare nodes.
+		for _, surface in pairs(game.surfaces) do
+			for _, node[i] in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
+				local position = node.position
+				local tree = surface.create_entity
+					{
+					name = "tibNode_tree",
+					position = position,
+					force = neutral,
+					raise_built = false
+					}
+			end
+		end
 	end
+	
 	
 	if data.mod_changes[MOD_NAME] and data.mod_changes[MOD_NAME].old_version then
 		game.print("[Tiberium Beta] old version: "..data.mod_changes[MOD_NAME].old_version..", adding Growth Accelerator speed beacons.")
