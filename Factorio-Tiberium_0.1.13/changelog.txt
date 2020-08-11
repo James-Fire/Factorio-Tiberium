@@ -44,6 +44,7 @@ Version: 0.1.13
     - More ore for Tib Only Start
     - Updated centrifuge recipes added extensive debug logging 
     - Fixed the changelog to show up in-game
+    - Script replacement for Blossom trees, so they don't show if they shouldn't.
   Features:
     - We now have a Tib only starting option.
     - Automated recipe breakdown method, for compatibility with basically every mod that adds new science packs or resources.
