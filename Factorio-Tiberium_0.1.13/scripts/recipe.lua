@@ -237,7 +237,7 @@ data:extend{
       category = "basic-tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
+      energy_required = 10,
       enabled = false,
       ingredients = {
         {type = "item", name = "tiberium-data", amount = 10},
@@ -256,10 +256,10 @@ data:extend{
       category = "basic-tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "item", name = "tiberium-ore", amount = 1},
+        {type = "item", name = "tiberium-ore", amount = 5},
       },
       results = {
         {type = "item", name = "tiberium-data", amount = 1}
@@ -276,10 +276,11 @@ data:extend{
       category = "tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 30,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "item", name = "tiberium-ore", amount = 1},
+        {type = "item", name = "tiberium-ore", amount = 5},
+		{type = "item", name = "coal", amount = 1}
       },
       results = {
         {type = "item", name = "tiberium-data", amount = 2}
@@ -296,10 +297,10 @@ data:extend{
       category = "tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "item", name = "tiberium-ore", amount = 1},
+        {type = "item", name = "tiberium-ore", amount = 5},
 		{type = "fluid", name = "sulfuric-acid", amount = 10},
       },
       results = {
@@ -317,10 +318,10 @@ data:extend{
       category = "tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "item", name = "tiberium-ore", amount = 1},
+        {type = "item", name = "tiberium-ore", amount = 5},
 		{type = "item", name = "uranium-ore", amount = 2}
       },
       results = {
@@ -338,10 +339,10 @@ data:extend{
       category = "tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "item", name = "tiberium-ore", amount = 1},
+        {type = "item", name = "tiberium-ore", amount = 5},
 		{type = "item", name = "processing-unit", amount = 1}
       },
       results = {
@@ -360,10 +361,10 @@ data:extend{
       category = "basic-tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "tiberium-slurry", amount = 1},
+        {type = "fluid", name = "tiberium-slurry", amount = 5},
       },
       results = {
         {type = "item", name = "tiberium-data", amount = 2}
@@ -380,10 +381,11 @@ data:extend{
       category = "tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 30,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "tiberium-slurry", amount = 1},
+        {type = "fluid", name = "tiberium-slurry", amount = 5},
+		{type = "item", name = "coal", amount = 1}
       },
       results = {
         {type = "item", name = "tiberium-data", amount = 4}
@@ -400,10 +402,10 @@ data:extend{
       category = "tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "tiberium-slurry", amount = 1},
+        {type = "fluid", name = "tiberium-slurry", amount = 5},
 		{type = "fluid", name = "sulfuric-acid", amount = 10},
       },
       results = {
@@ -421,10 +423,10 @@ data:extend{
       category = "tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "tiberium-slurry", amount = 1},
+        {type = "fluid", name = "tiberium-slurry", amount = 5},
 		{type = "item", name = "uranium-ore", amount = 2}
       },
       results = {
@@ -442,10 +444,10 @@ data:extend{
       category = "tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "tiberium-slurry", amount = 1},
+        {type = "fluid", name = "tiberium-slurry", amount = 5},
 		{type = "item", name = "processing-unit", amount = 1}
       },
       results = {
@@ -464,10 +466,10 @@ data:extend{
       category = "basic-tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "molten-tiberium", amount = 1},
+        {type = "fluid", name = "molten-tiberium", amount = 5},
       },
       results = {
         {type = "item", name = "tiberium-data", amount = 4}
@@ -484,10 +486,11 @@ data:extend{
       category = "tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 30,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "molten-tiberium", amount = 1},
+        {type = "fluid", name = "molten-tiberium", amount = 5},
+		{type = "item", name = "coal", amount = 1}
       },
       results = {
         {type = "item", name = "tiberium-data", amount = 8}
@@ -504,10 +507,10 @@ data:extend{
       category = "tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "molten-tiberium", amount = 1},
+        {type = "fluid", name = "molten-tiberium", amount = 5},
 		{type = "fluid", name = "sulfuric-acid", amount = 10},
       },
       results = {
@@ -525,10 +528,10 @@ data:extend{
       category = "tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "molten-tiberium", amount = 1},
+        {type = "fluid", name = "molten-tiberium", amount = 5},
 		{type = "item", name = "uranium-ore", amount = 2}
       },
       results = {
@@ -546,10 +549,10 @@ data:extend{
       category = "tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "molten-tiberium", amount = 1},
+        {type = "fluid", name = "molten-tiberium", amount = 5},
 		{type = "item", name = "processing-unit", amount = 1}
       },
       results = {
@@ -568,10 +571,10 @@ data:extend{
       category = "basic-tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "liquid-tiberium", amount = 1},
+        {type = "fluid", name = "liquid-tiberium", amount = 5},
       },
       results = {
         {type = "item", name = "tiberium-data", amount = 14}
@@ -588,10 +591,11 @@ data:extend{
       category = "tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 30,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "liquid-tiberium", amount = 1},
+        {type = "fluid", name = "liquid-tiberium", amount = 5},
+		{type = "item", name = "coal", amount = 1}
       },
       results = {
         {type = "item", name = "tiberium-data", amount = 28}
@@ -608,10 +612,10 @@ data:extend{
       category = "tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "liquid-tiberium", amount = 1},
+        {type = "fluid", name = "liquid-tiberium", amount = 5},
 		{type = "fluid", name = "sulfuric-acid", amount = 10},
       },
       results = {
@@ -629,10 +633,10 @@ data:extend{
       category = "tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "liquid-tiberium", amount = 1},
+        {type = "fluid", name = "liquid-tiberium", amount = 5},
 		{type = "item", name = "uranium-ore", amount = 2}
       },
       results = {
@@ -650,10 +654,10 @@ data:extend{
       category = "tiberium-science",
 	  always_show_made_in = true,
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
+      energy_required = 4,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "liquid-tiberium", amount = 1},
+        {type = "fluid", name = "liquid-tiberium", amount = 5},
 		{type = "item", name = "processing-unit", amount = 1}
       },
       results = {
@@ -673,13 +677,13 @@ data:extend{
       type = "recipe",
       name = "tiberium-ore-processing",
       category = "oil-processing",
-      energy_required = 15,
+      energy_required = 2,
 	  crafting_machine_tint = TibCraftingTint,
 	  emissions_multiplier = 2,
       enabled = false,
       ingredients = {
+		-- The Tiberium Ore is added to recipe during recipe-autogeneration since it varies based on the settings
         {type = "fluid", name = "water", amount = 100},
-        {type = "item", name = "tiberium-ore", amount = 10},
       },
       results = {
         {type = "fluid", name = "tiberium-slurry", amount = 6}
@@ -694,7 +698,7 @@ data:extend{
       name = "molten-tiberium-processing",
       category = "oil-processing",
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 10,
+      energy_required = 2,
 	  emissions_multiplier = 2,
       enabled = false,
       ingredients = {
@@ -746,7 +750,7 @@ data:extend{
       icon_size = 64,
 	  main_product = "",
       subgroup = "a-refining",
-      order = "a-2"
+      order = "b-2"
     },
 	{
       type = "recipe",

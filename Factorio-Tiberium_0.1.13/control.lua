@@ -602,9 +602,27 @@ script.on_nth_tick(10, function(event) --Player damage 6 times per second
 end
 )
 
+script.on_nth_tick(60 * 300, function(event) --Global integrity check
+	local nodeCount = 0
+	for _, surface in pairs(game.surfaces) do
+		nodeCount = nodeCount + surface.count_entities_filtered{name = "tibGrowthNode"}
+	end
+	if nodeCount ~= #global.tibGrowthNodeList then
+		game.print("!!!Warning: "..nodeCount.." Tiberium nodes exist while there are "..#global.tibGrowthNodeList.." nodes growing.")
+		game.print("Rebuilding Tiberium node growth list.")
+		global.tibGrowthNodeList = {}
+		for _, surface in pairs(game.surfaces) do
+			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
+				table.insert(global.tibGrowthNodeList, node)
+			end
+		end
+		global.intervalBetweenNodeUpdates = math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
+	end
+end)
+
 script.on_event(defines.events.on_trigger_created_entity, function(event)
 	CnC_SonicWall_OnTriggerCreatedEntity(event)
-	if debugText then  --Checking when this is actually called
+	if debugText and (event.entity.name == "CnC_SonicWall_Wall-damage") then  --Checking when this is actually called
 		game.print("SRF Wall damaged at "..event.entity.position.x..", "..event.entity.position.y)
 	end
 end)
@@ -768,7 +786,7 @@ script.on_event({defines.events.on_research_finished}, OnResearchFinished)
 function OnForceReset(event)
 	local force = event.force or event.destination
 	if force and force.get_entity_count(Beacon_Name) > 0 then -- only update when beacons exist for force
-		local module_count = entity.force.technologies["tiberium-growth-acceleration-acceleration"].level
+		local module_count = force.technologies["tiberium-growth-acceleration-acceleration"].level
 		for _, surface in pairs(game.surfaces) do
 			local beacons = surface.find_entities_filtered{name = Beacon_Name, force = force}
 			for _, beacon in pairs(beacons) do

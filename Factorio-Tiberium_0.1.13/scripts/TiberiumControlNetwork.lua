@@ -121,7 +121,7 @@ tiberiumNetworkNodeItem.place_result = "tiberium-network-node"
 
 local tibcat = data.raw["resource-category"]["basic-solid-tiberium"]
 
-local tiberiumNetworkNodeEntity = util.table.deepcopy(data.raw["mining-drill"]["electric-mining-drill"])
+local tiberiumNetworkNodeEntity = table.deepcopy(data.raw["mining-drill"]["electric-mining-drill"])
 tiberiumNetworkNodeEntity.name = "tiberium-network-node"
 tiberiumNetworkNodeEntity.energy_usage = "25000kW"
 tiberiumNetworkNodeEntity.mining_speed = 10
@@ -137,7 +137,7 @@ tiberiumNetworkNodeEntity.energy_source = {
 	emissions_per_minute = 200
 }
 
-data:extend{tiberiumNetworkNodeItem,tiberiumNetworkNodeEntity,tibcat,
+data:extend{tiberiumNetworkNodeItem, tiberiumNetworkNodeEntity,
   {
     type = "recipe",
     name = "tiberium-network-node",
@@ -177,23 +177,14 @@ for _, drill in pairs(data.raw["mining-drill"]) do
 	end
 end
 
-local growthAcceleratorItem = table.deepcopy(data.raw.item["pumpjack"])
-growthAcceleratorItem.name = "growth-accelerator-node"
-growthAcceleratorItem.order = "d[growth-accelerator]"
-local growthAcceleratorEntity = table.deepcopy(data.raw["mining-drill"]["node-harvester"])
-growthAcceleratorEntity.name = "growth-accelerator-node"
-
-data:extend{growthAcceleratorItem, growthAcceleratorEntity}
-
 local acceleratorSprite = {
-	-- Centrifuge A
+	-- Centrifuge C
 	filename = "__base__/graphics/entity/centrifuge/centrifuge-C.png",
 	priority = "high",
 	line_length = 8,
 	width = 119,
 	height = 107,
 	frame_count = 64,
-	shift = util.by_pixel(-0.5, -26.5),
 	hr_version = {
 		filename = "__base__/graphics/entity/centrifuge/hr-centrifuge-C.png",
 		priority = "high",
@@ -202,9 +193,26 @@ local acceleratorSprite = {
 		width = 237,
 		height = 214,
 		frame_count = 64,
-		shift = util.by_pixel(-0.25, -26.5)
 	}
 }
+
+local growthAcceleratorEntity = table.deepcopy(data.raw["mining-drill"]["node-harvester"])
+growthAcceleratorEntity.name = "growth-accelerator-node"
+growthAcceleratorEntity.animations = acceleratorSprite
+growthAcceleratorEntity.base_picture = {}
+growthAcceleratorEntity.base_picture.sheet = acceleratorSprite
+growthAcceleratorEntity.graphics_set = nil
+growthAcceleratorEntity.integration_patch = nil
+growthAcceleratorEntity.wet_mining_graphics_set = nil
+growthAcceleratorEntity.mining_speed = 1 / 15
+growthAcceleratorEntity.vector_to_place_result = {0, 0}
+growthAcceleratorEntity.energy_usage = "1kW"
+growthAcceleratorEntity.energy_source = {
+	type = "void",
+	emissions_per_minute = 2,
+}
+
+data:extend{growthAcceleratorEntity}
 
 data:extend{
 	--Void recipe for consuming energy credits
@@ -253,10 +261,10 @@ data:extend{
 		energy_usage = "1kW",
 		crafting_speed = 1,
 		fixed_recipe = "tiberium-growth",
-		allowed_effects = { "speed", "consumption" },
-		open_sound = { filename = "__base__/sound/machine-open.ogg", volume = 0.85 },
-		close_sound = { filename = "__base__/sound/machine-close.ogg", volume = 0.75 },
-		vehicle_impact_sound = { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
+		allowed_effects = {"speed", "consumption"},
+		open_sound = {filename = "__base__/sound/machine-open.ogg", volume = 0.85},
+		close_sound = {filename = "__base__/sound/machine-close.ogg", volume = 0.75},
+		vehicle_impact_sound = {filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65},
 		resistances = {
 			{
 				type = "fire",
@@ -285,12 +293,10 @@ data:extend{
 						line_length = 8,
 						priority = "high",
 						scale = 0.5,
-						shift = {0, -0.8515625},
 						width = 190
 					},
 					line_length = 8,
 					priority = "high",
-					shift = {0, -0.84375},
 					width = 96
 				},
 			},
@@ -298,14 +304,13 @@ data:extend{
 		idle_animation = {
 			layers = {
 				{
-					-- Centrifuge A
+					-- Centrifuge C
 					filename = "__base__/graphics/entity/centrifuge/centrifuge-C.png",
 					priority = "high",
 					line_length = 8,
 					width = 119,
 					height = 107,
 					frame_count = 64,
-					shift = util.by_pixel(-0.5, -26.5),
 					hr_version = {
 						filename = "__base__/graphics/entity/centrifuge/hr-centrifuge-C.png",
 						priority = "high",
@@ -314,7 +319,6 @@ data:extend{
 						width = 237,
 						height = 214,
 						frame_count = 64,
-						shift = util.by_pixel(-0.25, -26.5)
 					}
 				},
 				{
@@ -325,7 +329,6 @@ data:extend{
 					width = 132,
 					height = 74,
 					frame_count = 64,
-					shift = util.by_pixel(20, -10),
 					hr_version = {
 						filename = "__base__/graphics/entity/centrifuge/hr-centrifuge-C-shadow.png",
 						draw_as_shadow = true,
@@ -335,7 +338,6 @@ data:extend{
 						width = 279,
 						height = 152,
 						frame_count = 64,
-						shift = util.by_pixel(16.75, -10)
 					}
 				},
 			},

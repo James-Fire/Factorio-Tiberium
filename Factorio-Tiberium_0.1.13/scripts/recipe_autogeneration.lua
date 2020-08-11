@@ -7,16 +7,10 @@ local RecipeMult = settings.startup["tiberium-value"].value / 10
 local OrePerCredit = settings.startup["tiberium-growth"].value * 10
 local CreditTime = RecipeMult * OrePerCredit  --Scale with OrePerCredit instead of just constant 100
 local EnergyCreditCost = CreditTime * 3
-local InputMaterial = 10 / RecipeMult
-local RefineEnergyRequired = InputMaterial * 0.25
-local WastePerCycle      = math.max(InputMaterial / 10, 1)
--- local CentEnergyRequired = 10 / RecipeMult
--- local TiberiumPerCycle   = math.max(40 / RecipeMult, 1) --As ore is more valuable, it should take less of it to centrifuge
+local WastePerCycle = math.max(1 / RecipeMult, 1)
 
 LSlib.recipe.addIngredient("tiberium-rounds-magazine", "tiberium-ore", math.max(10 / RecipeMult, 1), "item") --So it doesn't crash for large RecipeMults
-LSlib.recipe.setEngergyRequired("tiberium-ore-processing", RefineEnergyRequired)
-LSlib.recipe.setEngergyRequired("molten-tiberium-processing", RefineEnergyRequired)
-LSlib.recipe.setEngergyRequired("tiberium-liquid-processing", RefineEnergyRequired * 24)
+LSlib.recipe.addIngredient("tiberium-ore-processing", "tiberium-ore", math.max(10 / RecipeMult, 1), "item")
 LSlib.recipe.setEngergyRequired("tiberium-growth-credit-from-energy", EnergyCreditCost)
 LSlib.recipe.addResult("tiberium-farming", "tiberium-ore", 100 + (OrePerCredit * 0.5), "item") --Changed this so the 100 base tiberium ore isn't multiplied
 LSlib.recipe.addResult("tiberium-farming", "tiberium-data", OrePerCredit * 0.1, "item")

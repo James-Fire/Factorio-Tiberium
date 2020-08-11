@@ -635,6 +635,16 @@ marvEntity.turret_animation = nil
 marvEntity.turret_return_timeout = nil
 marvEntity.turret_rotation_speed = nil
 marvEntity.weight = 50000
+marvEntity.collision_box = {{-1.4, -1.8}, {1.4, 1.8}}
+marvEntity.drawing_box = {{-2.3, -2.3}, {2.3, 2}}
+marvEntity.selection_box = {{-1.4, -1.8}, {1.4, 1.8}}
+marvEntity.burner.smoke[1].position = {0, 2.2}
+for _, layer in pairs(marvEntity.animation.layers) do
+	layer.scale = 0.75
+	if layer.hr_version then
+		layer.hr_version.scale = 0.75
+	end
+end
 
 data:extend{marvItem, marvEntity,
 	{
