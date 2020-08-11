@@ -150,12 +150,56 @@ local tne = noise.to_noise_expression;
 resource_autoplace = require("resource-autoplace");
 
 resource_autoplace.initialize_patch_set("tibGrowthNode", startingArea)
-
 data:extend({
+	{
+        type = "simple-entity",
+        name = "tibNode_tree",
+        icon = "__Factorio-Tiberium__/graphics/entity/nodes/tiberium_blossom_tree.png",
+		icon_size = 32,
+        flags = {"placeable-neutral", "player-creation", "not-repairable"},
+        subgroup = "remnants",
+        order = "a[remnants]",
+        max_health = 10000,
+        selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
+        collision_box = {{-0.4, -0.4}, {0.4, 0.4}},
+		collision_mask = {"layer-15"},
+        picture = {
+			filename = "__Factorio-Tiberium__/graphics/entity/nodes/tiberium_blossom_tree.png",
+			width = 320,
+			height = 251,
+        },
+        resistances =
+        {
+            {
+                type = "physical",
+                percent = 100
+            },
+            {
+                type = "acid",
+                percent = 100
+            },
+            {
+                type = "explosion",
+                percent = 100
+            },
+            {
+                type = "fire",
+                percent = 100
+            },
+            {
+                type = "laser",
+                percent = 100
+            },
+			{
+                type = "tiberium",
+                percent = 100
+            }
+        },
+    },
 	{
 		type = "resource",
 		name = "tibGrowthNode",
-		icon = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
+		icon = tiberiumInternalName.."/graphics/sonic wall/empty.png",
 		icon_size = 32,
 		flags = {"placeable-neutral"},
 		category = "advanced-solid-tiberium",
@@ -197,10 +241,10 @@ data:extend({
 		stage_counts = {0},
 		stages = {
 			sheet = {
-				filename = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
+				filename = tiberiumInternalName.."/graphics/sonic wall/empty.png",
 				priority = "extra-high",
-				width = 320,
-				height = 251,
+				width = 32,
+				height = 32,
 				frame_count = 1,
 				variation_count = 1
 			}
@@ -214,7 +258,7 @@ data:extend({
 	{
 		type = "resource",
 		name = "tibGrowthNode_infinite",
-		icon = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
+		icon = tiberiumInternalName.."/graphics/sonic wall/empty.png",
 		icon_size = 32,
 		flags = {"placeable-neutral"},
 		category = "advanced-liquid-tiberium",
@@ -244,10 +288,10 @@ data:extend({
 		stage_counts = {0},
 		stages = {
 			sheet = {
-				filename = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
+				filename = tiberiumInternalName.."/graphics/sonic wall/empty.png",
 				priority = "extra-high",
-				width = 320,
-				height = 251,
+				width = 32,
+				height = 32,
 				frame_count = 1,
 				variation_count = 1
 			}

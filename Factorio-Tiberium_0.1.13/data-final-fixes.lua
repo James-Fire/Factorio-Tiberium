@@ -13,12 +13,12 @@ for _, pre in pairs(data.raw["map-gen-presets"].default) do
 	if pre.basic_settings then
 		if pre.basic_settings.autoplace_controls then
 			pre.basic_settings.autoplace_controls[ore.name] = nil
-			pre.basic_settings.autoplace_controls["sulfur"] = nil
-			pre.basic_settings.autoplace_controls["infinite-"..ore.name] = nil
 		end
 	end
 end]]
 
+require("science")
+require("scripts/tib-map-gen-presets")
 -- Ease into early techs for Tib Only runs
 if settings.startup["tiberium-advanced-start"].value or settings.startup["tiberium-ore-removal"].value then
 	data.raw.technology["tiberium-processing-tech"].unit.count = 100

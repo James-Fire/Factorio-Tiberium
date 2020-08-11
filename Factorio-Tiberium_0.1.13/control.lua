@@ -103,7 +103,21 @@ script.on_configuration_changed(function(data)
 		for _, entity in pairs(global.world.find_entities_filtered{name = {"CnC_SonicWall_Hub", "tib-spike"}}) do
 			script.register_on_entity_destroyed(entity)
 		end
+		--Place Blossom trees on all the now bare nodes.
+		for _, surface in pairs(game.surfaces) do
+			for _, node[i] in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
+				local position = node.position
+				local tree = surface.create_entity
+					{
+					name = "tibNode_tree",
+					position = position,
+					force = neutral,
+					raise_built = false
+					}
+			end
+		end
 	end
+	
 	
 	if data.mod_changes[MOD_NAME] and data.mod_changes[MOD_NAME].old_version then
 		game.print("[Tiberium Beta] old version: "..data.mod_changes[MOD_NAME].old_version..", adding Growth Accelerator speed beacons.")
@@ -324,6 +338,14 @@ function CreateNode(surface, position)
 		surface.destroy_decoratives{area = area}
 		--Actual node creation
 		local node = surface.create_entity{name="tibGrowthNode", position = position, amount = 15000}
+		--Spawn tree entity when node is placed "tibNode_tree"
+		local tree = surface.create_entity
+			{
+			name = "tibNode_tree",
+			position = position,
+			force = neutral,
+			raise_built = false
+			}
 		table.insert(global.tibGrowthNodeList, node)
 		global.intervalBetweenNodeUpdates = math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
 	end
@@ -373,6 +395,16 @@ end)
 
 script.on_event(defines.events.on_resource_depleted, function(event)
 	if event.entity.name == "tibGrowthNode" then
+		--Remove tree entity when node is mined out
+		local position = event.entity.position
+		local area = {
+			{x = math.floor(position.x), y = math.floor(position.y)},
+			{x = math.ceil(position.x), y = math.ceil(position.y)}
+		}
+		local trees = surface.find_entities_filtered{area = area, name = "tibNode_tree"}
+		for _, tree in pairs(trees) do
+			tree.destroy()
+		end
 		for i, node in pairs(global.tibGrowthNodeList) do
 			if node == event.entity then
 				table.remove(global.tibGrowthNodeList, i)
@@ -489,6 +521,14 @@ script.on_event(defines.events.on_chunk_generated, function(event)
 	for i = 1, #entities, 1 do
 		table.insert(global.tibGrowthNodeList, entities[i])
 		local position = entities[i].position
+		--Spawn tree entity when node is placed "tibNode_tree"
+		local tree = surface.create_entity
+			{
+			name = "tibNode_tree",
+			position = position,
+			force = neutral,
+			raise_built = false
+			}
 		local howManyOre = math.min(math.max(10, (math.abs(position.x) + math.abs(position.y)) / 25), 200) --Start further nodes with more ore
 		PlaceOre(entities[i], howManyOre)
 		--Cosmetic stuff
@@ -642,6 +682,18 @@ local on_new_entity = function(event)
 		script.register_on_entity_destroyed(new_entity)
 		CnC_SonicWall_AddNode(new_entity, event.tick)
 	end
+	if (new_entity.name == "node-harvester") then
+		--Remove tree entity when node is covered
+		local position = new_entity.position
+		local area = {
+			{x = math.floor(position.x), y = math.floor(position.y)},
+			{x = math.ceil(position.x), y = math.ceil(position.y)}
+		}
+		local trees = surface.find_entities_filtered{area = area, name = "tibNode_tree"}
+		for _, tree in pairs(trees) do
+			tree.destroy()
+		end
+	end
 	if (new_entity.name == "tib-spike") then
 		script.register_on_entity_destroyed(new_entity)
 		local position = new_entity.position
@@ -649,9 +701,15 @@ local on_new_entity = function(event)
 			{x = math.floor(position.x), y = math.floor(position.y)},
 			{x = math.ceil(position.x), y = math.ceil(position.y)}
 		}
+		--Remove tree entity when node is covered
+		local trees = surface.find_entities_filtered{area = area, name = "tibNode_tree"}
+		for _, tree in pairs(trees) do
+			tree.destroy()
+		end
 		local nodes = surface.find_entities_filtered{area = area, name = "tibGrowthNode"}
 		for _, node in pairs(nodes) do
 			--Remove spiked node from growth list
+			
 			for i = 1, #global.tibGrowthNodeList do
 				if global.tibGrowthNodeList[i] == node then
 					table.remove(global.tibGrowthNodeList, i)
@@ -681,6 +739,11 @@ local on_new_entity = function(event)
 			{x = math.floor(position.x), y = math.floor(position.y)},
 			{x = math.ceil(position.x), y = math.ceil(position.y)}
 		}
+		--Remove tree entity when node is covered
+		local trees = surface.find_entities_filtered{area = area, name = "tibNode_tree"}
+		for _, tree in pairs(trees) do
+			tree.destroy()
+		end
 		local accelerators = surface.find_entities_filtered{area = area, name = "growth-accelerator-node"}
 		for _, accelerator in pairs(accelerators) do
 			local force = accelerator.force
@@ -720,6 +783,14 @@ local on_remove_entity = function(event)
 		}
 		local nodes = entity.surface.find_entities_filtered{area = area, name = "tibGrowthNode_infinite"}
 		for _, node in pairs(nodes) do
+			--Spawn tree entity when node is placed "tibNode_tree"
+			local tree = surface.create_entity
+			{
+			name = "tibNode_tree",
+			position = position,
+			force = neutral,
+			raise_built = false
+			}
 			local spikedNodeRichness = node.amount
 			node.destroy()
 			local newNode = entity.surface.create_entity
@@ -734,6 +805,17 @@ local on_remove_entity = function(event)
 		end
 		global.intervalBetweenNodeUpdates = math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
 	end
+	if (entity.name == "node-harvester") then
+	--Spawn tree entity when node is placed "tibNode_tree"
+	local position = entity.position
+		local tree = surface.create_entity
+		{
+		name = "tibNode_tree",
+		position = position,
+		force = neutral,
+		raise_built = false
+		}
+	end
 	if (entity.type == "mining-drill") then
 		for i, drill in pairs(global.drills) do
 			if drill == entity then
@@ -743,6 +825,16 @@ local on_remove_entity = function(event)
 		end
 	end
 	if Accelerator_Names[entity.name] then
+		--Spawn tree entity when node is placed "tibNode_tree"
+		local position = entity.position
+			local tree = surface.create_entity
+			{
+			name = "tibNode_tree",
+			position = position,
+			force = neutral,
+			raise_built = false
+			}
+
 		local beacons = entity.surface.find_entities_filtered{name = Beacon_Name, position = entity.position}
 		for _, beacon in pairs(beacons) do
 			beacon.destroy()
