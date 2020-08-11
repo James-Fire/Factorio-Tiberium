@@ -1,5 +1,5 @@
 -- Change when uploading to main/beta version, include 2 underscores on both sides
-tiberiumInternalName = "__Factorio-Tiberium-Beta__"
+tiberiumInternalName = "__Factorio-Tiberium__"
 
 require("__LSlib__/LSlib")
 require("scripts/item-groups")

@@ -154,7 +154,7 @@ data:extend({
 	{
         type = "simple-entity",
         name = "tibNode_tree",
-        icon = "__Factorio-Tiberium__/graphics/entity/nodes/tiberium_blossom_tree.png",
+        icon = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
 		icon_size = 32,
         flags = {"placeable-neutral", "player-creation", "not-repairable"},
         subgroup = "remnants",
@@ -164,7 +164,7 @@ data:extend({
         collision_box = {{-0.4, -0.4}, {0.4, 0.4}},
 		collision_mask = {"layer-15"},
         picture = {
-			filename = "__Factorio-Tiberium__/graphics/entity/nodes/tiberium_blossom_tree.png",
+			filename = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
 			width = 320,
 			height = 251,
         },
