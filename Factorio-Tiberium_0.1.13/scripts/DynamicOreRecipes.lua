@@ -864,9 +864,9 @@ function fugeRecipeTier(tier)
 	local foundRecipeMult = false
 	local material = (tier == 1) and "ore" or (tier == 2) and "slurry" or "molten"
 	local item = (tier == 1) and "tiberium-ore" or (tier == 2) and "tiberium-slurry" or "molten-tiberium"
+	local ingredientAmount = (tier ~= 1) and math.max(160 / settings.startup["tiberium-value"].value, 1) or 16
 	local targetAmount = (tier == 1) and 32 or (tier == 2) and 64 or 128
 	local totalOre = 0
-	local CentEnergyRequired = 10 / math.floor(settings.startup["tiberium-value"].value + 0.5)
 	-- Total all resources for the tier
 	for pack in pairs(science[tier]) do
 		sumDicts(resources, allPacks[pack])
@@ -909,8 +909,8 @@ function fugeRecipeTier(tier)
 		end
 	end
 	--Make actual recipe changes
-	LSlib.recipe.editEngergyRequired("tiberium-"..material.."-centrifuging", CentEnergyRequired * recipeMult)
-	LSlib.recipe.addIngredient("tiberium-"..material.."-centrifuging", item, 16 * recipeMult, (tier > 1) and "fluid" or "item")
+	LSlib.recipe.editEngergyRequired("tiberium-"..material.."-centrifuging", recipeMult)
+	LSlib.recipe.addIngredient("tiberium-"..material.."-centrifuging", item, ingredientAmount * recipeMult, (tier > 1) and "fluid" or "item")
 	for resource, amount in pairs(resources) do
 		if (resource ~= "stone") and (amount > 1 / 128) then
 			local rounded = math.ceil(amount * recipeMult)
@@ -920,7 +920,7 @@ function fugeRecipeTier(tier)
 	if resources["stone"] and (listLength(fluids) < 3) then
 		local stone = math.ceil(resources["stone"] * recipeMult)
 		LSlib.recipe.duplicate("tiberium-"..material.."-centrifuging", "tiberium-"..material.."-sludge-centrifuging")
-		LSlib.recipe.changeIcon("tiberium-"..material.."-sludge-centrifuging", "__Factorio-Tiberium__/graphics/icons/"..material.."-sludge-centrifuging.png", 32)
+		LSlib.recipe.changeIcon("tiberium-"..material.."-sludge-centrifuging", tiberiumInternalName.."/graphics/icons/"..material.."-sludge-centrifuging.png", 32)
 		LSlib.recipe.addResult("tiberium-"..material.."-sludge-centrifuging", "tiberium-sludge", stone, "fluid")
 		LSlib.recipe.addResult("tiberium-"..material.."-centrifuging", "stone", stone, "item")
 	else  -- Don't create sludge recipe if there is no stone to convert or we don't have enough fluid boxes
@@ -980,7 +980,7 @@ function addDirectRecipe(ore)
 	LSlib.recipe.addResult(recipeName, ore, oreAmount, itemOrFluid)
 	LSlib.recipe.setMainResult(recipeName, ore)
 	if settings.startup["tiberium-byproduct-direct"].value then  -- Direct Sludge Waste setting
-		local WastePerCycle = math.max(settings.startup["tiberium-value"].value / 100, 1)
+		local WastePerCycle = math.max(10 / settings.startup["tiberium-value"].value, 1)
 		LSlib.recipe.addResult(recipeName, "tiberium-sludge", WastePerCycle, "fluid")
 	end
 	LSlib.technology.addRecipeUnlock(tech, recipeName)
@@ -1003,7 +1003,7 @@ function addCreditRecipe(ore)
 	LSlib.recipe.setEngergyRequired(recipeName, energy)
 	LSlib.recipe.setOrderstring(recipeName, order)
 	if (ore == "coal") or (ore == "copper-ore") or (ore == "iron-ore") or (ore == "stone") or (ore == "crude-oil") or (ore == "uranium-ore") then
-		LSlib.recipe.changeIcon(recipeName, "__Factorio-Tiberium__/graphics/icons/growth-credit-"..ore..".png", 32)
+		LSlib.recipe.changeIcon(recipeName, tiberiumInternalName.."/graphics/icons/growth-credit-"..ore..".png", 32)
 	end
 end
 

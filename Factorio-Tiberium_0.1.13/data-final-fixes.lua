@@ -19,8 +19,10 @@ for _, pre in pairs(data.raw["map-gen-presets"].default) do
 	end
 end]]
 
---require("science")
+-- Ease into early techs for Tib Only runs
+if settings.startup["tiberium-advanced-start"].value or settings.startup["tiberium-ore-removal"].value then
+	data.raw.technology["tiberium-processing-tech"].unit.count = 100
+	data.raw.technology["tiberium-molten-processing"].unit.count = 400
+end
 
-
---Game complains about recipe not having an icon, so set it last. Game gets icon, it's not in our way.
-LSlib.recipe.changeIcon("template-direct", "__Factorio-Tiberium__/graphics/icons/tiberium-recycling.png", 32)
+require("scripts/DynamicOreRecipes")

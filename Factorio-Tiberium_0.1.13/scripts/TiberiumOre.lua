@@ -6,7 +6,7 @@ data:extend({
 	{
 		type = "item",
 		name = "growth-credit",
-		icon = "__Factorio-Tiberium__/graphics/icons/growth-credit.png",
+		icon = tiberiumInternalName.."/graphics/icons/growth-credit.png",
 		icon_size = 32,
 		flags = {},
 		subgroup = "a-items",
@@ -19,7 +19,7 @@ data:extend({
 		icon = "__base__/graphics/icons/nuclear-reactor.png",
 		icon_size = 64,
 		flags = {},
-		subgroup = "a-items",
+		subgroup = "a-intermediates",
 		order = "a[tiberium-ore]",
 		stack_size = 200
 	},
@@ -53,7 +53,7 @@ data:extend({
 		type = "resource",
 		name = "tiberium-ore",
 		category = "basic-solid-tiberium",
-		icon = "__Factorio-Tiberium__/graphics/icons/tiberium-ore.png",
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore.png",
 		icon_size = 32,
 		flags = {"placeable-neutral"},
 		order="a-b-f",
@@ -83,14 +83,14 @@ data:extend({
 		},
 		stages = {
 			sheet = {
-				filename = "__Factorio-Tiberium__/graphics/entity/ores/tiberium-ore.png",
+				filename = tiberiumInternalName.."/graphics/entity/ores/tiberium-ore.png",
 				priority = "extra-high",
 				width = 64,
 				height = 64,
 				frame_count = 12,
 				variation_count = 12,
 				hr_version = {
-					filename = "__Factorio-Tiberium__/graphics/entity/ores/hr-tiberium-ore.png",
+					filename = tiberiumInternalName.."/graphics/entity/ores/hr-tiberium-ore.png",
 					priority = "extra-high",
 					width = 128,
 					height = 128,
@@ -102,7 +102,7 @@ data:extend({
 		},
 		stages_effect = {
 			sheet = {
-				filename = "__Factorio-Tiberium__/graphics/entity/ores/tiberium-ore-glow.png",
+				filename = tiberiumInternalName.."/graphics/entity/ores/tiberium-ore-glow.png",
 				priority = "extra-high",
 				width = 64,
 				height = 64,
@@ -111,7 +111,7 @@ data:extend({
 				blend_mode = "additive",
 				flags = {"light"},
 				--hr_version = {
-				--  filename = "__Factorio-Tiberium__/graphics/entity/ores/hr-tiberium-ore-glow.png",
+				--  filename = tiberiumInternalName.."/graphics/entity/ores/hr-tiberium-ore-glow.png",
 				--  priority = "extra-high",
 				--  width = 128,
 				--  height = 128,
@@ -133,7 +133,7 @@ data:extend({
 	{
 		type = "item",
 		name = "tiberium-ore",
-		icon = "__Factorio-Tiberium__/graphics/icons/tiberium-ore.png",
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore.png",
 		icon_size = 32,
 		flags = {},
 		subgroup = "raw-resource",
@@ -155,7 +155,7 @@ data:extend({
 	{
 		type = "resource",
 		name = "tibGrowthNode",
-		icon = "__Factorio-Tiberium__/graphics/entity/nodes/tiberium_blossom_tree.png",
+		icon = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
 		icon_size = 32,
 		flags = {"placeable-neutral"},
 		category = "advanced-solid-tiberium",
@@ -197,7 +197,7 @@ data:extend({
 		stage_counts = {0},
 		stages = {
 			sheet = {
-				filename = "__Factorio-Tiberium__/graphics/entity/nodes/tiberium_blossom_tree.png",
+				filename = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
 				priority = "extra-high",
 				width = 320,
 				height = 251,
@@ -214,7 +214,7 @@ data:extend({
 	{
 		type = "resource",
 		name = "tibGrowthNode_infinite",
-		icon = "__Factorio-Tiberium__/graphics/entity/nodes/tiberium_blossom_tree.png",
+		icon = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
 		icon_size = 32,
 		flags = {"placeable-neutral"},
 		category = "advanced-liquid-tiberium",
@@ -244,7 +244,7 @@ data:extend({
 		stage_counts = {0},
 		stages = {
 			sheet = {
-				filename = "__Factorio-Tiberium__/graphics/entity/nodes/tiberium_blossom_tree.png",
+				filename = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
 				priority = "extra-high",
 				width = 320,
 				height = 251,
