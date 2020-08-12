@@ -17,8 +17,8 @@ for _, pre in pairs(data.raw["map-gen-presets"].default) do
 	end
 end]]
 
-require("science")
 require("scripts/tib-map-gen-presets")
+
 -- Ease into early techs for Tib Only runs
 if settings.startup["tiberium-advanced-start"].value or settings.startup["tiberium-ore-removal"].value then
 	data.raw.technology["tiberium-processing-tech"].unit.count = 100

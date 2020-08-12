@@ -105,7 +105,7 @@ script.on_configuration_changed(function(data)
 		end
 		--Place Blossom trees on all the now bare nodes.
 		for _, surface in pairs(game.surfaces) do
-			for _, node[i] in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
+			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
 				local position = node.position
 				local tree = surface.create_entity
 					{
@@ -401,7 +401,7 @@ script.on_event(defines.events.on_resource_depleted, function(event)
 			{x = math.floor(position.x), y = math.floor(position.y)},
 			{x = math.ceil(position.x), y = math.ceil(position.y)}
 		}
-		local trees = surface.find_entities_filtered{area = area, name = "tibNode_tree"}
+		local trees = event.entity.surface.find_entities_filtered{area = area, name = "tibNode_tree"}
 		for _, tree in pairs(trees) do
 			tree.destroy()
 		end
@@ -784,13 +784,13 @@ local on_remove_entity = function(event)
 		local nodes = entity.surface.find_entities_filtered{area = area, name = "tibGrowthNode_infinite"}
 		for _, node in pairs(nodes) do
 			--Spawn tree entity when node is placed "tibNode_tree"
-			local tree = surface.create_entity
-			{
-			name = "tibNode_tree",
-			position = position,
-			force = neutral,
-			raise_built = false
-			}
+			local tree = entity.surface.create_entity
+				{
+				name = "tibNode_tree",
+				position = position,
+				force = neutral,
+				raise_built = false
+				}
 			local spikedNodeRichness = node.amount
 			node.destroy()
 			local newNode = entity.surface.create_entity
@@ -806,15 +806,15 @@ local on_remove_entity = function(event)
 		global.intervalBetweenNodeUpdates = math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
 	end
 	if (entity.name == "node-harvester") then
-	--Spawn tree entity when node is placed "tibNode_tree"
-	local position = entity.position
-		local tree = surface.create_entity
-		{
-		name = "tibNode_tree",
-		position = position,
-		force = neutral,
-		raise_built = false
-		}
+		--Spawn tree entity when node is placed "tibNode_tree"
+		local position = entity.position
+		local tree = entity.surface.create_entity
+			{
+			name = "tibNode_tree",
+			position = position,
+			force = neutral,
+			raise_built = false
+			}
 	end
 	if (entity.type == "mining-drill") then
 		for i, drill in pairs(global.drills) do
@@ -827,7 +827,7 @@ local on_remove_entity = function(event)
 	if Accelerator_Names[entity.name] then
 		--Spawn tree entity when node is placed "tibNode_tree"
 		local position = entity.position
-			local tree = surface.create_entity
+		local tree = entity.surface.create_entity
 			{
 			name = "tibNode_tree",
 			position = position,

@@ -852,25 +852,6 @@ data:extend{
 	  allow_decomposition = false,
       order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
     },
---Direct Recipes
-    {
-      type = "recipe",
-      name = "template-direct",
-      category = "chemistry",
-	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 4,
-      enabled = false,
-      ingredients = {
-      },
-      results = {
-      },
-      icon_size = 32,
-      subgroup = "a-direct",
-	  allow_as_intermediate = false,
-	  allow_decomposition = false,
-	  always_show_made_in = true,
-      order = "c"
-    },
 --Centrifuging Recipes
     {
       type = "recipe",
@@ -991,30 +972,11 @@ data:extend{
 --Growth Credits
 	{
       type = "recipe",
-      name = "template-growth-credit",
-      category = "chemistry",
-	  subgroup = "a-growth-credits",
-	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 20,
-      enabled = false,
-      ingredients = {
-      },
-      results = {
-        {type = "item", name = "growth-credit", amount = 1},
-      },
-      icon = tiberiumInternalName.."/graphics/icons/growth-credit.png",
-      icon_size = 32,
-	  allow_decomposition = false,
-      order = "c",
-	  always_show_made_in = true,
-    },
-	{
-      type = "recipe",
       name = "tiberium-growth-credit-from-energy",
       category = "chemistry",
 	  subgroup = "a-growth-credits",
 	  crafting_machine_tint = TibCraftingTint,
-      energy_required = 200,
+      energy_required = 300,
       enabled = false,
       ingredients = {
       },

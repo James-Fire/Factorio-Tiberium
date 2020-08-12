@@ -40,6 +40,12 @@ end
 if mods["dark-matter-replicators-18-patch"] then
 	oreMult["tenemut"] = 1 / 32
 end
+local TibCraftingTint = {
+  primary    = {r = 0.109804, g = 0.721567, b = 0.231373,  a = 1},
+  secondary  = {r = 0.098039, g = 1,        b = 0.278431,  a = 1},
+  tertiary   = {r = 0.156863, g = 0.156863, b = 0.156863,  a = 0.235294},
+  quaternary = {r = 0.160784, g = 0.745098, b = 0.3058824, a = 0.345217},
+}
 
 -- Assumes: excludedCrafting
 -- Modifies: rawResources, availableRecipes, free, ingredientIndex, resultIndex, catalyst, ingredientDepth, recipeDepth, tibComboPacks
@@ -975,7 +981,7 @@ function addDirectRecipe(ore)
 	local energy = 12
 	local order = (not oreMult[ore] and "a-" or oreMult[ore] > 1 and "b-" or "c-")..ore
 	
-	LSlib.recipe.duplicate("template-direct", recipeName)
+	LSlib.recipe.create(recipeName)
 	LSlib.recipe.addIngredient(recipeName, "molten-tiberium", 16, "fluid")
 	LSlib.recipe.addResult(recipeName, ore, oreAmount, itemOrFluid)
 	LSlib.recipe.setMainResult(recipeName, ore)
@@ -986,6 +992,13 @@ function addDirectRecipe(ore)
 	LSlib.technology.addRecipeUnlock(tech, recipeName)
 	LSlib.recipe.setEngergyRequired(recipeName, energy)
 	LSlib.recipe.setOrderstring(recipeName, order)
+	LSlib.recipe.disable(recipeName)
+	LSlib.recipe.setSubgroup(recipeName, "a-direct")
+	LSlib.recipe.setShowMadeIn(recipeName, true)
+	data.raw.recipe[recipeName].category = "chemistry"
+	data.raw.recipe[recipeName].crafting_machine_tint = TibCraftingTint
+	data.raw.recipe[recipeName].allow_as_intermediate = false
+	data.raw.recipe[recipeName].allow_decomposition = false
 end
 
 --Creates recipes to turn raw materials into Growth Credits
@@ -997,7 +1010,7 @@ function addCreditRecipe(ore)
 	local energy = settings.startup["tiberium-growth"].value * settings.startup["tiberium-value"].value
 	local order = (not oreMult[ore] and "a-" or oreMult[ore] > 1 and "b-" or "c-")..ore
 
-	LSlib.recipe.duplicate("template-growth-credit", recipeName)
+	LSlib.recipe.create(recipeName)
 	LSlib.recipe.addIngredient(recipeName, ore, oreAmount, itemOrFluid)
 	LSlib.technology.addRecipeUnlock("tiberium-growth-acceleration", recipeName)
 	LSlib.recipe.setEngergyRequired(recipeName, energy)
@@ -1005,6 +1018,13 @@ function addCreditRecipe(ore)
 	if (ore == "coal") or (ore == "copper-ore") or (ore == "iron-ore") or (ore == "stone") or (ore == "crude-oil") or (ore == "uranium-ore") then
 		LSlib.recipe.changeIcon(recipeName, tiberiumInternalName.."/graphics/icons/growth-credit-"..ore..".png", 32)
 	end
+	LSlib.recipe.addResult(recipeName, "growth-credit", 1, "item")
+	LSlib.recipe.disable(recipeName)
+	LSlib.recipe.setSubgroup(recipeName, "a-growth-credits")
+	LSlib.recipe.setShowMadeIn(recipeName, true)
+	data.raw.recipe[recipeName].category = "chemistry"
+	data.raw.recipe[recipeName].crafting_machine_tint = TibCraftingTint
+	data.raw.recipe[recipeName].allow_decomposition = false
 end
 
 giantSetupFunction()
@@ -1032,7 +1052,3 @@ if debugText then
 	end
 	log("item depths \r\n"..output)
 end
-
--- Clean up templates
-data.raw.recipe["template-direct"] = nil
-data.raw.recipe["template-growth-credit"] = nil
