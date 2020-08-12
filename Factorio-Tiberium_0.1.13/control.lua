@@ -603,44 +603,44 @@ end
 
 script.on_nth_tick(10, function(event) --Player damage 6 times per second
 	for _, player in pairs(game.connected_players) do
-		if not player.valid or not player.character then break end
-		--Damage players that are standing on Tiberium Ore and not in vehicles
-		local nearby_ore_count = player.surface.count_entities_filtered{name = "tiberium-ore", position = player.position, radius = 1.5}
-		if nearby_ore_count > 0 and not player.character.vehicle and player.character.name ~= "jetpack-flying" then
-			player.character.damage(TiberiumDamage * nearby_ore_count * 0.1, game.forces.tiberium, "tiberium")
-		end
-		--Damage players with unsafe Tiberium products in their inventory
-		local damagingItems = 0
-		for _, inventory in pairs({player.get_inventory(defines.inventory.character_main), player.character.get_inventory(defines.inventory.character_trash)}) do
-			if inventory and inventory.valid then
-				for p = 1, #global.tiberiumProducts do
-					damagingItems = damagingItems + inventory.get_item_count(global.tiberiumProducts[p])
-					if damagingItems > 0 and not ItemDamageScale then break end
+		if player.valid and player.character then
+			--Damage players that are standing on Tiberium Ore and not in vehicles
+			local nearby_ore_count = player.surface.count_entities_filtered{name = "tiberium-ore", position = player.position, radius = 1.5}
+			if nearby_ore_count > 0 and not player.character.vehicle and player.character.name ~= "jetpack-flying" then
+				player.character.damage(TiberiumDamage * nearby_ore_count * 0.1, game.forces.tiberium, "tiberium")
+			end
+			--Damage players with unsafe Tiberium products in their inventory
+			local damagingItems = 0
+			for _, inventory in pairs({player.get_inventory(defines.inventory.character_main), player.get_inventory(defines.inventory.character_trash)}) do
+				if inventory and inventory.valid then
+					for p = 1, #global.tiberiumProducts do
+						damagingItems = damagingItems + inventory.get_item_count(global.tiberiumProducts[p])
+						if damagingItems > 0 and not ItemDamageScale then break end
+					end
+				end
+			end
+			if damagingItems > 0 then
+				if ItemDamageScale then
+					player.character.damage(math.ceil(damagingItems / 50) * TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")	
+				else
+					player.character.damage(TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")
+				end
+			end
+			--MARV ore deletion
+			if player.character.vehicle and (player.character.vehicle.name == "tiberium-marv") then
+				local deleted_ore = player.surface.find_entities_filtered{name = "tiberium-ore", position = player.position, radius = 4}
+				local harvested_amount = 0
+				for _, ore in pairs(deleted_ore) do
+					harvested_amount = harvested_amount + ore.amount * 0.01
+					ore.destroy()
+				end
+				if harvested_amount >= 1 then
+					player.character.vehicle.insert{name = "tiberium-ore", count = math.floor(harvested_amount)}
 				end
 			end
 		end
-		if damagingItems > 0 then
-			if ItemDamageScale then
-				player.character.damage(math.ceil(damagingItems / 50) * TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")	
-			else
-				player.character.damage(TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")
-			end
-		end
-		--MARV ore deletion
-		if player.character.vehicle and (player.character.vehicle.name == "tiberium-marv") then
-			local deleted_ore = player.surface.find_entities_filtered{name = "tiberium-ore", position = player.position, radius = 4}
-			local harvested_amount = 0
-			for _, ore in pairs(deleted_ore) do
-				harvested_amount = harvested_amount + ore.amount * 0.01
-				ore.destroy()
-			end
-			if harvested_amount >= 1 then
-				player.character.vehicle.insert{name = "tiberium-ore", count = math.floor(harvested_amount)}
-			end
-		end
 	end
-end
-)
+end)
 
 script.on_nth_tick(60 * 300, function(event) --Global integrity check
 	local nodeCount = 0
