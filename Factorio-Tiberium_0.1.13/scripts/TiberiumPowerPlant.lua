@@ -750,7 +750,7 @@ data:extend{
 			usage_priority = "secondary-input",
 			emissions_per_minute = 4
 		},
-		energy_usage = "300kW",
+		energy_usage = tostring(300 * (30 / 31)).."kW",  --Scale for nice max consumption
 		module_specification = {module_slots = 0},
 		allowed_effects = {"consumption", "speed", "productivity", "pollution"},
 		water_reflection = {
@@ -776,7 +776,7 @@ centrifuge2Item.place_result = "tiberium-centrifuge-2"
 
 local centrifuge2Entity = util.table.deepcopy(data.raw["assembling-machine"]["tiberium-centrifuge"])
 centrifuge2Entity.name = "tiberium-centrifuge-2"
-centrifuge2Entity.energy_usage = "500kW"
+centrifuge2Entity.energy_usage = tostring(500 * (30 / 31)).."kW"  -- Scale for nice max consumption
 centrifuge2Entity.crafting_speed = 2
 centrifuge2Entity.crafting_categories = {"tiberium-centrifuge-1", "tiberium-centrifuge-2"}
 centrifuge2Entity.energy_source.emissions_per_minute = 8
@@ -815,7 +815,7 @@ centrifuge3Item.place_result = "tiberium-centrifuge-3"
 
 local centrifuge3Entity = util.table.deepcopy(data.raw["assembling-machine"]["tiberium-centrifuge-2"])
 centrifuge3Entity.name = "tiberium-centrifuge-3"
-centrifuge3Entity.energy_usage = "700kW"
+centrifuge3Entity.energy_usage = tostring(700 * (30 / 31)).."kW"  -- Scale for nice max consumption
 centrifuge3Entity.crafting_speed = 3
 centrifuge3Entity.crafting_categories = {"tiberium-centrifuge-1", "tiberium-centrifuge-2", "tiberium-centrifuge-3"}
 centrifuge3Entity.energy_source.emissions_per_minute = 12

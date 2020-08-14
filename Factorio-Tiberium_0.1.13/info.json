@@ -1,6 +1,6 @@
 {
     "name": "Factorio-Tiberium",
-    "version": "0.1.13",
+    "version": "1.0.0",
     "title": "Factorio and Conquer: Tiberian Dawn",
     "author": "JamesFire",
     "contact": "",
@@ -21,5 +21,5 @@
 		"! Prospector",
 		"LSlib >= 2020.5.11"
 	],
-    "description": "Originally by Zillo7 fixed by SAH4001, fixed again by Oktabyte. Now being taken on by JamesFire. Adds Tiberium - Harvest it to convert it to other ores."
+    "description": "Adds Tiberium ore that spreads - Harvest it, refine it, and convert it to power, weapons, and other ores. By Zillo7 (0.15), SAH4001 (0.16), Oktabyte (0.17), JamesFire and randomflyingtaco (0.18+)"
 }

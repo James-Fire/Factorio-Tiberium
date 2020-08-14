@@ -87,8 +87,8 @@ function OnEntityMoved(event)
 end
 
 script.on_configuration_changed(function(data)
-	if upgradingToVersion(tiberiumInternalName, "0.1.13") then
-		game.print("Successfully ran conversion for "..tiberiumInternalName.." version 0.1.13")
+	if upgradingToVersion(tiberiumInternalName, "1.0.0") then
+		game.print("Successfully ran conversion for "..tiberiumInternalName.." version 1.0.0")
 		for _, surface in pairs(game.surfaces) do
 			-- Registering entities for the base 0.18.28 change
 			for _, entity in pairs(surface.find_entities_filtered{type = "mining-drill"}) do
