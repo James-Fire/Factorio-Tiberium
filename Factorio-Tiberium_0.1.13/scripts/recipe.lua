@@ -794,13 +794,13 @@ data:extend{
     },
 	{
       type = "recipe",
-      name = "tiberium-slurry-to-refined-concrete",
+      name = "tiberium-sludge-to-refined-concrete",
       category = "crafting-with-fluid",
 	  crafting_machine_tint = TibCraftingTint,
       energy_required = 10,
       enabled = false,
       ingredients = {
-        {type = "fluid", name = "tiberium-slurry", amount = 20},
+        {type = "fluid", name = "tiberium-sludge", amount = 10},
         {type = "item", name = "steel-plate", amount = 2}		
       },
       results = {

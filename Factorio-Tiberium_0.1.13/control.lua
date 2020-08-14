@@ -1,9 +1,9 @@
 require("scripts/CnC_Walls") --Note, to make SonicWalls work / be passable,
 
-local MOD_NAME = "Factorio-Tiberium"
+local tiberiumInternalName = "Factorio-Tiberium"  --No underscores for this one
 local Accelerator_Names = {
-  ["growth-accelerator-node"] = true,
-  ["growth-accelerator"] = true,
+	["growth-accelerator-node"] = true,
+	["growth-accelerator"] = true,
 }
 local Beacon_Name = "growth-accelerator-beacon"
 local Speed_Module_Name = "growth-accelerator-speed-module"
@@ -18,7 +18,7 @@ local ItemDamageScale = settings.global["tiberium-item-damage-scale"].value
 local debugText = settings.startup["tiberium-debug-text"].value
 
 script.on_load(function()
-  register_with_picker()
+	register_with_picker()
 end)
 
 script.on_init(function()
@@ -29,26 +29,16 @@ script.on_init(function()
 	global.tibMineNodeList = {}
 	global.drills = {}
 
-	-- Removed/unimplemented ideas
-	--global.contaminatedPlayers = {} -- {player reference, ticks}
-	-- global.intervalBetweenDamageUpdates =
-	  -- math.floor(math.max(60 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
-	--global.contactDamage = TiberiumDamage --how much damage should be applied to objects over tiberium?
-	--global.contactDamageTime = 30 --how long (in ticks) should players be damaged after contacting tiberium?
-	--global.vehicleDamage = TiberiumDamage --how much damage should be applied to vehicles players are in?
-	--global.tiberiumLevel = 0 --The level of tiberium; affects growth/damage patterns
-
 	-- Each node should spawn tiberium once every 5 minutes (give or take a handful of ticks rounded when dividing)
 	-- Currently allowing this to potentially update every tick but to keep things under control minUpdateInterval
 	-- can be set to something greater than 1. When minUpdateInterval is reached the global tiberium growth rate
 	-- will stagnate instead of increasing with each new node found but updates will continue to happen for all fields.
 	global.minUpdateInterval = 1
-	global.intervalBetweenNodeUpdates = math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
-	global.world = game.surfaces[1]
+	updateGrowthInterval()
+	
 	global.tiberiumTerrain = nil --"dirt-4" --Performance is awful, disabling this
 	global.oreType = "tiberium-ore"
 	global.tiberiumProducts = {"tiberium-bar", global.oreType}
-	global.liquidTiberiumProducts = {"liquid-tiberium", "tiberium-sludge", "tiberium-waste"}
 	global.damageForceName = "tiberium"
 	if not game.forces[global.damageForceName] then
 		game.create_force(global.damageForceName)
@@ -69,8 +59,11 @@ script.on_init(function()
 	}
 	-- CnC SonicWalls Init
 	CnC_SonicWall_OnInit(event)
-  end
-)
+end)
+
+function updateGrowthInterval()
+	global.intervalBetweenNodeUpdates = math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
+end
 
 function register_with_picker()
 	--register to PickerExtended
@@ -94,17 +87,17 @@ function OnEntityMoved(event)
 end
 
 script.on_configuration_changed(function(data)
-	-- tib 0.1.13 conversion for registering entities for the base 0.18.28 change
-	if data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["old_version"] < "0.1.13" and
-			data["mod_changes"]["Factorio-Tiberium"]["new_version"] >= "0.1.13" then
-		for _, entity in pairs(global.world.find_entities_filtered{type = "mining-drill"}) do
-			script.register_on_entity_destroyed(entity)
-		end
-		for _, entity in pairs(global.world.find_entities_filtered{name = {"CnC_SonicWall_Hub", "tib-spike"}}) do
-			script.register_on_entity_destroyed(entity)
-		end
-		--Place Blossom trees on all the now bare nodes.
+	if upgradingToVersion(tiberiumInternalName, "0.1.13") then
+		game.print("Successfully ran conversion for "..tiberiumInternalName.." version 0.1.13")
 		for _, surface in pairs(game.surfaces) do
+			-- Registering entities for the base 0.18.28 change
+			for _, entity in pairs(surface.find_entities_filtered{type = "mining-drill"}) do
+				script.register_on_entity_destroyed(entity)
+			end
+			for _, entity in pairs(surface.find_entities_filtered{name = {"CnC_SonicWall_Hub", "tib-spike"}}) do
+				script.register_on_entity_destroyed(entity)
+			end
+			-- Place Blossom trees on all the now bare nodes.
 			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
 				local position = node.position
 				local tree = surface.create_entity
@@ -115,13 +108,7 @@ script.on_configuration_changed(function(data)
 					raise_built = false
 					}
 			end
-		end
-	end
-	
-	
-	if data.mod_changes[MOD_NAME] and data.mod_changes[MOD_NAME].old_version then
-		game.print("[Tiberium Beta] old version: "..data.mod_changes[MOD_NAME].old_version..", adding Growth Accelerator speed beacons.")
-		for _, surface in pairs(game.surfaces) do
+			-- Add invisible beacons for new growth accelerator speed researches
 			for _, beacon in pairs(surface.find_entities_filtered{name = Beacon_Name}) do
 				beacon.destroy()
 			end
@@ -133,17 +120,26 @@ script.on_configuration_changed(function(data)
 				UpdateBeaconSpeed(beacon, module_count)
 			end
 		end
-	else
-		-- update beacons and speed in case other mods changed something??
-		for _, surface in pairs(game.surfaces) do
-			for _, beacon in pairs(surface.find_entities_filtered{name = Beacon_Name}) do
-				local module_count = beacon.force.technologies["tiberium-growth-acceleration-acceleration"].level
-				UpdateBeaconSpeed(beacon, module_count)
+		-- Unlock technologies that were split
+		for _, force in pairs(game.forces) do
+			if force.technologies["tiberium-processing-tech"].researched then
+				force.technologies["tiberium-sludge-processing"].researched = true
+			end
+			if force.technologies["tiberium-power-tech"].researched then
+				force.technologies["tiberium-sludge-recycling"].researched = true
 			end
 		end
 	end
+end)
+
+function upgradingToVersion(modName, version)
+	if not data["mod_changes"][modName] then
+		return false
+	else
+		return data["mod_changes"][modName]["old_version"] < version and
+			data["mod_changes"][modName]["new_version"] >= version
+	end
 end
-)
 
 function AddOre(surface, position, growthRate)
 	local area = {
@@ -347,7 +343,7 @@ function CreateNode(surface, position)
 			raise_built = false
 			}
 		table.insert(global.tibGrowthNodeList, node)
-		global.intervalBetweenNodeUpdates = math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
+		updateGrowthInterval()
 	end
 end
 
@@ -501,7 +497,7 @@ commands.add_command("tibChangeTerrain",
 			end
 			node.surface.set_tiles(newTiles, true, false)
 		end
-  end
+	end
 )
 commands.add_command("tibFixMineLag",
 	"Deletes all the deprecated Tiberium land mines on the map",
@@ -517,10 +513,13 @@ commands.add_command("tibFixMineLag",
 --initial chunk scan
 script.on_event(defines.events.on_chunk_generated, function(event)
 	local surface = event.surface
-	local entities = surface.find_entities_filtered{area = event.area, name = "tibGrowthNode"}
-	for i = 1, #entities, 1 do
-		table.insert(global.tibGrowthNodeList, entities[i])
-		local position = entities[i].position
+	local area = {  -- Extra illegal, please don't report to Wube
+		{event.area.left_top.x + 1, event.area.left_top.y + 1},
+		{event.area.right_bottom.x - 1, event.area.right_bottom.y - 1}
+	}
+	for i, newNode in pairs(surface.find_entities_filtered{area = area, name = "tibGrowthNode"}) do
+		table.insert(global.tibGrowthNodeList, newNode)
+		local position = newNode.position
 		--Spawn tree entity when node is placed "tibNode_tree"
 		local tree = surface.create_entity
 			{
@@ -530,7 +529,7 @@ script.on_event(defines.events.on_chunk_generated, function(event)
 			raise_built = false
 			}
 		local howManyOre = math.min(math.max(10, (math.abs(position.x) + math.abs(position.y)) / 25), 200) --Start further nodes with more ore
-		PlaceOre(entities[i], howManyOre)
+		PlaceOre(newNode, howManyOre)
 		--Cosmetic stuff
 		local tileArea = {
 			{x = math.floor(position.x) - 0.9, y = math.floor(position.y) - 0.9},
@@ -546,24 +545,8 @@ script.on_event(defines.events.on_chunk_generated, function(event)
 			surface.set_tiles(newTiles, true, false)
 		end
 	end
-	global.intervalBetweenNodeUpdates = math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
+	updateGrowthInterval()
 end)
-
---[[ Currently unused
-script.on_event(
-  defines.events.on_research_finished,
-  function(event)
-	--advance tiberium level when certain techs are researched
-	-- Maybe use tiberium level to influence growth rate
-	if (event.research.name == "somelowleveltibtech") then
-	  global.tiberiumLevel = 2
-	elseif (event.research.name == "somemidleveltibtech") then
-	  global.tiberiumLevel = 3
-	elseif (event.research.name == "somehighleveltibtech") then
-	  global.tiberiumLevel = 4
-	end
-  end
-)]]
 
 script.on_event(defines.events.on_tick, function(event)
 	-- Update SRF Walls
@@ -643,20 +626,23 @@ script.on_nth_tick(10, function(event) --Player damage 6 times per second
 end)
 
 script.on_nth_tick(60 * 300, function(event) --Global integrity check
+	if event.tick == 0 then return end
 	local nodeCount = 0
 	for _, surface in pairs(game.surfaces) do
 		nodeCount = nodeCount + surface.count_entities_filtered{name = "tibGrowthNode"}
 	end
 	if nodeCount ~= #global.tibGrowthNodeList then
-		game.print("!!!Warning: "..nodeCount.." Tiberium nodes exist while there are "..#global.tibGrowthNodeList.." nodes growing.")
-		game.print("Rebuilding Tiberium node growth list.")
+		if debugText then
+			game.print("!!!Warning: "..nodeCount.." Tiberium nodes exist while there are "..#global.tibGrowthNodeList.." nodes growing.")
+			game.print("Rebuilding Tiberium node growth list.")
+		end
 		global.tibGrowthNodeList = {}
 		for _, surface in pairs(game.surfaces) do
 			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
 				table.insert(global.tibGrowthNodeList, node)
 			end
 		end
-		global.intervalBetweenNodeUpdates = math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
+		updateGrowthInterval()
 	end
 end)
 
@@ -681,8 +667,7 @@ local on_new_entity = function(event)
 	if (new_entity.name == "CnC_SonicWall_Hub") then
 		script.register_on_entity_destroyed(new_entity)
 		CnC_SonicWall_AddNode(new_entity, event.tick)
-	end
-	if (new_entity.name == "node-harvester") then
+	elseif (new_entity.name == "node-harvester") then
 		--Remove tree entity when node is covered
 		local position = new_entity.position
 		local area = {
@@ -693,8 +678,7 @@ local on_new_entity = function(event)
 		for _, tree in pairs(trees) do
 			tree.destroy()
 		end
-	end
-	if (new_entity.name == "tib-spike") then
+	elseif (new_entity.name == "tib-spike") then
 		script.register_on_entity_destroyed(new_entity)
 		local position = new_entity.position
 		local area = {
@@ -709,7 +693,6 @@ local on_new_entity = function(event)
 		local nodes = surface.find_entities_filtered{area = area, name = "tibGrowthNode"}
 		for _, node in pairs(nodes) do
 			--Remove spiked node from growth list
-			
 			for i = 1, #global.tibGrowthNodeList do
 				if global.tibGrowthNodeList[i] == node then
 					table.remove(global.tibGrowthNodeList, i)
@@ -730,9 +713,8 @@ local on_new_entity = function(event)
 				raise_built = true
 				}
 		end
-		global.intervalBetweenNodeUpdates = math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
-	end
-	if (new_entity.name == "growth-accelerator-node") then
+		updateGrowthInterval()
+	elseif (new_entity.name == "growth-accelerator-node") then
 		local entity = event.created_entity
 		local position = new_entity.position
 		local area = {
@@ -773,6 +755,14 @@ script.on_event(defines.events.script_raised_revive, on_new_entity)
 
 local on_remove_entity = function(event)
 	local entity = event.entity
+	if (entity.type == "mining-drill") then
+		for i, drill in pairs(global.drills) do
+			if drill == entity then
+				table.remove(global.drills, i)
+				break
+			end
+		end
+	end
 	if (entity.name == "CnC_SonicWall_Hub") then
 		CnC_SonicWall_DeleteNode(entity, event.tick)
 	elseif (entity.name == "tib-spike") then
@@ -803,9 +793,8 @@ local on_remove_entity = function(event)
 				}
 			table.insert(global.tibGrowthNodeList, newNode)
 		end
-		global.intervalBetweenNodeUpdates = math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
-	end
-	if (entity.name == "node-harvester") then
+		updateGrowthInterval()
+	elseif (entity.name == "node-harvester") then
 		--Spawn tree entity when node is placed "tibNode_tree"
 		local position = entity.position
 		local tree = entity.surface.create_entity
@@ -815,16 +804,7 @@ local on_remove_entity = function(event)
 			force = neutral,
 			raise_built = false
 			}
-	end
-	if (entity.type == "mining-drill") then
-		for i, drill in pairs(global.drills) do
-			if drill == entity then
-				table.remove(global.drills, i)
-				break
-			end
-		end
-	end
-	if Accelerator_Names[entity.name] then
+	elseif Accelerator_Names[entity.name] then
 		--Spawn tree entity when node is placed "tibNode_tree"
 		local position = entity.position
 		local tree = entity.surface.create_entity
@@ -834,7 +814,6 @@ local on_remove_entity = function(event)
 			force = neutral,
 			raise_built = false
 			}
-
 		local beacons = entity.surface.find_entities_filtered{name = Beacon_Name, position = entity.position}
 		for _, beacon in pairs(beacons) do
 			beacon.destroy()

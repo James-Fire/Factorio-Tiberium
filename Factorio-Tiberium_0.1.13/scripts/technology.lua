@@ -65,27 +65,11 @@ data:extend
 				type = "unlock-recipe",
 				recipe = "tiberium-slurry-mechanical-data"
 			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-sludge-from-slurry"
-			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-sludge-to-concrete"
-			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-slurry-to-refined-concrete"
-			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-sludge-to-landfill"
-			},
 		},
 		prerequisites = {"tiberium-separation-tech", "advanced-electronics", "concrete"},
 		unit =
 		{
-			count = 400,
+			count = 250,
 			ingredients =
 			{
 				{"tiberium-science", 1},
@@ -127,10 +111,10 @@ data:extend
 				recipe = "tiberium-molten-thermal-data"
 			},
 		},
-		prerequisites = {"tiberium-processing-tech", "tiberium-thermal-research"},
+		prerequisites = {"tiberium-processing-tech", "tiberium-thermal-research", "chemical-science-pack"},
 		unit =
 		{
-			count = 800,
+			count = 500,
 			ingredients =
 			{
 				{"tiberium-science", 1},
@@ -168,15 +152,74 @@ data:extend
 				type = "unlock-recipe",
 				recipe = "tiberium-liquid-chemical-data"
 			},
+		},
+		prerequisites = {"tiberium-molten-processing", "tiberium-chemical-research"},
+		unit =
+		{
+			count = 1000,
+			ingredients =
+			{
+				{"tiberium-science", 1},
+				{"automation-science-pack", 1},
+				{"logistic-science-pack", 1},
+				{"chemical-science-pack", 1}
+			},
+			time = 30
+		}
+	},
+	{
+		type = "technology",
+		name = "tiberium-sludge-processing",
+		icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-sludge.png",
+		icon_size = 64,
+		effects =
+		{
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-sludge-from-slurry"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-sludge-to-concrete"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-sludge-to-refined-concrete"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-sludge-to-landfill"
+			},
+		},
+		prerequisites = {"tiberium-processing-tech", "landfill"},
+		unit =
+		{
+			count = 100,
+			ingredients =
+			{
+				{"tiberium-science", 1},
+				{"automation-science-pack", 1},
+				{"logistic-science-pack", 1},
+			},
+			time = 30
+		}
+	},
+	{
+		type = "technology",
+		name = "tiberium-sludge-recycling",
+		icon = tiberiumInternalName.."/graphics/technology/tiberium-sludge-recycling.png",
+		icon_size = 128,
+		effects =
+		{
 			{
 				type = "unlock-recipe",
 				recipe = "tiberium-waste-recycling"
 			},
 		},
-		prerequisites = {"tiberium-molten-processing", "tiberium-chemical-research"},
+		prerequisites = {"tiberium-molten-processing", "tiberium-sludge-processing"},
 		unit =
 		{
-			count = 1200,
+			count = 200,
 			ingredients =
 			{
 				{"tiberium-science", 1},
@@ -203,7 +246,7 @@ data:extend
 				recipe = "node-harvester"
 			},
 		},
-		prerequisites = {"tiberium-processing-tech", "battery"},
+		prerequisites = {"tiberium-processing-tech", "battery", "chemical-science-pack"},
 		unit =
 		{
 			count = 200,
@@ -264,7 +307,7 @@ data:extend
 				recipe = "growth-accelerator"
 			},
 		},
-		prerequisites = {"tiberium-processing-tech"},
+		prerequisites = {"tiberium-processing-tech", "chemical-science-pack"},
 		unit =
 		{
 			count = 800,
@@ -622,7 +665,7 @@ data:extend
 			},
 			time = 30
 		},
-		max_level = "8",
+		max_level = "infinite",
 		upgrade = true,
 		order = "e-l-f"
 	},
