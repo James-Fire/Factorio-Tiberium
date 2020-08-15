@@ -16,6 +16,25 @@ local TiberiumSpread = settings.startup["tiberium-spread"].value
 local bitersImmune = settings.startup["tiberium-wont-damage-biters"].value
 local ItemDamageScale = settings.global["tiberium-item-damage-scale"].value
 local debugText = settings.startup["tiberium-debug-text"].value
+-- Starting items, if the option is ticked.
+local tiberium_start = {
+	["tiberium-centrifuge-3"] = 3,
+	["iron-plate"] = 92,
+	["copper-plate"] = 100,
+	["transport-belt"] = 100,
+	["underground-belt"] = 10,
+	["splitter"] = 10,
+	["burner-inserter"] = 20,
+	["wooden-chest"] = 10,
+	["small-electric-pole"] = 50,
+	["stone-furnace"] = 1,
+	["burner-mining-drill"] = 5,
+	["boiler"] = 1,
+	["steam-engine"] = 2,
+	["pipe-to-ground"] = 20,
+	["pipe"] = 20,
+	["offshore-pump"] = 1
+}
 
 script.on_load(function()
 	register_with_picker()
@@ -57,6 +76,15 @@ script.on_init(function()
 		["unit-spawner"] = true,  --Biters immune until both performance and evo factor are fixed
 		["turret"] = true
 	}
+	-- Use interface to give starting items if possible
+	if (settings.startup["tiberium-advanced-start"].value or settings.startup["tiberium-ore-removal"].value)
+			and remote.interfaces["freeplay"] then
+		local freeplayStartItems = remote.call("freeplay", "get_created_items") or {}
+		for name, count in pairs(tiberium_start) do
+			freeplayStartItems[name] = (freeplayStartItems[name] or 0) + count
+		end
+		remote.call("freeplay", "set_created_items", freeplayStartItems)
+	end
 	-- CnC SonicWalls Init
 	CnC_SonicWall_OnInit(event)
 end)
@@ -87,7 +115,7 @@ function OnEntityMoved(event)
 end
 
 script.on_configuration_changed(function(data)
-	if upgradingToVersion(tiberiumInternalName, "1.0.0") then
+	if upgradingToVersion(data, tiberiumInternalName, "1.0.0") then
 		game.print("Successfully ran conversion for "..tiberiumInternalName.." version 1.0.0")
 		for _, surface in pairs(game.surfaces) do
 			-- Registering entities for the base 0.18.28 change
@@ -132,8 +160,9 @@ script.on_configuration_changed(function(data)
 	end
 end)
 
-function upgradingToVersion(modName, version)
-	if not data["mod_changes"][modName] then
+function upgradingToVersion(data, modName, version)
+	if not data["mod_changes"][modName] or not data["mod_changes"][modName]["old_version"]
+			or not data["mod_changes"][modName]["new_version"] then
 		return false
 	else
 		return data["mod_changes"][modName]["old_version"] < version and
@@ -869,38 +898,15 @@ end
 
 script.on_event({defines.events.on_technology_effects_reset, defines.events.on_forces_merging}, OnForceReset)
 
---Starting items, if the option is ticked.
-
-local function give_player_items(player, items) 
-	for i, v in pairs(items) do
-		player.insert{name = v[1], count = v[2]}
-	end
-end
-
 script.on_event(defines.events.on_player_created, function(event)
-	local tiberium_start = {
-		{"tiberium-centrifuge-3", 3},
-		{"iron-plate", 92},
-		{"copper-plate", 100},
-		{"transport-belt", 100},
-		{"underground-belt", 10},
-		{"splitter", 10},
-		{"burner-inserter", 20},
-		{"wooden-chest", 10},
-		{"small-electric-pole", 50},
-		{"stone-furnace", 1},
-		{"burner-mining-drill", 5},
-		{"boiler", 1},
-		{"steam-engine", 2},
-		{"pipe-to-ground", 10},
-		{"pipe", 20},
-		{"offshore-pump", 1}
-	}
-
 	local player = game.players[event.player_index]
 
 	if settings.startup["tiberium-advanced-start"].value or settings.startup["tiberium-ore-removal"].value then
-		give_player_items(player, tiberium_start)
+		if not remote.interfaces["freeplay"] then
+			for name, count in pairs(tiberium_start) do
+				player.insert{name = name, count = count}
+			end
+		end
 		player.force.technologies["tiberium-mechanical-research"].researched = true
 		player.force.technologies["tiberium-separation-tech"].researched = true
 	end

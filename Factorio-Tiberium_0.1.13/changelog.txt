@@ -1,5 +1,11 @@
 ---------------------------------------------------------------------------------------------------
-Version: 0.1.13
+Version: 1.0.1
+  Bugfixes:
+    - Fixed items not being granted from the Tiberium Advanced Start setting due to the new 1.0.0 cutscene
+	- Fixed crash that occurred when changing mods or mod versions associated with a save file
+	- Fixed crashes from mod incompatibilities with "Tiberium Only" map generation preset
+---------------------------------------------------------------------------------------------------
+Version: 1.0.0
   Bugfixes:
     - Fixes tickets 0054 and 0055
     - Fixed TCN, Node Harvester, and Spike not producing pollution
