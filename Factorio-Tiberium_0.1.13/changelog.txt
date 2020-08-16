@@ -1,9 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.2
+  Bugfixes:
+    - Fixed crash when player died from tiberium damage
+    - Fixed crash from module limitations with certain mod combinations
+    - Fixed crash when SRF hubs died (and a bunch of effects missing due to us previously not using on_entity_destroyed correctly)
+    - Fixed Tiberium Ore Centrifuging sometimes having no outputs with certain mod combinations
+---------------------------------------------------------------------------------------------------
 Version: 1.0.1
   Bugfixes:
     - Fixed items not being granted from the Tiberium Advanced Start setting due to the new 1.0.0 cutscene
-	- Fixed crash that occurred when changing mods or mod versions associated with a save file
-	- Fixed crashes from mod incompatibilities with "Tiberium Only" map generation preset
+    - Fixed crash that occurred when changing mods or mod versions associated with a save file
+    - Fixed crashes from mod incompatibilities with "Tiberium Only" map generation preset
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.0
   Bugfixes:

@@ -1,10 +1,7 @@
 require("scripts/CnC_Walls") --Note, to make SonicWalls work / be passable,
 
 local tiberiumInternalName = "Factorio-Tiberium"  --No underscores for this one
-local Accelerator_Names = {
-	["growth-accelerator-node"] = true,
-	["growth-accelerator"] = true,
-}
+
 local Beacon_Name = "growth-accelerator-beacon"
 local Speed_Module_Name = "growth-accelerator-speed-module"
 
@@ -46,7 +43,8 @@ script.on_init(function()
 	global.tibGrowthNodeList = {}
 	global.tibMineNodeListIndex = 0
 	global.tibMineNodeList = {}
-	global.drills = {}
+	global.tibDrills = {}
+	global.tibOnEntityDestroyed = {}
 
 	-- Each node should spawn tiberium once every 5 minutes (give or take a handful of ticks rounded when dividing)
 	-- Currently allowing this to potentially update every tick but to keep things under control minUpdateInterval
@@ -106,7 +104,7 @@ end
 
 function OnEntityMoved(event)
 	local entity = event.moved_entity
-	if entity and Accelerator_Names[entity.name] then
+	if entity and (entity.name == "growth-accelerator") then
 		local beacons = entity.surface.find_entities_filtered{name = Beacon_Name, position = event.start_pos}
 		for _, beacon in pairs(beacons) do
 			beacon.teleport(entity.position)
@@ -158,6 +156,36 @@ script.on_configuration_changed(function(data)
 			end
 		end
 	end
+	
+	if upgradingToVersion(data, tiberiumInternalName, "1.0.2") then
+		if not global.tibOnEntityDestroyed then global.tibOnEntityDestroyed = {} end
+		for _, surface in pairs(game.surfaces) do
+			-- Registering entities correctly this time
+			for _, entity in pairs(surface.find_entities_filtered{type = "mining-drill"}) do
+				registerEntity(entity)
+			end
+			for _, entity in pairs(surface.find_entities_filtered{name = {"CnC_SonicWall_Hub", "tib-spike", "growth-accelerator-node", "growth-accelerator"}}) do
+				registerEntity(entity)
+			end
+		end
+		--Convert globals
+		if not global.tibDrills then global.tibDrills = {} end
+		for _, drill in pairs(global.drills or {}) do
+			table.insert(global.tibDrills, {entity = drill, name = drill.name, position = drill.position})
+		end
+		global.drills = nil
+		for _, charging in pairs(global.SRF_node_ticklist) do
+			charging.position = charging.emitter.position
+		end
+		for _, low in pairs(global.SRF_low_power_ticklist) do
+			low.position = low.emitter.position
+		end
+		local new_SRF_nodes = {}
+		for _, node in pairs(global.SRF_nodes) do
+			table.insert(new_SRF_nodes, {emitter = node, position = node.position})
+		end
+		global.SRF_nodes = new_SRF_nodes
+	end
 end)
 
 function upgradingToVersion(data, modName, version)
@@ -201,13 +229,9 @@ function AddOre(surface, position, growthRate)
 	end
 
 	--Damage adjacent entities unless it's in the list of exemptDamageItems
-	local entitiesToDamage = surface.find_entities(area)
-	for i = 1, #entitiesToDamage do
-		if not entitiesToDamage[i].valid then break end
-		if not global.exemptDamageItems[entitiesToDamage[i].type] then
-			if entitiesToDamage[i].prototype.max_health > 0 and entitiesToDamage[i].health > 0 then
-				entitiesToDamage[i].damage(TiberiumDamage, game.forces.tiberium, "tiberium")
-			end
+	for _, entity in pairs(surface.find_entities(area)) do
+		if not global.exemptDamageItems[entity.type] then
+			safeDamage(entity, TiberiumDamage, game.forces.tiberium, "tiberium")
 		end
 	end
 
@@ -319,16 +343,10 @@ function PlaceOre(entity, howmany)
 	end
 
 	-- Tell all mining drills to wake up
-	if global.drills == nil then
-		global.drills = {}
-	end
-	for i = 1, #global.drills, 1 do
-		local drill = global.drills[i]
-		if (drill == nil or drill.valid == false) then
-			table.remove(drill)
-		else
-			drill.active = false
-			drill.active = true
+	for i, drill in pairs(global.tibDrills) do
+		if drill.entity and drill.entity.valid then
+			drill.entity.active = false
+			drill.entity.active = true
 		end
 	end
 	if debugText then
@@ -454,25 +472,21 @@ commands.add_command("tibRebuildLists",
 		global.tibGrowthNodeList = {}
 		global.tibMineNodeList = {}
 		global.SRF_nodes = {}
-		global.drills = {}
+		global.tibDrills = {}
 		for _, surface in pairs(game.surfaces) do
 			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
 				table.insert(global.tibGrowthNodeList, node)
 			end
-			for _, mine in pairs(surface.find_entities_filtered{name = "node-land-mine"}) do
-				table.insert(global.tibMineNodeList, mine)
-			end
 			for _, srf in pairs(surface.find_entities_filtered{name = "CnC_SonicWall_Hub"}) do
-				table.insert(global.SRF_nodes, srf)
+				table.insert(global.SRF_nodes, {emitter = srf, position = srf.position})
 			end
 			for _, drill in pairs(surface.find_entities_filtered{type = "mining-drill"}) do
-				table.insert(global.drills, drill)
+				table.insert(global.tibDrills, {entity = drill, name = drill.name, position = drill.position})
 			end
 		end
 		game.print("Found " .. #global.tibGrowthNodeList .. " nodes")
-		game.print("Found " .. #global.tibMineNodeList .. " mines")
 		game.print("Found " .. #global.SRF_nodes .. " SRF hubs")
-		game.print("Found " .. #global.drills .. " drills")
+		game.print("Found " .. #global.tibDrills .. " drills")
 	end
 )
 commands.add_command("tibGrowAllNodes",
@@ -599,9 +613,7 @@ script.on_event(defines.events.on_tick, function(event)
 			if node.valid then
 				local enemies = node.surface.find_entities_filtered{position = node.position, radius = TiberiumRadius, force = game.forces.enemy}
 				for _, enemy in pairs(enemies) do
-					if enemy.valid and enemy.health and enemy.health > 0 then
-						enemy.damage(TiberiumDamage * 6, game.forces.tiberium, "tiberium")
-					end
+					safeDamage(enemy, TiberiumDamage * 6, game.forces.tiberium, "tiberium")
 				end
 			else
 				game.print("Invalid Tiberium node in list position #"..i)
@@ -615,11 +627,23 @@ end
 
 script.on_nth_tick(10, function(event) --Player damage 6 times per second
 	for _, player in pairs(game.connected_players) do
-		if player.valid and player.character then
+		if player.valid and player.character and player.character.valid then
+			--MARV ore deletion
+			if player.character.vehicle and (player.character.vehicle.name == "tiberium-marv") then
+				local deleted_ore = player.surface.find_entities_filtered{name = "tiberium-ore", position = player.position, radius = 4}
+				local harvested_amount = 0
+				for _, ore in pairs(deleted_ore) do
+					harvested_amount = harvested_amount + ore.amount * 0.01
+					ore.destroy()
+				end
+				if harvested_amount >= 1 then
+					player.character.vehicle.insert{name = "tiberium-ore", count = math.floor(harvested_amount)}
+				end
+			end
 			--Damage players that are standing on Tiberium Ore and not in vehicles
 			local nearby_ore_count = player.surface.count_entities_filtered{name = "tiberium-ore", position = player.position, radius = 1.5}
 			if nearby_ore_count > 0 and not player.character.vehicle and player.character.name ~= "jetpack-flying" then
-				player.character.damage(TiberiumDamage * nearby_ore_count * 0.1, game.forces.tiberium, "tiberium")
+				safeDamage(player, TiberiumDamage * nearby_ore_count * 0.1, game.forces.tiberium, "tiberium")
 			end
 			--Damage players with unsafe Tiberium products in their inventory
 			local damagingItems = 0
@@ -633,26 +657,30 @@ script.on_nth_tick(10, function(event) --Player damage 6 times per second
 			end
 			if damagingItems > 0 then
 				if ItemDamageScale then
-					player.character.damage(math.ceil(damagingItems / 50) * TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")	
+					safeDamage(player, math.ceil(damagingItems / 50) * TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")	
 				else
-					player.character.damage(TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")
-				end
-			end
-			--MARV ore deletion
-			if player.character.vehicle and (player.character.vehicle.name == "tiberium-marv") then
-				local deleted_ore = player.surface.find_entities_filtered{name = "tiberium-ore", position = player.position, radius = 4}
-				local harvested_amount = 0
-				for _, ore in pairs(deleted_ore) do
-					harvested_amount = harvested_amount + ore.amount * 0.01
-					ore.destroy()
-				end
-				if harvested_amount >= 1 then
-					player.character.vehicle.insert{name = "tiberium-ore", count = math.floor(harvested_amount)}
+					safeDamage(player, TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")
 				end
 			end
 		end
 	end
 end)
+
+function safeDamage(entityOrPlayer, damageAmount, damagingForce, damageType)
+	if entityOrPlayer.is_player() then
+		if entityOrPlayer.valid and entityOrPlayer.character then
+			entity = entityOrPlayer.character
+		else
+			return
+		end
+	else
+		entity = entityOrPlayer
+	end
+	
+	if entity.valid and entity.health and entity.health > 0 then
+		entity.damage(damageAmount, damagingForce, damageType)
+	end
+end
 
 script.on_nth_tick(60 * 300, function(event) --Global integrity check
 	if event.tick == 0 then return end
@@ -682,38 +710,46 @@ script.on_event(defines.events.on_trigger_created_entity, function(event)
 	end
 end)
 
+function registerEntity(entity)  -- Cache relevant information to global and register
+	local entityInfo = {}
+	for _, property in pairs({"name", "type", "position", "surface", "force"}) do
+		entityInfo[property] = entity[property]
+	end
+	local registration_number = script.register_on_entity_destroyed(entity)
+	global.tibOnEntityDestroyed[registration_number] = entityInfo
+end
+
 local on_new_entity = function(event)
 	local new_entity = event.created_entity or event.entity --Handle multiple event types
 	local surface = new_entity.surface
+	local position = new_entity.position
+	local area = {
+		{x = math.floor(position.x), y = math.floor(position.y)},
+		{x = math.ceil(position.x), y = math.ceil(position.y)}
+	}
 	if (new_entity.type == "mining-drill") then
-		script.register_on_entity_destroyed(new_entity)
+		registerEntity(new_entity)
 		local duplicate = false
-		for _, drill in pairs(global.drills) do
-			if drill == new_entity then	duplicate = true break end
+		for _, drill in pairs(global.tibDrills) do
+			if drill.entity == new_entity then
+				duplicate = true
+				break
+			end
 		end
-		if not duplicate then table.insert(global.drills, new_entity) end
+		if not duplicate then table.insert(global.tibDrills, {entity = new_entity, name = new_entity.name, position = position}) end
 	end
 	if (new_entity.name == "CnC_SonicWall_Hub") then
-		script.register_on_entity_destroyed(new_entity)
+		registerEntity(new_entity)
 		CnC_SonicWall_AddNode(new_entity, event.tick)
 	elseif (new_entity.name == "node-harvester") then
+		registerEntity(new_entity)
 		--Remove tree entity when node is covered
-		local position = new_entity.position
-		local area = {
-			{x = math.floor(position.x), y = math.floor(position.y)},
-			{x = math.ceil(position.x), y = math.ceil(position.y)}
-		}
 		local trees = surface.find_entities_filtered{area = area, name = "tibNode_tree"}
 		for _, tree in pairs(trees) do
 			tree.destroy()
 		end
 	elseif (new_entity.name == "tib-spike") then
-		script.register_on_entity_destroyed(new_entity)
-		local position = new_entity.position
-		local area = {
-			{x = math.floor(position.x), y = math.floor(position.y)},
-			{x = math.ceil(position.x), y = math.ceil(position.y)}
-		}
+		registerEntity(new_entity)
 		--Remove tree entity when node is covered
 		local trees = surface.find_entities_filtered{area = area, name = "tibNode_tree"}
 		for _, tree in pairs(trees) do
@@ -744,12 +780,6 @@ local on_new_entity = function(event)
 		end
 		updateGrowthInterval()
 	elseif (new_entity.name == "growth-accelerator-node") then
-		local entity = event.created_entity
-		local position = new_entity.position
-		local area = {
-			{x = math.floor(position.x), y = math.floor(position.y)},
-			{x = math.ceil(position.x), y = math.ceil(position.y)}
-		}
 		--Remove tree entity when node is covered
 		local trees = surface.find_entities_filtered{area = area, name = "tibNode_tree"}
 		for _, tree in pairs(trees) do
@@ -765,6 +795,7 @@ local on_new_entity = function(event)
 				position = position,
 				force = force,
 				}
+			registerEntity(entity)
 			if entity.surface.count_entities_filtered{name = Beacon_Name, position = position} == 0 then
 				local beacon = entity.surface.create_entity{name = Beacon_Name, position = position, force = entity.force}
 				beacon.destructible = false
@@ -772,7 +803,6 @@ local on_new_entity = function(event)
 				local module_count = entity.force.technologies["tiberium-growth-acceleration-acceleration"].level
 				UpdateBeaconSpeed(beacon, module_count)
 			end
-			
 		end
 	end
 end
@@ -783,11 +813,11 @@ script.on_event(defines.events.script_raised_built, on_new_entity)
 script.on_event(defines.events.script_raised_revive, on_new_entity)
 
 local on_remove_entity = function(event)
-	local entity = event.entity
+	local entity = global.tibOnEntityDestroyed[event.registration_number]
 	if (entity.type == "mining-drill") then
-		for i, drill in pairs(global.drills) do
-			if drill == entity then
-				table.remove(global.drills, i)
+		for i, drill in pairs(global.tibDrills) do
+			if (drill.position.x == entity.position.x) and (drill.position.y == entity.position.y) and (drill.name == entity.name) then
+				table.remove(global.tibDrills, i)
 				break
 			end
 		end
@@ -833,7 +863,7 @@ local on_remove_entity = function(event)
 			force = neutral,
 			raise_built = false
 			}
-	elseif Accelerator_Names[entity.name] then
+	elseif (entity.name == "growth-accelerator") then
 		--Spawn tree entity when node is placed "tibNode_tree"
 		local position = entity.position
 		local tree = entity.surface.create_entity
@@ -848,12 +878,10 @@ local on_remove_entity = function(event)
 			beacon.destroy()
 		end
 	end
+	global.tibOnEntityDestroyed[event.registration_number] = nil  -- Avoid this global growing forever
 end
 
-script.on_event(defines.events.on_pre_player_mined_item, on_remove_entity)
-script.on_event(defines.events.on_robot_pre_mined, on_remove_entity)
-script.on_event(defines.events.script_raised_destroy, on_remove_entity)
-script.on_event(defines.events.on_entity_died, on_remove_entity)
+script.on_event(defines.events.on_entity_destroyed, on_remove_entity)
 
 -- Set modules in hidden beacons for Growth Accelerator speed bonus
 function UpdateBeaconSpeed(beacon, total_modules)

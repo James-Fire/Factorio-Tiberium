@@ -1,4 +1,5 @@
 -- Basic setup, variables to use. (Might expose to settings sometime? Or perhaps make research allow for longer wall segments?)
+require("__LSlib__/LSlib")
 
 local horz_wall, vert_wall = 1, 2
 local dir_mods = {{x = 1, y = 0, variation = horz_wall}, {x = -1, y = 0, variation = horz_wall},
@@ -19,22 +20,22 @@ local min   = math.min
 function CnC_SonicWall_FindNodes(surf, pos, force, dir)
 	local near_nodes = {nil, nil, nil, nil}
 	local near_dists = {999, 999, 999, 999}
-	for _, emitter in pairs(global.SRF_nodes) do
-		if not force or force.name == emitter.force.name then
-			if surf.index == emitter.surface.index then
-				local that_pos = emitter.position
+	for _, entry in pairs(global.SRF_nodes) do
+		if not force or force.name == entry.emitter.force.name then
+			if surf.index == entry.emitter.surface.index then
+				local that_pos = entry.position
 				if pos.x == that_pos.x and pos.y ~= that_pos.y then
 					if dir == vert_wall or dir == horz_wall + vert_wall then
 						local diff = that_pos.y - pos.y
 						if abs(diff) <= node_range then
 							if diff < 0 then
 								if -diff < near_dists[1] then
-									near_nodes[1] = emitter
+									near_nodes[1] = entry.emitter
 									near_dists[1] = -diff
 								end
 							else
 								if diff < near_dists[2] then
-									near_nodes[2] = emitter
+									near_nodes[2] = entry.emitter
 									near_dists[2] = diff
 								end
 							end
@@ -46,12 +47,12 @@ function CnC_SonicWall_FindNodes(surf, pos, force, dir)
 						if abs(diff) <= node_range then
 							if diff < 0 then
 								if -diff < near_dists[3] then
-									near_nodes[3] = emitter
+									near_nodes[3] = entry.emitter
 									near_dists[3] = -diff
 								end
 							else
 								if diff < near_dists[4] then
-									near_nodes[4] = emitter
+									near_nodes[4] = entry.emitter
 									near_dists[4] = diff
 								end
 							end
@@ -73,8 +74,8 @@ end
 --Called by on_built_entity in control.lua
 --Modifies global.SRF_nodes, global.SRF_node_ticklist, global.SRF_segments
 function CnC_SonicWall_AddNode(entity, tick)
-	table.insert(global.SRF_nodes, entity)
-	table.insert(global.SRF_node_ticklist, {emitter = entity, tick = tick + ceil(entity.electric_buffer_size / entity.electric_input_flow_limit)})
+	table.insert(global.SRF_nodes, {emitter = entity, position = entity.position})
+	table.insert(global.SRF_node_ticklist, {emitter = entity, position = entity.position, tick = tick + ceil(entity.electric_buffer_size / entity.electric_input_flow_limit)})
 	CnC_SonicWall_DisableNode(entity)  --Destroy any walls that went through where the wall was placed so it can calculate new walls
 end
 
@@ -111,13 +112,13 @@ end
 --Called by on_entity_died in control.lua
 --Modifies global.SRF_nodes, global.SRF_node_ticklist, global.SRF_low_power_ticklist
 function CnC_SonicWall_DeleteNode(entity, tick)
-	local k = find_value_in_table(global.SRF_nodes, entity)
+	local k = find_value_in_table(global.SRF_nodes, entity.position, "position")
 	if k then table.remove(global.SRF_nodes, k) end
 	
-	k = find_value_in_table(global.SRF_node_ticklist, entity, "emitter")
+	k = find_value_in_table(global.SRF_node_ticklist, entity.position, "position")
 	if k then table.remove(global.SRF_node_ticklist, k) end
 
-	k = find_value_in_table(global.SRF_low_power_ticklist, entity, "emitter")
+	k = find_value_in_table(global.SRF_low_power_ticklist, entity.position, "position")
 	if k then table.remove(global.SRF_low_power_ticklist, k) end
 
 	CnC_SonicWall_DisableNode(entity)
@@ -125,7 +126,7 @@ function CnC_SonicWall_DeleteNode(entity, tick)
 	local connected_nodes = CnC_SonicWall_FindNodes(entity.surface, entity.position, entity.force, horz_wall + vert_wall)
 	for i = 1, #connected_nodes do
 		if not find_value_in_table(global.SRF_node_ticklist, connected_nodes[i], "emitter") then
-			table.insert(global.SRF_node_ticklist, {emitter = connected_nodes[i], tick = tick + 10})
+			table.insert(global.SRF_node_ticklist, {emitter = connected_nodes[i], position = connected_nodes[i].position, tick = tick + 10})
 		end
 	end
 end
@@ -157,7 +158,7 @@ function CnC_SonicWall_WallDamage(surf, pos, tick)
 					mark_death = true
 				end
 				CnC_SonicWall_DisableNode(node)
-				table.insert(global.SRF_node_ticklist, {emitter = node, tick = tick + ceil(node.electric_buffer_size / node.electric_input_flow_limit)})
+				table.insert(global.SRF_node_ticklist, {emitter = node, position = node.position, tick = tick + ceil(node.electric_buffer_size / node.electric_input_flow_limit)})
 			end
 		end
 		if not mark_death then
@@ -284,11 +285,11 @@ function CnC_SonicWall_OnTick(event)
 	end
 	
 	if cur_tick % 60 == 0 then --Check for all emitters for low power once per second
-		for _, emitter in pairs(global.SRF_nodes) do
-			local ticks_rem = emitter.energy / emitter.electric_drain
+		for _, entry in pairs(global.SRF_nodes) do
+			local ticks_rem = entry.emitter.energy / entry.emitter.electric_drain
 			if ticks_rem > 5 and ticks_rem <= 65 then
-				if not find_value_in_table(global.SRF_low_power_ticklist, emitter, "emitter") then
-					table.insert(global.SRF_low_power_ticklist, {emitter = emitter, tick = cur_tick + ceil(ticks_rem)})
+				if not find_value_in_table(global.SRF_low_power_ticklist, entry.emitter, "emitter") then
+					table.insert(global.SRF_low_power_ticklist, {emitter = entry.emitter, position = entry.position, tick = cur_tick + ceil(ticks_rem)})
 				end
 			end
 		end
@@ -317,13 +318,13 @@ end
 
 --Helper function
 --Returns the key for a given value in a given table or false if it doesn't exist
---Optional subscript argument for when the list contains other lists
+--Optional subscript argument for when the list contains other lists (LSlib doesn't have this, otherwise I would use their version)
 function find_value_in_table(list, value, subscript)
 	if not list then return false end
 	if not value then return false end
 	for k, v in pairs(list) do
 		if subscript then
-			if v[subscript] == value then return k end
+			if LSlib.utils.table.areEqual(v[subscript], value) then return k end
 		else
 			if v == value then return k end
 		end
@@ -349,7 +350,7 @@ function convertSrfGlobals()
 	if global.hexi_hardlight_node_ticklist then
 		global.SRF_node_ticklist = {}
 		for _, v in pairs(global.hexi_hardlight_node_ticklist) do
-			table.insert(global.SRF_node_ticklist, {emitter = v[1], tick = v[2]})
+			table.insert(global.SRF_node_ticklist, {emitter = v[1], position = v[1].position, tick = v[2]})
 		end
 	elseif not global.SRF_node_ticklist then
 		global.SRF_node_ticklist = {}

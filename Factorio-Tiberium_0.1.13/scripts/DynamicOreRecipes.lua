@@ -815,7 +815,7 @@ function fugeTierSetup()
 	
 	for pack in pairs(tibComboPacks or {}) do
 		if not allPacks[pack] then
-			if debugText then log(">"..pack) end
+			if debugText then log("}\r\n"..pack.."{") end
 			allPacks[pack] = breadthFirst({[pack] = 1})
 			local tier1 = true
 			for ingredient in pairs(allPacks[pack]) do
@@ -832,9 +832,8 @@ function fugeTierSetup()
 		end
 	end
 	-- Purge high tier packs from T1
-	local somethingNew = true
-	while somethingNew do
-		somethingNew = false
+	repeat
+		local somethingNew = false
 		for pack in pairs(science[1]) do
 			for _, ingredient in pairs(tibComboPacks[pack]) do
 				local required = ingredient[1] and ingredient[1] or ingredient.name
@@ -848,19 +847,23 @@ function fugeTierSetup()
 				end
 			end
 		end
-	end
+	until not somethingNew
 	for pack in pairs(science[2] or {}) do
 		if not allPacks[pack] then
-			if debugText then log(">"..pack) end
+			if debugText then log("}\r\n"..pack.."{") end
 			allPacks[pack] = breadthFirst({[pack] = 1})
 		end
 	end
 	for pack in pairs(science[3] or {}) do
 		if not allPacks[pack] then
-			if debugText then log(">"..pack) end
+			if debugText then log("}\r\n"..pack.."{") end
 			allPacks[pack] = breadthFirst({[pack] = 1})
 		end
 	end
+	if listLength(science[1]) == 0 then  -- Fallback in case nothing qualifies for T1
+		science[1] = table.deepcopy(science[2])
+	end
+	if debugText then log("}") end
 end
 
 function fugeRecipeTier(tier)
@@ -917,10 +920,12 @@ function fugeRecipeTier(tier)
 	--Make actual recipe changes
 	LSlib.recipe.editEngergyRequired("tiberium-"..material.."-centrifuging", recipeMult)
 	LSlib.recipe.addIngredient("tiberium-"..material.."-centrifuging", item, ingredientAmount * recipeMult, (tier > 1) and "fluid" or "item")
+	if debugText then log("Tier "..tier.." centrifuge: "..ingredientAmount * recipeMult.." "..item) end
 	for resource, amount in pairs(resources) do
 		if (resource ~= "stone") and (amount > 1 / 128) then
 			local rounded = math.ceil(amount * recipeMult)
 			LSlib.recipe.addResult("tiberium-"..material.."-centrifuging", resource, rounded, fluids[resource] and "fluid" or "item")
+			if debugText then log("> "..rounded.." "..resource) end
 		end
 	end
 	if resources["stone"] and (listLength(fluids) < 3) then
@@ -929,8 +934,9 @@ function fugeRecipeTier(tier)
 		LSlib.recipe.changeIcon("tiberium-"..material.."-sludge-centrifuging", tiberiumInternalName.."/graphics/icons/"..material.."-sludge-centrifuging.png", 32)
 		LSlib.recipe.addResult("tiberium-"..material.."-sludge-centrifuging", "tiberium-sludge", stone, "fluid")
 		LSlib.recipe.addResult("tiberium-"..material.."-centrifuging", "stone", stone, "item")
+		if debugText then log("> "..stone.." stone") end
 	else  -- Don't create sludge recipe if there is no stone to convert or we don't have enough fluid boxes
-		data.raw["recipe"]["tiberium-"..material.."-sludge-centrifuging"] = nil
+		--data.raw["recipe"]["tiberium-"..material.."-sludge-centrifuging"] = nil  Don't delete recipe, just make it unavailable
 		local tech = (tier == 1) and "tiberium-separation-tech" or (tier == 2) and "tiberium-processing-tech" or "tiberium-molten-processing"
 		for i, effect in pairs(data.raw["technology"][tech]["effects"]) do
 			if effect.recipe == "tiberium-"..material.."-sludge-centrifuging" then
@@ -941,6 +947,7 @@ function fugeRecipeTier(tier)
 		if resources["stone"] then
 			local stone = math.ceil(resources["stone"] * recipeMult)
 			LSlib.recipe.addResult("tiberium-"..material.."-centrifuging", "stone", stone, "item")
+			if debugText then log("> "..stone.." stone") end
 		end
 	end
 end
@@ -1036,6 +1043,7 @@ fugeRecipeTier(2)
 fugeRecipeTier(3)
 
 if debugText then
+	log("Active mods: "..serpent.block(mods))
 	log("science "..serpent.block(science))
 	log("all packs "..serpent.block(allPacks))
 	log("raw resources "..serpent.block(rawResources))
@@ -1050,5 +1058,5 @@ if debugText then
 	for _, v in pairs(sortedDepth) do
 		output = output..v[2].." "..v[1].."\r\n"
 	end
-	log("item depths \r\n"..output)
+	log("item depths {\r\n"..output.."}")
 end
