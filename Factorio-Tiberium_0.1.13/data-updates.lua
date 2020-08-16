@@ -80,7 +80,9 @@ if mods["Krastorio2"] then
 	end
 	
 	-- Make Tiberium Magazines usable with rifles again
-	LSlib.recipe.editIngredient("tiberium-rounds-magazine", "piercing-rounds-magazine", "rifle-magazine", 1)
+	if krastorio.general.getSafeSettingValue("kr-more-realistic-weapon") then
+		LSlib.recipe.editIngredient("tiberium-rounds-magazine", "piercing-rounds-magazine", "rifle-magazine", 1)
+	end
 	local oldTibRounds = data.raw.ammo["tiberium-rounds-magazine"]
 	local newTibRounds = table.deepcopy(data.raw.ammo["uranium-rifle-magazine"])
 	if newTibRounds then
