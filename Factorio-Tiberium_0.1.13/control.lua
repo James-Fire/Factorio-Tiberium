@@ -33,10 +33,6 @@ local tiberium_start = {
 	["offshore-pump"] = 1
 }
 
-script.on_load(function()
-	register_with_picker()
-end)
-
 script.on_init(function()
 	register_with_picker()
 	global.tibGrowthNodeListIndex = 0
@@ -91,6 +87,10 @@ function updateGrowthInterval()
 	global.intervalBetweenNodeUpdates = math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
 end
 
+script.on_load(function()
+	register_with_picker()
+end)
+
 function register_with_picker()
 	--register to PickerExtended
 	if remote.interfaces["picker"] and remote.interfaces["picker"]["dolly_moved_entity_id"] then
@@ -125,14 +125,7 @@ script.on_configuration_changed(function(data)
 			end
 			-- Place Blossom trees on all the now bare nodes.
 			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
-				local position = node.position
-				local tree = surface.create_entity
-					{
-					name = "tibNode_tree",
-					position = position,
-					force = neutral,
-					raise_built = false
-					}
+				createBlossomTree(surface, node.position)
 			end
 			-- Add invisible beacons for new growth accelerator speed researches
 			for _, beacon in pairs(surface.find_entities_filtered{name = Beacon_Name}) do
@@ -171,7 +164,9 @@ script.on_configuration_changed(function(data)
 		--Convert globals
 		if not global.tibDrills then global.tibDrills = {} end
 		for _, drill in pairs(global.drills or {}) do
-			table.insert(global.tibDrills, {entity = drill, name = drill.name, position = drill.position})
+			if drill.valid then
+				table.insert(global.tibDrills, {entity = drill, name = drill.name, position = drill.position})
+			end
 		end
 		global.drills = nil
 		for _, charging in pairs(global.SRF_node_ticklist) do
@@ -188,7 +183,7 @@ script.on_configuration_changed(function(data)
 	end
 end)
 
-function upgradingToVersion(data, modName, version)
+function upgradingToVersion(data, modName, version)  -- Fix before 1.0.10
 	if not data["mod_changes"][modName] or not data["mod_changes"][modName]["old_version"]
 			or not data["mod_changes"][modName]["new_version"] then
 		return false
@@ -381,15 +376,9 @@ function CreateNode(surface, position)
 		surface.destroy_decoratives{area = area}
 		--Actual node creation
 		local node = surface.create_entity{name="tibGrowthNode", position = position, amount = 15000}
-		--Spawn tree entity when node is placed "tibNode_tree"
-		local tree = surface.create_entity
-			{
-			name = "tibNode_tree",
-			position = position,
-			force = neutral,
-			raise_built = false
-			}
 		table.insert(global.tibGrowthNodeList, node)
+		--Spawn tree entity when node is created
+		createBlossomTree(surface, position)
 		updateGrowthInterval()
 	end
 end
@@ -444,10 +433,7 @@ script.on_event(defines.events.on_resource_depleted, function(event)
 			{x = math.floor(position.x), y = math.floor(position.y)},
 			{x = math.ceil(position.x), y = math.ceil(position.y)}
 		}
-		local trees = event.entity.surface.find_entities_filtered{area = area, name = "tibNode_tree"}
-		for _, tree in pairs(trees) do
-			tree.destroy()
-		end
+		removeBlossomTree(event.entity.surface, area)
 		for i, node in pairs(global.tibGrowthNodeList) do
 			if node == event.entity then
 				table.remove(global.tibGrowthNodeList, i)
@@ -563,14 +549,8 @@ script.on_event(defines.events.on_chunk_generated, function(event)
 	for i, newNode in pairs(surface.find_entities_filtered{area = area, name = "tibGrowthNode"}) do
 		table.insert(global.tibGrowthNodeList, newNode)
 		local position = newNode.position
-		--Spawn tree entity when node is placed "tibNode_tree"
-		local tree = surface.create_entity
-			{
-			name = "tibNode_tree",
-			position = position,
-			force = neutral,
-			raise_built = false
-			}
+		--Spawn tree entity when node is placed
+		createBlossomTree(surface, position)
 		local howManyOre = math.min(math.max(10, (math.abs(position.x) + math.abs(position.y)) / 25), 200) --Start further nodes with more ore
 		PlaceOre(newNode, howManyOre)
 		--Cosmetic stuff
@@ -682,6 +662,28 @@ function safeDamage(entityOrPlayer, damageAmount, damagingForce, damageType)
 	end
 end
 
+function validpairs(table, subscript)
+	local function nextvalid(table, k)
+		while true do
+			k = next(table, k)
+			if not k or not table[k] then
+				return nil
+			else
+				if subscript and (type(table[k]) == "table") and table[k][subscript] then
+					if table[k][subscript].valid then
+						return k, table[k]
+					end
+				else
+					if table[k].valid then
+						return k, table[k]
+					end
+				end
+			end
+		end
+	end
+	return nextvalid, table, nil
+end
+
 script.on_nth_tick(60 * 300, function(event) --Global integrity check
 	if event.tick == 0 then return end
 	local nodeCount = 0
@@ -744,17 +746,11 @@ local on_new_entity = function(event)
 	elseif (new_entity.name == "node-harvester") then
 		registerEntity(new_entity)
 		--Remove tree entity when node is covered
-		local trees = surface.find_entities_filtered{area = area, name = "tibNode_tree"}
-		for _, tree in pairs(trees) do
-			tree.destroy()
-		end
+		removeBlossomTree(surface, area)
 	elseif (new_entity.name == "tib-spike") then
 		registerEntity(new_entity)
 		--Remove tree entity when node is covered
-		local trees = surface.find_entities_filtered{area = area, name = "tibNode_tree"}
-		for _, tree in pairs(trees) do
-			tree.destroy()
-		end
+		removeBlossomTree(surface, area)
 		local nodes = surface.find_entities_filtered{area = area, name = "tibGrowthNode"}
 		for _, node in pairs(nodes) do
 			--Remove spiked node from growth list
@@ -781,10 +777,7 @@ local on_new_entity = function(event)
 		updateGrowthInterval()
 	elseif (new_entity.name == "growth-accelerator-node") then
 		--Remove tree entity when node is covered
-		local trees = surface.find_entities_filtered{area = area, name = "tibNode_tree"}
-		for _, tree in pairs(trees) do
-			tree.destroy()
-		end
+		removeBlossomTree(surface, area)
 		local accelerators = surface.find_entities_filtered{area = area, name = "growth-accelerator-node"}
 		for _, accelerator in pairs(accelerators) do
 			local force = accelerator.force
@@ -796,8 +789,8 @@ local on_new_entity = function(event)
 				force = force,
 				}
 			registerEntity(entity)
-			if entity.surface.count_entities_filtered{name = Beacon_Name, position = position} == 0 then
-				local beacon = entity.surface.create_entity{name = Beacon_Name, position = position, force = entity.force}
+			if surface.count_entities_filtered{name = Beacon_Name, position = position} == 0 then
+				local beacon = surface.create_entity{name = Beacon_Name, position = position, force = entity.force}
 				beacon.destructible = false
 				beacon.minable = false
 				local module_count = entity.force.technologies["tiberium-growth-acceleration-acceleration"].level
@@ -814,6 +807,7 @@ script.on_event(defines.events.script_raised_revive, on_new_entity)
 
 local on_remove_entity = function(event)
 	local entity = global.tibOnEntityDestroyed[event.registration_number]
+	if not entity then return end
 	if (entity.type == "mining-drill") then
 		for i, drill in pairs(global.tibDrills) do
 			if (drill.position.x == entity.position.x) and (drill.position.y == entity.position.y) and (drill.name == entity.name) then
@@ -832,14 +826,8 @@ local on_remove_entity = function(event)
 		}
 		local nodes = entity.surface.find_entities_filtered{area = area, name = "tibGrowthNode_infinite"}
 		for _, node in pairs(nodes) do
-			--Spawn tree entity when node is placed "tibNode_tree"
-			local tree = entity.surface.create_entity
-				{
-				name = "tibNode_tree",
-				position = position,
-				force = neutral,
-				raise_built = false
-				}
+			--Spawn tree entity when node is uncovered
+			createBlossomTree(entity.surface, entity.position)
 			local spikedNodeRichness = node.amount
 			node.destroy()
 			local newNode = entity.surface.create_entity
@@ -854,31 +842,32 @@ local on_remove_entity = function(event)
 		end
 		updateGrowthInterval()
 	elseif (entity.name == "node-harvester") then
-		--Spawn tree entity when node is placed "tibNode_tree"
-		local position = entity.position
-		local tree = entity.surface.create_entity
-			{
-			name = "tibNode_tree",
-			position = position,
-			force = neutral,
-			raise_built = false
-			}
+		--Spawn tree entity when node is uncovered
+		createBlossomTree(entity.surface, entity.position)
 	elseif (entity.name == "growth-accelerator") then
-		--Spawn tree entity when node is placed "tibNode_tree"
-		local position = entity.position
-		local tree = entity.surface.create_entity
-			{
-			name = "tibNode_tree",
-			position = position,
-			force = neutral,
-			raise_built = false
-			}
+		--Spawn tree entity when node is uncovered
+		createBlossomTree(entity.surface, entity.position)
 		local beacons = entity.surface.find_entities_filtered{name = Beacon_Name, position = entity.position}
 		for _, beacon in pairs(beacons) do
 			beacon.destroy()
 		end
 	end
 	global.tibOnEntityDestroyed[event.registration_number] = nil  -- Avoid this global growing forever
+end
+
+function createBlossomTree(surface, position)
+	surface.create_entity{
+		name = "tibNode_tree",
+		position = position,
+		force = neutral,
+		raise_built = false
+	}
+end
+
+function removeBlossomTree(surface, area)
+	for _, tree in pairs(surface.find_entities_filtered{area = area, name = "tibNode_tree"}) do
+		tree.destroy()
+	end
 end
 
 script.on_event(defines.events.on_entity_destroyed, on_remove_entity)

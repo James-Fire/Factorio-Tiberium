@@ -58,6 +58,7 @@ data:extend{tiberiumNodeHarvesterItem, tiberiumNodeHarvesterEntity,
 local tiberiumSpikeItem = table.deepcopy(data.raw.item["pumpjack"])
 tiberiumSpikeItem.name = "tib-spike"
 tiberiumSpikeItem.icon = tiberiumInternalName.."/graphics/icons/tiberium-spike.png"
+tiberiumSpikeItem.icon_size = 128
 tiberiumSpikeItem.icon_mipmaps = nil
 tiberiumSpikeItem.subgroup = "a-buildings"
 tiberiumSpikeItem.order = "g[tib-spike]"

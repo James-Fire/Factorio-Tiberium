@@ -113,7 +113,6 @@ data:extend{
     name = "tiberium-rocket",
     icon = tiberiumInternalName.."/graphics/icons/tiberium-rocket.png",
     icon_size = 64,
-	icon_mipmaps = 0,
     ammo_type = {
       category = "rocket",
       action = {
@@ -619,7 +618,7 @@ marvItem.order = "e[personal-transport]-a[marv]"
 marvItem.subgroup = "a-items"
 marvItem.icon = tiberiumInternalName.."/graphics/icons/tiberium-marv.png"
 marvItem.icon_size = 128
-marvItem.icon_mipmaps = 0
+marvItem.icon_mipmaps = nil
 
 local marvEntity = table.deepcopy(data.raw.car["tank"])
 marvEntity.name = "tiberium-marv"

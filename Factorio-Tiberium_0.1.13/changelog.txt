@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.3
+  Changes:
+    - Slightly improved Tiberium Spike icon
+  Bugfixes:
+    - Fixed crash from entities dying after being registered by other mods
+    - Fixed crash from invalid mining drills in global list when upgrading to 1.0.2
+    - Improved centrifuge recipes when Clown's Science is active
+---------------------------------------------------------------------------------------------------
 Version: 1.0.2
   Bugfixes:
     - Fixed crash when player died from tiberium damage

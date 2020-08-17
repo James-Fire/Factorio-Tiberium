@@ -7,6 +7,10 @@ local debugText = settings.startup["tiberium-debug-text"].value
 local free = {}
 local fromThinAir = {}
 local excludedCrafting = {["barreling-pump"] = true, ["transport-drone-request"] = true} --Rigorous way to do this?
+if mods["Clowns-Science"] then
+	excludedCrafting["particle-accelerator"] = true
+	excludedCrafting["facility"] = true
+end
 --Debugging for findRecipe
 local unreachable = {}
 local multipleRecipes = {}
