@@ -1,0 +1,26 @@
+{
+    "name": "Factorio-Tiberium",
+    "version": "1.0.3",
+    "title": "Factorio and Conquer: Tiberian Dawn",
+    "author": "JamesFire",
+    "contact": "",
+    "homepage": "https://github.com/James-Fire/Factorio-Tiberium",
+    "factorio_version": "1.0",
+    "dependencies": [
+		"base >= 1.0.0",
+		"?angelsrefining",
+		"?angelspetrochem",
+		"?bobmining >=0.17.0",
+		"?bobores >=0.17.0",
+		"?bobrevamp >=0.17.0",
+		"?bobplates >=0.17.0",
+		"?Krastorio2",
+		"?Mining_Drones",
+		"?Orbital Ion Cannon",
+		"?omnimatter",
+		"! Prospector",
+		"LSlib >= 2020.5.11",
+		"informatron"
+	],
+    "description": "Adds Tiberium ore that spreads - Harvest it, refine it, and convert it to power, weapons, and other ores. By Zillo7 (0.15), SAH4001 (0.16), Oktabyte (0.17), JamesFire and randomflyingtaco (0.18+)"
+}

@@ -1,0 +1,48 @@
+{
+  "technology":
+  [
+    ["advanced-tiberium-transmutation-tech", "tiberium-transmutation-tech"]
+  ],
+  "item":
+  [
+	["tiberium-magazine", "tiberium-rounds-magazine"],
+	["tiberium-plant", "tiberium-power-plant"]
+  ],
+  "recipe":
+  [
+	["tiberium-magazine", "tiberium-rounds-magazine"],
+	["energy-growth-credit", "tiberium-growth-credit-from-energy"],
+	["iron-growth-credit", "tiberium-growth-credit-from-iron-ore"],
+	["copper-growth-credit", "tiberium-growth-credit-from-copper-ore"],
+	["stone-growth-credit", "tiberium-growth-credit-from-stone"],
+	["coal-growth-credit", "tiberium-growth-credit-from-coal"],
+	["oil-growth-credit", "tiberium-growth-credit-from-crude-oil"],
+	["uranium-growth-credit", "tiberium-growth-credit-from-uranium-ore"],
+	["saphirite-growth-credit", "tiberium-growth-credit-from-angels-ore1"],
+	["jivolite-growth-credit", "tiberium-growth-credit-from-angels-ore2"],
+	["stiratite-growth-credit", "tiberium-growth-credit-from-angels-ore3"],
+	["crotinnium-growth-credit", "tiberium-growth-credit-from-angels-ore4"],
+	["rubyte-growth-credit", "tiberium-growth-credit-from-angels-ore5"],
+	["bobmonium-growth-credit", "tiberium-growth-credit-from-angels-ore6"],
+	["multi-phase-oil-growth-credit", "tiberium-growth-credit-from-liquid-multi-phase-oil"],
+	["natural-gas-growth-credit", "tiberium-growth-credit-from-gas-natural-1"],
+	["tungsten-growth-credit", "tiberium-growth-credit-from-tungsten-ore"],
+	["silver-growth-credit", "tiberium-growth-credit-from-silver-ore"],
+	["zinc-growth-credit", "tiberium-growth-credit-from-zinc-ore"],
+	["rutile-growth-credit", "tiberium-growth-credit-from-rutile-ore"],
+	["gold-growth-credit", "tiberium-growth-credit-from-gold-ore"],
+	["cobalt-growth-credit", "tiberium-growth-credit-from-cobalt-ore"],
+	["nickel-growth-credit", "tiberium-growth-credit-from-nickel-ore"],
+	["lead-growth-credit", "tiberium-growth-credit-from-lead-ore"],
+	["quartz-growth-credit", "tiberium-growth-credit-from-quartz"],
+	["bauxite-growth-credit", "tiberium-growth-credit-from-bauxite-ore"],
+	["tin-growth-credit", "tiberium-growth-credit-from-tin-ore"],
+	["thorium-growth-credit", "tiberium-growth-credit-from-thorium-ore"],
+	["tiberium-plant", "tiberium-power-plant"]
+  ],
+  "mod-setting":
+  [
+	["debug-text", "tiberium-debug-text"],
+	["biters-immune-to-tiberium-damage", "tiberium-wont-damage-biters"]
+  ]
+}
