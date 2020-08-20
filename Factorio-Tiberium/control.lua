@@ -1,4 +1,5 @@
 require("scripts/CnC_Walls") --Note, to make SonicWalls work / be passable,
+require("scripts/informatron/informatron_remote_interface")
 
 local tiberiumInternalName = "Factorio-Tiberium"  --No underscores for this one
 

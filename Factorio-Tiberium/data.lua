@@ -11,3 +11,5 @@ require("scripts/TiberiumPowerPlant")
 require("scripts/Tiberium Combat")
 require("scripts/damage-type")
 require("scripts/recipe_autogeneration")
+
+require("scripts/informatron/informatron")
