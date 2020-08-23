@@ -1,4 +1,22 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.5
+  Changes:
+    - Added warning to not run the main Tiberium mod and the beta Tiberium mod at the same time
+    - Lowered selection priority of SRF walls, so you can now mine things from underneath SRF walls
+    - Tiberium Only map gen preset to be generated earlier during startup with the hope that more mods with apply their particular changes to it
+  Bugfixes:
+    - Fixed mining drills placed before mod was present not activating when Tiberium ore grows underneath them
+    - Fixed growth interval not being updated when you /tibRebuildLists
+    - Fixed crash from attempting to damage invalid entity
+    - Fixed our recipe detection to match the automatic correction applied by base Factorio when amount_max is less thant amount_min
+    - Fixed crash from destroying multiple connected SRF Hubs on the same tick
+---------------------------------------------------------------------------------------------------
+Version: 1.0.4
+  Features:
+    - Added in-game wiki to explain the basics of the mod
+  Changes:
+    - Removed Prospector conflict, since they updated their mod to be compatible with Tiberium (thanks Mylon!)
+---------------------------------------------------------------------------------------------------
 Version: 1.0.3
   Changes:
     - Slightly improved Tiberium Spike icon
@@ -83,7 +101,7 @@ Version: 1.0.0
     - Tweaks to recipe times: Empty fuel cell 20->5, Tiberium fuel cell 20->10, Refurbish fuel cell 20->30
     - Added UI element for Growth Accelerator speed researc, so it now looks like the tech does something
     - Removing unused code
-    - Allowing prod modules on various recipes	
+    - Allowing prod modules on various recipes
     - Added recipe descriptions
     - Added recipe names for Tiberium Data recipes
     - Removing Unused Brick and Wall files and strings

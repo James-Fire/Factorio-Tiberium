@@ -82,6 +82,17 @@ script.on_init(function()
 	end
 	-- CnC SonicWalls Init
 	CnC_SonicWall_OnInit(event)
+	
+	-- For drills that were present before Tiberium mod was added
+	for _, surface in pairs(game.surfaces) do
+		-- Registering entities correctly this time
+		for _, entity in pairs(surface.find_entities_filtered{type = "mining-drill"}) do
+			registerEntity(entity)
+		end
+		for _, drill in pairs(surface.find_entities_filtered{type = "mining-drill"}) do
+			table.insert(global.tibDrills, {entity = drill, name = drill.name, position = drill.position})
+		end
+	end
 end)
 
 function updateGrowthInterval()
@@ -184,14 +195,24 @@ script.on_configuration_changed(function(data)
 	end
 end)
 
-function upgradingToVersion(data, modName, version)  -- Fix before 1.0.10
-	if not data["mod_changes"][modName] or not data["mod_changes"][modName]["old_version"]
-			or not data["mod_changes"][modName]["new_version"] then
-		return false
-	else
-		return data["mod_changes"][modName]["old_version"] < version and
-			data["mod_changes"][modName]["new_version"] >= version
+function upgradingToVersion(data, modName, version)
+	if data["mod_changes"][modName] and data["mod_changes"][modName]["new_version"] then
+		local otherModName  -- Can't use normal flib migration, because we want to support going from beta to main mod
+		if modName == "Factorio-Tiberium" then
+			otherModName = "Factorio-Tiberium-Beta"
+		elseif modName == "Factorio-Tiberium-Beta" then
+			otherModName = "Factorio-Tiberium"
+		end
+		local oldVersion = data["mod_changes"][modName]["old_version"] or 
+				(data["mod_changes"][otherModName] and data["mod_changes"][otherModName]["old_version"])
+		if not oldVersion then return false end
+		local newVersion = data["mod_changes"][modName]["new_version"]
+		oldVersion = flib.migration.format_version(oldVersion, "%04d")
+		newVersion = flib.migration.format_version(newVersion, "%04d")
+		version = flib.migration.format_version(version, "%04d")
+		return (oldVersion < version) and (newVersion >= version)
 	end
+	return false
 end
 
 function AddOre(surface, position, growthRate)
@@ -226,7 +247,7 @@ function AddOre(surface, position, growthRate)
 
 	--Damage adjacent entities unless it's in the list of exemptDamageItems
 	for _, entity in pairs(surface.find_entities(area)) do
-		if not global.exemptDamageItems[entity.type] then
+		if entity.valid and not global.exemptDamageItems[entity.type] then
 			safeDamage(entity, TiberiumDamage, game.forces.tiberium, "tiberium")
 		end
 	end
@@ -471,6 +492,7 @@ commands.add_command("tibRebuildLists",
 				table.insert(global.tibDrills, {entity = drill, name = drill.name, position = drill.position})
 			end
 		end
+		updateGrowthInterval()
 		game.print("Found " .. #global.tibGrowthNodeList .. " nodes")
 		game.print("Found " .. #global.SRF_nodes .. " SRF hubs")
 		game.print("Found " .. #global.tibDrills .. " drills")
@@ -648,8 +670,10 @@ script.on_nth_tick(10, function(event) --Player damage 6 times per second
 end)
 
 function safeDamage(entityOrPlayer, damageAmount, damagingForce, damageType)
+	if not entityOrPlayer.valid then return end
+	local entity
 	if entityOrPlayer.is_player() then
-		if entityOrPlayer.valid and entityOrPlayer.character then
+		if entityOrPlayer.character then
 			entity = entityOrPlayer.character
 		else
 			return
@@ -708,7 +732,7 @@ end)
 
 script.on_event(defines.events.on_trigger_created_entity, function(event)
 	CnC_SonicWall_OnTriggerCreatedEntity(event)
-	if debugText and (event.entity.name == "CnC_SonicWall_Wall-damage") then  --Checking when this is actually called
+	if debugText and event.entity.valid and (event.entity.name == "CnC_SonicWall_Wall-damage") then  --Checking when this is actually called
 		game.print("SRF Wall damaged at "..event.entity.position.x..", "..event.entity.position.y)
 	end
 end)
