@@ -1,4 +1,8 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.4
+  Changes:
+    - Removed the Prospector conflict, since that mod has the exceptions we need.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.3
   Changes:
     - Slightly improved Tiberium Spike icon

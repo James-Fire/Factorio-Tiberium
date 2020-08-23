@@ -1,6 +1,6 @@
 {
     "name": "Factorio-Tiberium",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "title": "Factorio and Conquer: Tiberian Dawn",
     "author": "JamesFire",
     "contact": "",
@@ -18,7 +18,6 @@
 		"?Mining_Drones",
 		"?Orbital Ion Cannon",
 		"?omnimatter",
-		"! Prospector",
 		"LSlib >= 2020.5.11",
 		"informatron"
 	],
