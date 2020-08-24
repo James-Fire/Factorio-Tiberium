@@ -1,5 +1,6 @@
-require("scripts/CnC_Walls") --Note, to make SonicWalls work / be passable,
+require("scripts/CnC_Walls") --Note, to make SonicWalls work / be passable
 require("scripts/informatron/informatron_remote_interface")
+local migration = require("__flib__.migration")
 
 local tiberiumInternalName = "Factorio-Tiberium"  --No underscores for this one
 
@@ -92,6 +93,10 @@ script.on_init(function()
 		for _, drill in pairs(surface.find_entities_filtered{type = "mining-drill"}) do
 			table.insert(global.tibDrills, {entity = drill, name = drill.name, position = drill.position})
 		end
+	end
+	-- Define pack color for DiscoScience
+	if remote.interfaces["DiscoScience"] and remote.interfaces["DiscoScience"]["setIngredientColor"] then
+      remote.call("DiscoScience", "setIngredientColor", "tiberium-science", {r = 0.0, g = 1.0, b = 0.0})
 	end
 end)
 
@@ -193,6 +198,13 @@ script.on_configuration_changed(function(data)
 		end
 		global.SRF_nodes = new_SRF_nodes
 	end
+	
+	if upgradingToVersion(data, tiberiumInternalName, "1.0.2") then
+		-- Define pack color for DiscoScience
+		if remote.interfaces["DiscoScience"] and remote.interfaces["DiscoScience"]["setIngredientColor"] then
+		  remote.call("DiscoScience", "setIngredientColor", "tiberium-science", {r = 0.0, g = 1.0, b = 0.0})
+		end
+	end
 end)
 
 function upgradingToVersion(data, modName, version)
@@ -207,9 +219,9 @@ function upgradingToVersion(data, modName, version)
 				(data["mod_changes"][otherModName] and data["mod_changes"][otherModName]["old_version"])
 		if not oldVersion then return false end
 		local newVersion = data["mod_changes"][modName]["new_version"]
-		oldVersion = flib.migration.format_version(oldVersion, "%04d")
-		newVersion = flib.migration.format_version(newVersion, "%04d")
-		version = flib.migration.format_version(version, "%04d")
+		oldVersion = migration.format_version(oldVersion, "%04d")
+		newVersion = migration.format_version(newVersion, "%04d")
+		version = migration.format_version(version, "%04d")
 		return (oldVersion < version) and (newVersion >= version)
 	end
 	return false
