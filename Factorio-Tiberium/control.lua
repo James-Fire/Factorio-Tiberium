@@ -53,7 +53,7 @@ script.on_init(function()
 	
 	global.tiberiumTerrain = nil --"dirt-4" --Performance is awful, disabling this
 	global.oreType = "tiberium-ore"
-	global.tiberiumProducts = {"tiberium-bar", global.oreType}
+	global.tiberiumProducts = {global.oreType}
 	global.damageForceName = "tiberium"
 	if not game.forces[global.damageForceName] then
 		game.create_force(global.damageForceName)
@@ -418,7 +418,7 @@ function CreateNode(surface, position)
 end
 
 --Code for making the Liquid Seed spread tib
-function LiquidBomb(surface, position, resource, amount)
+function TiberiumSeedMissile(surface, position, resource, amount)
 	local radius = math.floor(amount^0.2)
 	for x = position.x - radius*radius, position.x + radius*radius do
 		for y = position.y - radius*radius, position.y + radius*radius do
@@ -438,6 +438,11 @@ function LiquidBomb(surface, position, resource, amount)
 						local tile = surface.get_tile(placePos)
 						if (tile.collides_with("ground-tile")) then
 							surface.create_entity{name=resource, position=placePos, amount=intensity, enable_cliff_removal=false}
+							--Cosmetic changes
+							if global.tiberiumTerrain then 
+								surface.set_tiles({{name = global.tiberiumTerrain, position = placePos}}, true, false)
+							end
+							surface.destroy_decoratives{position = placePos} --Remove decoration on tile on spread.
 						end
 					end
 				end
@@ -454,7 +459,7 @@ end
 script.on_event(defines.events.on_script_trigger_effect, function(event)
 	--Liquid Seed trigger
 	if event.effect_id == "seed-launch" then
-		LiquidBomb(game.surfaces[event.surface_index], event.target_position, "tiberium-ore", TiberiumMaxPerTile)
+		TiberiumSeedMissile(game.surfaces[event.surface_index], event.target_position, "tiberium-ore", TiberiumMaxPerTile)
 		return
 	end
 end)

@@ -161,6 +161,7 @@ data:extend({
         order = "a[remnants]",
         max_health = 10000,
         selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
+		selection_priority = 2,
         collision_box = {{-0.4, -0.4}, {0.4, 0.4}},
 		collision_mask = {"layer-15"},
         picture = {

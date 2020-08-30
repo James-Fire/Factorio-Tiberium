@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.6
+  Changes:
+    - Lowered selection priority of Tiberium Blossom Trees, so you can now mine things from underneath them
+    - Updated outdated setting decriptions
+    - Removed deprecated items, so they stop showing up as options for filters
+    - Updated Liquid Tiberium Bomb to use the new atomic bomb explosion animation
+---------------------------------------------------------------------------------------------------
 Version: 1.0.5
   Changes:
     - Added warning to not run the main Tiberium mod and the beta Tiberium mod at the same time

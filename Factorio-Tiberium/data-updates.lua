@@ -1,3 +1,5 @@
+require("scripts/tib-map-gen-presets")  -- After other mods have added their resources as part of the data step
+
 --Orbital Ion Cannon
 if mods["Orbital Ion Cannon"] then
 	LSlib.technology.addPrerequisite("orbital-ion-cannon", "tiberium-military-2")

@@ -30,7 +30,7 @@ local autoplaceExceptions = {
 }
 
 for name, resource in pairs(data.raw.resource) do
-	if resource.autoplace then
+	if resource.autoplace and data.raw["autoplace-control"][name] then
 		if not autoplaceExceptions[resource.name] then
 			mgp["Tib-only"].basic_settings.autoplace_controls[name] = {size = 0}
 		end
