@@ -8,7 +8,7 @@ Version: 1.0.6
   Changes:
     - Blossom Tree now blocks things from being built on it, except for our specific things that go on nodes.
   Bugfixes:
-    - Blossom Tree is n ow not placed back if there isn't a node to be placed on.
+    - Blossom Tree is now not placed back if there isn't a node to be placed on.
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.5
   Changes:
