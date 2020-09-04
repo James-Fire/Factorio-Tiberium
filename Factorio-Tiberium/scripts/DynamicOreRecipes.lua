@@ -46,10 +46,10 @@ if mods["dark-matter-replicators-18-patch"] then
 	oreMult["tenemut"] = 1 / 32
 end
 local TibCraftingTint = {
-  primary    = {r = 0.109804, g = 0.721567, b = 0.231373,  a = 1},
-  secondary  = {r = 0.098039, g = 1,        b = 0.278431,  a = 1},
-  tertiary   = {r = 0.156863, g = 0.156863, b = 0.156863,  a = 0.235294},
-  quaternary = {r = 0.160784, g = 0.745098, b = 0.3058824, a = 0.345217},
+	primary    = {r = 0.109804, g = 0.721567, b = 0.231373,  a = 1},
+	secondary  = {r = 0.098039, g = 1,        b = 0.278431,  a = 1},
+	tertiary   = {r = 0.156863, g = 0.156863, b = 0.156863,  a = 0.235294},
+	quaternary = {r = 0.160784, g = 0.745098, b = 0.3058824, a = 0.345217},
 }
 
 -- Assumes: excludedCrafting
@@ -331,7 +331,7 @@ function findRecipe(item, itemList)
 				end
 				penalty = penalty + 10 * recipeDepth[recipeName]
 				table.insert(recipes, {name=recipeName, count=resultList[item], penalty=penalty})
-			else  -- If it isn't reachable, don't use it.  Since we won't be able to break it down
+			else  -- If it isn't reachable, don't use it, since we won't be able to break it down
 				unreachable[recipeName] = true
 			end
 		end

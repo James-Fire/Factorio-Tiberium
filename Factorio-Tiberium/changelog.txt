@@ -1,10 +1,16 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.6
   Changes:
+    - New Tiberium Ore icon (and all icons for all recipes which included the old Tiberium Ore icon)
+    - Tiberium is now significantly better at killing trees
     - Lowered selection priority of Tiberium Blossom Trees, so you can now mine things from underneath them
     - Updated outdated setting decriptions
     - Removed deprecated items, so they stop showing up as options for filters
     - Updated Liquid Tiberium Bomb to use the new atomic bomb explosion animation
+  Bugfixes:
+    - Fixed scripts not recognizing some structures when converting from Beta version of mod to main version of mod
+    - Fixed unpowered SRF Emitters blocking Tiberium growth
+    - Fixed passengers in MARVs multiplying the amount of ore harvested
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.5
   Changes:

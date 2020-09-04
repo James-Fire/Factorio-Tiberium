@@ -236,7 +236,7 @@ data:extend{
 		type = "item",
 		name = "growth-credit-void",
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore.png",
-		icon_size = 32,
+		icon_size = 64,
 		flags = {"hidden"},
 		subgroup = "a-items",
 		stack_size = 200
@@ -571,7 +571,7 @@ data:extend{
         flags = {"placeable-neutral", "player-creation", "not-repairable"},
         subgroup = "remnants",
         order = "a[remnants]",
-        max_health = 10000,
+		destructible = false,
         selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
 		selection_priority = 1,
         collision_box = {{-0.4, -0.4}, {0.4, 0.4}},
