@@ -100,6 +100,9 @@ script.on_init(function()
 		for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
 			table.insert(global.tibGrowthNodeList, node)
 		end
+		for _, wall in pairs(surface.find_entities_filtered{name = "CnC_SonicWall_Wall"}) do
+			wall.destroy()  --Wipe out all lingering SRF so we can rebuild them
+		end
 	end
 	updateGrowthInterval()
 	
@@ -161,7 +164,7 @@ script.on_configuration_changed(function(data)
 				local beacon = accelerator.surface.create_entity{name = Beacon_Name, position = accelerator.position, force = accelerator.force}
 				beacon.destructible = false
 				beacon.minable = false
-				local module_count = accelerator.force.technologies["tiberium-growth-acceleration-acceleration"].level
+				local module_count = accelerator.force.technologies["tiberium-growth-acceleration-acceleration"].level - 1
 				UpdateBeaconSpeed(beacon, module_count)
 			end
 		end
@@ -195,14 +198,14 @@ script.on_configuration_changed(function(data)
 			end
 		end
 		global.drills = nil
-		for _, charging in pairs(global.SRF_node_ticklist) do
+		for _, charging in pairs(global.SRF_node_ticklist or {}) do
 			charging.position = charging.emitter.position
 		end
-		for _, low in pairs(global.SRF_low_power_ticklist) do
+		for _, low in pairs(global.SRF_low_power_ticklist or {}) do
 			low.position = low.emitter.position
 		end
 		local new_SRF_nodes = {}
-		for _, node in pairs(global.SRF_nodes) do
+		for _, node in pairs(global.SRF_nodes or {}) do
 			local emitter = node.emitter or node  --Prevent issues when converting from Beta and changing versions
 			table.insert(new_SRF_nodes, {emitter = emitter, position = emitter.position})
 		end
@@ -843,11 +846,12 @@ function on_new_entity(event)
 		end
 		updateGrowthInterval()
 	elseif (new_entity.name == "growth-accelerator-node") then
-		accelerator.destroy()
+		new_entity.destroy()
 		surface.create_entity{
 			name = "growth-accelerator",
 			position = position,
 			force = force,
+			raise_built = true
 		}
 	elseif (new_entity.name == "growth-accelerator") then
 		registerEntity(new_entity)
@@ -857,7 +861,7 @@ function on_new_entity(event)
 			local beacon = surface.create_entity{name = Beacon_Name, position = position, force = force}
 			beacon.destructible = false
 			beacon.minable = false
-			local module_count = force.technologies["tiberium-growth-acceleration-acceleration"].level
+			local module_count = force.technologies["tiberium-growth-acceleration-acceleration"].level - 1
 			UpdateBeaconSpeed(beacon, module_count)
 		end
 	end
@@ -947,7 +951,7 @@ function OnResearchFinished(event)
 	-- TODO: delay execution when event.by_script == true
 	local force = event.research.force
 	if force and force.get_entity_count(Beacon_Name) > 0 then -- only update when beacons exist for force
-		local module_count = force.technologies["tiberium-growth-acceleration-acceleration"].level		
+		local module_count = force.technologies["tiberium-growth-acceleration-acceleration"].level - 1
 		for _, surface in pairs(game.surfaces) do
 			local beacons = surface.find_entities_filtered{name = Beacon_Name, force = force}
 			for _, beacon in pairs(beacons) do
@@ -963,7 +967,7 @@ script.on_event({defines.events.on_research_finished}, OnResearchFinished)
 function OnForceReset(event)
 	local force = event.force or event.destination
 	if force and force.get_entity_count(Beacon_Name) > 0 then -- only update when beacons exist for force
-		local module_count = force.technologies["tiberium-growth-acceleration-acceleration"].level
+		local module_count = force.technologies["tiberium-growth-acceleration-acceleration"].level - 1
 		for _, surface in pairs(game.surfaces) do
 			local beacons = surface.find_entities_filtered{name = Beacon_Name, force = force}
 			for _, beacon in pairs(beacons) do

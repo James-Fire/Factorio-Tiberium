@@ -9,6 +9,8 @@ Version: 1.0.6
     - Updated Liquid Tiberium Bomb to use the new atomic bomb explosion animation
   Bugfixes:
     - Fixed scripts not recognizing some structures when converting from Beta version of mod to main version of mod
+    - Fixed off-by-1 error where Growth Accelerators had the bonus from an extra level of speed research
+    - Fixed conversion crash when converting from very old saves
     - Fixed unpowered SRF Emitters blocking Tiberium growth
     - Fixed passengers in MARVs multiplying the amount of ore harvested
 ---------------------------------------------------------------------------------------------------
