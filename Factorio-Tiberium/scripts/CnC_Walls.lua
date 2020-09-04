@@ -1,5 +1,6 @@
 -- Basic setup, variables to use. (Might expose to settings sometime? Or perhaps make research allow for longer wall segments?)
 require("__LSlib__/LSlib")
+local debugText = settings.startup["tiberium-debug-text"].value
 
 local horz_wall, vert_wall = 1, 2
 local dir_mods = {{x = 1, y = 0, variation = horz_wall}, {x = -1, y = 0, variation = horz_wall},
@@ -19,43 +20,28 @@ local min   = math.min
 --Assumes node_range, horz_wall, vert_wall, global.SRF_nodes
 function CnC_SonicWall_FindNodes(surf, pos, force, dir)
 	local near_nodes = {nil, nil, nil, nil}
-	local near_dists = {999, 999, 999, 999}
+	local near_dists = {node_range, node_range * -1, node_range, node_range * -1}
 	for _, entry in pairs(global.SRF_nodes) do
-		if not force or force.name == entry.emitter.force.name then
-			if surf.index == entry.emitter.surface.index then
-				local that_pos = entry.position
-				if pos.x == that_pos.x and pos.y ~= that_pos.y then
-					if dir == vert_wall or dir == horz_wall + vert_wall then
-						local diff = that_pos.y - pos.y
-						if abs(diff) <= node_range then
-							if diff < 0 then
-								if -diff < near_dists[1] then
-									near_nodes[1] = entry.emitter
-									near_dists[1] = -diff
-								end
-							else
-								if diff < near_dists[2] then
-									near_nodes[2] = entry.emitter
-									near_dists[2] = diff
-								end
-							end
+		if entry.emitter.valid then
+			if not force or force.name == entry.emitter.force.name then
+				if surf.index == entry.emitter.surface.index then
+					local x_diff = entry.position.x - pos.x
+					local y_diff = entry.position.y - pos.y
+					if (y_diff == 0) and (dir == horz_wall or dir == horz_wall + vert_wall) then  -- Horizontally aligned
+						if x_diff > 0 and x_diff <= near_dists[1] then
+							near_nodes[1] = entry.emitter
+							near_dists[1] = x_diff
+						elseif x_diff < 0 and x_diff >= near_dists[2] then
+							near_nodes[2] = entry.emitter
+							near_dists[2] = x_diff
 						end
-					end
-				elseif pos.x ~= that_pos.x and pos.y == that_pos.y then
-					if dir == horz_wall or dir == horz_wall + vert_wall then
-						local diff = that_pos.x - pos.x
-						if abs(diff) <= node_range then
-							if diff < 0 then
-								if -diff < near_dists[3] then
-									near_nodes[3] = entry.emitter
-									near_dists[3] = -diff
-								end
-							else
-								if diff < near_dists[4] then
-									near_nodes[4] = entry.emitter
-									near_dists[4] = diff
-								end
-							end
+					elseif (x_diff == 0) and (dir == vert_wall or dir == horz_wall + vert_wall) then  -- Vertically aligned
+						if y_diff > 0 and y_diff <= near_dists[3] then
+							near_nodes[3] = entry.emitter
+							near_dists[3] = y_diff
+						elseif y_diff < 0 and y_diff >= near_dists[4] then
+							near_nodes[4] = entry.emitter
+							near_dists[4] = y_diff
 						end
 					end
 				end
@@ -63,12 +49,11 @@ function CnC_SonicWall_FindNodes(surf, pos, force, dir)
 		end
 	end
 	
-	local nodes = {}
-	for i = 1, 4 do
-		if near_nodes[i] then table.insert(nodes, near_nodes[i]) end
+	local connected_nodes = {}
+	for _, node in pairs(near_nodes) do  -- Removes nils
+		table.insert(connected_nodes, node)
 	end
-	
-	return nodes
+	return connected_nodes
 end
 
 --Called by on_built_entity in control.lua
@@ -113,13 +98,22 @@ end
 --Modifies global.SRF_nodes, global.SRF_node_ticklist, global.SRF_low_power_ticklist
 function CnC_SonicWall_DeleteNode(entity, tick)
 	local k = find_value_in_table(global.SRF_nodes, entity.position, "position")
-	if k then table.remove(global.SRF_nodes, k) end
+	if k then
+		table.remove(global.SRF_nodes, k)
+		if debugText then game.print("Destroyed SRF at x: "..entity.position.x.." y: "..entity.position.y.." removed from SRF_nodes, "..#global.SRF_nodes.." entries remain") end
+	end
 	
 	k = find_value_in_table(global.SRF_node_ticklist, entity.position, "position")
-	if k then table.remove(global.SRF_node_ticklist, k) end
+	if k then
+		table.remove(global.SRF_node_ticklist, k)
+		if debugText then game.print("Destroyed SRF at x: "..entity.position.x.." y: "..entity.position.y.." removed from SRF_node_ticklist, "..#global.SRF_node_ticklist.." entries remain") end
+	end
 
 	k = find_value_in_table(global.SRF_low_power_ticklist, entity.position, "position")
-	if k then table.remove(global.SRF_low_power_ticklist, k) end
+	if k then
+		table.remove(global.SRF_low_power_ticklist, k)
+		if debugText then game.print("Destroyed SRF at x: "..entity.position.x.." y: "..entity.position.y.." removed from SRF_low_power_ticklist, "..#global.SRF_low_power_ticklist.." entries remain") end
+	end
 
 	CnC_SonicWall_DisableNode(entity)
 	--Tell connected walls to reevaluate their connections
@@ -265,7 +259,9 @@ function CnC_SonicWall_OnTick(event)
 	
 	for i = #global.SRF_node_ticklist, 1, -1 do
 		local charging = global.SRF_node_ticklist[i]
-		if charging.tick <= cur_tick then
+		if not charging.emitter.valid then
+			table.remove(global.SRF_node_ticklist, i)
+		elseif charging.tick <= cur_tick then
 			local charge_rem = charging.emitter.electric_buffer_size - charging.emitter.energy
 			if charge_rem <= 0 then
 				local connected_nodes = CnC_SonicWall_FindNodes(charging.emitter.surface, charging.emitter.position,
@@ -297,7 +293,9 @@ function CnC_SonicWall_OnTick(event)
 	
 	for i = #global.SRF_low_power_ticklist, 1, -1 do --Regularly check low power emitters to disable when their power runs out
 		local low = global.SRF_low_power_ticklist[i]
-		if low.tick <= cur_tick and low.emitter then
+		if not low.emitter.valid then
+			table.remove(global.SRF_low_power_ticklist, i)
+		elseif low.tick <= cur_tick and low.emitter then
 			local ticks_rem = low.emitter.energy / low.emitter.electric_drain
 			if ticks_rem <= 5 then
 				CnC_SonicWall_DeleteNode(low.emitter, cur_tick)  --Removes it from low power ticklist as well

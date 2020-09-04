@@ -17,6 +17,7 @@ tiberiumNodeHarvesterEntity.energy_usage = "5000kW"
 tiberiumNodeHarvesterEntity.resource_categories = {}
 tiberiumNodeHarvesterEntity.minable.result = "node-harvester"
 tiberiumNodeHarvesterEntity.resource_searching_radius = 0.49
+tiberiumNodeHarvesterEntity.collision_mask = {"layer-15"}
 table.insert(tiberiumNodeHarvesterEntity.resource_categories, "advanced-solid-tiberium")
 tiberiumNodeHarvesterEntity.energy_source = {
 	type = "electric",
@@ -75,6 +76,7 @@ tiberiumSpikeEntity.order = "g[tib-spike]"
 tiberiumSpikeEntity.resource_categories = {}
 tiberiumSpikeEntity.minable.result = "tib-spike"
 tiberiumSpikeEntity.resource_searching_radius = 0.49
+tiberiumSpikeEntity.collision_mask = {"layer-15"}
 table.insert(tiberiumSpikeEntity.resource_categories, "advanced-liquid-tiberium")
 table.insert(tiberiumSpikeEntity.resource_categories, "advanced-solid-tiberium")
 tiberiumSpikeEntity.energy_source = {
@@ -208,6 +210,7 @@ growthAcceleratorEntity.wet_mining_graphics_set = nil
 growthAcceleratorEntity.mining_speed = settings.startup["tiberium-growth"].value * 10 / 15
 growthAcceleratorEntity.vector_to_place_result = {0, 0}
 growthAcceleratorEntity.energy_usage = "1kW"
+growthAcceleratorEntity.collision_mask = {"layer-15"}
 growthAcceleratorEntity.energy_source = {
 	type = "void",
 	emissions_per_minute = 2,
@@ -572,6 +575,8 @@ data:extend{
         subgroup = "remnants",
         order = "a[remnants]",
         max_health = 10000,
+        selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
+		selection_priority = 1,
         collision_box = {{-0.4, -0.4}, {0.4, 0.4}},
 		collision_mask = {"layer-15"},
         pictures = {

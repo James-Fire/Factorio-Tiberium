@@ -162,7 +162,6 @@ data:extend({
         max_health = 10000,
         selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
         collision_box = {{-0.4, -0.4}, {0.4, 0.4}},
-		collision_mask = {"layer-15"},
         picture = {
 			filename = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
 			width = 320,

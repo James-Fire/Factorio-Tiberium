@@ -2,6 +2,7 @@
 --TODO:
 -- Make matrix solver more reliable
 -- Support alternate rocket silos (Py)
+-- Detect bullshit recipes (recipe categories to avoid?)
 
 local debugText = settings.startup["tiberium-debug-text"].value
 local free = {}
@@ -643,7 +644,7 @@ function normalResults(recipeName)
 		if result[1] then
 			resultTable[result[1]] = result[2]
 		elseif result.name then
-			resultTable[result.name] = (result.amount or (result.amount_min + result.amount_max) / 2) * (result.probability or 1)
+			resultTable[result.name] = (result.amount or (result.amount_min + math.max(result.amount_min, result.amount_max)) / 2) * (result.probability or 1)
 		end
 	end
 	return resultTable
