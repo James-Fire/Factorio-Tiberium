@@ -1,12 +1,15 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.6
-  Changes:
+  Features:
     - New Tiberium Ore icon (and all icons for all recipes which included the old Tiberium Ore icon)
+    - Tiberium Power Plant now emits smoke while producing power and has a more fitting sound
+  Changes:
     - Tiberium is now significantly better at killing trees
     - Lowered selection priority of Tiberium Blossom Trees, so you can now mine things from underneath them
     - Updated outdated setting decriptions
     - Removed deprecated items, so they stop showing up as options for filters
     - Updated Liquid Tiberium Bomb to use the new atomic bomb explosion animation
+    - Levels of Liquid Tiberium in Tiberium Power Plants now match the level of the connected pipes
   Bugfixes:
     - Fixed scripts not recognizing some structures when converting from Beta version of mod to main version of mod
     - Fixed off-by-1 error where Growth Accelerators had the bonus from an extra level of speed research
