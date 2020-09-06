@@ -13,6 +13,9 @@ Version: 1.0.6
     - Fixed conversion crash when converting from very old saves
     - Fixed unpowered SRF Emitters blocking Tiberium growth
     - Fixed passengers in MARVs multiplying the amount of ore harvested
+    - Fixed pipette tool not working on Growth Accelerators
+    - Fixed Blossom Trees being added when no Tiberium node exists
+    - Fixed miners not accounting for newly grown Tiberium Ore in their circuit network signal
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.5
   Changes:
