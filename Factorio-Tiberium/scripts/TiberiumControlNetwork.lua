@@ -216,9 +216,7 @@ growthAcceleratorEntity.energy_source = {
 	emissions_per_minute = 2,
 }
 
-data:extend{growthAcceleratorEntity}
-
-data:extend{
+data:extend{growthAcceleratorEntity, 
 	--Void recipe for consuming energy credits
 	{
 		type = "recipe",
@@ -239,7 +237,7 @@ data:extend{
 		type = "item",
 		name = "growth-credit-void",
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore.png",
-		icon_size = 32,
+		icon_size = 64,
 		flags = {"hidden"},
 		subgroup = "a-items",
 		stack_size = 200
@@ -259,6 +257,7 @@ data:extend{
 		icon_size = 128,
 		flags = {"placeable-neutral", "placeable-player", "player-creation"},
 		minable = {mining_time = 2, result = "growth-accelerator"},
+		placeable_by = {item = "growth-accelerator", count = 1},
 		max_health = 250,
 		corpse = "centrifuge-remnants",
 		dying_explosion = "medium-explosion",
@@ -387,16 +386,6 @@ data:extend{
 		stack_size = 15,
 	},
 	{
-		type = "item",
-		name = "growth-accelerator-node",
-		icon = tiberiumInternalName.."/graphics/technology/growth-accelerator.png",
-		icon_size = 128,
-		subgroup = "a-buildings",
-		order = "d[growth-accelerator]",
-		place_result = "growth-accelerator",
-		stack_size = 15,
-	},
-	{
 		type = "beacon",
 		name = "growth-accelerator-beacon",
 		energy_usage = "10W",
@@ -482,10 +471,7 @@ data:extend{
         order = "b[srf]",
         place_result = "CnC_SonicWall_Hub",
         stack_size = 50
-    }
-}
-
-data:extend{
+    },
     {
         type = "electric-energy-interface",
         name = "CnC_SonicWall_Hub",
@@ -574,7 +560,7 @@ data:extend{
         flags = {"placeable-neutral", "player-creation", "not-repairable"},
         subgroup = "remnants",
         order = "a[remnants]",
-        max_health = 10000,
+		destructible = false,
         selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
 		selection_priority = 1,
         collision_box = {{-0.4, -0.4}, {0.4, 0.4}},

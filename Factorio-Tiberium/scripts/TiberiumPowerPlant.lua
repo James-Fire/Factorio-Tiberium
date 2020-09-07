@@ -359,10 +359,10 @@ data:extend{
 		icon = tiberiumInternalName.."/graphics/icons/td-power-plant.png",
 		icon_size = 64,
 		flags = {"placeable-neutral","placeable-player", "player-creation"},
-		minable = {mining_time = 0.5, result = "tiberium-power-plant"},
+		minable = {mining_time = 2, result = "tiberium-power-plant"},
 		max_health = 500,
-		corpse = "medium-remnants",
-		dying_explosion = "medium-explosion",
+		corpse = "big-remnants",
+		dying_explosion = "big-explosion",
 		max_power_output = (200 / 60) .. "MJ",
 		effectivity = 2,
 		fluid_usage_per_tick = 4 / 60,
@@ -393,17 +393,26 @@ data:extend{
 		working_sound = {
 			sound = {
 				{
-					filename = "__base__/sound/chemical-plant.ogg",
+					filename = "__base__/sound/steam-turbine.ogg",
 					volume = 0.8
 				}
 			},
 			idle_sound = {filename = "__base__/sound/idle1.ogg", volume = 0.6},
 			apparent_volume = 1.5
 		},
+		smoke = {
+			{
+				east_position = {-1.2, -1.6},
+				frequency = 0.3125,
+				name = "turbine-smoke",
+				north_position = {-1.2, -1.5},
+				slow_down_factor = 1,
+				starting_frame_deviation = 60,
+				starting_vertical_speed = 0.08
+			}
+		},
 		fluid_box = {
-			base_area = 1.5,
-			base_level = -1.5,
-			height = 3,
+			base_area = 4,
 			pipe_connections = {
 				{type = "input-output", position = {0, 3}},
 				{type = "input-output", position = {0, -3}},

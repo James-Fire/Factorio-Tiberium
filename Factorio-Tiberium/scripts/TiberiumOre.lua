@@ -54,7 +54,8 @@ data:extend({
 		name = "tiberium-ore",
 		category = "basic-solid-tiberium",
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore.png",
-		icon_size = 32,
+		icon_size = 64,
+		icon_mipmaps = 4,
 		flags = {"placeable-neutral"},
 		order="a-b-f",
 		minable = {
@@ -134,7 +135,8 @@ data:extend({
 		type = "item",
 		name = "tiberium-ore",
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore.png",
-		icon_size = 32,
+		icon_size = 64,
+		icon_mipmaps = 4,
 		flags = {},
 		subgroup = "raw-resource",
 		order = "a[tiberium-ore]",
@@ -152,49 +154,23 @@ resource_autoplace = require("resource-autoplace");
 resource_autoplace.initialize_patch_set("tibGrowthNode", startingArea)
 data:extend({
 	{
-        type = "simple-entity",
-        name = "tibNode_tree",
-        icon = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
+		type = "simple-entity",
+		name = "tibNode_tree",
+		icon = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
 		icon_size = 32,
-        flags = {"placeable-neutral", "player-creation", "not-repairable"},
-        subgroup = "remnants",
-        order = "a[remnants]",
-        max_health = 10000,
-        selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
-        collision_box = {{-0.4, -0.4}, {0.4, 0.4}},
-        picture = {
+		flags = {"placeable-neutral", "player-creation", "not-repairable"},
+		subgroup = "remnants",
+		order = "a[remnants]",
+		destructible = false,
+		--selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
+		selection_priority = 2,
+		collision_box = {{-0.4, -0.4}, {0.4, 0.4}},
+		picture = {
 			filename = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
 			width = 320,
 			height = 251,
-        },
-        resistances =
-        {
-            {
-                type = "physical",
-                percent = 100
-            },
-            {
-                type = "acid",
-                percent = 100
-            },
-            {
-                type = "explosion",
-                percent = 100
-            },
-            {
-                type = "fire",
-                percent = 100
-            },
-            {
-                type = "laser",
-                percent = 100
-            },
-			{
-                type = "tiberium",
-                percent = 100
-            }
-        },
-    },
+		},
+	},
 	{
 		type = "resource",
 		name = "tibGrowthNode",
@@ -207,22 +183,10 @@ data:extend({
 		highlight = true,
 		minimum = 600000,
 		normal = 3000000,
-		infinite_depletion_amount = 10,
 		resource_patch_search_radius = 12,
 		tree_removal_probability = 0.8,
 		tree_removal_max_distance = 32 * 32,
-		minable = {
-			mining_time = 1,
-			results = {
-				{
-					type = "item",
-					name = "tiberium-ore",
-					amount_min = 1,
-					amount_max = 1,
-					probability = 1
-				}
-			}
-		},
+		minable = {mining_time = 1, result = "tiberium-ore"},
 		collision_box = {{-1.4, -1.4}, {1.4, 1.4}},
 		selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
 		autoplace = resource_autoplace.resource_autoplace_settings{

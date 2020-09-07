@@ -3,8 +3,12 @@ require("__LSlib__/LSlib")
 local debugText = settings.startup["tiberium-debug-text"].value
 
 local horz_wall, vert_wall = 1, 2
-local dir_mods = {{x = 1, y = 0, variation = horz_wall}, {x = -1, y = 0, variation = horz_wall},
-				  {x = 0, y = 1, variation = vert_wall}, {x = 0, y = -1, variation = vert_wall}}
+local dir_mods = {
+	{x = 1, y = 0, variation = horz_wall},
+	{x = -1, y = 0, variation = horz_wall},
+	{x = 0, y = 1, variation = vert_wall},
+	{x = 0, y = -1, variation = vert_wall}
+}
 local wall_health = 10000
 local joules_per_hitpoint = 400
 local node_range = 16

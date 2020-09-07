@@ -170,15 +170,6 @@ data:extend{
   },
   {
     type = "item",
-    name = "tiberium-bar",
-    icon = tiberiumInternalName.."/graphics/icons/tiberium-bar.png",
-    icon_size = 32,
-    flags = {},
-    subgroup = "a-items",
-    stack_size = 100
-  },
-  {
-    type = "item",
     name = "tiberium-data",
     icon = tiberiumInternalName.."/graphics/icons/tiberium-bar.png",
     icon_size = 32,
@@ -197,15 +188,6 @@ data:extend{
 	durability_description_key = "description.science-pack-remaining-amount-key",
     durability_description_value = "description.science-pack-remaining-amount-value",
     stack_size = 200,
-  },
-  {
-    type = "item",
-    name = "tiberium-brick",
-    icon = tiberiumInternalName.."/graphics/icons/tiberium-bar.png",
-    icon_size = 32,
-    flags = {},
-    subgroup = "intermediate-product",
-    stack_size = 100
   }
 }
 
@@ -225,7 +207,7 @@ data:extend{
       },
       results = {
       },
-      icon = tiberiumInternalName.."/graphics/icons/Tiberium-farming.png",
+      icon = tiberiumInternalName.."/graphics/icons/tiberium-farming.png",
       icon_size = 64,
 	  allow_decomposition = false,
       subgroup = "a-refining",

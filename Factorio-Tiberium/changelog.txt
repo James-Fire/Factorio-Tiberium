@@ -5,10 +5,26 @@ Version: 1.0.6
     - Added a Weaponry Category, with a couple entries
     - Fixed typos
     - Added a Liquid Seed category, in Tiberium Growth
+  Features:
+    - New Tiberium Ore icon (and all icons for all recipes which included the old Tiberium Ore icon)
+    - Tiberium Power Plant now emits smoke while producing power and has a more fitting sound
   Changes:
-    - Blossom Tree now blocks things from being built on it, except for our specific things that go on nodes.
+    - Blossom Tree now blocks things from being built on it, except for our specific structures that go on nodes.
+    - Tiberium is now significantly better at killing trees
+    - Lowered selection priority of Tiberium Blossom Trees, so you can now mine things from underneath them
+    - Updated outdated setting decriptions
+    - Removed deprecated items, so they stop showing up as options for filters
+    - Updated Liquid Tiberium Bomb to use the new atomic bomb explosion animation
+    - Levels of Liquid Tiberium in Tiberium Power Plants now match the level of the connected pipes
   Bugfixes:
-    - Blossom Tree is now not placed back if there isn't a node to be placed on.
+    - Fixed scripts not recognizing some structures when converting from Beta version of mod to main version of mod
+    - Fixed off-by-1 error where Growth Accelerators had the bonus from an extra level of speed research
+    - Fixed conversion crash when converting from very old saves
+    - Fixed unpowered SRF Emitters blocking Tiberium growth
+    - Fixed passengers in MARVs multiplying the amount of ore harvested
+    - Fixed pipette tool not working on Growth Accelerators
+    - Fixed Blossom Trees being added when no Tiberium node exists
+    - Fixed miners not accounting for newly grown Tiberium Ore in their circuit network signal
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.5
   Changes:
