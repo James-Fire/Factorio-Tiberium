@@ -1,4 +1,8 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.7
+  Bugfixes:
+    - Fixed crash introduced in 1.0.6 due to missing step-up conversion
+---------------------------------------------------------------------------------------------------
 Version: 1.0.6
   Wiki:
     - Gave all the final categories an Icon in their list entry.

@@ -219,6 +219,10 @@ script.on_configuration_changed(function(data)
 		end
 	end
 	
+	if upgradingToVersion(data, tiberiumInternalName, "1.0.7") then
+		global.tiberiumProducts = {global.oreType}
+	end
+	
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
 			(data["mod_changes"]["Factorio-Tiberium-Beta"] and data["mod_changes"]["Factorio-Tiberium-Beta"]["old_version"]) then
 		game.print("[Factorio-Tiberium] Successfully converted save from Beta Tiberium mod to Main Tiberium mod")
