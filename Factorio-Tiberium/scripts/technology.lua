@@ -369,7 +369,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-mechanical-research",
-		icon = tiberiumInternalName.."/graphics/icons/tiberium-mechanical.png",
+		icon = tiberiumInternalName.."/graphics/technology/testing-mechanical.png",
 		icon_size = 128,
 		effects =
 		{
@@ -392,11 +392,11 @@ data:extend
 			},
 			time = 15
 		}
-	}, 
+	},
 	{
 		type = "technology",
 		name = "tiberium-thermal-research",
-		icon = tiberiumInternalName.."/graphics/icons/Tiberium-thermal.png",
+		icon = tiberiumInternalName.."/graphics/technology/testing-thermal.png",
 		icon_size = 128,
 		effects =
 		{
@@ -424,7 +424,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-chemical-research",
-		icon = tiberiumInternalName.."/graphics/icons/tiberium-chemistry.png",
+		icon = tiberiumInternalName.."/graphics/technology/testing-chemical.png",
 		icon_size = 128,
 		effects =
 		{
@@ -457,7 +457,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-nuclear-research",
-		icon = tiberiumInternalName.."/graphics/icons/tiberium-nuclear.png",
+		icon = tiberiumInternalName.."/graphics/technology/testing-nuclear.png",
 		icon_size = 128,
 		effects =
 		{
@@ -495,7 +495,7 @@ data:extend
 	{
 		type = "technology",
 		name = "tiberium-electromagnetic-research",
-		icon = tiberiumInternalName.."/graphics/icons/Tiberium-EM.png",
+		icon = tiberiumInternalName.."/graphics/technology/testing-EM.png",
 		icon_size = 128,
 		effects =
 		{

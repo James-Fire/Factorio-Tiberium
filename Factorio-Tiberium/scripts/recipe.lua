@@ -180,7 +180,7 @@ data:extend{
   {
     type = "tool",
     name = "tiberium-science",
-    icon = tiberiumInternalName.."/graphics/icons/Tacitus.png",
+    icon = tiberiumInternalName.."/graphics/icons/tacitus.png",
     icon_size = 32,
     flags = {},
     subgroup = "a-items",
@@ -207,7 +207,7 @@ data:extend{
       },
       results = {
       },
-      icon = tiberiumInternalName.."/graphics/icons/Tiberium-farming.png",
+      icon = tiberiumInternalName.."/graphics/icons/tiberium-farming.png",
       icon_size = 64,
 	  allow_decomposition = false,
       subgroup = "a-refining",
