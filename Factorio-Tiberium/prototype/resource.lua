@@ -2,30 +2,7 @@ local TiberiumMaxPerTile = settings.startup["tiberium-growth"].value * 100
 local startingArea = settings.startup["tiberium-starting-area"].value or settings.startup["tiberium-ore-removal"].value or false
 local tibOnly = settings.startup["tiberium-ore-removal"].value or false
 
-data:extend({
-	{
-		type = "item",
-		name = "growth-credit",
-		icon = tiberiumInternalName.."/graphics/icons/growth-credit.png",
-		icon_size = 32,
-		flags = {},
-		subgroup = "a-items",
-		order = "a[tiberium-ore]",
-		stack_size = 200,
-	},
-	{
-		type = "item",
-		name = "tiberium-ion-core",
-		icon = "__base__/graphics/icons/nuclear-reactor.png",
-		icon_size = 64,
-		flags = {},
-		subgroup = "a-intermediates",
-		order = "a[tiberium-ore]",
-		stack_size = 200
-	},
-})
-
-data:extend({
+data:extend{
 	{
 		type = "autoplace-control",
 		name = "tibGrowthNode",
@@ -131,28 +108,14 @@ data:extend({
 		max_effect_alpha = 0.5,
 		map_color = {r = 0, g = 0.9, b = 0}
 	},
-	{
-		type = "item",
-		name = "tiberium-ore",
-		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore.png",
-		icon_size = 64,
-		icon_mipmaps = 4,
-		flags = {},
-		subgroup = "raw-resource",
-		order = "a[tiberium-ore]",
-		stack_size = 50,
-		fuel_value = "2MJ",
-		fuel_category = "chemical",
-		fuel_emissions_multiplier = 5,
-	},
-})
+}
 	
 local noise = require("noise");
 local tne = noise.to_noise_expression;
 resource_autoplace = require("resource-autoplace");
-
 resource_autoplace.initialize_patch_set("tibGrowthNode", startingArea)
-data:extend({
+
+data:extend{
 	{
 		type = "simple-entity",
 		name = "tibNode_tree",
@@ -215,9 +178,6 @@ data:extend({
 		map_color = {0, 0.9, 0},
 		map_grid = false
 	},
-})
-
-data:extend({
 	{
 		type = "resource",
 		name = "tibGrowthNode_infinite",
@@ -262,4 +222,4 @@ data:extend({
 		map_color = {0.2, 0.9, 0},
 		map_grid = false
 	},
-})
+}

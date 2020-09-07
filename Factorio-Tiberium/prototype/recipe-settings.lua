@@ -1,5 +1,4 @@
-require("scripts/recipe")
---require("scripts/FactoriumLib")
+require("prototype/recipe")
 
 local RecipeMult = settings.startup["tiberium-value"].value / 10
 
