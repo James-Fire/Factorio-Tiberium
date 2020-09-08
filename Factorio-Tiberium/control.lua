@@ -602,16 +602,6 @@ commands.add_command("tibChangeTerrain",
 		end
 	end
 )
-commands.add_command("tibFixMineLag",
-	"Deletes all the deprecated Tiberium land mines on the map",
-	function()
-		for _, surface in pairs(game.surfaces) do
-			for _, mine in pairs(surface.find_entities_filtered{name = "node-land-mine"}) do
-				mine.destroy()
-			end
-		end
-	end
-)
 
 --initial chunk scan
 script.on_event(defines.events.on_chunk_generated, function(event)

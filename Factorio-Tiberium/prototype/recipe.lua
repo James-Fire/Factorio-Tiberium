@@ -511,7 +511,7 @@ data:extend{
 		type = "recipe",
 		name = "tiberium-ore-processing",
 		category = "oil-processing",
-		energy_required = 2,
+		energy_required = 5,
 		crafting_machine_tint = TibCraftingTint,
 		emissions_multiplier = 2,
 		enabled = false,
@@ -520,7 +520,7 @@ data:extend{
 			{type = "fluid", name = "water", amount = 100},
 		},
 		results = {
-			{type = "fluid", name = "tiberium-slurry", amount = 6}
+			{type = "fluid", name = "tiberium-slurry", amount = 10}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-waste.png",
 		icon_size = 64,
@@ -532,15 +532,15 @@ data:extend{
 		name = "molten-tiberium-processing",
 		category = "oil-processing",
 		crafting_machine_tint = TibCraftingTint,
-		energy_required = 2,
+		energy_required = 5,
 		emissions_multiplier = 2,
 		enabled = false,
 		ingredients = {
-			{type = "fluid", name = "tiberium-slurry", amount = 10},
+			{type = "fluid", name = "tiberium-slurry", amount = 16},
 			{type = "fluid", name = "water", amount = 100},
 		},
 		results = {
-			{type = "fluid", name = "molten-tiberium", amount = 6}
+			{type = "fluid", name = "molten-tiberium", amount = 10}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/fluid/molten-tiberium.png",
 		icon_size = 64,
@@ -549,22 +549,24 @@ data:extend{
 	},
 	{
 		type = "recipe",
-		name = "tiberium-liquid-processing",
-		category = "chemistry",
+		name = "tiberium-advanced-molten-processing",
+		category = "oil-processing",
 		crafting_machine_tint = TibCraftingTint,
-		energy_required = 60,
+		energy_required = 5,
 		emissions_multiplier = 2,
 		enabled = false,
 		ingredients = {
-			{type = "fluid", name = "molten-tiberium", amount = 9},
+			{type = "fluid", name = "tiberium-slurry", amount = 16},
+			{type = "fluid", name = "crude-oil", amount = 32},
 		},
 		results = {
-			{type = "fluid", name = "liquid-tiberium", amount = 3}
+			{type = "fluid", name = "molten-tiberium", amount = 16},
+			{type = "fluid", name = "sulfuric-acid", amount = 16},
 		},
-		icon = tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png",
+		icon = tiberiumInternalName.."/graphics/icons/fluid/advanced-molten-processing.png",
 		icon_size = 64,
 		subgroup = "a-refining",
-		order = "c"
+		order = "b-2"
 	},
 	{
 		type = "recipe",
@@ -584,7 +586,49 @@ data:extend{
 		icon_size = 64,
 		main_product = "",
 		subgroup = "a-refining",
-		order = "b-2"
+		order = "b-3"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-waste-recycling",
+		category = "chemistry",
+		crafting_machine_tint = TibCraftingTint,
+		energy_required = 10,
+		enabled = false,
+		ingredients = {
+			{type = "fluid", name = "molten-tiberium", amount = 20},
+			{type = "fluid", name = "tiberium-sludge", amount = 5}
+		},
+		results = {
+			{type = "fluid", name = "molten-tiberium", amount = 23}
+		},
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-recycling.png",
+		icon_size = 32,
+		main_product = "",
+		subgroup = "a-refining",
+		allow_decomposition = false,
+		order = "b-4"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-liquid-processing",
+		category = "oil-processing",
+		crafting_machine_tint = TibCraftingTint,
+		energy_required = 5,
+		emissions_multiplier = 12,
+		enabled = false,
+		ingredients = {
+			{type = "fluid", name = "molten-tiberium", amount = 3},
+			{type = "fluid", name = "steam", amount = 100},
+		},
+		results = {
+			{type = "fluid", name = "liquid-tiberium", amount = 1},
+			{type = "fluid", name = "water", amount = 100},
+		},
+		icon = tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png",
+		icon_size = 64,
+		subgroup = "a-refining",
+		order = "c"
 	},
 	{
 		type = "recipe",
@@ -665,27 +709,6 @@ data:extend{
 		always_show_made_in = true,
 		order = "z-2"
 	},
-	{
-		type = "recipe",
-		name = "tiberium-waste-recycling",
-		category = "chemistry",
-		crafting_machine_tint = TibCraftingTint,
-		energy_required = 10,
-		enabled = false,
-		ingredients = {
-			{type = "fluid", name = "molten-tiberium", amount = 20},
-			{type = "fluid", name = "tiberium-sludge", amount = 5}
-		},
-		results = {
-			{type = "fluid", name = "molten-tiberium", amount = 23}
-		},
-		icon = tiberiumInternalName.."/graphics/icons/tiberium-recycling.png",
-		icon_size = 32,
-		main_product = "",
-		subgroup = "a-refining",
-		allow_decomposition = false,
-		order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
-	}
 }
 
 --Centrifuging Recipes

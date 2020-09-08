@@ -96,6 +96,10 @@ data:extend
 			},
 			{
 				type = "unlock-recipe",
+				recipe = "tiberium-advanced-molten-processing"
+			},
+			{
+				type = "unlock-recipe",
 				recipe = "tiberium-molten-centrifuging"
 			},
 			{

@@ -345,7 +345,6 @@ data:extend{
 		energy_source = {
 			type = "electric",
 			usage_priority = "secondary-output",
-			emissions_per_minute = 1000,
 		},
 		horizontal_animation = {
 			filename = tiberiumInternalName.."/graphics/entity/tiberium-power-plant/power-plant-256.png",
