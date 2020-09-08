@@ -279,7 +279,13 @@ function AddOre(surface, position, growthRate)
 	for _, entity in pairs(surface.find_entities(area)) do
 		if entity.valid and not global.exemptDamageItems[entity.type] then
 			if entity.type == "tree" then
+				local position = entity.position
+				local nodeNames = {"tibGrowthNode", "tibGrowthNode_infinite"}
 				safeDamage(entity, 9999, game.forces.tiberium, "tiberium")
+				if (math.random() < (TiberiumSpread / 100) ^ 4)  -- Up to 5% chance to turn a tree into a Blossom Tree
+						and (surface.count_entities_filtered{position = position, radius = TiberiumRadius * 0.8, name = nodeNames} == 0) then
+					CreateNode(surface, newPosition)
+				end
 			else
 				safeDamage(entity, TiberiumDamage, game.forces.tiberium, "tiberium")
 			end
@@ -434,8 +440,7 @@ function CreateNode(surface, position)
 	local nodeNames = {"tibGrowthNode", "tibGrowthNode_infinite"}
 	if surface.count_entities_filtered{area = area, name = nodeNames} == 0 then
 		--Clear other resources
-		local ore = surface.find_entities_filtered{area = area, type = "resource"}
-		for _, entity in pairs(ore) do
+		for _, entity in pairs(surface.find_entities_filtered{area = area, type = {"resource", "tree"}}) do
 			if entity.valid then
 				entity.destroy()
 			end
