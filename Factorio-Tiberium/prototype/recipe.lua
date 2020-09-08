@@ -1,5 +1,13 @@
 local TibProductivity = {
-	"tiberium-science",
+	"tiberium-science-mechanical",
+	"tiberium-science-thermal",
+	"tiberium-science-chemical",
+	"tiberium-science-nuclear",
+	"tiberium-science-EM",
+	"tiberium-science-thru-thermal",
+	"tiberium-science-thru-chemical",
+	"tiberium-science-thru-nuclear",
+	"tiberium-science-thru-EM",
 	"tiberium-ore-processing",
 	"molten-tiberium-processing",
 	"tiberium-liquid-processing",
@@ -46,43 +54,6 @@ local TibCraftingTint = {
 
 --Science stuff
 data:extend{
-	{
-		type = "recipe",
-		name = "tiberium-farming",
-		category = "tiberium-science",
-		always_show_made_in = true,
-		crafting_machine_tint = TibCraftingTint,
-		energy_required = 40,
-		enabled = false,
-		ingredients = {
-			{type = "item", name = "tiberium-ore", amount = 100},
-			{type = "item", name = "growth-credit", amount = 1},
-		},
-		results = {},
-		icon = tiberiumInternalName.."/graphics/icons/tiberium-farming.png",
-		icon_size = 64,
-		allow_decomposition = false,
-		subgroup = "a-refining",
-		order = "d"
-	},
-	{
-		type = "recipe",
-		name = "tiberium-science",
-		category = "basic-tiberium-science",
-		always_show_made_in = true,
-		crafting_machine_tint = TibCraftingTint,
-		energy_required = 10,
-		enabled = false,
-		ingredients = {
-			{type = "item", name = "tiberium-data", amount = 10},
-		},
-		results = {
-			{type = "item", name = "tiberium-science", amount = 1}
-		},
-		icon_size = 64,
-		subgroup = "a-refining",
-		order = "e"
-	},
 	--Ore Data
 	{
 		type = "recipe",
@@ -96,7 +67,7 @@ data:extend{
 			{type = "item", name = "tiberium-ore", amount = 5},
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 1}
+			{type = "item", name = "tiberium-data-mechanical", amount = 1}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/ore-mechanical.png",
 		icon_size = 64,
@@ -117,7 +88,7 @@ data:extend{
 			{type = "item", name = "coal", amount = 1}
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 2}
+			{type = "item", name = "tiberium-data-thermal", amount = 1}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/ore-thermal.png",
 		icon_size = 64,
@@ -138,7 +109,7 @@ data:extend{
 			{type = "fluid", name = "sulfuric-acid", amount = 10},
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 3}
+			{type = "item", name = "tiberium-data-chemical", amount = 1}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/ore-chemical.png",
 		icon_size = 64,
@@ -159,7 +130,7 @@ data:extend{
 			{type = "item", name = "uranium-ore", amount = 2}
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 4}
+			{type = "item", name = "tiberium-data-nuclear", amount = 1}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/ore-nuclear.png",
 		icon_size = 64,
@@ -180,7 +151,7 @@ data:extend{
 			{type = "item", name = "processing-unit", amount = 1}
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 5}
+			{type = "item", name = "tiberium-data-EM", amount = 1}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/ore-EM.png",
 		icon_size = 64,
@@ -201,7 +172,7 @@ data:extend{
 			{type = "fluid", name = "tiberium-slurry", amount = 5},
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 2}
+			{type = "item", name = "tiberium-data-mechanical", amount = 2}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/slurry-mechanical.png",
 		icon_size = 64,
@@ -222,7 +193,7 @@ data:extend{
 			{type = "item", name = "coal", amount = 1}
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 4}
+			{type = "item", name = "tiberium-data-thermal", amount = 2}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/slurry-thermal.png",
 		icon_size = 64,
@@ -243,7 +214,7 @@ data:extend{
 			{type = "fluid", name = "sulfuric-acid", amount = 10},
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 6}
+			{type = "item", name = "tiberium-data-chemical", amount = 2}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/slurry-chemical.png",
 		icon_size = 64,
@@ -264,7 +235,7 @@ data:extend{
 			{type = "item", name = "uranium-ore", amount = 2}
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 8}
+			{type = "item", name = "tiberium-data-nuclear", amount = 2}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/slurry-nuclear.png",
 		icon_size = 64,
@@ -285,7 +256,7 @@ data:extend{
 			{type = "item", name = "processing-unit", amount = 1}
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 10}
+			{type = "item", name = "tiberium-data-EM", amount = 2}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/slurry-EM.png",
 		icon_size = 64,
@@ -306,7 +277,7 @@ data:extend{
 			{type = "fluid", name = "molten-tiberium", amount = 5},
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 4}
+			{type = "item", name = "tiberium-data-mechanical", amount = 4}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/molten-mechanical.png",
 		icon_size = 64,
@@ -327,7 +298,7 @@ data:extend{
 			{type = "item", name = "coal", amount = 1}
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 8}
+			{type = "item", name = "tiberium-data-thermal", amount = 4}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/molten-thermal.png",
 		icon_size = 64,
@@ -348,7 +319,7 @@ data:extend{
 			{type = "fluid", name = "sulfuric-acid", amount = 10},
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 12}
+			{type = "item", name = "tiberium-data-chemical", amount = 4}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/molten-chemical.png",
 		icon_size = 64,
@@ -369,7 +340,7 @@ data:extend{
 			{type = "item", name = "uranium-ore", amount = 2}
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 16}
+			{type = "item", name = "tiberium-data-nuclear", amount = 4}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/molten-nuclear.png",
 		icon_size = 64,
@@ -390,7 +361,7 @@ data:extend{
 			{type = "item", name = "processing-unit", amount = 1}
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 20}
+			{type = "item", name = "tiberium-data-EM", amount = 4}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/molten-EM.png",
 		icon_size = 64,
@@ -411,7 +382,7 @@ data:extend{
 			{type = "fluid", name = "liquid-tiberium", amount = 5},
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 14}
+			{type = "item", name = "tiberium-data-mechanical", amount = 14}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/liquid-mechanical.png",
 		icon_size = 64,
@@ -432,7 +403,7 @@ data:extend{
 			{type = "item", name = "coal", amount = 1}
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 28}
+			{type = "item", name = "tiberium-data-thermal", amount = 14}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/liquid-thermal.png",
 		icon_size = 64,
@@ -453,7 +424,7 @@ data:extend{
 			{type = "fluid", name = "sulfuric-acid", amount = 10},
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 42}
+			{type = "item", name = "tiberium-data-chemical", amount = 14}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/liquid-chemical.png",
 		icon_size = 64,
@@ -474,7 +445,7 @@ data:extend{
 			{type = "item", name = "uranium-ore", amount = 2}
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 56}
+			{type = "item", name = "tiberium-data-nuclear", amount = 14}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/liquid-nuclear.png",
 		icon_size = 64,
@@ -495,14 +466,216 @@ data:extend{
 			{type = "item", name = "processing-unit", amount = 1}
 		},
 		results = {
-			{type = "item", name = "tiberium-data", amount = 70}
+			{type = "item", name = "tiberium-data-EM", amount = 14}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/liquid-EM.png",
 		icon_size = 64,
 		main_product = "",
 		subgroup = "a-liquid-science",
 		order = "e"
-	}
+	},
+	--Science Pack simple recipes
+	{
+		type = "recipe",
+		name = "tiberium-science-mechanical",
+		category = "basic-tiberium-science",
+		always_show_made_in = true,
+		crafting_machine_tint = TibCraftingTint,
+		energy_required = 10,
+		enabled = false,
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-mechanical.png",
+		icon_size = 32,
+		ingredients = {
+			{type = "item", name = "tiberium-data-mechanical", amount = 10},
+		},
+		results = {
+			{type = "item", name = "tiberium-science", amount = 1}
+		},
+		subgroup = "a-simple-science",
+		order = "a"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-science-thermal",
+		category = "basic-tiberium-science",
+		always_show_made_in = true,
+		crafting_machine_tint = TibCraftingTint,
+		energy_required = 10,
+		enabled = false,
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-thermal.png",
+		icon_size = 32,
+		ingredients = {
+			{type = "item", name = "tiberium-data-thermal", amount = 6},
+		},
+		results = {
+			{type = "item", name = "tiberium-science", amount = 1}
+		},
+		subgroup = "a-simple-science",
+		order = "b"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-science-chemical",
+		category = "basic-tiberium-science",
+		always_show_made_in = true,
+		crafting_machine_tint = TibCraftingTint,
+		energy_required = 10,
+		enabled = false,
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-chemical.png",
+		icon_size = 32,
+		ingredients = {
+			{type = "item", name = "tiberium-data-chemical", amount = 4},
+		},
+		results = {
+			{type = "item", name = "tiberium-science", amount = 1}
+		},
+		subgroup = "a-simple-science",
+		order = "c"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-science-nuclear",
+		category = "basic-tiberium-science",
+		always_show_made_in = true,
+		crafting_machine_tint = TibCraftingTint,
+		energy_required = 10,
+		enabled = false,
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-nuclear.png",
+		icon_size = 32,
+		ingredients = {
+			{type = "item", name = "tiberium-data-nuclear", amount = 3},
+		},
+		results = {
+			{type = "item", name = "tiberium-science", amount = 1}
+		},
+		subgroup = "a-simple-science",
+		order = "d"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-science-EM",
+		category = "basic-tiberium-science",
+		always_show_made_in = true,
+		crafting_machine_tint = TibCraftingTint,
+		energy_required = 10,
+		enabled = false,
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-EM.png",
+		icon_size = 32,
+		ingredients = {
+			{type = "item", name = "tiberium-data-EM", amount = 1},
+		},
+		results = {
+			{type = "item", name = "tiberium-science", amount = 1}
+		},
+		subgroup = "a-simple-science",
+		order = "e"
+	},
+	--Science Pack mixed recipes
+	{
+		type = "recipe",
+		name = "tiberium-farming",
+		category = "tiberium-science",
+		always_show_made_in = true,
+		crafting_machine_tint = TibCraftingTint,
+		energy_required = 40,
+		enabled = false,
+		ingredients = {
+			{type = "item", name = "tiberium-ore", amount = 100},
+			{type = "item", name = "growth-credit", amount = 1},
+		},
+		results = {},
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-farming.png",
+		icon_size = 64,
+		allow_decomposition = false,
+		subgroup = "a-mixed-science",
+		order = "a"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-science-thru-thermal",
+		category = "basic-tiberium-science",
+		always_show_made_in = true,
+		crafting_machine_tint = TibCraftingTint,
+		energy_required = 10,
+		enabled = false,
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-thermal.png",
+		icon_size = 32,
+		ingredients = {
+			{type = "item", name = "tiberium-data-mechanical", amount = 3},
+			{type = "item", name = "tiberium-data-thermal", amount = 3},
+		},
+		results = {
+			{type = "item", name = "tiberium-science", amount = 1}
+		},
+		subgroup = "a-mixed-science",
+		order = "b"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-science-thru-chemical",
+		category = "basic-tiberium-science",
+		always_show_made_in = true,
+		crafting_machine_tint = TibCraftingTint,
+		energy_required = 10,
+		enabled = false,
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-chemical.png",
+		icon_size = 32,
+		ingredients = {
+			{type = "item", name = "tiberium-data-mechanical", amount = 4},
+			{type = "item", name = "tiberium-data-thermal", amount = 4},
+			{type = "item", name = "tiberium-data-chemical", amount = 4},
+		},
+		results = {
+			{type = "item", name = "tiberium-science", amount = 3}
+		},
+		subgroup = "a-mixed-science",
+		order = "c"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-science-thru-nuclear",
+		category = "basic-tiberium-science",
+		always_show_made_in = true,
+		crafting_machine_tint = TibCraftingTint,
+		energy_required = 10,
+		enabled = false,
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-nuclear.png",
+		icon_size = 32,
+		ingredients = {
+			{type = "item", name = "tiberium-data-mechanical", amount = 2},
+			{type = "item", name = "tiberium-data-thermal", amount = 2},
+			{type = "item", name = "tiberium-data-chemical", amount = 2},
+			{type = "item", name = "tiberium-data-nuclear", amount = 2},
+		},
+		results = {
+			{type = "item", name = "tiberium-science", amount = 3}
+		},
+		subgroup = "a-mixed-science",
+		order = "d"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-science-thru-EM",
+		category = "basic-tiberium-science",
+		always_show_made_in = true,
+		crafting_machine_tint = TibCraftingTint,
+		energy_required = 10,
+		enabled = false,
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-EM.png",
+		icon_size = 32,
+		ingredients = {
+			{type = "item", name = "tiberium-data-mechanical", amount = 1},
+			{type = "item", name = "tiberium-data-thermal", amount = 1},
+			{type = "item", name = "tiberium-data-chemical", amount = 1},
+			{type = "item", name = "tiberium-data-nuclear", amount = 1},
+			{type = "item", name = "tiberium-data-EM", amount = 1},
+		},
+		results = {
+			{type = "item", name = "tiberium-science", amount = 4}
+		},
+		subgroup = "a-mixed-science",
+		order = "e"
+	},
 }
 
 --Refining/fluid recipes
@@ -570,6 +743,27 @@ data:extend{
 	},
 	{
 		type = "recipe",
+		name = "tiberium-liquid-processing",
+		category = "oil-processing",
+		crafting_machine_tint = TibCraftingTint,
+		energy_required = 5,
+		emissions_multiplier = 12,
+		enabled = false,
+		ingredients = {
+			{type = "fluid", name = "molten-tiberium", amount = 3},
+			{type = "fluid", name = "steam", amount = 100},
+		},
+		results = {
+			{type = "fluid", name = "liquid-tiberium", amount = 1},
+			{type = "fluid", name = "water", amount = 100},
+		},
+		icon = tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png",
+		icon_size = 64,
+		subgroup = "a-refining",
+		order = "c"
+	},
+	{
+		type = "recipe",
 		name = "tiberium-sludge-from-slurry",
 		category = "chemistry",
 		crafting_machine_tint = TibCraftingTint,
@@ -586,7 +780,7 @@ data:extend{
 		icon_size = 64,
 		main_product = "",
 		subgroup = "a-refining",
-		order = "b-3"
+		order = "d-1"
 	},
 	{
 		type = "recipe",
@@ -607,28 +801,7 @@ data:extend{
 		main_product = "",
 		subgroup = "a-refining",
 		allow_decomposition = false,
-		order = "b-4"
-	},
-	{
-		type = "recipe",
-		name = "tiberium-liquid-processing",
-		category = "oil-processing",
-		crafting_machine_tint = TibCraftingTint,
-		energy_required = 5,
-		emissions_multiplier = 12,
-		enabled = false,
-		ingredients = {
-			{type = "fluid", name = "molten-tiberium", amount = 3},
-			{type = "fluid", name = "steam", amount = 100},
-		},
-		results = {
-			{type = "fluid", name = "liquid-tiberium", amount = 1},
-			{type = "fluid", name = "water", amount = 100},
-		},
-		icon = tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png",
-		icon_size = 64,
-		subgroup = "a-refining",
-		order = "c"
+		order = "d-2"
 	},
 	{
 		type = "recipe",

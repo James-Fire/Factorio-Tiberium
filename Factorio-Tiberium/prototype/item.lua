@@ -2,8 +2,44 @@ data:extend{
 	--Science stuff
 	{
 		type = "item",
-		name = "tiberium-data",
-		icon = tiberiumInternalName.."/graphics/icons/tiberium-bar.png",
+		name = "tiberium-data-mechanical",
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-mechanical.png",
+		icon_size = 32,
+		flags = {},
+		subgroup = "a-items",
+		stack_size = 200
+	},
+	{
+		type = "item",
+		name = "tiberium-data-thermal",
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-thermal.png",
+		icon_size = 32,
+		flags = {},
+		subgroup = "a-items",
+		stack_size = 200
+	},
+	{
+		type = "item",
+		name = "tiberium-data-chemical",
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-chemical.png",
+		icon_size = 32,
+		flags = {},
+		subgroup = "a-items",
+		stack_size = 200
+	},
+	{
+		type = "item",
+		name = "tiberium-data-nuclear",
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-nuclear.png",
+		icon_size = 32,
+		flags = {},
+		subgroup = "a-items",
+		stack_size = 200
+	},
+	{
+		type = "item",
+		name = "tiberium-data-EM",
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-EM.png",
 		icon_size = 32,
 		flags = {},
 		subgroup = "a-items",

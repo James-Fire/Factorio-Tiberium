@@ -70,9 +70,21 @@ data:extend({
   },
   {
     type = "item-subgroup",
-    name = "a-items",
+    name = "a-simple-science",
     group = "tiberium",
     order = "g-0",
+  },
+  {
+    type = "item-subgroup",
+    name = "a-mixed-science",
+    group = "tiberium",
+    order = "g-1",
+  },
+  {
+    type = "item-subgroup",
+    name = "a-items",
+    group = "tiberium",
+    order = "h-0",
   },
   {
     type = "recipe-category",
