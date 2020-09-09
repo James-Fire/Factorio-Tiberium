@@ -1,10 +1,17 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.8
-  Bugfixes:
+  Changes:
+    - /tibDeleteOre command now also deletes nodes that grew on invalid terrain.  Can be useful if you had Tiberium growing on water or in the void of space from before 1.0.8
+  Bugfixes: 
+    - Fixed Tiberium damaging train tracks
+    - Fixed MARV destroying Blossom Trees
+    - Fixed Blossom trees not reappearing when Tiberium Spikes were deconstructred
+    - Fixed nodes sometimes missing a growth cycle when other nodes were mined out
     - Fixed Tiberium Science missing from Angel's Industry's labs and reduced the odds of it happening for other tech overhauls in general
     - Fixed Tiberium growing on certain tile types that shouldn't have resources on them (water and the void of space)
     - Fixed Tiberium Seed Missiles not destroying other resources when they grow Tiberium ore
     - Fixed centrifuge recipes accounting for hidden, inaccessible recipes
+    - Added a conversion to clean up issue from the last couple patches related to Blossom Trees
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.7
   Bugfixes:
