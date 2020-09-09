@@ -1,7 +1,7 @@
 {
-    "name": "Factorio-Tiberium-Beta",
-    "version": "1.1.0",
-    "title": "BETA Factorio and Conquer: Tiberian Dawn",
+    "name": "Factorio-Tiberium",
+    "version": "1.0.8",
+    "title": "Factorio and Conquer: Tiberian Dawn",
     "author": "JamesFire",
     "contact": "",
     "homepage": "https://github.com/James-Fire/Factorio-Tiberium",
@@ -12,6 +12,7 @@
 		"flib >= 0.3.0",
 		"informatron",
 		"? 5dim_battlefield >= 1.0.4",
+		"? angelsindustries",
 		"? angelsrefining",
 		"? angelspetrochem",
 		"? bobmining >= 1.0.0",

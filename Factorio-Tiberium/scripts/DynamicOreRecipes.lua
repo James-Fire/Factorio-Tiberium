@@ -81,8 +81,13 @@ function giantSetupFunction()
 	end
 	-- Compile list of available recipes
 	for recipe, recipeData in pairs(data.raw.recipe) do
-		if recipeData.enabled ~= false then  --Defaults to true, so only disabled if false
+		if (recipeData.enabled ~= false) and (recipeData.hidden ~= true) then  -- Enabled and not hidden
 			availableRecipes[recipe] = true
+		end
+	end
+	for _, assembler in pairs(data.raw["assembling-machine"]) do
+		if assembler.fixed_recipe and data.raw.recipe[assembler.fixed_recipe] and (data.raw.recipe[assembler.fixed_recipe].enabled ~= false) then
+			availableRecipes[assembler.fixed_recipe] = true  -- Enabled but only at a specific structure
 		end
 	end
 	for tech, techData in pairs(data.raw.technology) do
