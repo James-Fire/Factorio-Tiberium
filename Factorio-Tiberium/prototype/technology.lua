@@ -307,6 +307,14 @@ data:extend{
 			},
 			{
 				type = "unlock-recipe",
+				recipe = "aoe-node-harvester"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-beacon-node"
+			},
+			{
+				type = "unlock-recipe",
 				recipe = "tib-spike"
 			},
 			{
@@ -629,6 +637,35 @@ data:extend{
 			}
 		},
 		prerequisites = {"tiberium-growth-acceleration", "space-science-pack"},
+		unit = {
+			count_formula = "2^(L-1)*1000",
+			ingredients = {
+				{"tiberium-science", 1},
+				{"automation-science-pack", 1},
+				{"logistic-science-pack", 1},
+				{"chemical-science-pack", 1},
+				{"production-science-pack", 1},
+				{"utility-science-pack", 1},
+				{"space-science-pack", 1}
+			},
+			time = 30
+		},
+		max_level = "infinite",
+		upgrade = true,
+		order = "e-l-f"
+	},
+	{
+		type = "technology",
+		name = 	"tiberium-control-network-speed",
+		icon = tiberiumInternalName.."/graphics/technology/growth-accelerator-research.png",
+		icon_size = 128,
+		effects = {
+			{
+				type = "nothing",
+				effect_description = "Tibeirum Control Network speed bonus: +25%"
+			}
+		},
+		prerequisites = {"tiberium-control-network", "space-science-pack"},
 		unit = {
 			count_formula = "2^(L-1)*1000",
 			ingredients = {

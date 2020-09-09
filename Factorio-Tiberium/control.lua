@@ -6,6 +6,7 @@ local tiberiumInternalName = "Factorio-Tiberium-Beta"  --No underscores for this
 
 local Beacon_Name = "growth-accelerator-beacon"
 local Speed_Module_Name = "growth-accelerator-speed-module"
+local TCN_affected_entities = {"aoe-node-harvester", "tib-spike", "node-harvester", "tiberium-network-node"}
 
 local TiberiumDamage = settings.startup["tiberium-damage"].value
 local TiberiumGrowth = settings.startup["tiberium-growth"].value * 10
@@ -66,8 +67,6 @@ script.on_init(function()
 		["pipe-to-ground"] = true,
 		["electric-pole"] = true,
 		["inserter"] = true,
-		["straight-rail"] = true,
-		["curved-rail"] = true,
 		["unit-spawner"] = true,  --Biters immune until both performance and evo factor are fixed
 		["turret"] = true
 	}
@@ -221,35 +220,12 @@ script.on_configuration_changed(function(data)
 		end
 	end
 	
-	if upgradingToVersion(data, tiberiumInternalName, "1.0.7") then
-		global.tiberiumProducts = {global.oreType}
-	end
-	
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
 			(data["mod_changes"]["Factorio-Tiberium-Beta"] and data["mod_changes"]["Factorio-Tiberium-Beta"]["old_version"]) then
 		game.print("[Factorio-Tiberium] Successfully converted save from Beta Tiberium mod to Main Tiberium mod")
 		game.print("> Found " .. #global.tibGrowthNodeList .. " nodes")
 		game.print("> Found " .. #global.SRF_nodes .. " SRF hubs")
 		game.print("> Found " .. #global.tibDrills .. " drills")
-	end
-	
-	if upgradingToVersion(data, tiberiumInternalName, "1.0.8") then
-		for _, surface in pairs(game.surfaces) do
-			-- Destroy Blossom Trees with no nodes
-			for _, blossom in pairs(surface.find_entities_filtered{name = "tibNode_tree"}) do
-				if surface.count_entities_filtered{area = areaAroundPosition(blossom.position), name = "tibGrowthNode"} == 0 then
-					game.print("destroyed tree at x: "..blossom.position.x.." y: "..blossom.position.y)
-					blossom.destroy()
-				end
-			end
-			-- Place Blossom Trees on all bare nodes
-			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
-				if surface.count_entities_filtered{area = areaAroundPosition(node.position), name = "tibNode_tree"} == 0 then
-					createBlossomTree(surface, node.position)
-					game.print("created tree at x: "..node.position.x.." y: "..node.position.y)
-				end
-			end
-		end
 	end
 end)
 
@@ -329,7 +305,7 @@ function CheckPoint(surface, position, lastValidPosition, growthRate)
 		return true
 	end
 	
-	if tile.collides_with("resource-layer") then
+	if (not tile.collides_with("ground-tile")) then
 		AddOre(surface, lastValidPosition, growthRate)
 		return true  --Hit edge of water, add to previous ore
 	end
@@ -508,11 +484,8 @@ function TiberiumSeedMissile(surface, position, resource, amount)
 						oreEntity.amount = oreEntity.amount + intensity
 					else
 						local tile = surface.get_tile(placePos)
-						if (not tile.collides_with("resource-layer")) then
-							for _, ore in pairs(surface.find_entities_filtered{position = placePos, type = "resource"}) do
-								ore.destroy()
-							end
-							surface.create_entity{name = resource, position = placePos, amount = intensity, enable_cliff_removal = false}
+						if (tile.collides_with("ground-tile")) then
+							surface.create_entity{name=resource, position=placePos, amount=intensity, enable_cliff_removal=false}
 							--Cosmetic changes
 							if global.tiberiumTerrain then 
 								surface.set_tiles({{name = global.tiberiumTerrain, position = placePos}}, true, false)
@@ -543,7 +516,12 @@ script.on_event(defines.events.on_resource_depleted, function(event)
 	if event.entity.name == "tibGrowthNode" then
 		--Remove tree entity when node is mined out
 		removeBlossomTree(event.entity.surface, event.entity.position)
-		removeNodeFromGrowthList(event.entity)
+		for i, node in pairs(global.tibGrowthNodeList) do
+			if node == event.entity then
+				table.remove(global.tibGrowthNodeList, i)
+				break
+			end
+		end
 	end
 end)
 
@@ -601,15 +579,6 @@ commands.add_command("tibDeleteOre",
 		for _, surface in pairs(game.surfaces) do
 			for _, ore in pairs(surface.find_entities_filtered{name = "tiberium-ore"}) do
 				ore.destroy()
-			end
-			-- Also destroy nodes if they aren't on valid terrain
-			for _, node in pairs(surface.find_entities_filtered{name = {"tibGrowthNode", "tibGrowthNode_infinite"}}) do
-				local tile = surface.get_tiles_filtered{position = node.position}[1]
-				if tile.collides_with("resource-layer") then
-					removeBlossomTree(surface, node.position)
-					removeNodeFromGrowthList(node)
-					node.destroy()
-				end
 			end
 		end
 	end
@@ -762,19 +731,6 @@ function safeDamage(entityOrPlayer, damageAmount, damagingForce, damageType)
 	end
 end
 
-function removeNodeFromGrowthList(node)
-	for i = 1, #global.tibGrowthNodeList do
-		if global.tibGrowthNodeList[i] == node then
-			table.remove(global.tibGrowthNodeList, i)
-			if global.tibGrowthNodeListIndex >= i then
-				global.tibGrowthNodeListIndex = global.tibGrowthNodeListIndex - 1
-			end
-			return true
-		end
-	end
-	return false
-end
-
 function areaAroundPosition(position, extraRange)  --Eventually add more checks to this
 	if type(extraRange) ~= "number" then extraRange = 0 end
 	return {
@@ -865,6 +821,28 @@ function on_new_entity(event)
 		registerEntity(new_entity)
 		--Remove tree entity when node is covered
 		removeBlossomTree(surface, position)
+		--Place Beacon for Tiberium Control Network
+		ManageTCNBeacon(surface, position, force)
+	elseif (new_entity.name == "tiberium-network-node") then
+		registerEntity(new_entity)
+		--Place Beacon for Tiberium Control Network
+		ManageTCNBeacon(surface, position, force)
+	elseif (new_entity.name == "aoe-node-harvester") then
+		registerEntity(new_entity)
+		--Place Beacon for Tiberium Control Network
+		ManageTCNBeacon(surface, position, force)
+	elseif (new_entity.name == "tiberium-beacon-node") then
+		--Place Beacon for Tiberium Control Network
+		registerEntity(new_entity)
+		local TCNarea = areaAroundPosition(position, TiberiumRadius * 0.5)
+		local TCN_beacon_placement = surface.find_entities_filtered{area = TCNarea, name = TCN_affected_entities}
+		
+		for _, entities in pairs(TCN_beacon_placement) do
+			local TCNforce = entities.force
+			local TCNsurface = entities.surface
+			local TCNposition = entities.position
+			ManageTCNBeacon(TCNsurface, TCNposition, TCNforce)
+		end
 	elseif (new_entity.name == "tib-spike") then
 		registerEntity(new_entity)
 		--Remove tree entity when node is covered
@@ -872,7 +850,15 @@ function on_new_entity(event)
 		local nodes = surface.find_entities_filtered{area = areaAroundPosition(position), name = "tibGrowthNode"}
 		for _, node in pairs(nodes) do
 			--Remove spiked node from growth list
-			removeNodeFromGrowthList(node)
+			for i = 1, #global.tibGrowthNodeList do
+				if global.tibGrowthNodeList[i] == node then
+					table.remove(global.tibGrowthNodeList, i)
+					if global.tibGrowthNodeListIndex >= i then
+						global.tibGrowthNodeListIndex = global.tibGrowthNodeListIndex - 1
+					end
+					break
+				end
+			end
 			local noderichness = node.amount
 			node.destroy()
 			surface.create_entity{
@@ -884,6 +870,8 @@ function on_new_entity(event)
 			}
 		end
 		updateGrowthInterval()
+		--Place Beacon for Tiberium Control Network
+		ManageTCNBeacon(surface, position, force)
 	elseif (new_entity.name == "growth-accelerator-node") then
 		new_entity.destroy()
 		surface.create_entity{
@@ -926,10 +914,18 @@ function on_remove_entity(event)
 	end
 	if (entity.name == "CnC_SonicWall_Hub") then
 		CnC_SonicWall_DeleteNode(entity, event.tick)
+	elseif (entity.name == "tiberium-beacon-node") then
+		--Remove Beacon for Tiberium Control Network
+		local beacons = surface.find_entities_filtered{area = areaAroundPosition(position, TiberiumRadius * 0.5), name = Beacon_Name}
+		for _, beacon in pairs(beacons) do
+			ManageTCNBeacon(surface, position, force)
+		end
 	elseif (entity.name == "tib-spike") then
 		local area = areaAroundPosition(position)
 		local nodes = surface.find_entities_filtered{area = area, name = "tibGrowthNode_infinite"}
 		for _, node in pairs(nodes) do
+			--Spawn tree entity when node is uncovered
+			createBlossomTree(surface, position)
 			local spikedNodeRichness = node.amount
 			node.destroy()
 			local newNode = surface.create_entity{
@@ -940,12 +936,33 @@ function on_remove_entity(event)
 				raise_built = true
 			}
 			table.insert(global.tibGrowthNodeList, newNode)
-			createBlossomTree(surface, position)
+		end
+		--Remove Beacon for Tiberium Control Network
+		local beacons = surface.find_entities_filtered{name = Beacon_Name, position = position}
+		for _, beacon in pairs(beacons) do
+			beacon.destroy()
 		end
 		updateGrowthInterval()
 	elseif (entity.name == "node-harvester") then
 		--Spawn tree entity when node is uncovered
 		createBlossomTree(surface, position)
+		--Remove Beacon for Tiberium Control Network
+		local beacons = surface.find_entities_filtered{name = Beacon_Name, position = position}
+		for _, beacon in pairs(beacons) do
+			beacon.destroy()
+		end
+	elseif (entity.name == "tiberium-network-node") then
+		--Remove Beacon for Tiberium Control Network
+		local beacons = surface.find_entities_filtered{name = Beacon_Name, position = position}
+		for _, beacon in pairs(beacons) do
+			beacon.destroy()
+		end
+	elseif (entity.name == "aoe-node-harvester") then
+		--Remove Beacon for Tiberium Control Network
+		local beacons = surface.find_entities_filtered{name = Beacon_Name, position = position}
+		for _, beacon in pairs(beacons) do
+			beacon.destroy()
+		end
 	elseif (entity.name == "growth-accelerator") then
 		--Spawn tree entity when node is uncovered
 		createBlossomTree(surface, position)
@@ -976,6 +993,50 @@ end
 
 script.on_event(defines.events.on_entity_destroyed, on_remove_entity)
 
+-- Set modules in hidden beacons for Tiberium Control Network speed bonus
+function ManageTCNBeacon(surface, position, force)
+	local entities = surface.find_entities_filtered{name = TCN_affected_entities, area = areaAroundPosition(position, TiberiumRadius * 0.5)}
+	for i, entity in pairs(entities) do
+		if entity.valid then
+			local Beacon = surface.count_entities_filtered{name = Beacon_Name, position = entity.position}
+			local TCNBeacon = surface.count_entities_filtered{area = areaAroundPosition(entity.position, TiberiumRadius * 0.5), name = "tiberium-beacon-node"}
+			if TCNBeacon >= 1 then
+				if Beacon == 0 then
+					local beacon = surface.create_entity{name = Beacon_Name, position = entity.position, force = force}
+					beacon.destructible = false
+					beacon.minable = false
+					TCNModules(beacon)	
+				elseif Beacon == 1 then
+					local beacon = surface.find_entities_filtered{name = Beacon_Name, position = entity.position}
+					TCNModules(beacon[1])
+				end					
+			elseif TCNBeacon == 0 then
+				local beacons = surface.find_entities_filtered{name = Beacon_Name, area = areaAroundPosition(position, TiberiumRadius * 0.5)}
+				for _, beacon in pairs(beacons) do
+					beacon.destroy()
+				end
+			end
+		end
+	end
+end
+
+function TCNModules(beacon, surface)
+	local TCNBeacon = {}
+	if beacon.valid then
+		local surface = beacon.surface
+		local position = beacon.position
+		local force = beacon.force
+		local beacons = surface.count_entities_filtered{area = areaAroundPosition(position, TiberiumRadius * 0.5), name = "tiberium-beacon-node"}
+		if beacons >= 3 then
+			TCNBeacon = 3
+		else
+			TCNBeacon = beacons
+		end
+		local module_count = (force.technologies["tiberium-control-network-speed"].level + 5) * TCNBeacon
+		UpdateBeaconSpeed(beacon, module_count)
+	else
+	end
+end
 -- Set modules in hidden beacons for Growth Accelerator speed bonus
 function UpdateBeaconSpeed(beacon, total_modules)
 	local module_inventory = beacon.get_module_inventory()
@@ -983,6 +1044,9 @@ function UpdateBeaconSpeed(beacon, total_modules)
 		local added_modules = total_modules - module_inventory.get_item_count(Speed_Module_Name)
 		if added_modules >= 1 then
 			module_inventory.insert{name = Speed_Module_Name, count = added_modules}
+		elseif added_modules <= -1 then
+			removed_modules = added_modules * -1
+			module_inventory.remove{name = Speed_Module_Name, count = removed_modules}
 		end
 	end
 end
@@ -1000,6 +1064,15 @@ function OnResearchFinished(event)
 			end
 		end
 	end
+	if force and force.get_entity_count(Beacon_Name) > 0 then -- only update when beacons exist for force
+		for _, surface in pairs(game.surfaces) do
+			local beacons = surface.find_entities_filtered{name = Beacon_Name, force = force}
+			for _, beacon in pairs(beacons) do
+				TCNModules(beacon)
+				return
+			end
+		end
+	end
 end
 
 script.on_event({defines.events.on_research_finished}, OnResearchFinished)
@@ -1012,6 +1085,12 @@ function OnForceReset(event)
 			local beacons = surface.find_entities_filtered{name = Beacon_Name, force = force}
 			for _, beacon in pairs(beacons) do
 				UpdateBeaconSpeed(beacon, module_count)
+			end
+		end
+		for _, surface in pairs(game.surfaces) do
+			local beacons = surface.find_entities_filtered{name = Beacon_Name, force = force}
+			for _, beacon in pairs(beacons) do
+				TCNModules(beacon)
 			end
 		end
 	end

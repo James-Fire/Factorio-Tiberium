@@ -1008,7 +1008,7 @@ data:extend{
 data:extend{
 	{
 		type = "recipe",
-		name = "node-harvester",
+		name = "tiberium-node-harvester",
 		energy_required = 20,
 		enabled = false,
 		subgroup = "a-buildings",
@@ -1018,11 +1018,39 @@ data:extend{
 			{"iron-gear-wheel", 50},
 			{"iron-plate", 100}
 		},
-		result = "node-harvester",
+		result = "tiberium-node-harvester",
 	},
 	{
 		type = "recipe",
-		name = "tib-spike",
+		name = "tiberium-aoe-node-harvester",
+		energy_required = 20,
+		enabled = false,
+		subgroup = "a-buildings",
+		ingredients = {
+			{"processing-unit", 25},
+			{"node-harvester", 5},
+			{"iron-gear-wheel", 50},
+			{"steel-plate", 100}
+		},
+		result = "tiberium-aoe-node-harvester",
+	},
+	{
+		type = "recipe",
+		name = "tiberium-beacon-node",
+		energy_required = 20,
+		enabled = false,
+		subgroup = "a-buildings",
+		ingredients = {
+			{"processing-unit", 100},
+			{"beacon", 5},
+			{"copper-plate", 50},
+			{"steel-plate", 50}
+		},
+		result = "tiberium-beacon-node",
+	},
+	{
+		type = "recipe",
+		name = "tiberium-spike",
 		energy_required = 20,
 		enabled = false,
 		subgroup = "a-buildings",
@@ -1032,7 +1060,7 @@ data:extend{
 			{"solar-panel", 10},
 			{"CnC_SonicWall_Hub", 4}
 		},
-		result = "tib-spike",
+		result = "tiberium-spike",
 	},
 	{
 		type = "recipe",
@@ -1339,7 +1367,7 @@ data:extend{
 			{type = "item", name = "growth-credit", amount = 1},
 		},
 		icon = tiberiumInternalName.."/graphics/icons/growth-credit.png",
-		icon_size = 32,
+		icon_size = 64,
 		allow_decomposition = false,
 		order = "z",
 		always_show_made_in = true,

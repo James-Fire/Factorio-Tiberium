@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.0
+  Wiki:
+    - Added entries for the new equipment
+  Changes:
+    - Growth Credit Recipes now show what ore they are made from.
+    - Updated the Growth Credit icon to 64x64
+    - Tiberium Control Node now has far less range(30x30, down from 100x100), in addition to much less power required.
+    - Changed a bunch of internal names of items and entities.
+    - Updated the Growth Credit icon to 64x64
+    - Added an automated thing for adding ore icons to growth credit recipes
+    - Switched the Ion Core back to the old Nuclear Reactor icon
+  Features:
+    - AOE Node Harvester, for all your multi node harvesting needs.
+    - Tiberium Control Network added. Boosts all tiberium harvesting structures, for a fair bit of extra power required.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.8
   Changes:
     - /tibDeleteOre command now also deletes nodes that grew on invalid terrain.  Can be useful if you had Tiberium growing on water or in the void of space from before 1.0.8

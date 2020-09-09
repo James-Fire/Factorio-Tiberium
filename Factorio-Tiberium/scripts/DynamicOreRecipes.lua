@@ -1026,15 +1026,40 @@ function addCreditRecipe(ore)
 	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"
 	local energy = settings.startup["tiberium-growth"].value * settings.startup["tiberium-value"].value
 	local order = (not oreMult[ore] and "a-" or oreMult[ore] > 1 and "b-" or "c-")..ore
-
+	local oreIcon =  {}
+	local oreIconSize = {}
+	if data.raw.item[ore] then
+		oreIcon = data.raw["item"][ore].icon or "__core__/graphics/empty.png"
+		oreIconSize = data.raw["item"][ore].icon_size or 1
+		else if data.raw.fluid[ore] then
+			oreIcon = data.raw["fluid"][ore].icon or "__core__/graphics/empty.png"
+			oreIconSize = data.raw["fluid"][ore].icon_size or 1
+		else
+			oreIcon = "__core__/graphics/empty.png"
+			oreIconSize = 1
+		end
+	end
+	local icons =
+	{
+		{
+			icon = tiberiumInternalName.."/graphics/icons/growth-credit.png",
+			icon_size = 64, icon_mipmaps = 4,
+		},
+		{
+			icon = oreIcon,
+			icon_size = oreIconSize,
+			icon_mipmaps = ore.icon_mipmaps,
+			scale = 12.0 / oreIconSize, -- scale = 0.5 * 32 / icon_size simplified
+			shift = {10, -10}
+		},
+	}
+	
 	LSlib.recipe.create(recipeName)
 	LSlib.recipe.addIngredient(recipeName, ore, oreAmount, itemOrFluid)
 	LSlib.technology.addRecipeUnlock("tiberium-growth-acceleration", recipeName)
 	LSlib.recipe.setEngergyRequired(recipeName, energy)
 	LSlib.recipe.setOrderstring(recipeName, order)
-	if (ore == "coal") or (ore == "copper-ore") or (ore == "iron-ore") or (ore == "stone") or (ore == "crude-oil") or (ore == "uranium-ore") then
-		LSlib.recipe.changeIcon(recipeName, tiberiumInternalName.."/graphics/icons/growth-credit-"..ore..".png", 32)
-	end
+	LSlib.recipe.changeIcons(recipeName, icons, oreIconSize)
 	LSlib.recipe.addResult(recipeName, "growth-credit", 1, "item")
 	LSlib.recipe.disable(recipeName)
 	LSlib.recipe.setSubgroup(recipeName, "a-growth-credits")

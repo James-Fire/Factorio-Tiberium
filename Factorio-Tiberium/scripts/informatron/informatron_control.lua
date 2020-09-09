@@ -13,6 +13,8 @@ function Informatron.menu(player_index)
 		node_harvester = 1,
 		tiberium_spike = 1,
 		tiberium_control_node = 1,
+		aoe_node_harvester = 1,
+		tiberium_control_network = 1,
 	},
 	refining = {
 		tiberium_ore = 1,
@@ -49,6 +51,8 @@ function Informatron.page_content(page_name, player_index, element)
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".nodes"}}
 	elseif page_name == "growth_accelerator" then
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".growth_accelerator"}}
+	elseif page_name == "tiberium_seed" then
+		element.add{type="label", name="text_1", caption={tiberiumInternalName..".tiberium_seed"}}
 	
 	elseif page_name == "harvesting" then
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".harvesting"}}
@@ -59,8 +63,10 @@ function Informatron.page_content(page_name, player_index, element)
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".tiberium_spike"}}
 	elseif page_name == "tiberium_control_node" then
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".tiberium_control_node"}}
-	elseif page_name == "tiberium_seed" then
-		element.add{type="label", name="text_1", caption={tiberiumInternalName..".tiberium_seed"}}
+	elseif page_name == "aoe_node_harvester" then
+		element.add{type="label", name="text_1", caption={tiberiumInternalName..".aoe_node_harvester"}}
+	elseif page_name == "tiberium_control_network" then
+		element.add{type="label", name="text_1", caption={tiberiumInternalName..".tiberium_control_network"}}
 		
 	elseif page_name == "refining" then
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".refining"}}
