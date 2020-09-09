@@ -1,6 +1,6 @@
 {
     "name": "Factorio-Tiberium",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "title": "Factorio and Conquer: Tiberian Dawn",
     "author": "JamesFire",
     "contact": "",
@@ -12,6 +12,7 @@
 		"flib >= 0.3.0",
 		"informatron",
 		"? 5dim_battlefield >= 1.0.4",
+		"? angelsindustries",
 		"? angelsrefining",
 		"? angelspetrochem",
 		"? bobmining >= 1.0.0",

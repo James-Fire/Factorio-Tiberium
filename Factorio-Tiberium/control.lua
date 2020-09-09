@@ -302,7 +302,7 @@ function CheckPoint(surface, position, lastValidPosition, growthRate)
 		return true
 	end
 	
-	if (not tile.collides_with("ground-tile")) then
+	if tile.collides_with("resource-layer") then
 		AddOre(surface, lastValidPosition, growthRate)
 		return true  --Hit edge of water, add to previous ore
 	end
@@ -482,8 +482,11 @@ function TiberiumSeedMissile(surface, position, resource, amount)
 						oreEntity.amount = oreEntity.amount + intensity
 					else
 						local tile = surface.get_tile(placePos)
-						if (tile.collides_with("ground-tile")) then
-							surface.create_entity{name=resource, position=placePos, amount=intensity, enable_cliff_removal=false}
+						if (not tile.collides_with("resource-layer")) then
+							for _, ore in pairs(surface.find_entities_filtered{position = placePos, type = "resource"}) do
+								ore.destroy()
+							end
+							surface.create_entity{name = resource, position = placePos, amount = intensity, enable_cliff_removal = false}
 							--Cosmetic changes
 							if global.tiberiumTerrain then 
 								surface.set_tiles({{name = global.tiberiumTerrain, position = placePos}}, true, false)

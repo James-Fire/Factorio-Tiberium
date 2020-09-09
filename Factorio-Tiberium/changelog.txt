@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.8
+  Bugfixes:
+    - Fixed Tiberium Science missing from Angel's Industry's labs and reduced the odds of it happening for other tech overhauls in general
+    - Fixed Tiberium growing on certain tile types that shouldn't have resources on them (water and the void of space)
+    - Fixed Tiberium Seed Missiles not destroying other resources when they grow Tiberium ore
+    - Fixed centrifuge recipes accounting for hidden, inaccessible recipes
+---------------------------------------------------------------------------------------------------
 Version: 1.0.7
   Bugfixes:
     - Fixed crash introduced in 1.0.6 due to missing step-up conversion
