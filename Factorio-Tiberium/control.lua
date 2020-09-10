@@ -6,7 +6,7 @@ local tiberiumInternalName = "Factorio-Tiberium-Beta"  --No underscores for this
 
 local Beacon_Name = "growth-accelerator-beacon"
 local Speed_Module_Name = "growth-accelerator-speed-module"
-local TCN_affected_entities = {"aoe-node-harvester", "tib-spike", "node-harvester", "tiberium-network-node"}
+local TCN_affected_entities = {"tiberium-aoe-node-harvester", "tiberium-spike", "tiberium-node-harvester", "tiberium-network-node"}
 
 local TiberiumDamage = settings.startup["tiberium-damage"].value
 local TiberiumGrowth = settings.startup["tiberium-growth"].value * 10
@@ -91,7 +91,7 @@ script.on_init(function()
 			fakeEvent.entity = drill
 			on_new_entity(fakeEvent)
 		end
-		local namedEntities = {"CnC_SonicWall_Hub", "node-harvester", "tib-spike", "growth-accelerator-node", "growth-accelerator"}
+		local namedEntities = {"CnC_SonicWall_Hub", "tiberium-node-harvester", "tiberium-spike", "growth-accelerator-node", "growth-accelerator"}
 		for _, entity in pairs(surface.find_entities_filtered{name = namedEntities}) do
 			local fakeEvent = {}
 			fakeEvent.entity = entity
@@ -150,7 +150,7 @@ script.on_configuration_changed(function(data)
 			for _, entity in pairs(surface.find_entities_filtered{type = "mining-drill"}) do
 				script.register_on_entity_destroyed(entity)
 			end
-			for _, entity in pairs(surface.find_entities_filtered{name = {"CnC_SonicWall_Hub", "tib-spike"}}) do
+			for _, entity in pairs(surface.find_entities_filtered{name = {"CnC_SonicWall_Hub", "tiberium-spike"}}) do
 				script.register_on_entity_destroyed(entity)
 			end
 			-- Place Blossom trees on all the now bare nodes.
@@ -187,7 +187,7 @@ script.on_configuration_changed(function(data)
 			for _, entity in pairs(surface.find_entities_filtered{type = "mining-drill"}) do
 				registerEntity(entity)
 			end
-			for _, entity in pairs(surface.find_entities_filtered{name = {"CnC_SonicWall_Hub", "tib-spike", "growth-accelerator-node", "growth-accelerator"}}) do
+			for _, entity in pairs(surface.find_entities_filtered{name = {"CnC_SonicWall_Hub", "tiberium-spike", "growth-accelerator-node", "growth-accelerator"}}) do
 				registerEntity(entity)
 			end
 		end
@@ -817,7 +817,7 @@ function on_new_entity(event)
 	if (new_entity.name == "CnC_SonicWall_Hub") then
 		registerEntity(new_entity)
 		CnC_SonicWall_AddNode(new_entity, event.tick)
-	elseif (new_entity.name == "node-harvester") then
+	elseif (new_entity.name == "tiberium-node-harvester") then
 		registerEntity(new_entity)
 		--Remove tree entity when node is covered
 		removeBlossomTree(surface, position)
@@ -827,7 +827,7 @@ function on_new_entity(event)
 		registerEntity(new_entity)
 		--Place Beacon for Tiberium Control Network
 		ManageTCNBeacon(surface, position, force)
-	elseif (new_entity.name == "aoe-node-harvester") then
+	elseif (new_entity.name == "tiberium-aoe-node-harvester") then
 		registerEntity(new_entity)
 		--Place Beacon for Tiberium Control Network
 		ManageTCNBeacon(surface, position, force)
@@ -843,7 +843,7 @@ function on_new_entity(event)
 			local TCNposition = entities.position
 			ManageTCNBeacon(TCNsurface, TCNposition, TCNforce)
 		end
-	elseif (new_entity.name == "tib-spike") then
+	elseif (new_entity.name == "tiberium-spike") then
 		registerEntity(new_entity)
 		--Remove tree entity when node is covered
 		removeBlossomTree(surface, position)
@@ -920,7 +920,7 @@ function on_remove_entity(event)
 		for _, beacon in pairs(beacons) do
 			ManageTCNBeacon(surface, position, force)
 		end
-	elseif (entity.name == "tib-spike") then
+	elseif (entity.name == "tiberium-spike") then
 		local area = areaAroundPosition(position)
 		local nodes = surface.find_entities_filtered{area = area, name = "tibGrowthNode_infinite"}
 		for _, node in pairs(nodes) do
@@ -943,7 +943,7 @@ function on_remove_entity(event)
 			beacon.destroy()
 		end
 		updateGrowthInterval()
-	elseif (entity.name == "node-harvester") then
+	elseif (entity.name == "tiberium-node-harvester") then
 		--Spawn tree entity when node is uncovered
 		createBlossomTree(surface, position)
 		--Remove Beacon for Tiberium Control Network
@@ -957,7 +957,7 @@ function on_remove_entity(event)
 		for _, beacon in pairs(beacons) do
 			beacon.destroy()
 		end
-	elseif (entity.name == "aoe-node-harvester") then
+	elseif (entity.name == "tiberium-aoe-node-harvester") then
 		--Remove Beacon for Tiberium Control Network
 		local beacons = surface.find_entities_filtered{name = Beacon_Name, position = position}
 		for _, beacon in pairs(beacons) do

@@ -1,0 +1,17 @@
+{
+  "item":
+  [
+	["tib-spike", "tiberium-spike"],
+	["node-harvester", "tiberium-node-harvester"]
+  ],
+  "recipe":
+  [
+	["tib-spike", "tiberium-spike"],
+	["node-harvester", "tiberium-node-harvester"]
+  ],
+  "entity":
+  [
+	["tib-spike", "tiberium-spike"],
+	["node-harvester", "tiberium-node-harvester"]
+  ]
+}

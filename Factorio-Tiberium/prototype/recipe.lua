@@ -1028,7 +1028,7 @@ data:extend{
 		subgroup = "a-buildings",
 		ingredients = {
 			{"processing-unit", 25},
-			{"node-harvester", 5},
+			{"tiberium-node-harvester", 5},
 			{"iron-gear-wheel", 50},
 			{"steel-plate", 100}
 		},
@@ -1236,7 +1236,7 @@ data:extend{
 			{"engine-unit", 100},
 			{"steel-plate", 100},
 			{"iron-gear-wheel", 50},
-			{"node-harvester", 4},
+			{"tiberium-node-harvester", 4},
 		},
 		result = "tiberium-marv",
 		subgroup = "a-items",

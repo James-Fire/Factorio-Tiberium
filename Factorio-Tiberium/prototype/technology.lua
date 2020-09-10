@@ -665,7 +665,7 @@ data:extend{
 				effect_description = "Tibeirum Control Network speed bonus: +25%"
 			}
 		},
-		prerequisites = {"tiberium-control-network", "space-science-pack"},
+		prerequisites = {"tiberium-control-network-tech", "space-science-pack"},
 		unit = {
 			count_formula = "2^(L-1)*1000",
 			ingredients = {

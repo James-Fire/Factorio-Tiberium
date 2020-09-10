@@ -145,7 +145,7 @@ if mods["MoreScience"] then
 end
 
 if mods["omnimatter"] then
-	LSlib.recipe.editIngredient("tib-spike", "pumpjack", "offshore-pump", 1)
+	LSlib.recipe.editIngredient("tiberium-spike", "pumpjack", "offshore-pump", 1)
 end
 
 local TibBasicScience = {"chemical-plant", "assembling-machine-1", "assembling-machine-2", "assembling-machine-3"}
