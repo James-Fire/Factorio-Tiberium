@@ -1,4 +1,4 @@
-require("prototype/entity/node-harvester")
+require("prototype/entity/tiberium-node-harvester")
 
 local acceleratorSprite = {
 	-- Centrifuge C
@@ -19,7 +19,7 @@ local acceleratorSprite = {
 	}
 }
 
-local growthAcceleratorNode = table.deepcopy(data.raw["mining-drill"]["node-harvester"])
+local growthAcceleratorNode = table.deepcopy(data.raw["mining-drill"]["tiberium-node-harvester"])
 growthAcceleratorNode.name = "growth-accelerator-node"
 growthAcceleratorNode.animations = acceleratorSprite
 growthAcceleratorNode.base_picture = {}

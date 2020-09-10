@@ -225,7 +225,7 @@ data:extend{
 			},
 			{
 				type = "unlock-recipe",
-				recipe = "node-harvester"
+				recipe = "tiberium-node-harvester"
 			},
 		},
 		prerequisites = {"tiberium-processing-tech", "battery", "chemical-science-pack"},
@@ -307,7 +307,7 @@ data:extend{
 			},
 			{
 				type = "unlock-recipe",
-				recipe = "aoe-node-harvester"
+				recipe = "tiberium-aoe-node-harvester"
 			},
 			{
 				type = "unlock-recipe",
@@ -315,7 +315,7 @@ data:extend{
 			},
 			{
 				type = "unlock-recipe",
-				recipe = "tib-spike"
+				recipe = "tiberium-spike"
 			},
 			{
 				type = "unlock-recipe",

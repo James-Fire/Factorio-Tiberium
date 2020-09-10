@@ -1389,8 +1389,8 @@ data:extend{
 		results = {
 			{type = "item", name = "tiberium-ion-core", amount = 1},
 		},
-		icon = "__base__/graphics/icons/nuclear-reactor.png",
-		icon_size = 64,
+		icon = tiberiumInternalName.."/graphics/icons/nuclear-reactor.png",
+		icon_size = 32,
 		order = "a[tiberium-ion-core]"
 	},
 	--Void recipe for consuming energy credits
