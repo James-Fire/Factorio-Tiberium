@@ -67,6 +67,8 @@ script.on_init(function()
 		["pipe-to-ground"] = true,
 		["electric-pole"] = true,
 		["inserter"] = true,
+		["straight-rail"] = true,
+		["curved-rail"] = true,
 		["unit-spawner"] = true,  --Biters immune until both performance and evo factor are fixed
 		["turret"] = true
 	}
@@ -220,6 +222,29 @@ script.on_configuration_changed(function(data)
 		end
 	end
 	
+	if upgradingToVersion(data, tiberiumInternalName, "1.0.7") then
+		global.tiberiumProducts = {global.oreType}
+	end
+	
+	if upgradingToVersion(data, tiberiumInternalName, "1.0.8") then
+		for _, surface in pairs(game.surfaces) do
+			-- Destroy Blossom Trees with no nodes
+			for _, blossom in pairs(surface.find_entities_filtered{name = "tibNode_tree"}) do
+				if surface.count_entities_filtered{area = areaAroundPosition(blossom.position), name = "tibGrowthNode"} == 0 then
+					if debugText then game.print("destroyed tree at x: "..blossom.position.x.." y: "..blossom.position.y) end
+					blossom.destroy()
+				end
+			end
+			-- Place Blossom Trees on all bare nodes
+			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
+				if surface.count_entities_filtered{area = areaAroundPosition(node.position), name = "tibNode_tree"} == 0 then
+					createBlossomTree(surface, node.position)
+					if debugText then game.print("created tree at x: "..node.position.x.." y: "..node.position.y) end
+				end
+			end
+		end
+	end
+	
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
 			(data["mod_changes"]["Factorio-Tiberium-Beta"] and data["mod_changes"]["Factorio-Tiberium-Beta"]["old_version"]) then
 		game.print("[Factorio-Tiberium] Successfully converted save from Beta Tiberium mod to Main Tiberium mod")
@@ -305,7 +330,7 @@ function CheckPoint(surface, position, lastValidPosition, growthRate)
 		return true
 	end
 	
-	if (not tile.collides_with("ground-tile")) then
+	if tile.collides_with("resource-layer") then
 		AddOre(surface, lastValidPosition, growthRate)
 		return true  --Hit edge of water, add to previous ore
 	end
@@ -484,8 +509,11 @@ function TiberiumSeedMissile(surface, position, resource, amount)
 						oreEntity.amount = oreEntity.amount + intensity
 					else
 						local tile = surface.get_tile(placePos)
-						if (tile.collides_with("ground-tile")) then
-							surface.create_entity{name=resource, position=placePos, amount=intensity, enable_cliff_removal=false}
+						if (not tile.collides_with("resource-layer")) then
+							for _, ore in pairs(surface.find_entities_filtered{position = placePos, type = "resource"}) do
+								ore.destroy()
+							end
+							surface.create_entity{name = resource, position = placePos, amount = intensity, enable_cliff_removal = false}
 							--Cosmetic changes
 							if global.tiberiumTerrain then 
 								surface.set_tiles({{name = global.tiberiumTerrain, position = placePos}}, true, false)
@@ -516,12 +544,7 @@ script.on_event(defines.events.on_resource_depleted, function(event)
 	if event.entity.name == "tibGrowthNode" then
 		--Remove tree entity when node is mined out
 		removeBlossomTree(event.entity.surface, event.entity.position)
-		for i, node in pairs(global.tibGrowthNodeList) do
-			if node == event.entity then
-				table.remove(global.tibGrowthNodeList, i)
-				break
-			end
-		end
+		removeNodeFromGrowthList(event.entity)
 	end
 end)
 
@@ -579,6 +602,15 @@ commands.add_command("tibDeleteOre",
 		for _, surface in pairs(game.surfaces) do
 			for _, ore in pairs(surface.find_entities_filtered{name = "tiberium-ore"}) do
 				ore.destroy()
+			end
+			-- Also destroy nodes if they aren't on valid terrain
+			for _, node in pairs(surface.find_entities_filtered{name = {"tibGrowthNode", "tibGrowthNode_infinite"}}) do
+				local tile = surface.find_tiles_filtered{position = node.position}[1]
+				if tile.collides_with("resource-layer") then
+					removeBlossomTree(surface, node.position)
+					removeNodeFromGrowthList(node)
+					node.destroy()
+				end
 			end
 		end
 	end
@@ -731,6 +763,19 @@ function safeDamage(entityOrPlayer, damageAmount, damagingForce, damageType)
 	end
 end
 
+function removeNodeFromGrowthList(node)
+	for i = 1, #global.tibGrowthNodeList do
+		if global.tibGrowthNodeList[i] == node then
+			table.remove(global.tibGrowthNodeList, i)
+			if global.tibGrowthNodeListIndex >= i then
+				global.tibGrowthNodeListIndex = global.tibGrowthNodeListIndex - 1
+			end
+			return true
+		end
+	end
+	return false
+end
+
 function areaAroundPosition(position, extraRange)  --Eventually add more checks to this
 	if type(extraRange) ~= "number" then extraRange = 0 end
 	return {
@@ -850,15 +895,7 @@ function on_new_entity(event)
 		local nodes = surface.find_entities_filtered{area = areaAroundPosition(position), name = "tibGrowthNode"}
 		for _, node in pairs(nodes) do
 			--Remove spiked node from growth list
-			for i = 1, #global.tibGrowthNodeList do
-				if global.tibGrowthNodeList[i] == node then
-					table.remove(global.tibGrowthNodeList, i)
-					if global.tibGrowthNodeListIndex >= i then
-						global.tibGrowthNodeListIndex = global.tibGrowthNodeListIndex - 1
-					end
-					break
-				end
-			end
+			removeNodeFromGrowthList(node)
 			local noderichness = node.amount
 			node.destroy()
 			surface.create_entity{
@@ -924,8 +961,6 @@ function on_remove_entity(event)
 		local area = areaAroundPosition(position)
 		local nodes = surface.find_entities_filtered{area = area, name = "tibGrowthNode_infinite"}
 		for _, node in pairs(nodes) do
-			--Spawn tree entity when node is uncovered
-			createBlossomTree(surface, position)
 			local spikedNodeRichness = node.amount
 			node.destroy()
 			local newNode = surface.create_entity{
@@ -936,6 +971,7 @@ function on_remove_entity(event)
 				raise_built = true
 			}
 			table.insert(global.tibGrowthNodeList, newNode)
+			createBlossomTree(surface, position)
 		end
 		--Remove Beacon for Tiberium Control Network
 		local beacons = surface.find_entities_filtered{name = Beacon_Name, position = position}

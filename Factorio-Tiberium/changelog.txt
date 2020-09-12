@@ -16,7 +16,7 @@ Version: 1.1.0
 Version: 1.0.8
   Changes:
     - /tibDeleteOre command now also deletes nodes that grew on invalid terrain.  Can be useful if you had Tiberium growing on water or in the void of space from before 1.0.8
-  Bugfixes: 
+  Bugfixes:
     - Fixed Tiberium damaging train tracks
     - Fixed MARV destroying Blossom Trees
     - Fixed Blossom trees not reappearing when Tiberium Spikes were deconstructred
