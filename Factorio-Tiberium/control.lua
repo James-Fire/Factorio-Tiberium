@@ -6,6 +6,7 @@ local tiberiumInternalName = "Factorio-Tiberium-Beta"  --No underscores for this
 
 local Beacon_Name = "growth-accelerator-beacon"
 local Speed_Module_Name = "growth-accelerator-speed-module"
+local TCN_Beacon_Name = "TCN-beacon"
 local TCN_affected_entities = {"tiberium-aoe-node-harvester", "tiberium-spike", "tiberium-node-harvester", "tiberium-network-node"}
 
 local TiberiumDamage = settings.startup["tiberium-damage"].value
@@ -973,7 +974,7 @@ function on_remove_entity(event)
 		CnC_SonicWall_DeleteNode(entity, event.tick)
 	elseif (entity.name == "tiberium-beacon-node") then
 		--Remove Beacon for Tiberium Control Network
-		local beacons = surface.find_entities_filtered{area = areaAroundPosition(position, TiberiumRadius * 0.5), name = Beacon_Name}
+		local beacons = surface.find_entities_filtered{area = areaAroundPosition(position, TiberiumRadius * 0.5), name = TCN_Beacon_Name}
 		for _, beacon in pairs(beacons) do
 			ManageTCNBeacon(surface, position, force)
 		end
@@ -994,7 +995,7 @@ function on_remove_entity(event)
 			createBlossomTree(surface, position)
 		end
 		--Remove Beacon for Tiberium Control Network
-		local beacons = surface.find_entities_filtered{name = Beacon_Name, position = position}
+		local beacons = surface.find_entities_filtered{name = TCN_Beacon_Name, position = position}
 		for _, beacon in pairs(beacons) do
 			beacon.destroy()
 		end
@@ -1003,19 +1004,19 @@ function on_remove_entity(event)
 		--Spawn tree entity when node is uncovered
 		createBlossomTree(surface, position)
 		--Remove Beacon for Tiberium Control Network
-		local beacons = surface.find_entities_filtered{name = Beacon_Name, position = position}
+		local beacons = surface.find_entities_filtered{name = TCN_Beacon_Name, position = position}
 		for _, beacon in pairs(beacons) do
 			beacon.destroy()
 		end
 	elseif (entity.name == "tiberium-network-node") then
 		--Remove Beacon for Tiberium Control Network
-		local beacons = surface.find_entities_filtered{name = Beacon_Name, position = position}
+		local beacons = surface.find_entities_filtered{name = TCN_Beacon_Name, position = position}
 		for _, beacon in pairs(beacons) do
 			beacon.destroy()
 		end
 	elseif (entity.name == "tiberium-aoe-node-harvester") then
 		--Remove Beacon for Tiberium Control Network
-		local beacons = surface.find_entities_filtered{name = Beacon_Name, position = position}
+		local beacons = surface.find_entities_filtered{name = TCN_Beacon_Name, position = position}
 		for _, beacon in pairs(beacons) do
 			beacon.destroy()
 		end
@@ -1054,20 +1055,20 @@ function ManageTCNBeacon(surface, position, force)
 	local entities = surface.find_entities_filtered{name = TCN_affected_entities, area = areaAroundPosition(position, TiberiumRadius * 0.5)}
 	for i, entity in pairs(entities) do
 		if entity.valid then
-			local Beacon = surface.count_entities_filtered{name = Beacon_Name, position = entity.position}
+			local Beacon = surface.count_entities_filtered{name = TCN_Beacon_Name, position = entity.position}
 			local TCNBeacon = surface.count_entities_filtered{area = areaAroundPosition(entity.position, TiberiumRadius * 0.5), name = "tiberium-beacon-node"}
 			if TCNBeacon >= 1 then
 				if Beacon == 0 then
-					local beacon = surface.create_entity{name = Beacon_Name, position = entity.position, force = force}
+					local beacon = surface.create_entity{name = TCN_Beacon_Name, position = entity.position, force = force}
 					beacon.destructible = false
 					beacon.minable = false
 					TCNModules(beacon)	
 				elseif Beacon == 1 then
-					local beacon = surface.find_entities_filtered{name = Beacon_Name, position = entity.position}
+					local beacon = surface.find_entities_filtered{name = TCN_Beacon_Name, position = entity.position}
 					TCNModules(beacon[1])
 				end					
 			elseif TCNBeacon == 0 then
-				local beacons = surface.find_entities_filtered{name = Beacon_Name, area = areaAroundPosition(position, TiberiumRadius * 0.5)}
+				local beacons = surface.find_entities_filtered{name = TCN_Beacon_Name, area = areaAroundPosition(position, TiberiumRadius * 0.5)}
 				for _, beacon in pairs(beacons) do
 					beacon.destroy()
 				end
@@ -1120,9 +1121,9 @@ function OnResearchFinished(event)
 			end
 		end
 	end
-	if force and force.get_entity_count(Beacon_Name) > 0 then -- only update when beacons exist for force
+	if force and force.get_entity_count(TCN_Beacon_Name) > 0 then -- only update when beacons exist for force
 		for _, surface in pairs(game.surfaces) do
-			local beacons = surface.find_entities_filtered{name = Beacon_Name, force = force}
+			local beacons = surface.find_entities_filtered{name = TCN_Beacon_Name, force = force}
 			for _, beacon in pairs(beacons) do
 				TCNModules(beacon)
 				return
@@ -1148,8 +1149,10 @@ function OnForceReset(event)
 				UpdateBeaconSpeed(beacon, module_count)
 			end
 		end
+	end
+	if force and force.get_entity_count(TCN_Beacon_Name) > 0 then -- only update when beacons exist for force
 		for _, surface in pairs(game.surfaces) do
-			local beacons = surface.find_entities_filtered{name = Beacon_Name, force = force}
+			local beacons = surface.find_entities_filtered{name = TCN_Beacon_Name, force = force}
 			for _, beacon in pairs(beacons) do
 				TCNModules(beacon)
 			end

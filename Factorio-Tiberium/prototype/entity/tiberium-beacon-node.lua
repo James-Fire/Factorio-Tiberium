@@ -75,4 +75,64 @@ data:extend({
 		orientation_to_variation = false
 	}
 	},
+	--Invisible beacons for Growth Accelerator speed research
+	{
+		type = "beacon",
+		name = "TCN-beacon",
+		energy_usage = "10W",
+		flags = {
+			"hide-alt-info",
+			"not-blueprintable",
+			"not-deconstructable",
+			"placeable-off-grid",
+			"not-on-map",
+			"no-automated-item-removal",
+			"no-automated-item-insertion"
+		},
+		collision_mask = {"resource-layer"}, -- disable collision
+		resistances = {
+			{
+				type = "fire",
+				percent = 90
+			},
+			{
+				type = "tiberium",
+				percent = 100
+			}
+		},
+		animation = {
+			filename =  "__core__/graphics/empty.png",
+			width = 1,
+			height = 1,
+			line_length = 1,
+			frame_count = 1,
+		},
+		animation_shadow = {
+			filename = "__core__/graphics/empty.png",
+			width = 1,
+			height = 1,
+			line_length = 1,
+			frame_count = 1,
+		},
+		-- 0.17 supports 0W entities
+		energy_source = {type = "void"},
+		base_picture = {
+			filename = "__core__/graphics/empty.png",
+			width = 1,
+			height = 1,
+		},
+		supply_area_distance = 0,
+		radius_visualisation_picture = {
+			filename = "__core__/graphics/empty.png",
+			width = 1,
+			height = 1
+		},
+		distribution_effectivity = 1,
+		module_specification = {
+			module_slots = 65535,
+		},
+		allowed_effects = {"speed", "consumption"},
+		selection_box = {{0, 0}, {0, 0}},
+		collision_box = {{-0.4, -0.4}, {0.4, 0.4}}, -- reduce size preventing inserters from picking modules, will not power unless center is covered
+	},
 })

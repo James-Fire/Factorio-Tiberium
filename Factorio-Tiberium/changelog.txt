@@ -7,6 +7,7 @@ Version: 1.1.0
     - Updated the Growth Credit icon to 64x64
     - Tiberium Control Node now has far less range(30x30, down from 100x100), in addition to much less power required.
     - Changed a bunch of internal names of items and entities.
+    - Updated the Growth Credit icon to 64x64
     - Added an automated thing for adding ore icons to growth credit recipes
     - Switched the Ion Core back to the old Nuclear Reactor icon
     - Refinement recipes crafting time increased from 2 to 5
