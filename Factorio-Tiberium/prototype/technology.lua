@@ -539,9 +539,9 @@ data:extend{
 				recipe = "tiberium-rounds-magazine"
 			},
 			{
-				type = "unlock-recipe",
-				recipe = "tiberium-armor"
-			},
+				type = "nothing",
+				effect_description = "80% reduced Tiberium Damage taken"	
+			}
 		},
 		prerequisites = {"tiberium-separation-tech", "military-science-pack", "heavy-armor"},
 		unit = {
@@ -603,12 +603,12 @@ data:extend{
 			},
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-power-armor"
-			},
-			{
-				type = "unlock-recipe",
 				recipe = "tiberium-marv"
 			},
+			{
+				type = "nothing",
+				effect_description = "Immune to Tiberium Damage when wearing any Power Armor"	
+			}
 		},
 		prerequisites = {"tiberium-military-2", "rocket-control-unit", "tiberium-control-network-tech", "power-armor-mk2"},
 		unit = {

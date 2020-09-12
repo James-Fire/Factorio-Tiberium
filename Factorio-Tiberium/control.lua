@@ -72,6 +72,10 @@ script.on_init(function()
 		["unit-spawner"] = true,  --Biters immune until both performance and evo factor are fixed
 		["turret"] = true
 	}
+	global.tiberiumDamageTakenMulti = {}
+	for _, force in pairs(game.forces) do
+		global.tiberiumDamageTakenMulti[force.name] = 1
+	end
 	
 	-- Use interface to give starting items if possible
 	if (settings.startup["tiberium-advanced-start"].value or settings.startup["tiberium-ore-removal"].value)
@@ -245,6 +249,16 @@ script.on_configuration_changed(function(data)
 		end
 	end
 	
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.0") then
+		for _, force in pairs(game.forces) do
+			if force.technologies["tiberium-military-3"].researched then
+				global.tiberiumDamageTakenMulti[force.name] = 0
+			elseif force.technologies["tiberium-military-1"].researched then
+				global.tiberiumDamageTakenMulti[force.name] = 0.2
+			end
+		end
+	end
+
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
 			(data["mod_changes"]["Factorio-Tiberium-Beta"] and data["mod_changes"]["Factorio-Tiberium-Beta"]["old_version"]) then
 		game.print("[Factorio-Tiberium] Successfully converted save from Beta Tiberium mod to Main Tiberium mod")
@@ -719,10 +733,16 @@ script.on_nth_tick(10, function(event) --Player damage 6 times per second
 					player.vehicle.insert{name = "tiberium-ore", count = math.floor(harvested_amount)}
 				end
 			end
+			local damageMulti = global.tiberiumDamageTakenMulti[player.force.name]
+			if (damageMulti == 0) and player.character.grid then
+				break
+			elseif (damageMulti == 0) then
+				damageMulti = 0.2
+			end
 			--Damage players that are standing on Tiberium Ore and not in vehicles
 			local nearby_ore_count = player.surface.count_entities_filtered{name = "tiberium-ore", position = player.position, radius = 1.5}
 			if nearby_ore_count > 0 and not player.character.vehicle and player.character.name ~= "jetpack-flying" then
-				safeDamage(player, TiberiumDamage * nearby_ore_count * 0.1, game.forces.tiberium, "tiberium")
+				safeDamage(player, TiberiumDamage * nearby_ore_count * 0.1 * damageMulti, game.forces.tiberium, "tiberium")
 			end
 			--Damage players with unsafe Tiberium products in their inventory
 			local damagingItems = 0
@@ -736,9 +756,9 @@ script.on_nth_tick(10, function(event) --Player damage 6 times per second
 			end
 			if damagingItems > 0 then
 				if ItemDamageScale then
-					safeDamage(player, math.ceil(damagingItems / 50) * TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")	
+					safeDamage(player, math.ceil(damagingItems / 50) * TiberiumDamage * 0.3 * damageMulti, game.forces.tiberium, "tiberium")	
 				else
-					safeDamage(player, TiberiumDamage * 0.3, game.forces.tiberium, "tiberium")
+					safeDamage(player, TiberiumDamage * 0.3 * damageMulti, game.forces.tiberium, "tiberium")
 				end
 			end
 		end
@@ -1108,6 +1128,11 @@ function OnResearchFinished(event)
 				return
 			end
 		end
+	end
+	if event.research.name == "tiberium-military-1" then  --Caching this so we don't check it constantly
+		global.tiberiumDamageTakenMulti[event.research.force.name] = 0.2
+	elseif event.research.name == "tiberium-military-3" then
+		global.tiberiumDamageTakenMulti[event.research.force.name] = 0
 	end
 end
 

@@ -9,9 +9,20 @@ Version: 1.1.0
     - Changed a bunch of internal names of items and entities.
     - Added an automated thing for adding ore icons to growth credit recipes
     - Switched the Ion Core back to the old Nuclear Reactor icon
+    - Refinement recipes crafting time increased from 2 to 5
+    - Refinement recipes input materials increased from 10 to 16
+    - Refinement recipes output materials increased from 6 to 10
+    - Liquid Tiberium recipe now significantly faster, requires steam, gives water as a byproduct, produces signficantly more pollution, and is now produced in an Oil Refinery
+    - Tiberium Power Plant now longer produces pollution
+    - Changed Tiberium Farming to give Tiberium Data from Chemical Tests
+    - Replaced Tiberium Armor and Tiberium Field Suit items with bonus effects from their technologies which reduce Tiberium Damage taken by 80% and 100%, respectively
   Features:
     - AOE Node Harvester, for all your multi node harvesting needs.
     - Tiberium Control Network added. Boosts all tiberium harvesting structures, for a fair bit of extra power required.
+    - Added new Advanced Molten Tiberium Processing recipe that also requires Crude Oil, but gives Sulfuric Acid and more Molten Tiberium
+    - Split Tiberium Data into 5 separate items, one coming from each type of Tiberium testing, each type of Tiberium Data can be turned into Tiberium Science with different ratios
+    - Added 4 special recipes where you can turn in sets of different types of Tiberium Data to get more Tiberium Science than you would normally
+    - Tiberium can now infect nearby trees, turning them into Blossom Trees, causing Tiberium to spread more rapidly in heavily forested areas
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.8
   Changes:
