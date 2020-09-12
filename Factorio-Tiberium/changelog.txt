@@ -17,6 +17,7 @@ Version: 1.1.0
     - Tiberium Power Plant now longer produces pollution
     - Changed Tiberium Farming to give Tiberium Data from Chemical Tests
     - Replaced Tiberium Armor and Tiberium Field Suit items with bonus effects from their technologies which reduce Tiberium Damage taken by 80% and 100%, respectively
+	- Conditional recipe changes for a bunch of buildings. Steel is mostly replaced by Titanium/Aluminum, Pumpjacks/Mining Drills use upgraded versions(At least for Bob's), TCN Beacon uses Advanced Processing Units
   Features:
     - AOE Node Harvester, for all your multi node harvesting needs.
     - Tiberium Control Network added. Boosts all tiberium harvesting structures, for a fair bit of extra power required.
