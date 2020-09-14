@@ -1026,31 +1026,34 @@ function addCreditRecipe(ore)
 	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"
 	local energy = settings.startup["tiberium-growth"].value * settings.startup["tiberium-value"].value
 	local order = (not oreMult[ore] and "a-" or oreMult[ore] > 1 and "b-" or "c-")..ore
-	local oreIcon =  {}
-	local oreIconSize = {}
-	if data.raw.item[ore] then
-		oreIcon = data.raw["item"][ore].icon or "__core__/graphics/empty.png"
-		oreIconSize = data.raw["item"][ore].icon_size or 1
-		else if data.raw.fluid[ore] then
-			oreIcon = data.raw["fluid"][ore].icon or "__core__/graphics/empty.png"
-			oreIconSize = data.raw["fluid"][ore].icon_size or 1
-		else
-			oreIcon = "__core__/graphics/empty.png"
-			oreIconSize = 1
-		end
+	local oreIcon, oreIconSize, oreTint
+	if data.raw["item"][ore] then
+		local icon = LSlib.item.getIcons("item", ore)[1]
+		oreIcon = icon.icon
+		oreIconSize = icon.icon_size
+		oreTint = icon.tint
+	elseif data.raw["fluid"][ore] then
+		local icon = LSlib.item.getIcons("fluid", ore)[1]
+		oreIcon = icon.icon
+		oreIconSize = icon.icon_size
+		oreTint = icon.tint
 	end
-	local icons =
-	{
+	if not oreIcon then
+		oreIcon = "__core__/graphics/empty.png"
+		oreIconSize = 1
+	end
+	local icons = {
 		{
 			icon = tiberiumInternalName.."/graphics/icons/growth-credit.png",
-			icon_size = 64, icon_mipmaps = 4,
+			icon_size = 64,
 		},
 		{
 			icon = oreIcon,
 			icon_size = oreIconSize,
 			icon_mipmaps = ore.icon_mipmaps,
-			scale = 12.0 / oreIconSize, -- scale = 0.5 * 32 / icon_size simplified
-			shift = {10, -10}
+			scale = 12.0 / (oreIconSize or 1), -- scale = 0.5 * 32 / icon_size simplified
+			shift = {10, -10},
+			tint = oreTint,
 		},
 	}
 	
@@ -1059,7 +1062,7 @@ function addCreditRecipe(ore)
 	LSlib.technology.addRecipeUnlock("tiberium-growth-acceleration", recipeName)
 	LSlib.recipe.setEngergyRequired(recipeName, energy)
 	LSlib.recipe.setOrderstring(recipeName, order)
-	LSlib.recipe.changeIcons(recipeName, icons, oreIconSize)
+	LSlib.recipe.changeIcons(recipeName, icons, 64)
 	LSlib.recipe.addResult(recipeName, "growth-credit", 1, "item")
 	LSlib.recipe.disable(recipeName)
 	LSlib.recipe.setSubgroup(recipeName, "a-growth-credits")
