@@ -309,24 +309,24 @@ function AddOre(surface, position, growthRate)
 				entity.destroy()
 			end
 		end
-		oreEntity = surface.create_entity{name = "tiberium-ore", amount = math.min(growthRate, TiberiumMaxPerTile), position = position}
-		if global.tiberiumTerrain then 
-			surface.set_tiles({{name = global.tiberiumTerrain, position = position}}, true, false)
+		if (surface.count_entities_filtered{area = area, type = "tree"} > 0)
+				and (surface.count_entities_filtered{position = position, radius = TiberiumRadius * 0.8, name = nodeNames} == 0)
+				and (math.random() < (TiberiumSpread / 100) ^ 4) then  -- Around 1% chance to turn a tree into a Blossom Tree
+			CreateNode(surface, newPosition)
+		else
+			oreEntity = surface.create_entity{name = "tiberium-ore", amount = math.min(growthRate, TiberiumMaxPerTile), position = position}
+			if global.tiberiumTerrain then 
+				surface.set_tiles({{name = global.tiberiumTerrain, position = position}}, true, false)
+			end
+			surface.destroy_decoratives{position = position} --Remove decoration on tile on spread.
 		end
-		surface.destroy_decoratives{position = position} --Remove decoration on tile on spread.
 	end
-
+	
 	--Damage adjacent entities unless it's in the list of exemptDamageItems
 	for _, entity in pairs(surface.find_entities(area)) do
 		if entity.valid and not global.exemptDamageItems[entity.type] then
 			if entity.type == "tree" then
-				local position = entity.position
-				local nodeNames = {"tibGrowthNode", "tibGrowthNode_infinite"}
 				safeDamage(entity, 9999, game.forces.tiberium, "tiberium")
-				if (math.random() < (TiberiumSpread / 100) ^ 4)  -- Up to 5% chance to turn a tree into a Blossom Tree
-						and (surface.count_entities_filtered{position = position, radius = TiberiumRadius * 0.8, name = nodeNames} == 0) then
-					CreateNode(surface, newPosition)
-				end
 			else
 				safeDamage(entity, TiberiumDamage, game.forces.tiberium, "tiberium")
 			end
@@ -663,9 +663,15 @@ script.on_event(defines.events.on_chunk_generated, function(event)
 		{event.area.left_top.x + 1, event.area.left_top.y + 1},
 		{event.area.right_bottom.x - 1, event.area.right_bottom.y - 1}
 	}
-	for i, newNode in pairs(surface.find_entities_filtered{area = area, name = "tibGrowthNode"}) do
+	for _, newNode in pairs(surface.find_entities_filtered{area = area, name = "tibGrowthNode"}) do
 		table.insert(global.tibGrowthNodeList, newNode)
 		local position = newNode.position
+		--Clear trees
+		for _, tree in pairs(surface.find_entities_filtered{area = areaAroundPosition(position, 0.9), type = "tree"}) do
+			if tree.valid then
+				tree.destroy()
+			end
+		end
 		--Spawn tree entity when node is placed
 		createBlossomTree(surface, position)
 		local howManyOre = math.min(math.max(10, (math.abs(position.x) + math.abs(position.y)) / 25), 200) --Start further nodes with more ore
