@@ -20,3 +20,4 @@ require("prototype/recipe")
 require("prototype/damage-type")
 require("prototype/recipe-settings")
 require("scripts/informatron/informatron")
+if mods["rusty-locale"] then require("scripts/localised_description") end

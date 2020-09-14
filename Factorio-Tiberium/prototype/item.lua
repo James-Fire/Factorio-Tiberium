@@ -6,6 +6,7 @@ data:extend{
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-mechanical.png",
 		icon_size = 32,
 		flags = {},
+		localised_description = {"item-description.tiberium-data"},
 		subgroup = "a-items",
 		stack_size = 200
 	},
@@ -15,6 +16,7 @@ data:extend{
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-thermal.png",
 		icon_size = 32,
 		flags = {},
+		localised_description = {"item-description.tiberium-data"},
 		subgroup = "a-items",
 		stack_size = 200
 	},
@@ -24,6 +26,7 @@ data:extend{
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-chemical.png",
 		icon_size = 32,
 		flags = {},
+		localised_description = {"item-description.tiberium-data"},
 		subgroup = "a-items",
 		stack_size = 200
 	},
@@ -33,6 +36,7 @@ data:extend{
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-nuclear.png",
 		icon_size = 32,
 		flags = {},
+		localised_description = {"item-description.tiberium-data"},
 		subgroup = "a-items",
 		stack_size = 200
 	},
@@ -42,6 +46,7 @@ data:extend{
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-EM.png",
 		icon_size = 32,
 		flags = {},
+		localised_description = {"item-description.tiberium-data"},
 		subgroup = "a-items",
 		stack_size = 200
 	},
