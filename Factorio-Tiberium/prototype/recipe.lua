@@ -855,6 +855,25 @@ data:extend{
 	},
 }
 
+--Fancy descriptions for Mixed Science recipes
+local dataTypeValues = {}
+for _, recipe in pairs{"tiberium-science-mechanical", "tiberium-science-thermal", "tiberium-science-chemical", "tiberium-science-nuclear", "tiberium-science-EM"} do
+	if data.raw.recipe[recipe] and data.raw.recipe[recipe].ingredients and data.raw.recipe[recipe].results then
+		dataTypeValues[data.raw.recipe[recipe].ingredients[1].name] = data.raw.recipe[recipe].results[1].amount / data.raw.recipe[recipe].ingredients[1].amount
+	end
+end
+for _, recipe in pairs{"tiberium-science-thru-thermal", "tiberium-science-thru-chemical", "tiberium-science-thru-nuclear", "tiberium-science-thru-EM"} do
+	local ingredientValue, resultValue = 0, 0
+	if data.raw.recipe[recipe] and data.raw.recipe[recipe].ingredients and data.raw.recipe[recipe].results then
+		for _, ingredient in pairs(data.raw.recipe[recipe].ingredients) do
+			ingredientValue = ingredientValue + (dataTypeValues[ingredient.name] * ingredient.amount)
+		end
+		resultValue = data.raw.recipe[recipe].results[1].amount
+		local bonusValue = (resultValue / ingredientValue) - 1
+		data.raw.recipe[recipe].localised_description = {"recipe-description.tiberium-mixed-science", string.format("%d", bonusValue * 100)}
+	end
+end
+
 --Refining/fluid recipes
 data:extend{
 	{

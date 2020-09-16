@@ -8,7 +8,7 @@ data:extend({
 	type = "beacon",
 	name = "tiberium-beacon-node",
 	icon = tiberiumInternalName.."/graphics/icons/beacon.png",
-	icon_size = 32, icon_mipmaps = 4,
+	icon_size = 32,
 	flags = {"placeable-player", "player-creation"},
 	minable = {mining_time = 0.2, result = "tiberium-beacon-node"},
 	max_health = 200,
