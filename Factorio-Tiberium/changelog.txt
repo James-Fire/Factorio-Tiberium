@@ -1,8 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.9
+  Features:
+    - New French translation.  Thanks to Fr_Dae and Omicron's french team.  [Traduit par la Team Omicron] https://discord.gg/rxqqBS8
+    - New Russian translation.  Thanks to CV514 from our Factorio and Conquer Discord.
+  Bugfixes:
+    - Fixed crash from /tibDeleteOre command
+---------------------------------------------------------------------------------------------------
 Version: 1.0.8
   Changes:
     - /tibDeleteOre command now also deletes nodes that grew on invalid terrain.  Can be useful if you had Tiberium growing on water or in the void of space from before 1.0.8
-  Bugfixes: 
+  Bugfixes:
     - Fixed Tiberium damaging train tracks
     - Fixed MARV destroying Blossom Trees
     - Fixed Blossom trees not reappearing when Tiberium Spikes were deconstructred

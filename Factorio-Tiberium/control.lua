@@ -599,7 +599,7 @@ commands.add_command("tibDeleteOre",
 			end
 			-- Also destroy nodes if they aren't on valid terrain
 			for _, node in pairs(surface.find_entities_filtered{name = {"tibGrowthNode", "tibGrowthNode_infinite"}}) do
-				local tile = surface.get_tiles_filtered{position = node.position}[1]
+				local tile = surface.find_tiles_filtered{position = node.position}[1]
 				if tile.collides_with("resource-layer") then
 					removeBlossomTree(surface, node.position)
 					removeNodeFromGrowthList(node)
