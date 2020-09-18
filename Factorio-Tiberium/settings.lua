@@ -1,5 +1,5 @@
 data:extend(
-{  
+{
   {
     type = "int-setting",
     name = "tiberium-growth",

@@ -11,7 +11,7 @@ tiberiumNodeHarvester.energy_usage = "5000kW"
 tiberiumNodeHarvester.resource_categories = {}
 tiberiumNodeHarvester.minable.result = "tiberium-node-harvester"
 tiberiumNodeHarvester.resource_searching_radius = 0.49
-tiberiumNodeHarvester.collision_mask = {"layer-15"}
+tiberiumNodeHarvester.collision_mask = {"water-tile", "player-layer"}
 table.insert(tiberiumNodeHarvester.resource_categories, "advanced-solid-tiberium")
 tiberiumNodeHarvester.energy_source = {
 	type = "electric",

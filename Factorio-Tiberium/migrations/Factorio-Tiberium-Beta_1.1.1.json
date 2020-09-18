@@ -1,0 +1,28 @@
+{
+  "item":
+  [
+    ["ion-turret", "tiberium-ion-turret"],
+    ["CnC_SonicWall_Hub", "tiberium-srf-emitter"],
+    ["growth-accelerator", "tiberium-growth-accelerator"],
+    ["growth-credit", "tiberium-growth-credit"]
+  ],
+  "recipe":
+  [
+    ["ion-turret", "tiberium-ion-turret"],
+    ["CnC_SonicWall_Hub", "tiberium-srf-emitter"],
+    ["growth-accelerator", "tiberium-growth-accelerator"]
+  ],
+  "entity":
+  [
+    ["ion-turret", "tiberium-ion-turret"],
+    ["CnC_SonicWall_Hub", "tiberium-srf-emitter"],
+    ["CnC_SonicWall_Wall", "tiberium-srf-wall"],
+    ["growth-accelerator", "tiberium-growth-accelerator"],
+    ["growth-accelerator-node", "tiberium-growth-accelerator-node"],
+    ["growth-accelerator-beacon", "tiberium-growth-accelerator-beacon"]
+  ],
+  "module":
+  [
+    ["growth-accelerator-speed-module", "tiberium-growth-accelerator-speed-module"]
+  ]
+}

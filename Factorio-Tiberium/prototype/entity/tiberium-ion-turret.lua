@@ -1,11 +1,11 @@
 data:extend{
 	{
 		type = "electric-turret",
-		name = "ion-turret",
+		name = "tiberium-ion-turret",
 		icon = "__base__/graphics/icons/laser-turret.png",
 		icon_size = 64,
 		flags = {"placeable-player", "placeable-enemy", "player-creation"},
-		minable = {mining_time = 0.5, result = "ion-turret"},
+		minable = {mining_time = 0.5, result = "tiberium-ion-turret"},
 		max_health = 1000,
 		collision_box = {{-0.7, -0.7}, {0.7, 0.7}},
 		selection_box = {{-1, -1}, {1, 1}},

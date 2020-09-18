@@ -21,3 +21,5 @@ require("prototype/damage-type")
 require("prototype/recipe-settings")
 require("scripts/informatron/informatron")
 if mods["rusty-locale"] then require("scripts/localised_description") end
+
+table.insert(data.raw.character.character.mining_categories, "basic-solid-tiberium")

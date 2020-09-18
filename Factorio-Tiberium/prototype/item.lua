@@ -65,12 +65,12 @@ data:extend{
 	--Structures
 	{
 		type = "item",
-		name = "growth-accelerator",
+		name = "tiberium-growth-accelerator",
 		icon = tiberiumInternalName.."/graphics/technology/growth-accelerator.png",
 		icon_size = 128,
 		subgroup = "a-buildings",
-		order = "d[growth-accelerator]",
-		place_result = "growth-accelerator-node",
+		order = "d[tiberium-growth-accelerator]",
+		place_result = "tiberium-growth-accelerator-node",
 		stack_size = 15,
 	},
 	{
@@ -119,12 +119,12 @@ data:extend{
 	},
 	{
 		type = "item",
-		name = "CnC_SonicWall_Hub",
+		name = "tiberium-srf-emitter",
 		icon = tiberiumInternalName.."/graphics/sonic wall/node icon.png",
 		icon_size = 32,
 		subgroup = "a-buildings",
 		order = "b[srf]",
-		place_result = "CnC_SonicWall_Hub",
+		place_result = "tiberium-srf-connector",
 		stack_size = 50
 	},
 	{
@@ -182,12 +182,12 @@ data:extend{
 	},
 	{
 		type = "item",
-		name = "ion-turret",
+		name = "tiberium-ion-turret",
 		icon = "__base__/graphics/icons/laser-turret.png",
 		icon_size = 64,
 		subgroup = "a-buildings",
-		order = "f[ion-turret]",
-		place_result = "ion-turret",
+		order = "f[tiberium-ion-turret]",
+		place_result = "tiberium-ion-turret",
 		stack_size = 50
 	},
 	--Military
@@ -238,7 +238,7 @@ data:extend{
 	--Other
 	{
 		type = "item",
-		name = "growth-credit",
+		name = "tiberium-growth-credit",
 		icon = tiberiumInternalName.."/graphics/icons/growth-credit.png",
 		icon_size = 64,
 		flags = {},
@@ -273,7 +273,7 @@ data:extend{
 	--Dummy Items
 	{
 		type = "item",
-		name = "growth-credit-void",
+		name = "tiberium-growth-credit-void",
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore.png",
 		icon_size = 64,
 		flags = {"hidden"},

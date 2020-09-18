@@ -353,7 +353,7 @@ function removeBadRecipes(pass)
 		end
 	end
 
-	-- Look for categories that contained broken recipes and exclude 
+	-- Look for categories that contained broken recipes and exclude other recipes from the same category
 	for recipe, recipeData in pairs(availableRecipes) do
 		if not fakeRecipes[recipe] then
 			local category = recipeData.category
@@ -1157,7 +1157,7 @@ function addCreditRecipe(ore)
 	LSlib.recipe.setEngergyRequired(recipeName, energy)
 	LSlib.recipe.setOrderstring(recipeName, order)
 	LSlib.recipe.changeIcons(recipeName, icons, 64)
-	LSlib.recipe.addResult(recipeName, "growth-credit", 1, "item")
+	LSlib.recipe.addResult(recipeName, "tiberium-growth-credit", 1, "item")
 	LSlib.recipe.disable(recipeName)
 	LSlib.recipe.setSubgroup(recipeName, "a-growth-credits")
 	LSlib.recipe.setShowMadeIn(recipeName, true)

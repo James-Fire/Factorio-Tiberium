@@ -221,7 +221,7 @@ data:extend{
 		effects = {
 			{
 				type = "unlock-recipe",
-				recipe = "CnC_SonicWall_Hub"
+				recipe = "tiberium-srf-emitter"
 			},
 			{
 				type = "unlock-recipe",
@@ -280,7 +280,7 @@ data:extend{
 		effects = {
 			{
 				type = "unlock-recipe",
-				recipe = "growth-accelerator"
+				recipe = "tiberium-growth-accelerator"
 			},
 		},
 		prerequisites = {"tiberium-processing-tech", "chemical-science-pack"},
@@ -343,7 +343,7 @@ data:extend{
 			},
 			time = 30
 		}
-	}, 
+	},
 	--Science Techs
 	{
 		type = "technology",
@@ -401,7 +401,7 @@ data:extend{
 			},
 			time = 30
 		}
-	}, 
+	},
 	{
 		type = "technology",
 		name = "tiberium-chemical-research",
@@ -567,7 +567,7 @@ data:extend{
 			},
 			{
 				type = "unlock-recipe",
-				recipe = "ion-turret"
+				recipe = "tiberium-ion-turret"
 			},
 			{
 				type = "unlock-recipe",

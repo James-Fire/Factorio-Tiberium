@@ -7,7 +7,7 @@ data:extend({
     inventory_order = "f-m",
     order = "f-m",
   },
-  
+  -- Subgroups
   {
     type = "item-subgroup",
     name = "a-buildings",
@@ -46,7 +46,7 @@ data:extend({
   },
   {
     type = "item-subgroup",
-    name = "a-science",
+    name = "a-ore-science",
     group = "tiberium",
     order = "f-6",
   },
@@ -86,6 +86,7 @@ data:extend({
     group = "tiberium",
     order = "h-0",
   },
+  -- Categories
   {
     type = "recipe-category",
     name = "tiberium-centrifuge-1"

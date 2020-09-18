@@ -9,7 +9,7 @@ tiberiumSpike.order = "g[tiberium-spike]"
 tiberiumSpike.resource_categories = {}
 tiberiumSpike.minable.result = "tiberium-spike"
 tiberiumSpike.resource_searching_radius = 0.49
-tiberiumSpike.collision_mask = {"layer-15"}
+tiberiumSpike.collision_mask = {"water-tile", "player-layer"}
 table.insert(tiberiumSpike.resource_categories, "advanced-liquid-tiberium")
 table.insert(tiberiumSpike.resource_categories, "advanced-solid-tiberium")
 tiberiumSpike.energy_source = {

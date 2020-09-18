@@ -128,7 +128,7 @@ data:extend{
 		--selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
 		selection_priority = 2,
 		collision_box = {{-0.4, -0.4}, {0.4, 0.4}},
-		collision_mask = {"item-layer", "object-layer", "water-tile"},
+		collision_mask = {"item-layer", "object-layer"},
 		picture = {
 			filename = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
 			width = 320,

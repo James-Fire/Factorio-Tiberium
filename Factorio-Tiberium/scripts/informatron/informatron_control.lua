@@ -22,7 +22,7 @@ function Informatron.menu(player_index)
 		slurry = 1,
 		molten = 1,
 		liquid = 1,
-		centrifuging = 1, 
+		centrifuging = 1,
 	},
 	containment = {
 		armor = 1,

@@ -12,9 +12,9 @@ end
 
 if mods["Krastorio2"] then
 	-- Balance changes to match Krastorio
-	data.raw["electric-turret"]["ion-turret"]["energy_source"]["drain"] = "100kW"
-	data.raw["electric-turret"]["ion-turret"]["attack_parameters"]["cooldown"] = 30 -- Ion Turret to 2 APS
-	data.raw["electric-turret"]["ion-turret"]["attack_parameters"]["damage_modifier"] = 12 -- Damage to 120
+	data.raw["electric-turret"]["tiberium-ion-turret"]["energy_source"]["drain"] = "100kW"
+	data.raw["electric-turret"]["tiberium-ion-turret"]["attack_parameters"]["cooldown"] = 30 -- Ion Turret to 2 APS
+	data.raw["electric-turret"]["tiberium-ion-turret"]["attack_parameters"]["damage_modifier"] = 12 -- Damage to 120
 	
 	-- Fix our infinites to match
 	local techPairs = {{tib = "tiberium-explosives", copy = "stronger-explosives-7", max_level = 4},
@@ -40,7 +40,7 @@ if mods["Krastorio2"] then
 		data.raw["technology"][techs.tib].name = techs.tib
 		data.raw["technology"][techs.tib].max_level = techs.max_level
 		
-		if not data.raw["technology"][techs.copy] then 
+		if not data.raw["technology"][techs.copy] then
 			log("missing tech "..techs.copy)
 		else
 			data.raw["technology"][techs.tib].unit.ingredients = table.deepcopy(data.raw["technology"][techs.copy].unit.ingredients)
@@ -190,8 +190,6 @@ for _, assembler in pairs(TibScience) do
 	LSlib.entity.addCraftingCategory("assembling-machine", assembler, "tiberium-science")
 end
 
--- Below code isn't specific to any single mod
-
 --[[if (mods["Mining_Drones"]) then
 	data.raw["assembling-machine"][names.mining_depot].animation = make_4way_animation_from_spritesheet{
     {
@@ -235,8 +233,15 @@ end
       }
     }
 	}
-	--data.raw["unit"][bot_name].icon = 
+	--data.raw["unit"][bot_name].icon =
 end]]
+
+-- Below code isn't specific to any single mod
+for _, drill in pairs(data.raw["mining-drill"]) do
+	if LSlib.utils.table.hasValue(drill.resource_categories, "basic-solid") then
+		table.insert(drill.resource_categories, "basic-solid-tiberium")
+	end
+end
 
 -- Add Tiberium resistance to armors
 for name, armor in pairs(data.raw.armor) do

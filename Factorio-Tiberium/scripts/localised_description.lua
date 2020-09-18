@@ -40,13 +40,13 @@ prototypes["car"] = {
 }
 prototypes["item"] = {
 	"tiberium-power-plant",
-	"growth-credit",
-	"growth-accelerator",
+	"tiberium-growth-credit",
+	"tiberium-growth-accelerator",
 	"tiberium-network-node",
 	"tiberium-node-harvester",
-	"CnC_SonicWall_Hub",
+	"tiberium-srf-emitter",
 	"tiberium-spike",
-	"ion-turret",
+	"tiberium-ion-turret",
 	"tiberium-ion-core",
 	"tiberium-centrifuge",
 	"tiberium-centrifuge-2",
@@ -65,17 +65,17 @@ prototypes["assembling-machine"] = {
 	"tiberium-centrifuge",
 	"tiberium-centrifuge-2",
 	"tiberium-centrifuge-3",
-	"growth-accelerator",
+	"tiberium-growth-accelerator",
 }
 prototypes["mining-drill"] = {
-	"growth-accelerator-node",
+	"tiberium-growth-accelerator-node",
 	"tiberium-network-node",
 	"tiberium-node-harvester",
 	"tiberium-aoe-node-harvester",
 	"tiberium-spike",
 }
 prototypes["electric-turret"] = {
-	"ion-turret",
+	"tiberium-ion-turret",
 }
 prototypes["beacon"] = {
 	"tiberium-beacon-node",
@@ -84,10 +84,10 @@ prototypes["generator"] = {
 	"tiberium-power-plant",
 }
 prototypes["electric-energy-interface"] = {
-	"CnC_SonicWall_Hub",
+	"tiberium-srf-emitter",
 }
 prototypes["simple-entity"] = {
-	"CnC_SonicWall_Wall",
+	"tiberium-srf-wall",
 }
 prototypes["resource"] = {
 	"tibGrowthNode_infinite",

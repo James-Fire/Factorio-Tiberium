@@ -181,7 +181,7 @@ function CnC_SonicWall_TestWall(surf, pos, dir, node)
 	if not global.SRF_segments[surf.index][x] then global.SRF_segments[surf.index][x] = {} end
 	
 	if not global.SRF_segments[surf.index][x][y] then
-		if not surf.can_place_entity{name = "CnC_SonicWall_Wall", position=pos, force = node.force} then return false end
+		if not surf.can_place_entity{name = "tiberium-srf-wall", position=pos, force = node.force} then return false end
 	else
 		local wall = global.SRF_segments[surf.index][x][y]
 		if wall[1] ~= horz_wall + vert_wall - dir then return false end --There is already a wall in the direction we want
@@ -200,7 +200,7 @@ function CnC_SonicWall_MakeWall(surf, pos, dir, node)
 	if not global.SRF_segments[surf.index][x] then global.SRF_segments[surf.index][x] = {} end
 	
 	if not global.SRF_segments[surf.index][x][y] then
-		local wall = surf.create_entity{name="CnC_SonicWall_Wall", position=pos, force=node.force}
+		local wall = surf.create_entity{name="tiberium-srf-wall", position=pos, force=node.force}
 		if not wall then error("Wall creation failed!") end
 		wall.graphics_variation = dir
 		global.SRF_segments[surf.index][x][y] = {dir, wall}
@@ -312,7 +312,7 @@ function CnC_SonicWall_OnTick(event)
 end
 
 function CnC_SonicWall_OnTriggerCreatedEntity(event)
-	if event.entity.name == "CnC_SonicWall_Wall-damage" then
+	if event.entity.name == "tiberium-srf-wall-damage" then
 		table.insert(global.SRF_damage, {event.entity.surface, event.entity.position})
 		event.entity.destroy()
 	end

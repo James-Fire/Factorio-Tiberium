@@ -4,8 +4,8 @@ local migration = require("__flib__.migration")
 
 local tiberiumInternalName = "Factorio-Tiberium-Beta"  --No underscores for this one
 
-local Beacon_Name = "growth-accelerator-beacon"
-local Speed_Module_Name = "growth-accelerator-speed-module"
+local Beacon_Name = "tiberium-growth-accelerator-beacon"
+local Speed_Module_Name = "tiberium-growth-accelerator-speed-module"
 local TCN_Beacon_Name = "TCN-beacon"
 local TCN_affected_entities = {"tiberium-aoe-node-harvester", "tiberium-spike", "tiberium-node-harvester", "tiberium-network-node"}
 
@@ -98,7 +98,7 @@ script.on_init(function()
 			fakeEvent.entity = drill
 			on_new_entity(fakeEvent)
 		end
-		local namedEntities = {"CnC_SonicWall_Hub", "tiberium-node-harvester", "tiberium-spike", "growth-accelerator-node", "growth-accelerator"}
+		local namedEntities = {"tiberium-srf-emitter", "tiberium-node-harvester", "tiberium-spike", "tiberium-growth-accelerator-node", "tiberium-growth-accelerator"}
 		for _, entity in pairs(surface.find_entities_filtered{name = namedEntities}) do
 			local fakeEvent = {}
 			fakeEvent.entity = entity
@@ -108,7 +108,7 @@ script.on_init(function()
 		for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
 			table.insert(global.tibGrowthNodeList, node)
 		end
-		for _, wall in pairs(surface.find_entities_filtered{name = "CnC_SonicWall_Wall"}) do
+		for _, wall in pairs(surface.find_entities_filtered{name = "tiberium-srf-wall"}) do
 			wall.destroy()  --Wipe out all lingering SRF so we can rebuild them
 		end
 	end
@@ -125,10 +125,6 @@ function updateGrowthInterval()
 end
 
 script.on_load(function()
-	register_with_picker()
-end)
-
-function register_with_picker()
 	--register to PickerExtended
 	if remote.interfaces["picker"] and remote.interfaces["picker"]["dolly_moved_entity_id"] then
 		script.on_event(remote.call("picker", "dolly_moved_entity_id"), OnEntityMoved)
@@ -137,11 +133,11 @@ function register_with_picker()
 	if remote.interfaces["PickerDollies"] and remote.interfaces["PickerDollies"]["dolly_moved_entity_id"] then
 		script.on_event(remote.call("PickerDollies", "dolly_moved_entity_id"), OnEntityMoved)
 	end
-end
+end)
 
 function OnEntityMoved(event)
 	local entity = event.moved_entity
-	if entity and (entity.name == "growth-accelerator") then
+	if entity and (entity.name == "tiberium-growth-accelerator") then
 		local beacons = entity.surface.find_entities_filtered{name = Beacon_Name, position = event.start_pos}
 		for _, beacon in pairs(beacons) do
 			beacon.teleport(entity.position)
@@ -157,7 +153,7 @@ script.on_configuration_changed(function(data)
 			for _, entity in pairs(surface.find_entities_filtered{type = "mining-drill"}) do
 				script.register_on_entity_destroyed(entity)
 			end
-			for _, entity in pairs(surface.find_entities_filtered{name = {"CnC_SonicWall_Hub", "tiberium-spike"}}) do
+			for _, entity in pairs(surface.find_entities_filtered{name = {"tiberium-srf-emitter", "tiberium-spike"}}) do
 				script.register_on_entity_destroyed(entity)
 			end
 			-- Place Blossom trees on all the now bare nodes.
@@ -168,7 +164,7 @@ script.on_configuration_changed(function(data)
 			for _, beacon in pairs(surface.find_entities_filtered{name = Beacon_Name}) do
 				beacon.destroy()
 			end
-			for _, accelerator in pairs(surface.find_entities_filtered{name = "growth-accelerator"}) do
+			for _, accelerator in pairs(surface.find_entities_filtered{name = "tiberium-growth-accelerator"}) do
 				local beacon = accelerator.surface.create_entity{name = Beacon_Name, position = accelerator.position, force = accelerator.force}
 				beacon.destructible = false
 				beacon.minable = false
@@ -194,7 +190,7 @@ script.on_configuration_changed(function(data)
 			for _, entity in pairs(surface.find_entities_filtered{type = "mining-drill"}) do
 				registerEntity(entity)
 			end
-			for _, entity in pairs(surface.find_entities_filtered{name = {"CnC_SonicWall_Hub", "tiberium-spike", "growth-accelerator-node", "growth-accelerator"}}) do
+			for _, entity in pairs(surface.find_entities_filtered{name = {"tiberium-srf-emitter", "tiberium-spike", "tiberium-growth-accelerator-node", "tiberium-growth-accelerator"}}) do
 				registerEntity(entity)
 			end
 		end
@@ -231,7 +227,7 @@ script.on_configuration_changed(function(data)
 		global.tiberiumProducts = {global.oreType}
 	end
 	
-	if upgradingToVersion(data, tiberiumInternalName, "1.0.8") then
+	if upgradingToVersion(data, tiberiumInternalName, "1.0.9") then
 		for _, surface in pairs(game.surfaces) do
 			-- Destroy Blossom Trees with no nodes
 			for _, blossom in pairs(surface.find_entities_filtered{name = "tibNode_tree"}) do
@@ -242,7 +238,7 @@ script.on_configuration_changed(function(data)
 			end
 			-- Place Blossom Trees on all bare nodes
 			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
-				if surface.count_entities_filtered{area = areaAroundPosition(node.position), name = "tibNode_tree"} == 0 then
+				if surface.count_entities_filtered{area = areaAroundPosition(node.position), name = {"tibNode_tree", "tiberium-node-harvester", "tiberium-growth-accelerator"}} == 0 then
 					createBlossomTree(surface, node.position)
 					if debugText then game.print("created tree at x: "..node.position.x.." y: "..node.position.y) end
 				end
@@ -251,11 +247,32 @@ script.on_configuration_changed(function(data)
 	end
 	
 	if upgradingToVersion(data, tiberiumInternalName, "1.1.0") then
+		if not global.tiberiumDamageTakenMulti then
+			global.tiberiumDamageTakenMulti = {}
+			for _, force in pairs(game.forces) do
+				global.tiberiumDamageTakenMulti[force.name] = 1
+			end
+		end
 		for _, force in pairs(game.forces) do
 			if force.technologies["tiberium-military-3"].researched then
 				global.tiberiumDamageTakenMulti[force.name] = 0
 			elseif force.technologies["tiberium-military-1"].researched then
 				global.tiberiumDamageTakenMulti[force.name] = 0.2
+			end
+		end
+	end
+
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.1") then
+		for _, surface in pairs(game.surfaces) do
+			-- Add connectors to existing SRF Emitters
+			for _, emitter in pairs(surface.find_entities_filtered{name = "tiberium-srf-emitter"}) do
+				if surface.count_entities_filtered{position = emitter.position, name = "tiberium-srf-connector"} == 0 then
+					surface.create_entity{
+						name = "tiberium-srf-connector",
+						position = emitter.position,
+						force = emitter.force
+					}
+				end
 			end
 		end
 	end
@@ -277,7 +294,7 @@ function upgradingToVersion(data, modName, version)
 		elseif modName == "Factorio-Tiberium-Beta" then
 			otherModName = "Factorio-Tiberium"
 		end
-		local oldVersion = data["mod_changes"][modName]["old_version"] or 
+		local oldVersion = data["mod_changes"][modName]["old_version"] or
 				(data["mod_changes"][otherModName] and data["mod_changes"][otherModName]["old_version"])
 		if not oldVersion then return false end
 		local newVersion = data["mod_changes"][modName]["new_version"]
@@ -315,7 +332,7 @@ function AddOre(surface, position, growthRate)
 			CreateNode(surface, newPosition)
 		else
 			oreEntity = surface.create_entity{name = "tiberium-ore", amount = math.min(growthRate, TiberiumMaxPerTile), position = position}
-			if global.tiberiumTerrain then 
+			if global.tiberiumTerrain then
 				surface.set_tiles({{name = global.tiberiumTerrain, position = position}}, true, false)
 			end
 			surface.destroy_decoratives{position = position} --Remove decoration on tile on spread.
@@ -351,13 +368,13 @@ function CheckPoint(surface, position, lastValidPosition, growthRate)
 	end
 
 	local area = areaAroundPosition(position)
-	local entitiesBlockTiberium = {"CnC_SonicWall_Wall", "cliff", "tibGrowthNode_infinite"}
+	local entitiesBlockTiberium = {"tiberium-srf-wall", "cliff", "tibGrowthNode_infinite"}
 	if surface.count_entities_filtered{area = area, name = entitiesBlockTiberium} > 0 then
 		AddOre(surface, lastValidPosition, growthRate * 0.5)  --50% lost
 		return true  --Hit fence or cliff or spiked node, add to previous ore
 	end
 	
-	local emitterHubs = surface.find_entities_filtered{area = area, name = "CnC_SonicWall_Hub"}
+	local emitterHubs = surface.find_entities_filtered{area = area, name = "tiberium-srf-emitter"}
 	for _, emitter in pairs(emitterHubs) do
 		if emitter.valid then
 			local emitterPowered = true
@@ -401,11 +418,11 @@ function PlaceOre(entity, howmany)
 	-- Scale size based on distance from spawn, separate from density in case we end up wanting them to scale differently
 	local size = TiberiumRadius * math.max(1, math.sqrt(math.abs(position.x) + math.abs(position.y)) / 30)
 
-	local accelerator = surface.find_entity("growth-accelerator", position)
+	local accelerator = surface.find_entity("tiberium-growth-accelerator", position)
 	if accelerator then
 		howmany = howmany + accelerator.products_finished
 		surface.create_entity{
-			name = "growth-accelerator-text",
+			name = "tiberium-growth-accelerator-text",
 			position = {x = position.x - 1.5, y = position.y - 1},
 			text = "Grew "..math.floor(accelerator.products_finished * growthRate).." extra ore",
 			color = {r = 0, g = 204, b = 255},
@@ -530,7 +547,7 @@ function TiberiumSeedMissile(surface, position, resource, amount)
 							end
 							surface.create_entity{name = resource, position = placePos, amount = intensity, enable_cliff_removal = false}
 							--Cosmetic changes
-							if global.tiberiumTerrain then 
+							if global.tiberiumTerrain then
 								surface.set_tiles({{name = global.tiberiumTerrain, position = placePos}}, true, false)
 							end
 							surface.destroy_decoratives{position = placePos} --Remove decoration on tile on spread.
@@ -583,7 +600,7 @@ commands.add_command("tibRebuildLists",
 			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
 				table.insert(global.tibGrowthNodeList, node)
 			end
-			for _, srf in pairs(surface.find_entities_filtered{name = "CnC_SonicWall_Hub"}) do
+			for _, srf in pairs(surface.find_entities_filtered{name = "tiberium-srf-emitter"}) do
 				table.insert(global.SRF_nodes, {emitter = srf, position = srf.position})
 			end
 			for _, drill in pairs(surface.find_entities_filtered{type = "mining-drill"}) do
@@ -856,7 +873,7 @@ end)
 
 script.on_event(defines.events.on_trigger_created_entity, function(event)
 	CnC_SonicWall_OnTriggerCreatedEntity(event)
-	if debugText and event.entity.valid and (event.entity.name == "CnC_SonicWall_Wall-damage") then  --Checking when this is actually called
+	if debugText and event.entity.valid and (event.entity.name == "tiberium-srf-wall-damage") then  --Checking when this is actually called
 		game.print("SRF Wall damaged at "..event.entity.position.x..", "..event.entity.position.y)
 	end
 end)
@@ -886,9 +903,15 @@ function on_new_entity(event)
 		end
 		if not duplicate then table.insert(global.tibDrills, {entity = new_entity, name = new_entity.name, position = position}) end
 	end
-	if (new_entity.name == "CnC_SonicWall_Hub") then
-		registerEntity(new_entity)
-		CnC_SonicWall_AddNode(new_entity, event.tick)
+	if (new_entity.name == "tiberium-srf-connector") then
+		local emitter = surface.create_entity{
+			name = "tiberium-srf-emitter",
+			position = position,
+			force = force,
+			raise_built = true
+		}
+		registerEntity(emitter)
+		CnC_SonicWall_AddNode(emitter, event.tick)
 	elseif (new_entity.name == "tiberium-node-harvester") then
 		registerEntity(new_entity)
 		--Remove tree entity when node is covered
@@ -936,15 +959,15 @@ function on_new_entity(event)
 		updateGrowthInterval()
 		--Place Beacon for Tiberium Control Network
 		ManageTCNBeacon(surface, position, force)
-	elseif (new_entity.name == "growth-accelerator-node") then
+	elseif (new_entity.name == "tiberium-growth-accelerator-node") then
 		new_entity.destroy()
 		surface.create_entity{
-			name = "growth-accelerator",
+			name = "tiberium-growth-accelerator",
 			position = position,
 			force = force,
 			raise_built = true
 		}
-	elseif (new_entity.name == "growth-accelerator") then
+	elseif (new_entity.name == "tiberium-growth-accelerator") then
 		registerEntity(new_entity)
 		--Remove tree entity when node is covered
 		removeBlossomTree(surface, position)
@@ -976,7 +999,10 @@ function on_remove_entity(event)
 			end
 		end
 	end
-	if (entity.name == "CnC_SonicWall_Hub") then
+	if (entity.name == "tiberium-srf-emitter") then
+		for _, connector in pairs(surface.find_entities_filtered{name = "tiberium-srf-connector", position = position}) do
+			connector.destroy()
+		end
 		CnC_SonicWall_DeleteNode(entity, event.tick)
 	elseif (entity.name == "tiberium-beacon-node") then
 		--Remove Beacon for Tiberium Control Network
@@ -1026,7 +1052,7 @@ function on_remove_entity(event)
 		for _, beacon in pairs(beacons) do
 			beacon.destroy()
 		end
-	elseif (entity.name == "growth-accelerator") then
+	elseif (entity.name == "tiberium-growth-accelerator") then
 		--Spawn tree entity when node is uncovered
 		createBlossomTree(surface, position)
 		local beacons = surface.find_entities_filtered{name = Beacon_Name, position = position}

@@ -126,7 +126,7 @@ Version: 1.0.0
     - Fixed Transport Drones ruining Fuge Recipes
     - Fixed Centrifuge animation. Pip covers don't overlap the top anymore.
     - Low power SRF fix, they'll now disappear if you don't have enough power, not just if you have none.
-    - Fixed Centrifuge pollution scaling 
+    - Fixed Centrifuge pollution scaling
     - K2 and AAI crash fixed
     - Fixed Bob's Assembling machines not being able to do the TibBasicScience category.
     - 0073 Tiberium products in your trash now damage you without having scaling on
@@ -161,7 +161,7 @@ Version: 1.0.0
     - Better support for surfaces with Tiberium Growth
     - Tweaks to Growth Acceleration Research
     - More ore for Tib Only Start
-    - Updated centrifuge recipes added extensive debug logging 
+    - Updated centrifuge recipes added extensive debug logging
     - Fixed the changelog to show up in-game
     - Script replacement for Blossom trees, so they don't show if they shouldn't.
     - Reordered recipes in our tab

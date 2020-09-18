@@ -20,7 +20,7 @@ local acceleratorSprite = {
 }
 
 local growthAcceleratorNode = table.deepcopy(data.raw["mining-drill"]["tiberium-node-harvester"])
-growthAcceleratorNode.name = "growth-accelerator-node"
+growthAcceleratorNode.name = "tiberium-growth-accelerator-node"
 growthAcceleratorNode.animations = acceleratorSprite
 growthAcceleratorNode.base_picture = {}
 growthAcceleratorNode.base_picture.sheet = acceleratorSprite
@@ -30,21 +30,21 @@ growthAcceleratorNode.wet_mining_graphics_set = nil
 growthAcceleratorNode.mining_speed = settings.startup["tiberium-growth"].value * 10 / 15
 growthAcceleratorNode.vector_to_place_result = {0, 0}
 growthAcceleratorNode.energy_usage = "1kW"
-growthAcceleratorNode.collision_mask = {"layer-15"}
+growthAcceleratorNode.collision_mask = {"water-tile", "player-layer"}
 growthAcceleratorNode.energy_source = {
 	type = "void",
 	emissions_per_minute = 2,
 }
 
-data:extend{growthAcceleratorNode, 
+data:extend{growthAcceleratorNode,
 	{
 		type = "assembling-machine",
-		name = "growth-accelerator",
+		name = "tiberium-growth-accelerator",
 		icon = tiberiumInternalName.."/graphics/technology/growth-accelerator.png",
 		icon_size = 128,
 		flags = {"placeable-neutral", "placeable-player", "player-creation"},
-		minable = {mining_time = 2, result = "growth-accelerator"},
-		placeable_by = {item = "growth-accelerator", count = 1},
+		minable = {mining_time = 2, result = "tiberium-growth-accelerator"},
+		placeable_by = {item = "tiberium-growth-accelerator", count = 1},
 		max_health = 250,
 		corpse = "centrifuge-remnants",
 		dying_explosion = "medium-explosion",
@@ -135,7 +135,7 @@ data:extend{growthAcceleratorNode,
 	--Floating text for displaying growth amount
 	{
 		type = "flying-text",
-		name = "growth-accelerator-text",
+		name = "tiberium-growth-accelerator-text",
 		flags = {"not-on-map", "placeable-off-grid"},
 		time_to_live = 180,
 		speed = 1 / 60,
@@ -146,7 +146,7 @@ data:extend{growthAcceleratorNode,
 data:extend{
 	{
 		type = "beacon",
-		name = "growth-accelerator-beacon",
+		name = "tiberium-growth-accelerator-beacon",
 		energy_usage = "10W",
 		flags = {
 			"hide-alt-info",
@@ -169,7 +169,7 @@ data:extend{
 			}
 		},
 		animation = {
-			filename =  "__core__/graphics/empty.png",
+			filename = "__core__/graphics/empty.png",
 			width = 1,
 			height = 1,
 			line_length = 1,
@@ -206,7 +206,7 @@ data:extend{
 	-- hidden speed modules matching infinite tech bonus size
 	{
 		type = "module",
-		name = "growth-accelerator-speed-module",
+		name = "tiberium-growth-accelerator-speed-module",
 		icon = "__core__/graphics/empty.png",
 		icon_size = 1,
 		flags = {"hidden"},
