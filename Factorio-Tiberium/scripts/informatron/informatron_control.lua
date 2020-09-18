@@ -39,7 +39,7 @@ end
 
 function Informatron.page_content(page_name, player_index, element)
   local player = game.players[player_index]
-  
+
 	if page_name == tiberiumInternalName then
 		element.add{type="button", name="image_1", style="tiberium"}
 		element.add{type = "label", name="text_1", caption={tiberiumInternalName..".mod_page"}}

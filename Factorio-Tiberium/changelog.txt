@@ -1,4 +1,26 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.1
+  Features:
+    - Added compatibility for mods that alter our descriptions (such as Extended Descriptions)
+    - SRF Emitters now show connection lines to other SRF Emitters when you are placing them
+  Changes:
+    - Added icons for the 9 new Tiberium Science recipes added by 1.1.0
+    - Added fancy desctiptions the fancy Tiberium Science recipes
+    - Updated Growth Credit from Energy icon
+    - Tiberium Science recipes crafting time reduced to 1 second and can now be crafted by hand
+    - Tiberium Data recipes crafting time increased from 4 seconds to 5 seconds
+    - Centrifuge recipe calculation now supports custom rocket silos added by mods (e.g. Py)
+    - Centrifuge recipe calculation now attempts to identify categories of unbalanced recipes and exclude them when calculating science pack costs
+    - Slightly reduced the rate at which new Tiberium nodes are spawned overall to compensate for the faster spreading in forests
+  Bugfixes:
+    - Fixed crash from modded ores that used certain IconSpecification formats
+    - Fixed trees growing on top of Tiberium Nodes
+    - Fixed Tiberium being able to infect trees on the other side of SRF walls
+    - Fixed missing descriptions on some items
+    - Fixed some drills from other mods not being able to mine Tiberium ore
+    - Fixed collision properties of Node Harvesters, Growth Accelerators, and Tiberium Spikes
+    - Fixed Tiberium Science recipes not being available in Advanced Assembling Machines or Advanced Chemical Plants added by Krastorio 2
+---------------------------------------------------------------------------------------------------
 Version: 1.1.0
   Wiki:
     - Added entries for the new equipment
@@ -161,7 +183,6 @@ Version: 1.0.0
     - Better support for surfaces with Tiberium Growth
     - Tweaks to Growth Acceleration Research
     - More ore for Tib Only Start
-    - Updated centrifuge recipes added extensive debug logging
     - Fixed the changelog to show up in-game
     - Script replacement for Blossom trees, so they don't show if they shouldn't.
     - Reordered recipes in our tab
