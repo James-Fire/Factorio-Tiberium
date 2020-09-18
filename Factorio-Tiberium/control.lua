@@ -125,6 +125,10 @@ function updateGrowthInterval()
 end
 
 script.on_load(function()
+	register_with_picker()
+end)
+
+function register_with_picker()
 	--register to PickerExtended
 	if remote.interfaces["picker"] and remote.interfaces["picker"]["dolly_moved_entity_id"] then
 		script.on_event(remote.call("picker", "dolly_moved_entity_id"), OnEntityMoved)
@@ -133,7 +137,7 @@ script.on_load(function()
 	if remote.interfaces["PickerDollies"] and remote.interfaces["PickerDollies"]["dolly_moved_entity_id"] then
 		script.on_event(remote.call("PickerDollies", "dolly_moved_entity_id"), OnEntityMoved)
 	end
-end)
+end
 
 function OnEntityMoved(event)
 	local entity = event.moved_entity
@@ -461,7 +465,7 @@ function PlaceOre(entity, howmany)
 		if not done then
 			oreEntity = AddOre(surface, lastValidPosition, growthRate)
 			--Spread setting makes spawning new nodes more likely
-			if oreEntity and (math.random() < ((oreEntity.amount / TiberiumMaxPerTile) + (TiberiumSpread / 50 - 1))) then
+			if oreEntity and (math.random() < ((oreEntity.amount / TiberiumMaxPerTile) + (TiberiumSpread / 50 - 0.9))) then
 				local nodeNames = {"tibGrowthNode", "tibGrowthNode_infinite"}
 				if (surface.count_entities_filtered{position = newPosition, radius = TiberiumRadius * 0.8, name = nodeNames} == 0) then
 					CreateNode(surface, newPosition)  --Use standard function to also remove overlapping ore

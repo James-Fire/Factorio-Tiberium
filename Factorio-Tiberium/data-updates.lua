@@ -1,5 +1,8 @@
 require("scripts/tib-map-gen-presets")  -- After other mods have added their resources as part of the data step
 
+local TibBasicScience = {"chemical-plant", "assembling-machine-1", "assembling-machine-2", "assembling-machine-3"}
+local TibScience = {"chemical-plant"}
+
 --Orbital Ion Cannon
 if mods["Orbital Ion Cannon"] then
 	LSlib.technology.addPrerequisite("orbital-ion-cannon", "tiberium-military-2")
@@ -11,6 +14,11 @@ if mods["Orbital Ion Cannon"] then
 end
 
 if mods["Krastorio2"] then
+	-- Crafting machines
+	table.insert(TibBasicScience, "kr-advanced-assembling-machine")
+	table.insert(TibBasicScience, "kr-advanced-chemical-plant")
+	table.insert(TibScience, "kr-advanced-chemical-plant")
+	
 	-- Balance changes to match Krastorio
 	data.raw["electric-turret"]["tiberium-ion-turret"]["energy_source"]["drain"] = "100kW"
 	data.raw["electric-turret"]["tiberium-ion-turret"]["attack_parameters"]["cooldown"] = 30 -- Ion Turret to 2 APS
@@ -148,9 +156,6 @@ if mods["omnimatter"] then
 	LSlib.recipe.editIngredient("tiberium-spike", "pumpjack", "offshore-pump", 1)
 end
 
-local TibBasicScience = {"chemical-plant", "assembling-machine-1", "assembling-machine-2", "assembling-machine-3"}
-local TibScience = {"chemical-plant"}
-
 if mods["angelspetrochem"] then	
 	table.insert(TibBasicScience, "angels-chemical-plant")
 	table.insert(TibBasicScience, "angels-chemical-plant-2")
@@ -166,7 +171,7 @@ if mods["angelspetrochem"] then
 	table.insert(TibScience, "advanced-chemical-plant")
 	table.insert(TibScience, "advanced-chemical-plant-2")
 	--Replace the vanilla Chemical Plant with one of Angel's, cause apparently it's too hard to simply use the vanilla one.
-	LSlib.recipe.editIngredient("tiberium-plant", "chemical-plant", "angels-chemical-plant-2", 1)
+	LSlib.recipe.editIngredient("tiberium-power-plant", "chemical-plant", "angels-chemical-plant-2", 1)
 end
 
 if mods["bobassembly"] then
