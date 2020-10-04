@@ -4,7 +4,7 @@ for name, technology in pairs(data.raw.technology) do
 	if string.sub(name, 1, 9) == "tiberium-" then
 		for _, ingredient in pairs(technology.unit.ingredients) do
 			local pack = ingredient[1] and ingredient[1] or ingredient.name
-			if pack ~= "tiberium-science" then -- Don't add Tib Science
+			if (pack ~= "tiberium-science") and data.raw.tool[pack] then -- Don't add Tib Science
 				tibComboPacks[pack] = true
 			end
 		end

@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.2
+  Bugfixes:
+    - Fixed crash from Krastorio 2 and the new Space Exploration science packs
+    - Fixed crash from mining SRF Emitters
+---------------------------------------------------------------------------------------------------
 Version: 1.1.1
   Features:
     - Added compatibility for mods that alter our descriptions (such as Extended Descriptions)

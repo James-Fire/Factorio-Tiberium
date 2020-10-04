@@ -68,7 +68,7 @@ function giantSetupFunction()
 	for labName, labData in pairs(data.raw.lab) do
 		if LSlib.utils.table.hasValue(labData.inputs, "tiberium-science") then
 			for _, pack in pairs(labData.inputs or {}) do
-				if pack ~= "tiberium-science" then
+				if (pack ~= "tiberium-science") and data.raw.tool[pack] then
 					tibComboPacks[pack] = {}
 				end
 			end

@@ -1003,7 +1003,7 @@ function on_remove_entity(event)
 			end
 		end
 	end
-	if (entity.name == "tiberium-srf-emitter") then
+	if (entity.name == "tiberium-srf-emitter") or (entity.name == "CnC_SonicWall_Hub") then
 		for _, connector in pairs(surface.find_entities_filtered{name = "tiberium-srf-connector", position = position}) do
 			connector.destroy()
 		end
