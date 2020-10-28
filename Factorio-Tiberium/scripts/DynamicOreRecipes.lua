@@ -1,5 +1,7 @@
 --TODO:
 -- Make matrix solver more reliable
+-- Better rounding for centrifuge
+-- Handle mono-resource outputs with actual weights instead of just targets
 
 local debugText = settings.startup["tiberium-debug-text"].value
 local free = {}
@@ -743,9 +745,15 @@ function normalResults(recipeName)
 	local resultTable = {}
 	for _, result in pairs(results) do
 		if result[1] then
-			resultTable[result[1]] = result[2]
+			local amount = result[2]
+			if amount > 0 then
+				resultTable[result[1]] = amount
+			end
 		elseif result.name then
-			resultTable[result.name] = (result.amount or (result.amount_min + math.max(result.amount_min, result.amount_max)) / 2) * (result.probability or 1)
+			local amount = (result.amount or (result.amount_min + math.max(result.amount_min, result.amount_max)) / 2) * (result.probability or 1)
+			if amount > 0 then
+				resultTable[result.name] = amount
+			end
 		end
 	end
 	return resultTable
@@ -977,8 +985,8 @@ function fugeRecipeTier(tier)
 	local smallResources = 0
 	local recipeMult = 1
 	local foundRecipeMult = false
-	local material = (tier == 1) and "ore" or (tier == 2) and "slurry" or "molten"
-	local item = (tier == 1) and "tiberium-ore" or (tier == 2) and "tiberium-slurry" or "molten-tiberium"
+	local material = (tier == 1) and "slurry" or (tier == 2) and "molten" or "liquid"
+	local item = (tier == 1) and "tiberium-slurry" or (tier == 2) and "molten-tiberium" or "liquid-tiberium"
 	local ingredientAmount = (tier ~= 1) and math.max(160 / settings.startup["tiberium-value"].value, 1) or 16
 	local targetAmount = (tier == 1) and 32 or (tier == 2) and 64 or 128
 	local totalOre = 0
@@ -1025,7 +1033,7 @@ function fugeRecipeTier(tier)
 	end
 	--Make actual recipe changes
 	LSlib.recipe.editEngergyRequired("tiberium-"..material.."-centrifuging", recipeMult)
-	LSlib.recipe.addIngredient("tiberium-"..material.."-centrifuging", item, ingredientAmount * recipeMult, (tier > 1) and "fluid" or "item")
+	LSlib.recipe.addIngredient("tiberium-"..material.."-centrifuging", item, ingredientAmount * recipeMult, "fluid")
 	if debugText then log("Tier "..tier.." centrifuge: "..ingredientAmount * recipeMult.." "..item) end
 	for resource, amount in pairs(resources) do
 		if (resource ~= "stone") and (amount > 1 / 128) then
@@ -1043,7 +1051,7 @@ function fugeRecipeTier(tier)
 		if debugText then log("> "..stone.." stone") end
 	else  -- Don't create sludge recipe if there is no stone to convert or we don't have enough fluid boxes
 		--data.raw["recipe"]["tiberium-"..material.."-sludge-centrifuging"] = nil  Don't delete recipe, just make it unavailable
-		local tech = (tier == 1) and "tiberium-separation-tech" or (tier == 2) and "tiberium-processing-tech" or "tiberium-molten-processing"
+		local tech = "tiberium-"..material.."-centrifuging"
 		for i, effect in pairs(data.raw["technology"][tech]["effects"]) do
 			if effect.recipe == "tiberium-"..material.."-sludge-centrifuging" then
 				table.remove(data.raw["technology"][tech]["effects"], i)
@@ -1090,7 +1098,7 @@ function addDirectRecipe(ore)
 	local recipeName = "tiberium-molten-to-"..ore
 	local oreAmount = math.floor(64 * (oreMult[ore] and oreMult[ore] or 1) + 0.5)
 	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"
-	local tech = data.raw.fluid[ore] and "tiberium-molten-processing" or "tiberium-transmutation-tech"
+	local tech = data.raw.fluid[ore] and "tiberium-molten-centrifuging" or "tiberium-transmutation-tech"
 	local energy = 12
 	local order = (not oreMult[ore] and "a-" or oreMult[ore] > 1 and "b-" or "c-")..ore
 	

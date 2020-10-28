@@ -19,7 +19,7 @@ data:extend{
 		icon_size = 64,
 		max_temperature = 1000,
 		order = "a[fluid]-c[crude-oil]",
-		fuel_value = "25MJ",
+		fuel_value = "12.5MJ",
 		emissions_multiplier = 3,
 		pressure_to_speed_ratio = 0.4,
 	},

@@ -15,11 +15,6 @@ local TibProductivity = {
 	"tiberium-fuel-cell",
 	"tiberium-ion-core",
 	"tiberium-farming",
-	"tiberium-ore-mechanical-data",
-	"tiberium-ore-thermal-data",
-	"tiberium-ore-chemical-data",
-	"tiberium-ore-nuclear-data",
-	"tiberium-ore-EM-data",
 	"tiberium-slurry-mechanical-data",
 	"tiberium-slurry-thermal-data",
 	"tiberium-slurry-chemical-data",
@@ -55,10 +50,9 @@ local TibCraftingTint = {
 -- Science stuff
 local testingOrder = {["a"] = "mechanical", ["b"] = "thermal", ["c"] = "chemical", ["d"] = "nuclear", ["e"] = "EM"}
 local testingIngredients = {
-	["tiberium-ore"] = 1,
-	["tiberium-slurry"] = 2,
-	["molten-tiberium"] = 4,
-	["liquid-tiberium"] = 14
+	["tiberium-slurry"] = 1,
+	["molten-tiberium"] = 2,
+	["liquid-tiberium"] = 4
 }
 local packExchangeRates = {
 	mechanical = {data = 10, science = 1},
@@ -77,7 +71,7 @@ local comboExchangeRates = {
 for order, test in pairs(testingOrder) do
 	-- Data recipes
 	for tiberium, multiplier in pairs(testingIngredients) do
-		local ingredients = {{type = (tiberium == "tiberium-ore") and "item" or "fluid", name = tiberium, amount = 5}}
+		local ingredients = {{type = "fluid", name = tiberium, amount = 5}}
 		if test == "thermal" then
 			table.insert(ingredients, {type = "item", name = "coal", amount = 1})
 		elseif test == "chemical" then
@@ -249,17 +243,17 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-ore-processing",
-		category = "oil-processing",
+		category = "crafting-with-fluid",
 		energy_required = 5,
 		crafting_machine_tint = TibCraftingTint,
 		emissions_multiplier = 2,
 		enabled = false,
 		ingredients = {
 			-- The Tiberium Ore is added to recipe during recipe-autogeneration since it varies based on the settings
-			{type = "fluid", name = "water", amount = 100},
+			{type = "fluid", name = "water", amount = 32},
 		},
 		results = {
-			{type = "fluid", name = "tiberium-slurry", amount = 10}
+			{type = "fluid", name = "tiberium-slurry", amount = 16}
 		},
 		icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-waste.png",
 		icon_size = 64,
@@ -276,7 +270,7 @@ data:extend{
 		enabled = false,
 		ingredients = {
 			{type = "fluid", name = "tiberium-slurry", amount = 16},
-			{type = "fluid", name = "water", amount = 100},
+			{type = "fluid", name = "water", amount = 32},
 		},
 		results = {
 			{type = "fluid", name = "molten-tiberium", amount = 10}
@@ -312,15 +306,15 @@ data:extend{
 		name = "tiberium-liquid-processing",
 		category = "oil-processing",
 		crafting_machine_tint = TibCraftingTint,
-		energy_required = 5,
-		emissions_multiplier = 12,
+		energy_required = 20,
+		emissions_multiplier = 15,
 		enabled = false,
 		ingredients = {
-			{type = "fluid", name = "molten-tiberium", amount = 3},
-			{type = "fluid", name = "steam", amount = 100},
+			{type = "fluid", name = "molten-tiberium", amount = 16},
+			{type = "fluid", name = "steam", amount = 300},
 		},
 		results = {
-			{type = "fluid", name = "liquid-tiberium", amount = 1},
+			{type = "fluid", name = "liquid-tiberium", amount = 10},
 			{type = "fluid", name = "water", amount = 100},
 		},
 		icon = tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png",
@@ -454,30 +448,10 @@ data:extend{
 data:extend{
 	{
 		type = "recipe",
-		name = "tiberium-ore-centrifuging",
+		name = "tiberium-slurry-centrifuging",
 		category = "tiberium-centrifuge-1",
 		subgroup = "a-centrifuging",
 		energy_required = 10,
-		enabled = false,
-		ingredients = {
-			{type = "fluid", name = "water", amount = 100},
-		},
-		results = {
-		},
-		icon = tiberiumInternalName.."/graphics/icons/ore-centrifuging.png",
-		icon_size = 32,
-		allow_as_intermediate = false,
-		allow_decomposition = false,
-		always_show_made_in = true,
-		always_show_products = true,
-		order = "a[fluid-chemistry]-f[heavy-oil-cracking]"
-	},
-	{
-		type = "recipe",
-		name = "tiberium-slurry-centrifuging",
-		category = "tiberium-centrifuge-2",
-		subgroup = "a-centrifuging",
-		energy_required = 15,
 		enabled = false,
 		ingredients = {
 		},
@@ -489,14 +463,14 @@ data:extend{
 		allow_decomposition = false,
 		always_show_made_in = true,
 		always_show_products = true,
-		order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
+		order = "a[fluid-chemistry]-f[heavy-oil-cracking]"
 	},
 	{
 		type = "recipe",
 		name = "tiberium-molten-centrifuging",
-		category = "tiberium-centrifuge-3",
+		category = "tiberium-centrifuge-2",
 		subgroup = "a-centrifuging",
-		energy_required = 20,
+		energy_required = 15,
 		enabled = false,
 		ingredients = {
 		},
@@ -508,34 +482,33 @@ data:extend{
 		allow_decomposition = false,
 		always_show_made_in = true,
 		always_show_products = true,
-		order = "c[fluid-chemistry]-f[heavy-oil-cracking]"
+		order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
 	},
 	{
 		type = "recipe",
-		name = "tiberium-ore-sludge-centrifuging",
-		category = "tiberium-centrifuge-1",
+		name = "tiberium-liquid-centrifuging",
+		category = "tiberium-centrifuge-3",
 		subgroup = "a-centrifuging",
-		energy_required = 10,
+		energy_required = 20,
 		enabled = false,
 		ingredients = {
-			{type = "fluid", name = "water", amount = 100},
 		},
 		results = {
 		},
-		icon = tiberiumInternalName.."/graphics/icons/ore-sludge-centrifuging.png",
+		icon = tiberiumInternalName.."/graphics/icons/liquid-centrifuging.png",
 		icon_size = 32,
 		allow_as_intermediate = false,
 		allow_decomposition = false,
 		always_show_made_in = true,
 		always_show_products = true,
-		order = "d"
+		order = "c[fluid-chemistry]-f[heavy-oil-cracking]"
 	},
 	{
 		type = "recipe",
 		name = "tiberium-slurry-sludge-centrifuging",
-		category = "tiberium-centrifuge-2",
+		category = "tiberium-centrifuge-1",
 		subgroup = "a-centrifuging",
-		energy_required = 15,
+		energy_required = 10,
 		enabled = false,
 		ingredients = {
 		},
@@ -547,11 +520,30 @@ data:extend{
 		allow_decomposition = false,
 		always_show_made_in = true,
 		always_show_products = true,
-		order = "e"
+		order = "d"
 	},
 	{
 		type = "recipe",
 		name = "tiberium-molten-sludge-centrifuging",
+		category = "tiberium-centrifuge-2",
+		subgroup = "a-centrifuging",
+		energy_required = 15,
+		enabled = false,
+		ingredients = {
+		},
+		results = {
+		},
+		icon = tiberiumInternalName.."/graphics/icons/molten-sludge-centrifuging.png",
+		icon_size = 32,
+		allow_as_intermediate = false,
+		allow_decomposition = false,
+		always_show_made_in = true,
+		always_show_products = true,
+		order = "e"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-liquid-sludge-centrifuging",
 		category = "tiberium-centrifuge-3",
 		subgroup = "a-centrifuging",
 		energy_required = 20,
@@ -560,7 +552,7 @@ data:extend{
 		},
 		results = {
 		},
-		icon = tiberiumInternalName.."/graphics/icons/molten-sludge-centrifuging.png",
+		icon = tiberiumInternalName.."/graphics/icons/liquid-sludge-centrifuging.png",
 		icon_size = 32,
 		allow_as_intermediate = false,
 		allow_decomposition = false,
@@ -789,7 +781,7 @@ data:extend{
 		energy_required = 50,
 		ingredients = {
 			{"rocket-control-unit", 10},
-			{type = "fluid", name = "liquid-tiberium", amount = 200}
+			{type = "fluid", name = "liquid-tiberium", amount = 400}
 		},
 		result = "tiberium-seed"
 	},
@@ -846,7 +838,7 @@ data:extend{
 		enabled = false,
 		ingredients = {
 			{type = "item", name = "solid-fuel", amount = 10},
-			{type = "fluid", name = "liquid-tiberium", amount = 10},
+			{type = "fluid", name = "liquid-tiberium", amount = 40},
 		},
 		results = {
 			{type = "item", name = "nuclear-fuel", amount = 1},
@@ -907,7 +899,7 @@ data:extend{
 		enabled = false,
 		ingredients = {
 			{type = "item", name = "tiberium-empty-cell", amount = 1},
-			{type = "fluid", name = "liquid-tiberium", amount = 160},
+			{type = "fluid", name = "liquid-tiberium", amount = 320},
 		},
 		results = {
 			{type = "item", name = "tiberium-fuel-cell", amount = 1},
@@ -948,7 +940,7 @@ data:extend{
 		energy_required = 20,
 		enabled = false,
 		ingredients = {
-			{type = "fluid", name = "liquid-tiberium", amount = 10},
+			{type = "fluid", name = "liquid-tiberium", amount = 20},
 			{type = "item", name = "steel-plate", amount = 5},
 			{type = "item", name = "pipe", amount = 5},
 		},

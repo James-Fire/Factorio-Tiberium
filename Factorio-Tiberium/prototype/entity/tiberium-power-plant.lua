@@ -335,7 +335,7 @@ data:extend{
 		dying_explosion = "big-explosion",
 		max_power_output = (200 / 60) .. "MJ",
 		effectivity = 2,
-		fluid_usage_per_tick = 4 / 60,
+		fluid_usage_per_tick = 8 / 60,
 		maximum_temperature = 1000,
 		burns_fluid = true,
 		scale_fluid_usage = true,

@@ -1,50 +1,13 @@
 data:extend{
 	{
 		type = "technology",
-		name = "tiberium-separation-tech",
-		icon = tiberiumInternalName.."/graphics/technology/tiberium-separation-tech.png",
-		icon_size = 128,
-		effects = {
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-centrifuge"
-			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-ore-centrifuging"
-			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-ore-sludge-centrifuging"
-			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-sludge-to-stone-brick"
-			},
-		},
-		prerequisites = {"tiberium-mechanical-research", "steel-processing"},
-		unit = {
-			count = 100,
-			ingredients = {
-				{"tiberium-science", 1},
-				{"automation-science-pack", 1},
-			},
-			time = 30
-		}
-	},
-	{
-		type = "technology",
-		name = "tiberium-processing-tech",
+		name = "tiberium-slurry-centrifuging",
 		icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-waste.png",
 		icon_size = 64,
 		effects = {
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-centrifuge-2"
-			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-ore-processing"
+				recipe = "tiberium-centrifuge"
 			},
 			{
 				type = "unlock-recipe",
@@ -56,10 +19,39 @@ data:extend{
 			},
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-slurry-mechanical-data"
+				recipe = "tiberium-sludge-to-stone-brick"
 			},
 		},
-		prerequisites = {"tiberium-separation-tech", "advanced-electronics", "concrete"},
+		prerequisites = {"tiberium-mechanical-research"},
+		unit = {
+			count = 100,
+			ingredients = {
+				{"tiberium-science", 1},
+				{"automation-science-pack", 1},
+			},
+			time = 30
+		}
+	},
+	{
+		type = "technology",
+		name = "tiberium-molten-centrifuging",
+		icon = tiberiumInternalName.."/graphics/icons/fluid/molten-tiberium.png",
+		icon_size = 64,
+		effects = {
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-centrifuge-2"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-molten-centrifuging"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-molten-sludge-centrifuging"
+			},
+		},
+		prerequisites = {"tiberium-slurry-centrifuging", "tiberium-thermal-research", "advanced-electronics", "concrete"},
 		unit = {
 			count = 250,
 			ingredients = {
@@ -72,40 +64,16 @@ data:extend{
 	},
 	{
 		type = "technology",
-		name = "tiberium-molten-processing",
-		icon = tiberiumInternalName.."/graphics/icons/fluid/molten-tiberium.png",
+		name = "tiberium-advanced-molten-processing",
+		icon = tiberiumInternalName.."/graphics/technology/cool-molten-tiberium.png",
 		icon_size = 64,
 		effects = {
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-centrifuge-3"
-			},
-			{
-				type = "unlock-recipe",
-				recipe = "molten-tiberium-processing"
-			},
-			{
-				type = "unlock-recipe",
 				recipe = "tiberium-advanced-molten-processing"
 			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-molten-centrifuging"
-			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-molten-sludge-centrifuging"
-			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-molten-mechanical-data"
-			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-molten-thermal-data"
-			},
 		},
-		prerequisites = {"tiberium-processing-tech", "tiberium-thermal-research", "chemical-science-pack"},
+		prerequisites = {"tiberium-thermal-research", "chemical-science-pack"},
 		unit = {
 			count = 500,
 			ingredients = {
@@ -119,32 +87,24 @@ data:extend{
 	},
 	{
 		type = "technology",
-		name = "tiberium-power-tech",
+		name = "tiberium-liquid-centrifuging",
 		icon = tiberiumInternalName.."/graphics/technology/tiberium-processing-tech.png",
 		icon_size = 128,
 		effects = {
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-power-plant"
+				recipe = "tiberium-centrifuge-3"
 			},
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-liquid-processing"
+				recipe = "tiberium-liquid-centrifuging"
 			},
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-liquid-mechanical-data"
-			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-liquid-thermal-data"
-			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-liquid-chemical-data"
+				recipe = "tiberium-liquid-sludge-centrifuging"
 			},
 		},
-		prerequisites = {"tiberium-molten-processing", "tiberium-chemical-research"},
+		prerequisites = {"tiberium-molten-centrifuging", "tiberium-chemical-research"},
 		unit = {
 			count = 1000,
 			ingredients = {
@@ -152,6 +112,46 @@ data:extend{
 				{"automation-science-pack", 1},
 				{"logistic-science-pack", 1},
 				{"chemical-science-pack", 1}
+			},
+			time = 30
+		}
+	},
+	{
+		type = "technology",
+		name = "tiberium-power-tech",
+		icon = tiberiumInternalName.."/graphics/icons/td-power-plant.png",
+		icon_size = 64,
+		effects = {
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-power-plant"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-empty-cell"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-fuel-cell"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-cell-cleaning"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-nuclear-fuel"
+			},
+		},
+		prerequisites = {"tiberium-liquid-centrifuging", "tiberium-nuclear-research"},
+		unit = {
+			count = 1000,
+			ingredients = {
+				{"tiberium-science", 1},
+				{"automation-science-pack", 1},
+				{"logistic-science-pack", 1},
+				{"chemical-science-pack", 1},
+				{"production-science-pack", 1},
 			},
 			time = 30
 		}
@@ -179,7 +179,7 @@ data:extend{
 				recipe = "tiberium-sludge-to-landfill"
 			},
 		},
-		prerequisites = {"tiberium-processing-tech", "landfill"},
+		prerequisites = {"tiberium-slurry-centrifuging", "landfill"},
 		unit = {
 			count = 100,
 			ingredients = {
@@ -201,7 +201,7 @@ data:extend{
 				recipe = "tiberium-waste-recycling"
 			},
 		},
-		prerequisites = {"tiberium-molten-processing", "tiberium-sludge-processing"},
+		prerequisites = {"tiberium-thermal-research", "tiberium-sludge-processing"},
 		unit = {
 			count = 200,
 			ingredients = {
@@ -228,7 +228,7 @@ data:extend{
 				recipe = "tiberium-node-harvester"
 			},
 		},
-		prerequisites = {"tiberium-processing-tech", "battery", "chemical-science-pack"},
+		prerequisites = {"tiberium-chemical-research", "battery"},
 		unit = {
 			count = 200,
 			ingredients = {
@@ -246,20 +246,8 @@ data:extend{
 		icon = tiberiumInternalName.."/graphics/technology/tiberium-transmutation.png",
 		icon_size = 128,
 		effects = {
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-empty-cell"
-			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-fuel-cell"
-			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-cell-cleaning"
-			},
 		},
-		prerequisites = {"tiberium-molten-processing", "tiberium-nuclear-research"},
+		prerequisites = {"tiberium-molten-centrifuging", "tiberium-nuclear-research"},
 		unit = {
 			count = 5000,
 			ingredients = {
@@ -283,7 +271,7 @@ data:extend{
 				recipe = "tiberium-growth-accelerator"
 			},
 		},
-		prerequisites = {"tiberium-processing-tech", "chemical-science-pack"},
+		prerequisites = {"tiberium-chemical-research"},
 		unit = {
 			count = 800,
 			ingredients = {
@@ -297,8 +285,8 @@ data:extend{
 	},
 	{
 		type = "technology",
-		name = "tiberium-control-network-tech",
-		icon = tiberiumInternalName.."/graphics/technology/tiberium-control-network-tech.png",
+		name = "tiberium-advanced-containment-tech",
+		icon = tiberiumInternalName.."/graphics/technology/tiberium-minus.png",
 		icon_size = 128,
 		effects = {
 			{
@@ -311,11 +299,32 @@ data:extend{
 			},
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-beacon-node"
+				recipe = "tiberium-spike"
 			},
+		},
+		prerequisites = {"tiberium-electromagnetic-research", "tiberium-containment-tech"},
+		unit = {
+			count = 1200,
+			ingredients = {
+				{"tiberium-science", 1},
+				{"automation-science-pack", 1},
+				{"logistic-science-pack", 1},
+				{"chemical-science-pack", 1},
+				{"production-science-pack", 1},
+				{"utility-science-pack", 1}
+			},
+			time = 30
+		}
+	},
+	{
+		type = "technology",
+		name = "tiberium-control-network-tech",
+		icon = tiberiumInternalName.."/graphics/technology/tiberium-control-network-tech.png",
+		icon_size = 128,
+		effects = {
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-spike"
+				recipe = "tiberium-beacon-node"
 			},
 			{
 				type = "unlock-recipe",
@@ -325,14 +334,10 @@ data:extend{
 				type = "unlock-recipe",
 				recipe = "tiberium-growth-credit-from-energy"
 			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-nuclear-fuel"
-			},
 		},
-		prerequisites = {"tiberium-power-tech", "tiberium-electromagnetic-research"},
+		prerequisites = {"tiberium-electromagnetic-research", "tiberium-growth-acceleration"},
 		unit = {
-			count = 2400,
+			count = 1200,
 			ingredients = {
 				{"tiberium-science", 1},
 				{"automation-science-pack", 1},
@@ -353,14 +358,18 @@ data:extend{
 		effects = {
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-ore-mechanical-data"
+				recipe = "tiberium-ore-processing"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-slurry-mechanical-data"
 			},
 			{
 				type = "unlock-recipe",
 				recipe = "tiberium-science-mechanical"
 			},
 		},
-		prerequisites = {},
+		prerequisites = {"automation-2"},
 		unit = {
 			count = 50,
 			ingredients = {
@@ -377,7 +386,15 @@ data:extend{
 		effects = {
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-ore-thermal-data"
+				recipe = "molten-tiberium-processing"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-molten-mechanical-data"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-molten-thermal-data"
 			},
 			{
 				type = "unlock-recipe",
@@ -392,7 +409,7 @@ data:extend{
 				recipe = "tiberium-science-thru-thermal"
 			},
 		},
-		prerequisites = {"tiberium-mechanical-research", "advanced-material-processing"},
+		prerequisites = {"tiberium-mechanical-research", "oil-processing"},
 		unit = {
 			count = 100,
 			ingredients = {
@@ -410,7 +427,19 @@ data:extend{
 		effects = {
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-ore-chemical-data"
+				recipe = "tiberium-liquid-processing"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-liquid-mechanical-data"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-liquid-thermal-data"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-liquid-chemical-data"
 			},
 			{
 				type = "unlock-recipe",
@@ -446,10 +475,6 @@ data:extend{
 		icon = tiberiumInternalName.."/graphics/technology/testing-nuclear.png",
 		icon_size = 128,
 		effects = {
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-ore-nuclear-data"
-			},
 			{
 				type = "unlock-recipe",
 				recipe = "tiberium-slurry-nuclear-data"
@@ -491,18 +516,6 @@ data:extend{
 		effects = {
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-science-EM"
-			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-science-thru-EM"
-			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-ore-EM-data"
-			},
-			{
-				type = "unlock-recipe",
 				recipe = "tiberium-slurry-EM-data"
 			},
 			{
@@ -512,6 +525,14 @@ data:extend{
 			{
 				type = "unlock-recipe",
 				recipe = "tiberium-liquid-EM-data"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-science-EM"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-science-thru-EM"
 			},
 		},
 		prerequisites = {"tiberium-nuclear-research", "utility-science-pack"},
@@ -543,7 +564,7 @@ data:extend{
 				effect_description = "80% reduced Tiberium Damage taken"	
 			}
 		},
-		prerequisites = {"tiberium-separation-tech", "military-science-pack", "heavy-armor"},
+		prerequisites = {"tiberium-thermal-research", "military-science-pack", "heavy-armor"},
 		unit = {
 			count = 100,
 			ingredients = {
@@ -574,7 +595,7 @@ data:extend{
 				recipe = "tiberium-rocket"
 			},
 		},
-		prerequisites = {"tiberium-military-1", "tiberium-power-tech", "rocketry", "laser"},
+		prerequisites = {"tiberium-chemical-research", "tiberium-military-1", "rocketry", "laser"},
 		unit = {
 			count = 300,
 			ingredients = {
@@ -607,10 +628,10 @@ data:extend{
 			},
 			{
 				type = "nothing",
-				effect_description = "Immune to Tiberium Damage when wearing any Power Armor"	
-			}
+				effect_description = "Immune to Tiberium Damage when wearing any Power Armor"
+			},
 		},
-		prerequisites = {"tiberium-military-2", "rocket-control-unit", "tiberium-control-network-tech", "power-armor-mk2"},
+		prerequisites = {"tiberium-military-2", "tiberium-containment-tech", "rocket-control-unit", "power-armor-mk2"},
 		unit = {
 			count = 500,
 			ingredients = {
