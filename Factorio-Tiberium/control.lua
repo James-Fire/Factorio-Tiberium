@@ -724,7 +724,13 @@ script.on_event(defines.events.on_tick, function(event)
 			global.tibGrowthNodeListIndex = 1
 		end
 		if tibGrowthNodeCount >= 1 then
-			PlaceOre(global.tibGrowthNodeList[global.tibGrowthNodeListIndex], 10)
+			local node = global.tibGrowthNodeList[global.tibGrowthNodeListIndex]
+			PlaceOre(node, 10)
+			local position = node.position
+			local surface = node.surface
+			if surface.count_entities_filtered{area = areaAroundPosition(position), name = {"tibNode_tree", "tiberium-network-node", "tiberium-spike", "tiberium-growth-accelerator"}} == 0 then
+				createBlossomTree(surface, position)
+			end
 		end
 	end
 	if not bitersImmune then
