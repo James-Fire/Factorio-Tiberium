@@ -130,11 +130,14 @@ if mods["MoreScience"] then
 	for techName, techData in pairs(data.raw.technology) do
 		if string.sub(techName, 1, 9) == "tiberium-" then
 			-- Most techs have the new science packs added to them
-			if (techName ~= "tiberium-mechanical-research") and (techName ~= "tiberium-separation-tech")
-					and (techName ~= "tiberium-military-1") and (techName ~= "tiberium-thermal-research") then
+			if (techName ~= "tiberium-mechanical-research") and (techName ~= "tiberium-slurry-centrifuging")
+					and (techName ~= "tiberium-military-1") and (techName ~= "tiberium-thermal-research") 
+					and (techName ~= "tiberium-sludge-processing") and (techName ~= "tiberium-advanced-molten-processing")
+					and (techName ~= "tiberium-sludge-recycling") then
 				table.insert(techData.unit.ingredients, {"electric-power-science-pack", 1})
 			end
-			if (techName ~= "tiberium-mechanical-research") and (techName ~= "tiberium-separation-tech") then
+			if (techName ~= "tiberium-mechanical-research") and (techName ~= "tiberium-slurry-centrifuging") 
+					and (techName ~= "tiberium-thermal-research") then
 				table.insert(techData.unit.ingredients, {"advanced-automation-science-pack", 1})
 			end
 			-- Take our repeatable techs and swap them to infused packs

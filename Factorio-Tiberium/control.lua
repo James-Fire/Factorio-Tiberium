@@ -1214,6 +1214,6 @@ script.on_event(defines.events.on_player_created, function(event)
 			end
 		end
 		player.force.technologies["tiberium-mechanical-research"].researched = true
-		player.force.technologies["tiberium-separation-tech"].researched = true
+		player.force.technologies["tiberium-slurry-centrifuging"].researched = true
 	end
 end)
