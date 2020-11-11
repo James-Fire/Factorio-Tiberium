@@ -19,17 +19,28 @@ data:extend({
 	damaged_trigger_effect = hit_effects.entity(),
 	drawing_box = {{-1.5, -2.2}, {1.5, 1.3}},
 	allowed_effects = {"consumption"},
-
-	graphics_set = require("__base__/prototypes/entity/beacon-animations"),
-
-	radius_visualisation_picture =
-	{
+	animation = {
+		animation_speed = 0.5,
+		filename = tiberiumInternalName.."/graphics/entity/beacon/beacon-antenna.png",
+		frame_count = 32,
+		height = 50,
+		width = 54,
+		line_length = 8,
+		shift = {-0.03125, -1.71875},
+	},
+	base_picture = {
+		filename = tiberiumInternalName.."/graphics/entity/beacon/beacon-base.png",
+		height = 93,
+		width = 116,
+		shift = {0.34375, 0.046875},
+	},
+	radius_visualisation_picture = {
 		filename = "__base__/graphics/entity/beacon/beacon-radius-visualization.png",
 		priority = "extra-high-no-scale",
 		width = 10,
 		height = 10
 	},
-	supply_area_distance = TiberiumRadius * 0.5,
+	supply_area_distance = math.floor(TiberiumRadius * 0.5),
 	energy_source = {
 		type = "electric",
 		usage_priority = "secondary-input"
