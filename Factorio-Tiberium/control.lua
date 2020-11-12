@@ -19,6 +19,7 @@ local ItemDamageScale = settings.global["tiberium-item-damage-scale"].value
 local debugText = settings.startup["tiberium-debug-text"].value
 -- Starting items, if the option is ticked.
 local tiberium_start = {
+	["assembling-machine-2"] = 5,
 	["tiberium-centrifuge-3"] = 3,
 	["iron-plate"] = 92,
 	["copper-plate"] = 100,
@@ -32,8 +33,8 @@ local tiberium_start = {
 	["burner-mining-drill"] = 5,
 	["boiler"] = 1,
 	["steam-engine"] = 2,
-	["pipe-to-ground"] = 20,
-	["pipe"] = 20,
+	["pipe-to-ground"] = 40,
+	["pipe"] = 50,
 	["offshore-pump"] = 1
 }
 
@@ -1213,7 +1214,16 @@ script.on_event(defines.events.on_player_created, function(event)
 				player.insert{name = name, count = count}
 			end
 		end
-		player.force.technologies["tiberium-mechanical-research"].researched = true
-		player.force.technologies["tiberium-slurry-centrifuging"].researched = true
+		UnlockTechnologyAndPrereqs(player.force, "tiberium-mechanical-research")
+		UnlockTechnologyAndPrereqs(player.force, "tiberium-slurry-centrifuging")
 	end
 end)
+
+function UnlockTechnologyAndPrereqs(force, techName)
+	if not force.technologies[techName].researched then
+		force.technologies[techName].researched = true
+		for techPrereq in pairs(game.technology_prototypes[techName].prerequisites) do
+			UnlockTechnologyAndPrereqs(force, techPrereq)
+		end
+	end
+end
