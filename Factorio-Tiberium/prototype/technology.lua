@@ -53,7 +53,7 @@ data:extend{
 		},
 		prerequisites = {"tiberium-slurry-centrifuging", "tiberium-thermal-research", "advanced-electronics", "concrete"},
 		unit = {
-			count = 250,
+			count = 200,
 			ingredients = {
 				{"tiberium-science", 1},
 				{"automation-science-pack", 1},
@@ -75,7 +75,7 @@ data:extend{
 		},
 		prerequisites = {"tiberium-thermal-research", "chemical-science-pack"},
 		unit = {
-			count = 500,
+			count = 100,
 			ingredients = {
 				{"tiberium-science", 1},
 				{"automation-science-pack", 1},
@@ -106,7 +106,7 @@ data:extend{
 		},
 		prerequisites = {"tiberium-molten-centrifuging", "tiberium-chemical-research"},
 		unit = {
-			count = 1000,
+			count = 300,
 			ingredients = {
 				{"tiberium-science", 1},
 				{"automation-science-pack", 1},
@@ -145,7 +145,7 @@ data:extend{
 		},
 		prerequisites = {"tiberium-liquid-centrifuging", "tiberium-nuclear-research"},
 		unit = {
-			count = 1000,
+			count = 600,
 			ingredients = {
 				{"tiberium-science", 1},
 				{"automation-science-pack", 1},
@@ -561,7 +561,7 @@ data:extend{
 			},
 			{
 				type = "nothing",
-				effect_description = "80% reduced Tiberium Damage taken"	
+				effect_description = {"technology-description.tiberium-military-partial-immunity", "80%"}
 			}
 		},
 		prerequisites = {"tiberium-thermal-research", "military-science-pack", "heavy-armor"},
@@ -628,7 +628,7 @@ data:extend{
 			},
 			{
 				type = "nothing",
-				effect_description = "Immune to Tiberium Damage when wearing any Power Armor"
+				effect_description = {"technology-description.tiberium-military-total-immunity"}
 			},
 		},
 		prerequisites = {"tiberium-military-2", "tiberium-containment-tech", "rocket-control-unit", "power-armor-mk2"},
@@ -654,7 +654,7 @@ data:extend{
 		effects = {
 			{
 				type = "nothing",
-				effect_description = "Growth Accelerator speed: +25%"
+				effect_description = {"technology-description.tiberium-growth-acceleration-acceleration-effect", "+25%"}
 			}
 		},
 		prerequisites = {"tiberium-growth-acceleration", "space-science-pack"},
@@ -678,12 +678,21 @@ data:extend{
 	{
 		type = "technology",
 		name = 	"tiberium-control-network-speed",
-		icon = tiberiumInternalName.."/graphics/technology/growth-accelerator-research.png",
-		icon_size = 128,
+		icons = {
+			{
+				icon = tiberiumInternalName.."/graphics/technology/effect-transmission.png",
+				icon_size = 128,
+			},
+			{
+				icon = "__core__/graphics/time-editor-icon.png",
+				icon_size = 32,
+				shift = {-48, 48},
+			},
+		},
 		effects = {
 			{
 				type = "nothing",
-				effect_description = "Tibeirum Control Network speed bonus: +25%"
+				effect_description = {"technology-description.tiberium-control-network-speed-effect", "+25%"}
 			}
 		},
 		prerequisites = {"tiberium-control-network-tech", "space-science-pack"},
