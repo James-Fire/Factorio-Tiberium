@@ -136,13 +136,22 @@ function CnC_SonicWall_WallDamage(surf, pos, tick)
 	if global.SRF_segments[surf.index] and global.SRF_segments[surf.index][x] and global.SRF_segments[surf.index][x][y] then
 		local mark_death = false
 		local force = nil
-		
+
 		local wall = global.SRF_segments[surf.index][x][y]
+		local connected_nodes = CnC_SonicWall_FindNodes(surf, pos, nil, wall[1], true) --What did the extra arg originally do?
+
+		if not wall[2].valid then
+			local node = connected_nodes[1]
+			CnC_SonicWall_SendAlert(node.force, defines.alert_type.entity_destroyed, node)
+			CnC_SonicWall_DisableNode(node)
+			table.insert(global.SRF_node_ticklist, {emitter = node, position = node.position, tick = tick + ceil(node.electric_buffer_size / node.electric_input_flow_limit)})
+			return
+		end
+		
 		local damage_amt = wall_health - wall[2].health
 		wall[2].health = wall_health
 		local joule_cost = damage_amt * joules_per_hitpoint
 		
-		local connected_nodes = CnC_SonicWall_FindNodes(surf, pos, nil, wall[1], true) --What did the extra arg originally do?
 		local shared_cost = joule_cost / #connected_nodes
 		for _, node in pairs(connected_nodes) do
 			if not force then force = node.force end
