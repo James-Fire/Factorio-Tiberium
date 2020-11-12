@@ -87,8 +87,18 @@ data:extend{
 	{
 		type = "item",
 		name = "tiberium-centrifuge",
-		icon = "__base__/graphics/icons/centrifuge.png",
-		icon_size = 64,
+		icons = {
+			{
+				icon = tiberiumInternalName.."/graphics/icons/fuge1.png",
+				icon_size = 32,
+			},
+			{
+				icon = "__base__/graphics/icons/centrifuge.png",
+				icon_size = 64,
+				scale = 28/64,
+			},
+		},
+		icon_size = 32,
 		flags = {},
 		subgroup = "a-buildings",
 		order = "a[tiberium-centrifuge]-1",
@@ -98,8 +108,18 @@ data:extend{
 	{
 		type = "item",
 		name = "tiberium-centrifuge-2",
-		icon = "__base__/graphics/icons/centrifuge.png",
-		icon_size = 64,
+		icons = {
+			{
+				icon = tiberiumInternalName.."/graphics/icons/fuge2.png",
+				icon_size = 32,
+			},
+			{
+				icon = "__base__/graphics/icons/centrifuge.png",
+				icon_size = 64,
+				scale = 28/64,
+			},
+		},
+		icon_size = 32,
 		flags = {},
 		subgroup = "a-buildings",
 		order = "a[tiberium-centrifuge]-2",
@@ -109,8 +129,18 @@ data:extend{
 	{
 		type = "item",
 		name = "tiberium-centrifuge-3",
-		icon = "__base__/graphics/icons/centrifuge.png",
-		icon_size = 64,
+		icons = {
+			{
+				icon = tiberiumInternalName.."/graphics/icons/fuge3.png",
+				icon_size = 32,
+			},
+			{
+				icon = "__base__/graphics/icons/centrifuge.png",
+				icon_size = 64,
+				scale = 28/64,
+			},
+		},
+		icon_size = 32,
 		flags = {},
 		subgroup = "a-buildings",
 		order = "a[tiberium-centrifuge]-3",

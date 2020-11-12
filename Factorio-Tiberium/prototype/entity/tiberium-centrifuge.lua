@@ -7,15 +7,15 @@ data:extend{
 	{
 		type = "assembling-machine",
 		name = "tiberium-centrifuge",
-		icon = "__base__/graphics/icons/centrifuge.png",
-		icon_size = 64,
-		icon_mipmaps = 4,
+		icons = data.raw.item["tiberium-centrifuge"].icons,
+		icon_size = 32,
 		flags = {"placeable-neutral", "placeable-player", "player-creation"},
 		minable = {mining_time = 0.1, result = "tiberium-centrifuge"},
 		max_health = 350,
 		corpse = "centrifuge-remnants",
 		dying_explosion = "centrifuge-explosion",
 		fast_replaceable_group = "tib-centrifuge",
+		next_upgrade = "tiberium-centrifuge-2",
 		resistances = {
 			{
 				type = "fire",
@@ -336,10 +336,12 @@ data:extend{
 --Tiberium Centrifuge 2
 local centrifuge2Entity = util.table.deepcopy(data.raw["assembling-machine"]["tiberium-centrifuge"])
 centrifuge2Entity.name = "tiberium-centrifuge-2"
+centrifuge2Entity.next_upgrade = "tiberium-centrifuge-3"
 centrifuge2Entity.energy_usage = tostring(500 * (30 / 31)).."kW"  -- Scale for nice max consumption
 centrifuge2Entity.crafting_speed = 2
 centrifuge2Entity.crafting_categories = {"tiberium-centrifuge-1", "tiberium-centrifuge-2"}
 centrifuge2Entity.energy_source.emissions_per_minute = 8
+centrifuge2Entity.icons = data.raw.item["tiberium-centrifuge-2"].icons
 centrifuge2Entity.minable.result = "tiberium-centrifuge-2"
 centrifuge2Entity.module_specification.module_slots = 2
 for k, v in pairs(centrifuge2Entity.idle_animation.layers) do
@@ -354,10 +356,12 @@ end
 --Tiberium Centrifuge 3
 local centrifuge3Entity = util.table.deepcopy(data.raw["assembling-machine"]["tiberium-centrifuge"])
 centrifuge3Entity.name = "tiberium-centrifuge-3"
+centrifuge3Entity.next_upgrade = nil
 centrifuge3Entity.energy_usage = tostring(700 * (30 / 31)).."kW"  -- Scale for nice max consumption
 centrifuge3Entity.crafting_speed = 3
 centrifuge3Entity.crafting_categories = {"tiberium-centrifuge-1", "tiberium-centrifuge-2", "tiberium-centrifuge-3"}
 centrifuge3Entity.energy_source.emissions_per_minute = 12
+centrifuge3Entity.icons = data.raw.item["tiberium-centrifuge-3"].icons
 centrifuge3Entity.minable.result = "tiberium-centrifuge-3"
 centrifuge3Entity.module_specification.module_slots = 4
 for k, v in pairs(centrifuge3Entity.idle_animation.layers) do
