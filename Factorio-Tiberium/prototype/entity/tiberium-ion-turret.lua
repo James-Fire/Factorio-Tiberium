@@ -17,7 +17,7 @@ data:extend{
 		energy_source = {
 			type = "electric",
 			buffer_capacity = "20000kJ",
-			input_flow_limit = "48000kW",
+			input_flow_limit = "20000kW",
 			drain = "24kW",
 			usage_priority = "primary-input"
 		},
@@ -99,8 +99,8 @@ data:extend{
 		vehicle_impact_sound = {filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65},
 		attack_parameters = {
 			type = "beam",
-			cooldown = 40,
-			range = 48,
+			cooldown = 120,
+			range = 40,
 			source_direction_count = 64,
 			source_offset = {0, -3.423489 / 4},
 			damage_modifier = 8,
