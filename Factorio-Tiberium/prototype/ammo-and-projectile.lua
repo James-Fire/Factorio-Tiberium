@@ -8,7 +8,7 @@ data:extend{
     name = "tiberium-rounds-magazine",
     icon = "__base__/graphics/icons/uranium-rounds-magazine.png",
     icon_size = 64,
-	icon_mipmaps = 4,
+    icon_mipmaps = 4,
     ammo_type = {
       category = "bullet",
       action = {
@@ -36,7 +36,7 @@ data:extend{
     },
     magazine_size = 10,
     subgroup = "a-items",
-    order = "a[basic-clips]-d[tiberium-rounds-magazine]",
+    order = "b[basic-clips]-d[tiberium-rounds-magazine]",
     stack_size = 200
   }
 }
@@ -64,7 +64,7 @@ data:extend{
       }
     },
     subgroup = "a-items",
-    order = "b[rocket-launcher]-a[basic]",
+    order = "c[rocket-launcher]-a[basic]",
     stack_size = 200
   },
   {
@@ -197,7 +197,7 @@ data:extend{tibNukeGroundZero, tibNukeWave,
       }
     },
     subgroup = "a-items",
-    order = "b[rocket-launcher]-b[atomic-bomb]",
+    order = "c[rocket-launcher]-b[atomic-bomb]",
     stack_size = 10
   },
   {
@@ -496,7 +496,7 @@ data:extend{
       }
     },
     subgroup = "a-items",
-    order = "b[rocket-launcher]-c[seed-missile]",
+    order = "c[rocket-launcher]-c[seed-missile]",
     stack_size = 10
   },
   {

@@ -1045,6 +1045,7 @@ function fugeRecipeTier(tier)
 	if resources["stone"] and (listLength(fluids) < 3) then
 		local stone = math.ceil(resources["stone"] * recipeMult)
 		LSlib.recipe.duplicate("tiberium-"..material.."-centrifuging", "tiberium-"..material.."-sludge-centrifuging")
+		data.raw.recipe["tiberium-"..material.."-sludge-centrifuging"].localised_name = {"recipe-name.tiberium-sludge-centrifuging", {"fluid-name."..item}}
 		LSlib.recipe.changeIcon("tiberium-"..material.."-sludge-centrifuging", tiberiumInternalName.."/graphics/icons/"..material.."-sludge-centrifuging.png", 32)
 		LSlib.recipe.addResult("tiberium-"..material.."-sludge-centrifuging", "tiberium-sludge", stone, "fluid")
 		LSlib.recipe.addResult("tiberium-"..material.."-centrifuging", "stone", stone, "item")

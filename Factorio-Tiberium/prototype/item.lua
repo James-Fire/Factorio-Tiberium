@@ -6,8 +6,10 @@ data:extend{
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-mechanical.png",
 		icon_size = 32,
 		flags = {},
+		localised_name = {"item-name.tiberium-data-generic", {"recipe-name.tiberium-testing-mechanical"}},
 		localised_description = {"item-description.tiberium-data"},
 		subgroup = "a-items",
+		order = "a[science]-a[mechanical-data]",
 		stack_size = 200
 	},
 	{
@@ -16,8 +18,10 @@ data:extend{
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-thermal.png",
 		icon_size = 32,
 		flags = {},
+		localised_name = {"item-name.tiberium-data-generic", {"recipe-name.tiberium-testing-thermal"}},
 		localised_description = {"item-description.tiberium-data"},
 		subgroup = "a-items",
+		order = "a[science]-b[thermal-data]",
 		stack_size = 200
 	},
 	{
@@ -26,8 +30,10 @@ data:extend{
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-chemical.png",
 		icon_size = 32,
 		flags = {},
+		localised_name = {"item-name.tiberium-data-generic", {"recipe-name.tiberium-testing-chemical"}},
 		localised_description = {"item-description.tiberium-data"},
 		subgroup = "a-items",
+		order = "a[science]-c[chemical-data]",
 		stack_size = 200
 	},
 	{
@@ -36,8 +42,10 @@ data:extend{
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-nuclear.png",
 		icon_size = 32,
 		flags = {},
+		localised_name = {"item-name.tiberium-data-generic", {"recipe-name.tiberium-testing-nuclear"}},
 		localised_description = {"item-description.tiberium-data"},
 		subgroup = "a-items",
+		order = "a[science]-d[nuclear-data]",
 		stack_size = 200
 	},
 	{
@@ -46,8 +54,10 @@ data:extend{
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-data-EM.png",
 		icon_size = 32,
 		flags = {},
+		localised_name = {"item-name.tiberium-data-generic", {"recipe-name.tiberium-testing-EM"}},
 		localised_description = {"item-description.tiberium-data"},
 		subgroup = "a-items",
+		order = "a[science]-e[EM-data]",
 		stack_size = 200
 	},
 	{
@@ -57,6 +67,7 @@ data:extend{
 		icon_size = 32,
 		flags = {},
 		subgroup = "a-items",
+		order = "a[science]-f[science-pack]",
 		durability = 1,
 		durability_description_key = "description.science-pack-remaining-amount-key",
 		durability_description_value = "description.science-pack-remaining-amount-value",

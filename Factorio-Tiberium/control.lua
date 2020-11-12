@@ -282,6 +282,26 @@ script.on_configuration_changed(function(data)
 		end
 	end
 
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.2") then
+		-- Unlock technologies that were split
+		for _, force in pairs(game.forces) do
+			if force.technologies["tiberium-control-network-tech"].researched then
+				force.technologies["tiberium-advanced-containment-tech"].researched = true
+			end
+			if force.technologies["tiberium-chemical-research"].researched then
+				force.technologies["tiberium-advanced-molten-processing"].researched = true
+			end
+			--Disable deprecated recipes
+			if force.recipes["tiberium-armor"].enabled then
+				force.recipes["tiberium-armor"].enabled = false
+			end
+			if force.recipes["tiberium-power-armor"].enabled then
+				force.recipes["tiberium-power-armor"].enabled = false
+			end
+			UpdateRecipeUnlocks(force)
+		end
+	end
+
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
 			(data["mod_changes"]["Factorio-Tiberium-Beta"] and data["mod_changes"]["Factorio-Tiberium-Beta"]["old_version"]) then
 		game.print("[Factorio-Tiberium] Successfully converted save from Beta Tiberium mod to Main Tiberium mod")
@@ -309,6 +329,18 @@ function upgradingToVersion(data, modName, version)
 		return (oldVersion < version) and (newVersion >= version)
 	end
 	return false
+end
+
+function UpdateRecipeUnlocks(force)
+	for _, tech in pairs(force.technologies) do
+		if string.sub(tech.name, 1, 9) == "tiberium-" then
+			for _, effect in pairs(tech.effects) do
+				if effect.type == "unlock-recipe" and string.sub(effect.recipe, 1, 9) == "tiberium-" then
+					force.recipes[effect.recipe].enabled = tech.researched
+				end
+			end
+		end
+	end
 end
 
 function AddOre(surface, position, growthRate)

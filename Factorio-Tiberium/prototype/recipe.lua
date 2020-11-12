@@ -243,6 +243,7 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-ore-processing",
+		localised_name = {"recipe-name.tiberium-ore-processing"},
 		category = "crafting-with-fluid",
 		energy_required = 5,
 		crafting_machine_tint = TibCraftingTint,
@@ -257,6 +258,7 @@ data:extend{
 		},
 		icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-waste.png",
 		icon_size = 64,
+		main_product = "",
 		subgroup = "a-refining",
 		order = "a"
 	},
@@ -449,6 +451,7 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-slurry-centrifuging",
+		localised_name = {"recipe-name.tiberium-centrifuging", {"fluid-name.tiberium-slurry"}},
 		category = "tiberium-centrifuge-1",
 		subgroup = "a-centrifuging",
 		energy_required = 10,
@@ -468,6 +471,7 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-molten-centrifuging",
+		localised_name = {"recipe-name.tiberium-centrifuging", {"fluid-name.molten-tiberium"}},
 		category = "tiberium-centrifuge-2",
 		subgroup = "a-centrifuging",
 		energy_required = 15,
@@ -487,6 +491,7 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-liquid-centrifuging",
+		localised_name = {"recipe-name.tiberium-centrifuging", {"fluid-name.liquid-tiberium"}},
 		category = "tiberium-centrifuge-3",
 		subgroup = "a-centrifuging",
 		energy_required = 20,
@@ -506,6 +511,7 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-slurry-sludge-centrifuging",
+		--localised_name set by DynamicOreRecipes
 		category = "tiberium-centrifuge-1",
 		subgroup = "a-centrifuging",
 		energy_required = 10,
@@ -525,6 +531,7 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-molten-sludge-centrifuging",
+		--localised_name set by DynamicOreRecipes
 		category = "tiberium-centrifuge-2",
 		subgroup = "a-centrifuging",
 		energy_required = 15,
@@ -544,6 +551,7 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-liquid-sludge-centrifuging",
+		--localised_name set by DynamicOreRecipes
 		category = "tiberium-centrifuge-3",
 		subgroup = "a-centrifuging",
 		energy_required = 20,
