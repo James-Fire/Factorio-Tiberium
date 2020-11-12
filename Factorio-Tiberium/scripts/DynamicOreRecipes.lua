@@ -41,6 +41,28 @@ end
 if mods["dark-matter-replicators-18-patch"] then
 	oreMult["tenemut"] = 1 / 32
 end
+if mods["space-exploration"] then
+	for itemName, item in pairs(data.raw.item) do
+		if item.subgroup == "core-fragments" then
+			if not item.flags then
+				if debugText then log("Marked "..itemName.." as a raw resource") end
+				rawResources[itemName] = true
+			else
+				local skip = false
+				for _, flag in pairs(item.flags) do
+					if flag == "hidden" then
+						skip = true
+						break
+					end
+				end
+				if not skip then
+					if debugText then log("Marked "..itemName.." as a raw resource") end
+					rawResources[itemName] = true
+				end
+			end
+		end
+	end
+end
 local TibCraftingTint = {
 	primary    = {r = 0.109804, g = 0.721567, b = 0.231373,  a = 1},
 	secondary  = {r = 0.098039, g = 1,        b = 0.278431,  a = 1},
