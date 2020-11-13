@@ -52,6 +52,13 @@ Version: 1.1.0
     - Added 4 special recipes where you can turn in sets of different types of Tiberium Data to get more Tiberium Science than you would normally
     - Tiberium can now infect nearby trees, turning them into Blossom Trees, causing Tiberium to spread more rapidly in heavily forested areas
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.9
+  Features:
+    - New French translation.  Thanks to Fr_Dae and Omicron's french team.  [Traduit par la Team Omicron] https://discord.gg/rxqqBS8
+    - New Russian translation.  Thanks to CV514 from our Factorio and Conquer Discord.
+  Bugfixes:
+    - Fixed crash from /tibDeleteOre command
+---------------------------------------------------------------------------------------------------
 Version: 1.0.8
   Changes:
     - /tibDeleteOre command now also deletes nodes that grew on invalid terrain.  Can be useful if you had Tiberium growing on water or in the void of space from before 1.0.8
