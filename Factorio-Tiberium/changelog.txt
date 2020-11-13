@@ -1,8 +1,31 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.2
+  Changes:
+    - Removed Tiberium Ore Centrifuging
+    - Added Liquid Tiberium Centrifuging
+    - Made Liquid Tiberium less expensive, recipes give more of it and recipes that use it require more of it
+    - Tiberium Slurry now made in assemblers instead of oil refineries
+    - Tiberium Slurry now takes less water
+    - Moved refining recipes to the main testing technology chain
+    - Split TCN into separate technologies: TCN and Advanced Containment
+    - Split Advanced Molten Tiberium Processing out to its own tech
+    - Moved Tiberium power-related recipes to a new technology
+    - Changed most prereqs, the first Tiberium tech is now locked behind Automation 2
+    - Tiberium Control Network model updated to be the pre-1.0 beacon
+    - The 3 tiers of Tiberium Centrifuges now have unique icons
+    - Tiberium Centrifuges now work with upgrade planners
+    - Tech costs rebalanced
+    - Ion Beam Projectors nerfed to have less range (48->40) and fire less often (1.5->0.5), they are probably still too strong
+    - Updated Tib Only start with assembling machines, more pipes, and more technologies to account for the prereq and refining changes
+    - Tiberium armors have been removed (they were made irrelevant by 1.1.0)
+    - Improved localisation support through better string paramerization and less string redundancy
   Bugfixes:
     - Fixed crash from Krastorio 2 and the new Space Exploration science packs
     - Fixed crash from mining SRF Emitters
+    - Fixed recipes from other mods with 0 quantity outputs breaking centrifuging recipes
+    - Blossom Trees that were destroyed by any means are now regenerated the next time that the node grows
+    - Fixed Space Exploration causing centrifuging recipes to give science packs directly
+    - Fixed crash that occurred when destroying an SRF Wall Segment but not the connected SRF Emitter Hubs (Thanks to Nagua for submitting this pull request!)
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.1
   Features:
