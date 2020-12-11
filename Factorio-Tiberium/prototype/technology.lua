@@ -119,8 +119,8 @@ data:extend{
 	{
 		type = "technology",
 		name = "tiberium-power-tech",
-		icon = tiberiumInternalName.."/graphics/icons/td-power-plant.png",
-		icon_size = 64,
+		icon = tiberiumInternalName.."/graphics/technology/tiberium-power-tech.png",
+		icon_size = 256,
 		effects = {
 			{
 				type = "unlock-recipe",
@@ -649,8 +649,19 @@ data:extend{
 	{
 		type = "technology",
 		name = 	"tiberium-growth-acceleration-acceleration",
-		icon = tiberiumInternalName.."/graphics/technology/growth-accelerator-research.png",
-		icon_size = 128,
+		icons = {
+			{
+			  icon = tiberiumInternalName.."/graphics/technology/growth-accelerator.png",
+			  icon_size = 128,
+			},
+			{
+			  icon = "__core__/graphics/icons/technology/constants/constant-speed.png",
+			  icon_size = 128,
+			  icon_mipmaps = 3,
+			  scale = 64 / 128,
+			  shift = {50, 50}
+			},
+		},
 		effects = {
 			{
 				type = "nothing",
@@ -680,13 +691,15 @@ data:extend{
 		name = 	"tiberium-control-network-speed",
 		icons = {
 			{
-				icon = tiberiumInternalName.."/graphics/technology/effect-transmission.png",
-				icon_size = 128,
+			  icon = tiberiumInternalName.."/graphics/technology/effect-transmission.png",
+			  icon_size = 128,
 			},
 			{
-				icon = "__core__/graphics/time-editor-icon.png",
-				icon_size = 32,
-				shift = {-48, 48},
+			  icon = "__core__/graphics/icons/technology/constants/constant-speed.png",
+			  icon_size = 128,
+			  icon_mipmaps = 3,
+			  scale = 64 / 128,
+			  shift = {50, 50}
 			},
 		},
 		effects = {
@@ -716,8 +729,9 @@ data:extend{
 	{
 		type = "technology",
 		name = "tiberium-explosives",
-		icon_size = 128,
-		icon = "__base__/graphics/technology/stronger-explosives-3.png",
+		icon_size = 256,
+		icon_mipmaps = 4,
+		icons = util.technology_icon_constant_damage("__base__/graphics/technology/stronger-explosives-3.png"),
 		effects = {
 			{
 				type = "ammo-damage",
@@ -757,22 +771,18 @@ data:extend{
 	{
 		type = "technology",
 		name = "tiberium-energy-weapons-damage",
-		icon_size = 128,
-		icon = "__base__/graphics/technology/energy-weapons-damage-3.png",
+		icon_size = 256,
+		icon_mipmaps = 4,
+		icons = util.technology_icon_constant_damage("__base__/graphics/technology/energy-weapons-damage.png"),
 		effects = {
 			{
 				type = "ammo-damage",
-				ammo_category = "laser-turret",
+				ammo_category = "laser",
 				modifier = 0.7
 			},
 			{
 				type = "ammo-damage",
-				ammo_category = "combat-robot-laser",
-				modifier = 0.3
-			},
-			{
-				type = "ammo-damage",
-				ammo_category = "combat-robot-beam",
+				ammo_category = "beam",
 				modifier = 0.3
 			}
 		},

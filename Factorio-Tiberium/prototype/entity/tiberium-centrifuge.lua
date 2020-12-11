@@ -1,5 +1,5 @@
-local hit_effects = require ("__base__.prototypes.entity.demo-hit-effects")
-local sounds = require("__base__.prototypes.entity.demo-sounds")
+local hit_effects = require ("__base__.prototypes.entity.hit-effects")
+local sounds = require("__base__.prototypes.entity.sounds")
 local greenFugeTint = {r = 0.3, g = 0.8, b = 0.3, a = 0.8}
 
 --Tiberium Centrifuge

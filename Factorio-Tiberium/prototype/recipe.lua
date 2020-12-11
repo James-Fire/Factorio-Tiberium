@@ -777,7 +777,7 @@ data:extend{
 		ingredients = {
 			{"rocket-control-unit", 10},
 			{"explosives", 10},
-			{type = "fluid", name = "liquid-tiberium", amount = 10}
+			{type = "fluid", name = "liquid-tiberium", amount = 1000}
 		},
 		result = "tiberium-nuke"
 	},

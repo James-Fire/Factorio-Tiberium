@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.3
+  Changes:
+    - Now compatible with Factorio version 1.1
+    - Changed our infinite research technology icons to match the new style for 1.1
+    - Added some missing zeroes to Liquid Tiberium Bomb recipe, so it now takes 1000 Liquid Tiberium instead of 10
+    - Fixed Tiberium Spike entity icon size
+    - Better resolution image for Liquid Tiberium Power technology
+  Bugfixes:
+    - Tiberium nodes will no longer spawn underneath existing structures
+---------------------------------------------------------------------------------------------------
 Version: 1.1.2
   Changes:
     - Removed Tiberium Ore Centrifuging
@@ -33,7 +43,7 @@ Version: 1.1.1
     - SRF Emitters now show connection lines to other SRF Emitters when you are placing them
   Changes:
     - Added icons for the 9 new Tiberium Science recipes added by 1.1.0
-    - Added fancy desctiptions the fancy Tiberium Science recipes
+    - Added fancy descriptions the fancy Tiberium Science recipes
     - Updated Growth Credit from Energy icon
     - Tiberium Science recipes crafting time reduced to 1 second and can now be crafted by hand
     - Tiberium Data recipes crafting time increased from 4 seconds to 5 seconds

@@ -105,7 +105,7 @@ data:extend{
 			source_offset = {0, -3.423489 / 4},
 			damage_modifier = 8,
 			ammo_type = {
-				category = "laser-turret",
+				category = "laser",
 				energy_consumption = "2000kJ",
 				action = {
 					type = "direct",

@@ -531,16 +531,26 @@ end
 
 function CreateNode(surface, position)
 	local area = areaAroundPosition(position, 0.9)
-	--Avoid overlapping with other nodes
+	-- Avoid overlapping with other nodes
 	local nodeNames = {"tibGrowthNode", "tibGrowthNode_infinite"}
 	if surface.count_entities_filtered{area = area, name = nodeNames} == 0 then
-		--Clear other resources
+		-- Check if another entity would block the node
+		local blocked = false
+		for _, entity in pairs(surface.find_entities_filtered{area = area, collision_mask = {"object-layer"}}) do
+			if entity.type ~= "tree" then
+				blocked = true
+				break
+			end
+		end
+		if blocked then return end
+		
+		-- Clear other resources
 		for _, entity in pairs(surface.find_entities_filtered{area = area, type = {"resource", "tree"}}) do
 			if entity.valid then
 				entity.destroy()
 			end
 		end
-		--Aesthetic changes
+		-- Aesthetic changes
 		if global.tiberiumTerrain then
 			local newTiles = {}
 			local oldTiles = surface.find_tiles_filtered{area = area, collision_mask = "ground-tile"}
@@ -550,10 +560,10 @@ function CreateNode(surface, position)
 			surface.set_tiles(newTiles, true, false)
 		end
 		surface.destroy_decoratives{area = area}
-		--Actual node creation
+		-- Actual node creation
 		local node = surface.create_entity{name="tibGrowthNode", position = position, amount = 15000}
 		table.insert(global.tibGrowthNodeList, node)
-		--Spawn tree entity when node is created
+		-- Spawn tree entity when node is created
 		createBlossomTree(surface, position)
 		updateGrowthInterval()
 	end

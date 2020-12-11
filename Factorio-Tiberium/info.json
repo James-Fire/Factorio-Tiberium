@@ -1,11 +1,11 @@
 {
     "name": "Factorio-Tiberium-Beta",
-    "version": "1.1.2",
+    "version": "1.1.3",
     "title": "BETA Factorio and Conquer: Tiberian Dawn",
     "author": "JamesFire",
     "contact": "",
     "homepage": "https://github.com/James-Fire/Factorio-Tiberium",
-    "factorio_version": "1.0",
+    "factorio_version": "1.1",
     "dependencies": [
 		"base >= 1.0.0",
 		"LSlib >= 2020.8.22",

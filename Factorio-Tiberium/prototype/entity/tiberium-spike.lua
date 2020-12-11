@@ -1,5 +1,6 @@
 local tiberiumSpike = table.deepcopy(data.raw["mining-drill"]["pumpjack"])
 tiberiumSpike.name = "tiberium-spike"
+tiberiumSpike.icon_size = 128
 tiberiumSpike.icon = tiberiumInternalName.."/graphics/icons/tiberium-spike.png"
 tiberiumSpike.icon_mipmaps = nil
 tiberiumSpike.radius_visualisation_picture = data.raw["mining-drill"]["pumpjack"].radius_visualisation_picture
