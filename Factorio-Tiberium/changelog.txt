@@ -7,7 +7,7 @@ Version: 1.1.4
     - Every Entity affected by the Tiberium Control Network Beacon has a flat 2MW power requirement, in addition to the increased power usage on the entity itself.
   Bugfixes:
     - Fixed a literally unplayable typo.
-	---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 Version: 1.1.3
   Changes:
     - Now compatible with Factorio version 1.1
