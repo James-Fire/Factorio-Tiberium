@@ -42,7 +42,7 @@ data:extend({
 	},
 	supply_area_distance = math.floor(TiberiumRadius * 0.5),
 	energy_source = {
-		type = "electric",
+		type = "void",
 		usage_priority = "secondary-input"
 	},
 	vehicle_impact_sound = sounds.generic_impact,
@@ -90,7 +90,9 @@ data:extend({
 	{
 		type = "beacon",
 		name = "TCN-beacon",
-		energy_usage = "10W",
+		energy_usage = "5MW",
+		icon = tiberiumInternalName.."/graphics/icons/beacon.png",
+		icon_size = 32,
 		flags = {
 			"hide-alt-info",
 			"not-blueprintable",
@@ -126,7 +128,10 @@ data:extend({
 			frame_count = 1,
 		},
 		-- 0.17 supports 0W entities
-		energy_source = {type = "void"},
+		energy_source = {
+			type = "electric",
+			usage_priority = "secondary-input"
+		},
 		base_picture = {
 			filename = "__core__/graphics/empty.png",
 			width = 1,

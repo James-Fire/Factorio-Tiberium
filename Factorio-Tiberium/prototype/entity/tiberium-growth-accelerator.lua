@@ -214,6 +214,6 @@ data:extend{
 		category = "speed",
 		tier = 0,
 		stack_size = 1,
-		effect = {speed = {bonus = 0.25}, consumption = {bonus = 0.25}},
+		effect = {speed = {bonus = 0.25}, consumption = {bonus = 0.40}},
 	}
 }

@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.4
+  Wiki:
+    - Expanded on, and corrected, the wiki entry for the Tiberium Control Network Beacon.
+  Changes:
+    - Tiberium Control Network Beacon no longer takes power.
+    - Every Entity affected by the Tiberium Control Network Beacon has a flat 2MW power requirement, in addition to the increased power usage on the entity itself.
+  Bugfixes:
+    - Fixed a literally unplayable typo.
+	---------------------------------------------------------------------------------------------------
 Version: 1.1.3
   Changes:
     - Now compatible with Factorio version 1.1
