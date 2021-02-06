@@ -7,6 +7,9 @@ Version: 1.1.4
     - Every Entity affected by the Tiberium Control Network Beacon has a flat 2MW power requirement, in addition to the increased power usage on the entity itself.
   Bugfixes:
     - Fixed a literally unplayable typo.
+    - Fixed Tiberium refining recipes being unavailable when Pyanodon's Petroleum Handling was active.
+  Features:
+    - Updated Russian translation including the entire Wiki. Thanks to CV514, once again!
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.3
   Changes:
