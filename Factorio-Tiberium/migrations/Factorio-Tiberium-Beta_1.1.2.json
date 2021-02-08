@@ -1,0 +1,12 @@
+{
+  "technology": [
+    ["tiberium-separation-tech", "tiberium-slurry-centrifuging"],
+    ["tiberium-processing-tech", "tiberium-molten-centrifuging"],
+    ["tiberium-molten-processing", "tiberium-liquid-centrifuging"],
+    ["tiberium-power-tech", "tiberium-liquid-tiberium-tech"]
+  ],
+  "item": [
+    ["tiberium-armor", "heavy-armor"],
+    ["tiberium-power-armor", "power-armor-mk2"]
+  ]
+}

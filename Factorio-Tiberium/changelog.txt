@@ -1,4 +1,102 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.4
+  Wiki:
+    - Expanded on, and corrected, the wiki entry for the Tiberium Control Network Beacon.
+  Changes:
+    - Tiberium Control Network Beacon no longer takes power.
+    - Every Entity affected by the Tiberium Control Network Beacon has a flat 2MW power requirement, in addition to the increased power usage on the entity itself.
+  Bugfixes:
+    - Fixed a literally unplayable typo.
+    - Fixed Tiberium refining recipes being unavailable when Pyanodon's Petroleum Handling was active.
+  Features:
+    - Updated Russian translation including the entire Wiki. Thanks to CV514, once again!
+---------------------------------------------------------------------------------------------------
+Version: 1.1.3
+  Changes:
+    - Now compatible with Factorio version 1.1
+    - Changed our infinite research technology icons to match the new style for 1.1
+    - Added some missing zeroes to Liquid Tiberium Bomb recipe, so it now takes 1000 Liquid Tiberium instead of 10
+    - Fixed Tiberium Spike entity icon size
+    - Better resolution image for Liquid Tiberium Power technology
+  Bugfixes:
+    - Tiberium nodes will no longer spawn underneath existing structures
+---------------------------------------------------------------------------------------------------
+Version: 1.1.2
+  Changes:
+    - Removed Tiberium Ore Centrifuging
+    - Added Liquid Tiberium Centrifuging
+    - Made Liquid Tiberium less expensive, recipes give more of it and recipes that use it require more of it
+    - Tiberium Slurry now made in assemblers instead of oil refineries
+    - Tiberium Slurry now takes less water
+    - Moved refining recipes to the main testing technology chain
+    - Split TCN into separate technologies: TCN and Advanced Containment
+    - Split Advanced Molten Tiberium Processing out to its own tech
+    - Moved Tiberium power-related recipes to a new technology
+    - Changed most prereqs, the first Tiberium tech is now locked behind Automation 2
+    - Tiberium Control Network model updated to be the pre-1.0 beacon
+    - The 3 tiers of Tiberium Centrifuges now have unique icons
+    - Tiberium Centrifuges now work with upgrade planners
+    - Tech costs rebalanced
+    - Ion Beam Projectors nerfed to have less range (48->40) and fire less often (1.5->0.5), they are probably still too strong
+    - Updated Tib Only start with assembling machines, more pipes, and more technologies to account for the prereq and refining changes
+    - Tiberium armors have been removed (they were made irrelevant by 1.1.0)
+    - Improved localisation support through better string paramerization and less string redundancy
+  Bugfixes:
+    - Fixed crash from Krastorio 2 and the new Space Exploration science packs
+    - Fixed crash from mining SRF Emitters
+    - Fixed recipes from other mods with 0 quantity outputs breaking centrifuging recipes
+    - Blossom Trees that were destroyed by any means are now regenerated the next time that the node grows
+    - Fixed Space Exploration causing centrifuging recipes to give science packs directly
+    - Fixed crash that occurred when destroying an SRF Wall Segment but not the connected SRF Emitter Hubs (Thanks to Nagua for submitting this pull request!)
+---------------------------------------------------------------------------------------------------
+Version: 1.1.1
+  Features:
+    - Added compatibility for mods that alter our descriptions (such as Extended Descriptions)
+    - SRF Emitters now show connection lines to other SRF Emitters when you are placing them
+  Changes:
+    - Added icons for the 9 new Tiberium Science recipes added by 1.1.0
+    - Added fancy descriptions the fancy Tiberium Science recipes
+    - Updated Growth Credit from Energy icon
+    - Tiberium Science recipes crafting time reduced to 1 second and can now be crafted by hand
+    - Tiberium Data recipes crafting time increased from 4 seconds to 5 seconds
+    - Centrifuge recipe calculation now supports custom rocket silos added by mods (e.g. Py)
+    - Centrifuge recipe calculation now attempts to identify categories of unbalanced recipes and exclude them when calculating science pack costs
+    - Slightly reduced the rate at which new Tiberium nodes are spawned overall to compensate for the faster spreading in forests
+  Bugfixes:
+    - Fixed crash from modded ores that used certain IconSpecification formats
+    - Fixed trees growing on top of Tiberium Nodes
+    - Fixed Tiberium being able to infect trees on the other side of SRF walls
+    - Fixed missing descriptions on some items
+    - Fixed some drills from other mods not being able to mine Tiberium ore
+    - Fixed collision properties of Node Harvesters, Growth Accelerators, and Tiberium Spikes
+    - Fixed Tiberium Science recipes not being available in Advanced Assembling Machines or Advanced Chemical Plants added by Krastorio 2
+---------------------------------------------------------------------------------------------------
+Version: 1.1.0
+  Wiki:
+    - Added entries for the new equipment
+  Changes:
+    - Growth Credit Recipes now show what ore they are made from.
+    - Updated the Growth Credit icon to 64x64
+    - Tiberium Control Node now has far less range(30x30, down from 100x100), in addition to much less power required.
+    - Changed a bunch of internal names of items and entities.
+    - Added an automated thing for adding ore icons to growth credit recipes
+    - Switched the Ion Core back to the old Nuclear Reactor icon
+    - Refinement recipes crafting time increased from 2 to 5
+    - Refinement recipes input materials increased from 10 to 16
+    - Refinement recipes output materials increased from 6 to 10
+    - Liquid Tiberium recipe now significantly faster, requires steam, gives water as a byproduct, produces signficantly more pollution, and is now produced in an Oil Refinery
+    - Tiberium Power Plant no longer produces pollution
+    - Changed Tiberium Farming to give Tiberium Data from Chemical Tests
+    - Replaced Tiberium Armor and Tiberium Field Suit items with bonus effects from their technologies which reduce Tiberium Damage taken by 80% and 100%, respectively
+    - Conditional recipe changes for a bunch of buildings. Steel is mostly replaced by Titanium/Aluminum, Pumpjacks/Mining Drills use upgraded versions(At least for Bob's), TCN Beacon uses Advanced Processing Units
+  Features:
+    - AOE Node Harvester, for all your multi node harvesting needs.
+    - Tiberium Control Network added. Boosts all tiberium harvesting structures, for a fair bit of extra power required.
+    - Added new Advanced Molten Tiberium Processing recipe that also requires Crude Oil, but gives Sulfuric Acid and more Molten Tiberium
+    - Split Tiberium Data into 5 separate items, one coming from each type of Tiberium testing, each type of Tiberium Data can be turned into Tiberium Science with different ratios
+    - Added 4 special recipes where you can turn in sets of different types of Tiberium Data to get more Tiberium Science than you would normally
+    - Tiberium can now infect nearby trees, turning them into Blossom Trees, causing Tiberium to spread more rapidly in heavily forested areas
+---------------------------------------------------------------------------------------------------
 Version: 1.0.9
   Features:
     - New French translation.  Thanks to Fr_Dae and Omicron's french team.  [Traduit par la Team Omicron] https://discord.gg/rxqqBS8
@@ -107,7 +205,7 @@ Version: 1.0.0
     - Fixed Transport Drones ruining Fuge Recipes
     - Fixed Centrifuge animation. Pip covers don't overlap the top anymore.
     - Low power SRF fix, they'll now disappear if you don't have enough power, not just if you have none.
-    - Fixed Centrifuge pollution scaling 
+    - Fixed Centrifuge pollution scaling
     - K2 and AAI crash fixed
     - Fixed Bob's Assembling machines not being able to do the TibBasicScience category.
     - 0073 Tiberium products in your trash now damage you without having scaling on
@@ -142,7 +240,6 @@ Version: 1.0.0
     - Better support for surfaces with Tiberium Growth
     - Tweaks to Growth Acceleration Research
     - More ore for Tib Only Start
-    - Updated centrifuge recipes added extensive debug logging 
     - Fixed the changelog to show up in-game
     - Script replacement for Blossom trees, so they don't show if they shouldn't.
     - Reordered recipes in our tab

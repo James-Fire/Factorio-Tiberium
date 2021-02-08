@@ -1,17 +1,12 @@
-
 --TODO:
 -- Make matrix solver more reliable
--- Support alternate rocket silos (Py)
--- Detect bullshit recipes (recipe categories to avoid?)
+-- Better rounding for centrifuge
+-- Handle mono-resource outputs with actual weights instead of just targets
 
 local debugText = settings.startup["tiberium-debug-text"].value
 local free = {}
-local fromThinAir = {}
-local excludedCrafting = {["barreling-pump"] = true, ["transport-drone-request"] = true} --Rigorous way to do this?
-if mods["Clowns-Science"] then
-	excludedCrafting["particle-accelerator"] = true
-	excludedCrafting["facility"] = true
-end
+local excludedCrafting = {["transport-drone-request"] = true} --Rigorous way to do this?
+
 --Debugging for findRecipe
 local unreachable = {}
 local multipleRecipes = {}
@@ -20,12 +15,13 @@ local multipleRecipes = {}
 local availableRecipes = {}
 local fakeRecipes = {}
 local rawResources = {}
+local tibComboPacks = {}
+local catalyst = {}
 local ingredientIndex = {}
+local resultIndex = {}
+local badRecipeCategories = {num = {}, div = {}}
 local recipeDepth = {}
 local ingredientDepth = {}
-local catalyst = {}
-local resultIndex = {}
-local tibComboPacks = {}
 
 local science = {{}, {}, {}}
 local allPacks = {}
@@ -45,6 +41,28 @@ end
 if mods["dark-matter-replicators-18-patch"] then
 	oreMult["tenemut"] = 1 / 32
 end
+if mods["space-exploration"] then
+	for itemName, item in pairs(data.raw.item) do
+		if item.subgroup == "core-fragments" then
+			if not item.flags then
+				if debugText then log("Marked "..itemName.." as a raw resource") end
+				rawResources[itemName] = true
+			else
+				local skip = false
+				for _, flag in pairs(item.flags) do
+					if flag == "hidden" then
+						skip = true
+						break
+					end
+				end
+				if not skip then
+					if debugText then log("Marked "..itemName.." as a raw resource") end
+					rawResources[itemName] = true
+				end
+			end
+		end
+	end
+end
 local TibCraftingTint = {
 	primary    = {r = 0.109804, g = 0.721567, b = 0.231373,  a = 1},
 	secondary  = {r = 0.098039, g = 1,        b = 0.278431,  a = 1},
@@ -57,7 +75,7 @@ local TibCraftingTint = {
 function giantSetupFunction()
 	-- Raw resources
 	for _, resourceData in pairs(data.raw.resource) do
-		if resourceData.autoplace and resourceData.minable then 
+		if resourceData.autoplace and resourceData.minable then
 			if resourceData.minable.result then
 				rawResources[resourceData.minable.result] = true
 			elseif resourceData.minable.results then --For fluids/multiple results
@@ -69,53 +87,44 @@ function giantSetupFunction()
 			end
 		end
 	end
+
 	-- Find all science packs used with tib science in labs
 	for labName, labData in pairs(data.raw.lab) do
 		if LSlib.utils.table.hasValue(labData.inputs, "tiberium-science") then
 			for _, pack in pairs(labData.inputs or {}) do
-				if pack ~= "tiberium-science" then
+				if (pack ~= "tiberium-science") and data.raw.tool[pack] then
 					tibComboPacks[pack] = {}
 				end
 			end
 		end
 	end
+
 	-- Compile list of available recipes
-	for recipe, recipeData in pairs(data.raw.recipe) do
-		if (recipeData.enabled ~= false) and (recipeData.hidden ~= true) then  -- Enabled and not hidden
-			availableRecipes[recipe] = true
+	allAvailableRecipes()
+
+	-- Build indices used later for pruning and traversing tree
+	for recipe in pairs(availableRecipes) do
+		local ingredientList = normalIngredients(recipe)
+		local resultList     = normalResults(recipe)
+		availableRecipes[recipe] = {ingredient = ingredientList, result = resultList}
+		for ingredient in pairs(ingredientList) do
+			if resultList[ingredient] then catalyst[recipe] = true end -- Keep track of enrichment/catalyst recipes
+			ingredientIndex[ingredient] = ingredientIndex[ingredient] or {}
+			ingredientIndex[ingredient][recipe] = true
 		end
-	end
-	for _, assembler in pairs(data.raw["assembling-machine"]) do
-		if assembler.fixed_recipe and data.raw.recipe[assembler.fixed_recipe] and (data.raw.recipe[assembler.fixed_recipe].enabled ~= false) then
-			availableRecipes[assembler.fixed_recipe] = true  -- Enabled but only at a specific structure
+		for result in pairs(resultList) do
+			if not resultIndex[result] then resultIndex[result] = {} end
+			resultIndex[result][recipe] = true
 		end
-	end
-	for tech, techData in pairs(data.raw.technology) do
-		if (techData.enabled == nil) or (techData.enabled == true) then  -- Only use enabled recipes
-			for _, effect in pairs(techData.effects or {}) do
-				if effect.recipe then
-					if data.raw.recipe[effect.recipe] then
-						availableRecipes[effect.recipe] = true
-						if data.raw.recipe[effect.recipe].result and tibComboPacks[data.raw.recipe[effect.recipe].result] then
-							tibComboPacks[data.raw.recipe[effect.recipe].result] = techData.unit.ingredients  --save for later
-						end
-					else
-						log(tech.." tried to unlock recipe "..effect.recipe.." which does not exist?")
-					end
-				end
+		if data.raw.recipe[recipe] and not fakeRecipes[recipe] then
+			local category = data.raw.recipe[recipe].category
+			availableRecipes[recipe].category = category
+			if category or data.raw.recipe[recipe].subgroup then
+				availableRecipes[recipe].fullCategory = (category or "").."|"..(data.raw.recipe[recipe].subgroup or "")
 			end
 		end
 	end
-	for recipeName in pairs(availableRecipes) do
-		local recipe = data.raw.recipe[recipeName]
-		if excludedCrafting[recipe.category] then
-			availableRecipes[recipeName] = nil
-		elseif recipe.subgroup and (string.find(recipe.subgroup, "empty%-barrel") or string.find(recipe.subgroup, "barrel%-empty")) then -- Hope other mods have good naming
-			availableRecipes[recipeName] = nil
-		elseif string.find(recipeName, "tiberium") then  -- Want only non-tib recipes for fuge stuff
-			availableRecipes[recipeName] = nil
-		end
-	end
+
 	-- Build a more comprehensive list of free items and ingredient index for later
 	for _, pump in pairs(data.raw["offshore-pump"]) do
 		if pump.fluid then
@@ -132,31 +141,22 @@ function giantSetupFunction()
 			free[fish.minable.result] = true
 		end
 	end
-	local cachedFree = table.deepcopy(free)  -- Cache list in case we encounter transmutation degeneracy
+
+	-- Pruning stupid recipes
+	removeBadRecipes(1)
 	
-	for name, boiler in pairs(data.raw["boiler"]) do
-		if boiler.fluid_box.filter and boiler.output_fluid_box.filter then
-			availableRecipes["dummy-recipe-boiler-"..name] = {ingredient = {[boiler.fluid_box.filter] = 1}, result = {[boiler.output_fluid_box.filter] = 1}}
-			fakeRecipes["dummy-recipe-boiler-"..name] = true
-		end
-	end
-	for recipeName in pairs(availableRecipes) do
-		local ingredientList = normalIngredients(recipeName)
-		local resultList     = normalResults(recipeName)
-		availableRecipes[recipeName] = {ingredient = ingredientList, result = resultList}
+	for recipe in pairs(availableRecipes) do
+		local ingredientList = normalIngredients(recipe)
+		local resultList     = normalResults(recipe)
 		if next(ingredientList) == nil then
 			for result in pairs(resultList) do
+				if (tibComboPacks[result] or rawResources[result]) and markBadRecipe(recipe) then
+					break  -- Intervene against recipes that make resources/science free
+				end
 				if not free[result] then
 					free[result] = true
-					if debugText then log(result.." is free because there are no ingredients for "..recipeName) end
-					fromThinAir[result] = recipeName
+					if debugText then log(result.." is free because there are no ingredients for "..recipe) end
 				end
-			end
-		else
-			for ingredient in pairs(ingredientList) do
-				if resultList[ingredient] then catalyst[recipeName] = true end -- Keep track of enrichment/catalyst recipes
-				ingredientIndex[ingredient] = ingredientIndex[ingredient] or {}
-				ingredientIndex[ingredient][recipeName] = true
 			end
 		end
 	end
@@ -167,20 +167,23 @@ function giantSetupFunction()
 		if debugText then log("On loop#"..countFreeLoops.." there were "..listLength(newFreeItems).." new free items") end
 		local nextLoopFreeItems = {}
 		for freeItem in pairs(newFreeItems) do
-			for recipeName in pairs(ingredientIndex[freeItem] or {}) do
+			for recipe in pairs(ingredientIndex[freeItem] or {}) do
 				local actuallyFree = true
-				for ingredient in pairs(normalIngredients(recipeName)) do
+				for ingredient in pairs(normalIngredients(recipe)) do
 					if not free[ingredient] then
 						actuallyFree = false
 						break
 					end
 				end
 				if actuallyFree then
-					for result in pairs(normalResults(recipeName)) do
-						if free[result] == nil then
+					for result in pairs(normalResults(recipe)) do
+						if (tibComboPacks[result] or rawResources[result]) and markBadRecipe(recipe) then
+							break  -- Intervene against recipes that make resources/science free
+						end
+						if not free[result] then
 							free[result] = true
 							nextLoopFreeItems[result] = true
-							if debugText then log(result.." is free via "..recipeName.." since "..freeItem.." is free") end
+							if debugText then log(result.." is free via "..recipe.." since "..freeItem.." is free") end
 						end
 					end
 				end
@@ -188,46 +191,28 @@ function giantSetupFunction()
 		end
 		newFreeItems = nextLoopFreeItems
 	end
+
+	-- Pruning stupid recipes 2nd pass
+	removeBadRecipes(2)
+
 	-- Setup for depth calculations
 	local basicMaterials = table.deepcopy(rawResources)
-	local checkedRockets = false
-	local checkedTranmutation = true
-	local freeResources = 0
-	local freeScience = false
 	for material in pairs(rawResources) do
-		ingredientDepth[material] = 0 -- idk if resources should be 1 and only free should be 0?
-		if free[material] then
-			freeResources = freeResources + 1
-			log("^^^ You have a free resource: "..material)
-		end
+		ingredientDepth[material] = 0
 	end
-	for pack in pairs(tibComboPacks) do
-		if free[pack] then
-			log(pack.." was marked as free, need to recalculate free items")
-			freeScience = true
-		end
-	end
-	if freeScience or (freeResources > (listLength(rawResources) - 1) * 0.6) then  --Excluding tib
-		log(freeResources.."/"..listLength(rawResources).." resources are free, other transmutation mod suspected")
-		checkedTransmutation = false
-		free = table.deepcopy(cachedFree)
-		for item in pairs(cachedFree) do  -- Include in first level of recipe tree building, since we no longer have free tree
-			basicMaterials[item] = true
-		end
-	end
-	for item, bool in pairs(free) do
-		if bool then ingredientDepth[item] = 0 end
+	for item in pairs(free) do
+		ingredientDepth[item] = 0
 	end
 	-- Now iteratively build up recipes starting from raw resources
 	while next(basicMaterials) do
 		local nextMaterials = {}
 		for material in pairs(basicMaterials) do
-			for recipeName in pairs(ingredientIndex[material] or {}) do
-				if not recipeDepth[recipeName] then  --I could nest this deeper but it seems simpler to have at the top
+			for recipe in pairs(ingredientIndex[material] or {}) do
+				if not recipeDepth[recipe] then  --I could nest this deeper but it seems simpler to have at the top
 					-- Something with storing a complexity for the recipe, maybe move scoring to here from findRecipe?
 					-- Nah leave it in findRecipe so it can account for other active ingredients
 					local maxIngredientLevel = 0
-					for ingredient in pairs(normalIngredients(recipeName)) do
+					for ingredient in pairs(normalIngredients(recipe)) do
 						if not ingredientDepth[ingredient] then
 							maxIngredientLevel = false
 							break
@@ -237,66 +222,201 @@ function giantSetupFunction()
 					end
 					
 					if maxIngredientLevel then
-						recipeDepth[recipeName] = maxIngredientLevel + 1
-						for result in pairs(normalResults(recipeName)) do
-							if not resultIndex[result] then resultIndex[result] = {} end
-							resultIndex[result][recipeName] = true
-							if not ingredientDepth[result] then 
+						recipeDepth[recipe] = maxIngredientLevel + 1
+						for result in pairs(normalResults(recipe)) do
+							if not ingredientDepth[result] then
 								ingredientDepth[result] = maxIngredientLevel + 1
 								nextMaterials[result] = true --And then add new results to nextMaterials
-								if data.raw.item[result] then
-									local burntResult = data.raw.item[result].burnt_result
-									if burntResult then -- Fake recipe for burning fuel
-										local fakeRecipeName = "dummy-recipe-burning-"..result
-										fakeRecipes[fakeRecipeName] = true
-										availableRecipes[fakeRecipeName] = {ingredient = {[result] = 1}, result = {[burntResult] = 1}}
-										if not resultIndex[burntResult] then resultIndex[burntResult] = {} end
-										resultIndex[burntResult][fakeRecipeName] = true
-										if not ingredientDepth[burntResult] then
-											ingredientDepth[burntResult] = maxIngredientLevel + 2
-											nextMaterials[burntResult] = true
-										end
-									end
-								end
 							end
 						end
 					end
 				end
 			end
 		end
-		if not next(nextMaterials) and not checkedRockets then
-			checkedRockets = true
-			for satellite, satelliteData in pairs(data.raw.item) do
-				if satelliteData.rocket_launch_product then
-					local partName = next(normalResults(data.raw["rocket-silo"]["rocket-silo"].fixed_recipe))
-					local numParts = data.raw["rocket-silo"]["rocket-silo"].rocket_parts_required or 1
-					local depth = math.max(ingredientDepth[satellite] or 999, ingredientDepth[partName] or 999)
-					local launchProduct = satelliteData.rocket_launch_product[1] or satelliteData.rocket_launch_product.name
-					local launchAmount  = satelliteData.rocket_launch_product[2] or satelliteData.rocket_launch_product.amount
-					if launchProduct then  -- Fake recipe for rockets
-						local fakeRecipeName = "dummy-recipe-launching-"..satellite
-						ingredientDepth[launchProduct] = depth + 1
-						recipeDepth[fakeRecipeName] = depth + 1
-						nextMaterials[launchProduct] = true
-						fakeRecipes[fakeRecipeName] = true
-						availableRecipes[fakeRecipeName] = {ingredient = {[satellite] = 1, [partName] = numParts}, result = {[launchProduct] = launchAmount}}
-						if not resultIndex[launchProduct] then resultIndex[launchProduct] = {} end
-						resultIndex[launchProduct][fakeRecipeName] = true
+		basicMaterials = nextMaterials
+	end
+end
+
+--Modifies: availableRecipes, fakeRecipes, tibComboPacks
+function allAvailableRecipes()
+	-- Recipes unlocked by default
+	for recipe, recipeData in pairs(data.raw.recipe) do
+		if (recipeData.enabled ~= false) and (recipeData.hidden ~= true) then  -- Enabled and not hidden
+			availableRecipes[recipe] = true
+		end
+	end
+	-- Recipes nabled but only at a specific structure
+	for _, assembler in pairs(data.raw["assembling-machine"]) do
+		if assembler.fixed_recipe and data.raw.recipe[assembler.fixed_recipe] and (data.raw.recipe[assembler.fixed_recipe].enabled ~= false) then
+			availableRecipes[assembler.fixed_recipe] = true
+		end
+	end
+	-- Recipes unlocked by a technology
+	for tech, techData in pairs(data.raw.technology) do
+		if (techData.enabled == nil) or (techData.enabled == true) then  -- Only use enabled technologies
+			for _, effect in pairs(techData.effects or {}) do
+				if effect.recipe then
+					if data.raw.recipe[effect.recipe] then
+						availableRecipes[effect.recipe] = true
+						if data.raw.recipe[effect.recipe].result and tibComboPacks[data.raw.recipe[effect.recipe].result] then
+							tibComboPacks[data.raw.recipe[effect.recipe].result] = techData.unit.ingredients  --save for later
+						end
+					else
+						log(tech.." tried to unlock recipe "..effect.recipe.." which does not exist?")
 					end
 				end
 			end
-		elseif not next(nextMaterials) and not checkedTransmutation then
-			checkedTransmutation = true
-			for item in pairs(fromThinAir) do  -- Repopulate with items that have no normal recipes
-				if not resultIndex[item] and not rawResources[item] then
-					free[item] = true
-					ingredientDepth[item] = 0
-					nextMaterials[item] = true
+		end
+	end
+	for item, itemData in pairs(data.raw.item) do
+		-- Dummy recipes for rocket launch products
+		if itemData.rocket_launch_product then
+			local launchProduct = itemData.rocket_launch_product[1] or itemData.rocket_launch_product.name
+			local launchAmount  = itemData.rocket_launch_product[2] or itemData.rocket_launch_product.amount
+			if launchProduct then  -- Fake recipe for rockets
+				for silo, siloData in pairs(data.raw["rocket-silo"]) do
+					if siloData.fixed_recipe and siloData.rocket_result_inventory_size and (siloData.rocket_result_inventory_size > 0) then
+						local fakeRecipeName = "dummy-recipe-launching-"..item.."-from-"..silo
+						local partName = next(normalResults(siloData.fixed_recipe))
+						local numParts = (siloData.rocket_parts_required or 1) / siloData.rocket_result_inventory_size
+						fakeRecipes[fakeRecipeName] = true
+						availableRecipes[fakeRecipeName] = {ingredient = {[item] = 1, [partName] = numParts}, result = {[launchProduct] = launchAmount}}
+					end
 				end
 			end
 		end
-		basicMaterials = nextMaterials
+		-- Dummy recipes for burning items
+		local burntResult = itemData.burnt_result
+		if burntResult then
+			local fakeRecipeName = "dummy-recipe-burning-"..item
+			fakeRecipes[fakeRecipeName] = true
+			availableRecipes[fakeRecipeName] = {ingredient = {[item] = 1}, result = {[burntResult] = 1}}
+		end
 	end
+	-- Dummy recipes for boilers
+	for name, boiler in pairs(data.raw["boiler"]) do
+		if boiler.fluid_box.filter and boiler.output_fluid_box.filter then
+			availableRecipes["dummy-recipe-boiler-"..name] = {ingredient = {[boiler.fluid_box.filter] = 1}, result = {[boiler.output_fluid_box.filter] = 1}}
+			fakeRecipes["dummy-recipe-boiler-"..name] = true
+		end
+	end
+	-- Avoid Tiberium recipes
+	for recipe in pairs(availableRecipes) do
+		if string.find(recipe, "tiberium") then
+			availableRecipes[recipe] = nil
+		end
+	end
+end
+
+--Assumes: fakeRecipes, tibComboPacks, rawResources
+--Modifies: availableRecipes, ingredientIndex, resultIndex
+function removeBadRecipes(pass)
+	local vanillaCategories = {
+		["advanced-crafting"] = true,
+		["basic-crafting"] = true,
+		["centrifuging"] = true,
+		["chemistry"] = true,
+		["crafting"] = true,
+		["crafting-with-fluid"] = true,
+		["oil-processing"] = true,
+		["rocket-building"] = true,
+		["smelting"] = true,
+	}
+	if pass == 1 then
+		--Build table and remove specific recipes on first pass
+		for recipe, recipeData in pairs(availableRecipes) do
+			if not fakeRecipes[recipe] then
+				local category = recipeData.category
+				if category then
+					if not badRecipeCategories.div[category] then  -- Initialize
+						badRecipeCategories.num[category] = 0
+						badRecipeCategories.div[category] = 1
+					else
+						badRecipeCategories.div[category] = badRecipeCategories.div[category] + 1
+					end
+				end
+				local fullCategory = recipeData.fullCategory
+				if fullCategory then
+					if not badRecipeCategories.div[fullCategory] then  -- Initialize
+						badRecipeCategories.num[fullCategory] = 0
+						badRecipeCategories.div[fullCategory] = 1
+					else
+						badRecipeCategories.div[fullCategory] = badRecipeCategories.div[fullCategory] + 1
+					end
+				end
+				local resultList = normalResults(recipe)
+				local numResults = listLength(resultList)
+				local sciencePackTypes, sciencePackCount  = 0, 0
+				for result, amount in pairs(resultList) do
+					if (result == "empty-barrel") and (numResults > 1) then  -- Bad recipes like unbarreling give empty barrels
+						markBadRecipe(recipe)
+						break
+					elseif (rawResources[result] or tibComboPacks[result]) and (next(normalIngredients(recipe)) == nil) then  -- Bad recipes give raw resources/science for free
+						markBadRecipe(recipe)
+						break
+					elseif tibComboPacks[result] then
+						sciencePackTypes = sciencePackTypes + 1
+						if sciencePackTypes > 2 then  -- Bad recipes make more than 2 types of science packs
+							markBadRecipe(recipe)
+							break
+						end
+						sciencePackCount = sciencePackCount + amount
+						if sciencePackCount > 1000 then  -- Bad recipes give more than 1000 science packs
+							markBadRecipe(recipe)
+							break
+						end
+					end
+				end
+			end
+		end
+	elseif pass == 2 then
+		--Only log table on second pass
+		for category, div in pairs(badRecipeCategories.div) do
+			local bs = (badRecipeCategories.num[category] / div > 0.2) and "**BS** " or ""
+			log(bs..category..": "..badRecipeCategories.num[category] .."/"..div)
+		end
+	end
+
+	-- Look for categories that contained broken recipes and exclude other recipes from the same category
+	for recipe, recipeData in pairs(availableRecipes) do
+		if not fakeRecipes[recipe] then
+			local category = recipeData.category
+			local fullCategory = recipeData.fullCategory
+			if fullCategory and (badRecipeCategories.num[fullCategory] / badRecipeCategories.div[fullCategory] > 0.2) then
+				markBadRecipe(recipe)
+			elseif category and not vanillaCategories[category] and (badRecipeCategories.num[category] / badRecipeCategories.div[category] > 0.2) then
+				markBadRecipe(recipe)
+			elseif category and excludedCrafting[category] then
+				markBadRecipe(recipe)
+			end
+		end
+	end
+end
+
+--Returns: Whether the recipe was successfully removed
+--Assumes: rawResources
+--Modifies: availableRecipes, ingredientIndex, resultIndex
+function markBadRecipe(recipe)
+	-- Check whether we need to keep it because there are no other ways to get an item
+	for result in pairs(availableRecipes[recipe]["result"]) do
+		if not rawResources[result] and not free[result] and (listLength(resultIndex[result]) == 1) then
+			return false
+		end
+	end
+	-- Now we are clear to remove it
+	log("Removing bad recipe "..recipe)
+	for ingredient in pairs(availableRecipes[recipe]["ingredient"]) do
+		ingredientIndex[ingredient][recipe] = nil
+	end
+	for result in pairs(availableRecipes[recipe]["result"]) do
+		resultIndex[result][recipe] = nil
+	end
+	local category = availableRecipes[recipe].category
+	if category then badRecipeCategories.num[category] = badRecipeCategories.num[category] + 1 end
+	local fullCategory = availableRecipes[recipe].fullCategory
+	if fullCategory then badRecipeCategories.num[fullCategory] = badRecipeCategories.num[fullCategory] + 1 end
+	availableRecipes[recipe] = nil
+	return true
 end
 
 -- Assumes: free, recipeDepth
@@ -332,9 +452,9 @@ function findRecipe(item, itemList)
 			end
 			if recipeDepth[recipeName] then
 				if recipeDepth[recipeName] > ingredientDepth[item] then
-					penalty = penalty + 1000000  -- Avoid recipes that don't reduce overall complexity
+					penalty = penalty + 10000  -- Avoid recipes that don't reduce overall complexity
 				end
-				penalty = penalty + 10 * recipeDepth[recipeName]
+				penalty = penalty + 20 * recipeDepth[recipeName]
 				table.insert(recipes, {name=recipeName, count=resultList[item], penalty=penalty})
 			else  -- If it isn't reachable, don't use it, since we won't be able to break it down
 				unreachable[recipeName] = true
@@ -647,9 +767,15 @@ function normalResults(recipeName)
 	local resultTable = {}
 	for _, result in pairs(results) do
 		if result[1] then
-			resultTable[result[1]] = result[2]
+			local amount = result[2]
+			if amount > 0 then
+				resultTable[result[1]] = amount
+			end
 		elseif result.name then
-			resultTable[result.name] = (result.amount or (result.amount_min + math.max(result.amount_min, result.amount_max)) / 2) * (result.probability or 1)
+			local amount = (result.amount or (result.amount_min + math.max(result.amount_min, result.amount_max)) / 2) * (result.probability or 1)
+			if amount > 0 then
+				resultTable[result.name] = amount
+			end
 		end
 	end
 	return resultTable
@@ -657,7 +783,7 @@ end
 
 function sumDicts(dict1, dict2, logging)
 	if type(dict1) ~= "table" then dict1 = {} end
-	if type(dict2) == "table" then 
+	if type(dict2) == "table" then
 		for k, v in pairs(dict2) do
 			dict1[k] = v + (dict1[k] or 0)
 			if logging then
@@ -881,8 +1007,8 @@ function fugeRecipeTier(tier)
 	local smallResources = 0
 	local recipeMult = 1
 	local foundRecipeMult = false
-	local material = (tier == 1) and "ore" or (tier == 2) and "slurry" or "molten"
-	local item = (tier == 1) and "tiberium-ore" or (tier == 2) and "tiberium-slurry" or "molten-tiberium"
+	local material = (tier == 1) and "slurry" or (tier == 2) and "molten" or "liquid"
+	local item = (tier == 1) and "tiberium-slurry" or (tier == 2) and "molten-tiberium" or "liquid-tiberium"
 	local ingredientAmount = (tier ~= 1) and math.max(160 / settings.startup["tiberium-value"].value, 1) or 16
 	local targetAmount = (tier == 1) and 32 or (tier == 2) and 64 or 128
 	local totalOre = 0
@@ -929,7 +1055,7 @@ function fugeRecipeTier(tier)
 	end
 	--Make actual recipe changes
 	LSlib.recipe.editEngergyRequired("tiberium-"..material.."-centrifuging", recipeMult)
-	LSlib.recipe.addIngredient("tiberium-"..material.."-centrifuging", item, ingredientAmount * recipeMult, (tier > 1) and "fluid" or "item")
+	LSlib.recipe.addIngredient("tiberium-"..material.."-centrifuging", item, ingredientAmount * recipeMult, "fluid")
 	if debugText then log("Tier "..tier.." centrifuge: "..ingredientAmount * recipeMult.." "..item) end
 	for resource, amount in pairs(resources) do
 		if (resource ~= "stone") and (amount > 1 / 128) then
@@ -941,13 +1067,14 @@ function fugeRecipeTier(tier)
 	if resources["stone"] and (listLength(fluids) < 3) then
 		local stone = math.ceil(resources["stone"] * recipeMult)
 		LSlib.recipe.duplicate("tiberium-"..material.."-centrifuging", "tiberium-"..material.."-sludge-centrifuging")
+		data.raw.recipe["tiberium-"..material.."-sludge-centrifuging"].localised_name = {"recipe-name.tiberium-sludge-centrifuging", {"fluid-name."..item}}
 		LSlib.recipe.changeIcon("tiberium-"..material.."-sludge-centrifuging", tiberiumInternalName.."/graphics/icons/"..material.."-sludge-centrifuging.png", 32)
 		LSlib.recipe.addResult("tiberium-"..material.."-sludge-centrifuging", "tiberium-sludge", stone, "fluid")
 		LSlib.recipe.addResult("tiberium-"..material.."-centrifuging", "stone", stone, "item")
 		if debugText then log("> "..stone.." stone") end
 	else  -- Don't create sludge recipe if there is no stone to convert or we don't have enough fluid boxes
 		--data.raw["recipe"]["tiberium-"..material.."-sludge-centrifuging"] = nil  Don't delete recipe, just make it unavailable
-		local tech = (tier == 1) and "tiberium-separation-tech" or (tier == 2) and "tiberium-processing-tech" or "tiberium-molten-processing"
+		local tech = "tiberium-"..material.."-centrifuging"
 		for i, effect in pairs(data.raw["technology"][tech]["effects"]) do
 			if effect.recipe == "tiberium-"..material.."-sludge-centrifuging" then
 				table.remove(data.raw["technology"][tech]["effects"], i)
@@ -994,7 +1121,7 @@ function addDirectRecipe(ore)
 	local recipeName = "tiberium-molten-to-"..ore
 	local oreAmount = math.floor(64 * (oreMult[ore] and oreMult[ore] or 1) + 0.5)
 	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"
-	local tech = data.raw.fluid[ore] and "tiberium-molten-processing" or "tiberium-transmutation-tech"
+	local tech = data.raw.fluid[ore] and "tiberium-molten-centrifuging" or "tiberium-transmutation-tech"
 	local energy = 12
 	local order = (not oreMult[ore] and "a-" or oreMult[ore] > 1 and "b-" or "c-")..ore
 	
@@ -1026,16 +1153,42 @@ function addCreditRecipe(ore)
 	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"
 	local energy = settings.startup["tiberium-growth"].value * settings.startup["tiberium-value"].value
 	local order = (not oreMult[ore] and "a-" or oreMult[ore] > 1 and "b-" or "c-")..ore
-
+	local oreIcon, oreIconSize, oreTint
+	if data.raw["item"][ore] then
+		local icon = LSlib.item.getIcons("item", ore)[1]
+		oreIcon = icon.icon
+		oreIconSize = icon.icon_size
+		oreTint = icon.tint
+	elseif data.raw["fluid"][ore] then
+		local icon = LSlib.item.getIcons("fluid", ore)[1]
+		oreIcon = icon.icon
+		oreIconSize = icon.icon_size
+		oreTint = icon.tint
+	end
+	local icons = {
+		{
+			icon = tiberiumInternalName.."/graphics/icons/growth-credit.png",
+			icon_size = 64,
+		},
+	}
+	if oreIcon then
+		icons[2] = {
+			icon = oreIcon,
+			icon_size = oreIconSize,
+			icon_mipmaps = ore.icon_mipmaps,
+			scale = 12.0 / (oreIconSize or 1), -- scale = 0.5 * 32 / icon_size simplified
+			shift = {10, -10},
+			tint = oreTint,
+		}
+	end
+	
 	LSlib.recipe.create(recipeName)
 	LSlib.recipe.addIngredient(recipeName, ore, oreAmount, itemOrFluid)
 	LSlib.technology.addRecipeUnlock("tiberium-growth-acceleration", recipeName)
 	LSlib.recipe.setEngergyRequired(recipeName, energy)
 	LSlib.recipe.setOrderstring(recipeName, order)
-	if (ore == "coal") or (ore == "copper-ore") or (ore == "iron-ore") or (ore == "stone") or (ore == "crude-oil") or (ore == "uranium-ore") then
-		LSlib.recipe.changeIcon(recipeName, tiberiumInternalName.."/graphics/icons/growth-credit-"..ore..".png", 32)
-	end
-	LSlib.recipe.addResult(recipeName, "growth-credit", 1, "item")
+	LSlib.recipe.changeIcons(recipeName, icons, 64)
+	LSlib.recipe.addResult(recipeName, "tiberium-growth-credit", 1, "item")
 	LSlib.recipe.disable(recipeName)
 	LSlib.recipe.setSubgroup(recipeName, "a-growth-credits")
 	LSlib.recipe.setShowMadeIn(recipeName, true)

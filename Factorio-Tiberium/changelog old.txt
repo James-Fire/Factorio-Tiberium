@@ -81,7 +81,7 @@ Feb 17
 
 Fixed mine placement, so they do not get repeatedly placed.
 
-Added a command to remove all mines, to reset it. /tibFixMineLag 
+Added a command to remove all mines, to reset it. /tibFixMineLag
 
 ---------------------------------------------------------------------------------------------------
 
@@ -293,7 +293,7 @@ Nuclear fuel production from liquid tib, expensive to be efficient.
 
 ---------------------------------------------------------------------------------------------------
 
-2019.12.05 
+2019.12.05
 	[Art] -Ax
 	-Implemented placeholder Tiberium Ore art + glow (Based on Tiberian Sun sprites.)
 		* Disabled 'HR rendering' of sprites for now, since there is only the 64px version.

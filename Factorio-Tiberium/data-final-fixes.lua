@@ -4,7 +4,7 @@ for name, technology in pairs(data.raw.technology) do
 	if string.sub(name, 1, 9) == "tiberium-" then
 		for _, ingredient in pairs(technology.unit.ingredients) do
 			local pack = ingredient[1] and ingredient[1] or ingredient.name
-			if pack ~= "tiberium-science" then -- Don't add Tib Science
+			if (pack ~= "tiberium-science") and data.raw.tool[pack] then -- Don't add Tib Science
 				tibComboPacks[pack] = true
 			end
 		end
@@ -22,12 +22,6 @@ for labName, labData in pairs(data.raw.lab) do
 		end
 	end
 	if addTib then table.insert(data.raw.lab[labName].inputs, "tiberium-science") end
-end
-
--- Ease into early techs for Tib Only runs
-if settings.startup["tiberium-advanced-start"].value or settings.startup["tiberium-ore-removal"].value then
-	data.raw.technology["tiberium-processing-tech"].unit.count = 100
-	data.raw.technology["tiberium-molten-processing"].unit.count = 400
 end
 
 require("scripts/DynamicOreRecipes")
