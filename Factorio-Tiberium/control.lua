@@ -2,7 +2,7 @@ require("scripts/CnC_Walls") --Note, to make SonicWalls work / be passable
 require("scripts/informatron/informatron_remote_interface")
 local migration = require("__flib__.migration")
 
-local tiberiumInternalName = "Factorio-Tiberium-Beta"  --No underscores for this one
+local tiberiumInternalName = "Factorio-Tiberium"  --No underscores for this one
 
 local Beacon_Name = "tiberium-growth-accelerator-beacon"
 local Speed_Module_Name = "tiberium-growth-accelerator-speed-module"

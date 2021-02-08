@@ -1,5 +1,5 @@
 -- Change when uploading to main/beta version, include 2 underscores on both sides
-tiberiumInternalName = "__Factorio-Tiberium-Beta__"
+tiberiumInternalName = "__Factorio-Tiberium__"
 
 if mods["Factorio-Tiberium"] and mods["Factorio-Tiberium-Beta"] then
 	local message = "\n[font=default-large-bold][color=0,255,0]Don't run Tiberium and Tiberium Beta at the same time.[/color][/font]\n"

@@ -1,4 +1,29 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.5
+  Features:
+    - Here's a quick summary of all the 1.1 changes. Feel free to read the notes from the other 1.1.X patches if you want all the details
+    - New Structures:
+    - AOE Node Harvester - Multiple harvesters on a single Tiberium node? A single harvester for multiple Tiberium nodes? The possibilities are endless!
+    - Tiberium Control Network - A specialized beacon for when your Tiberium miners aren't going fast enough
+    - New Recipes:
+    - Tiberium Science Recipe overhaul - Split Tiberium Data into 5 separate items, one coming from each type of Tiberium testing, with bonuses for mixing and matching. New Tiberium Science should be more interesting to optimize
+    - Tiberium refining recipes diversified - Tiberium Slurry is now produced in an assembling machine and Liquid Tiberium now requires steam. Added an alternate recipe for Molten Tiberium if you feel like being fancy
+    - Changed Cetrifuging Tiers - Removed Tiberium Ore Centrifuging and added Liquid Tiberium Centrifuging
+    - New Mechanics:
+    - Tiberium can infect trees - Tiberium now converts and kills trees as it spreads, rapidly infecting densely-wooded areas
+    - Quality of Life:
+    - UI for lining up SRF emitters - No more guessing whether your fences will connect!
+    - Better icons - We said better icons, not good icons
+    - Mod Compatibility:
+    - Expanded compatibility with Bob's Mods, Py Petroleum, Extended Descriptions, and Krastorio 2
+    - Reduced the number of mods that will cause the Tiberium Centrifuging recipes to break
+    - Tiberium Armor replaced - Now you can protect yourself from Tiberium damage while using armor from any mod
+  Balancing:
+    - Tiberium Network Node shrunk - Smaller, cheaper, and less likely to cause brownouts
+    - Ion Beam Projectors significantly less overpowered - They are still pretty good, though
+    - Technology costs rebalanced - Technologies split up so you can get the good stuff without paying for any of the extras
+    - Liquid Tiberium Bomb now takes 1000 Liquid Tiberium instead of 10
+---------------------------------------------------------------------------------------------------
 Version: 1.1.4
   Wiki:
     - Expanded on, and corrected, the wiki entry for the Tiberium Control Network Beacon.
