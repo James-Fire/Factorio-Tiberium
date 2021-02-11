@@ -738,6 +738,20 @@ data:extend{
 		},
 		result = "tiberium-ion-turret"
 	},
+	{
+		type = "recipe",
+		name = "tiberium-advanced-guard-tower",
+		energy_required = 20,
+		enabled = false,
+		subgroup = "a-buildings",
+		ingredients = {
+			{"iron-plate", 40},
+			{"steel-plate", 10},
+			{"electronic-circuit", 10},
+			{"stone-brick", 40}
+		},
+		result = "tiberium-advanced-guard-tower"
+	},
 }
 
 -- Military

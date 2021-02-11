@@ -231,6 +231,16 @@ data:extend{
 		place_result = "tiberium-ion-turret",
 		stack_size = 50
 	},
+	{
+		type = "item",
+		name = "tiberium-advanced-guard-tower",
+		icon = tiberiumInternalName.."/graphics/entity/advanced-guard-tower/advanced-guard-tower-256.png",
+		icon_size = 256,
+		subgroup = "a-buildings",
+		order = "f[tiberium-advanced-guard-tower]",
+		place_result = "tiberium-advanced-guard-tower",
+		stack_size = 50
+	},
 	--Military
 	{
 		type = "item-with-entity-data",
