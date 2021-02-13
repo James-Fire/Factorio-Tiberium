@@ -592,6 +592,10 @@ data:extend{
 			},
 			{
 				type = "unlock-recipe",
+				recipe = "tiberium-obelisk-of-light"
+			},
+			{
+				type = "unlock-recipe",
 				recipe = "tiberium-advanced-guard-tower"
 			},
 			{

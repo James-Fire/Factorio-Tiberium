@@ -233,6 +233,16 @@ data:extend{
 	},
 	{
 		type = "item",
+		name = "tiberium-obelisk-of-light",
+		icon = tiberiumInternalName.."/graphics/entity/obelisk-of-light/obelisk-of-light-222.png",
+		icon_size = 222,
+		subgroup = "a-buildings",
+		order = "f[tiberium-obelisk-of-light]",
+		place_result = "tiberium-obelisk-of-light",
+		stack_size = 50
+	},
+	{
+		type = "item",
 		name = "tiberium-advanced-guard-tower",
 		icon = tiberiumInternalName.."/graphics/entity/advanced-guard-tower/advanced-guard-tower-256.png",
 		icon_size = 256,

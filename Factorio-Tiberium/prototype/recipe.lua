@@ -740,6 +740,19 @@ data:extend{
 	},
 	{
 		type = "recipe",
+		name = "tiberium-obelisk-of-light",
+		energy_required = 20,
+		enabled = false,
+		subgroup = "a-buildings",
+		ingredients = {
+			{"advanced-circuit", 40},
+			{"steel-plate", 40},
+			{"tiberium-ion-core", 1}
+		},
+		result = "tiberium-obelisk-of-light"
+	},
+	{
+		type = "recipe",
 		name = "tiberium-advanced-guard-tower",
 		energy_required = 20,
 		enabled = false,

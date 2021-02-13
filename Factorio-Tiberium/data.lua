@@ -19,6 +19,7 @@ require("prototype/vehicle")
 require("prototype/recipe")
 require("prototype/damage-type")
 require("prototype/recipe-settings")
+require("prototype/sound")
 require("scripts/informatron/informatron")
 if mods["rusty-locale"] then require("scripts/localised_description") end
 
