@@ -156,6 +156,9 @@ if mods["MoreScience"] then
 end
 
 if mods["omnimatter"] then
+	omni.matter.add_ignore_resource("tiberium-ore")
+    omni.matter.add_ignore_resource("tibGrowthNode")
+    omni.matter.add_ignore_resource("tibNode_tree")
 	LSlib.recipe.editIngredient("tiberium-spike", "pumpjack", "offshore-pump", 1)
 end
 

@@ -23,7 +23,7 @@
 		"? Krastorio2",
 		"? Mining_Drones",
 		"? Orbital Ion Cannon",
-		"? omnimatter",
+		"? omnimatter >= 4.1.9",
 		"? Prospector >= 1.0.26",
 		"? space-exploration"
 	],
