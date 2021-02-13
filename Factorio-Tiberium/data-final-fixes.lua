@@ -24,4 +24,13 @@ for labName, labData in pairs(data.raw.lab) do
 	if addTib then table.insert(data.raw.lab[labName].inputs, "tiberium-science") end
 end
 
+if mods["alien-biomes"] then
+	for k,v in pairs(data.raw.tile.landfill.collision_mask) do
+		if v == "resource-layer" then
+			table.remove(data.raw.tile.landfill.collision_mask, k)
+			break
+		end
+	end
+end
+
 require("scripts/DynamicOreRecipes")

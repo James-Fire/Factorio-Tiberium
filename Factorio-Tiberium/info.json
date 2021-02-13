@@ -12,6 +12,7 @@
 		"flib >= 0.3.0",
 		"informatron",
 		"? 5dim_battlefield >= 1.0.4",
+		"? alien-biomes",
 		"? angelsindustries",
 		"? angelsrefining",
 		"? angelspetrochem",
