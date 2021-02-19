@@ -1,13 +1,13 @@
 {
     "name": "Factorio-Tiberium",
-    "version": "1.1.6",
+    "version": "1.1.13",
     "title": "Factorio and Conquer: Tiberian Dawn",
     "author": "JamesFire",
     "contact": "",
     "homepage": "https://github.com/James-Fire/Factorio-Tiberium",
     "factorio_version": "1.1",
     "dependencies": [
-		"base >= 1.0.0",
+		"base >= 1.1.0",
 		"LSlib >= 2020.8.22",
 		"flib >= 0.3.0",
 		"informatron",

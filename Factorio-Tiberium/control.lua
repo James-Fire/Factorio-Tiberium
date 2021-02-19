@@ -302,7 +302,7 @@ script.on_configuration_changed(function(data)
 		end
 	end
 
-	if upgradingToVersion(data, tiberiumInternalName, "1.1.6") then
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.13") then
 		for _, surface in pairs(game.surfaces) do
 			-- Register Growth Nodes for deletion detection
 			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do

@@ -1,8 +1,8 @@
 ---------------------------------------------------------------------------------------------------
-Version: 1.1.6
+Version: 1.1.13
   Features:
-    - Added Obelisk of Light
-    - Added Advanced Guard Tower
+    - Added Obelisk of Light (Ion Beam Projector will be removed in a future update)
+    - Added Advanced Guard Tower, a turret that shoots rockets
     - Added Tiberium Chemical Sprayer weapon ammo
   Bugfixes:
     - Fixed crash caused by other mods/scripts deleting Tiberium nodes
