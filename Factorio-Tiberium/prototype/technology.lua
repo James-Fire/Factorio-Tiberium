@@ -602,8 +602,12 @@ data:extend{
 				type = "unlock-recipe",
 				recipe = "tiberium-rocket"
 			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-chemical-sprayer-ammo"
+			},
 		},
-		prerequisites = {"tiberium-chemical-research", "tiberium-military-1", "rocketry", "laser"},
+		prerequisites = {"tiberium-chemical-research", "tiberium-military-1", "rocketry", "laser", "flamethrower"},
 		unit = {
 			count = 300,
 			ingredients = {

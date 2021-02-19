@@ -24,7 +24,7 @@ for labName, labData in pairs(data.raw.lab) do
 	if addTib then table.insert(data.raw.lab[labName].inputs, "tiberium-science") end
 end
 
-if mods["alien-biomes"] then
+if mods["alien-biomes"] then  -- Reverting this change so Tiberium can grow on landfill again
 	for k,v in pairs(data.raw.tile.landfill.collision_mask) do
 		if v == "resource-layer" then
 			table.remove(data.raw.tile.landfill.collision_mask, k)

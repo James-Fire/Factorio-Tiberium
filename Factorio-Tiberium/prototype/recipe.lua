@@ -783,6 +783,18 @@ data:extend{
 	},
 	{
 		type = "recipe",
+		name = "tiberium-chemical-sprayer-ammo",
+		enabled = false,
+		category = "crafting-with-fluid",
+		energy_required = 6,
+		ingredients = {
+			{"steel-plate", 5},
+			{type = "fluid", name = "liquid-tiberium", amount = 100}
+		},
+		result = "tiberium-chemical-sprayer-ammo",
+	},
+	{
+		type = "recipe",
 		name = "tiberium-rocket",
 		enabled = false,
 		category = "crafting-with-fluid",
