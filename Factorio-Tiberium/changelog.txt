@@ -4,6 +4,7 @@ Version: 1.1.13
     - Added Obelisk of Light (Ion Beam Projector will be removed in a future update)
     - Added Advanced Guard Tower, a turret that shoots rockets
     - Added Tiberium Chemical Sprayer weapon ammo
+    - Updated French and Russian translations thanks to Fr_Dae and CV514, respectively
   Bugfixes:
     - Fixed crash caused by other mods/scripts deleting Tiberium nodes
     - Tiberium Ore will now spawn even when Omnimatter is active
