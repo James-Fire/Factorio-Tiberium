@@ -52,6 +52,7 @@ script.on_init(function()
 	-- can be set to something greater than 1. When minUpdateInterval is reached the global tiberium growth rate
 	-- will stagnate instead of increasing with each new node found but updates will continue to happen for all fields.
 	global.minUpdateInterval = 1
+	global.intervalBetweenNodeUpdates = 18000
 	global.tiberiumTerrain = nil --"dirt-4" --Performance is awful, disabling this
 	global.oreType = "tiberium-ore"
 	global.tiberiumProducts = {global.oreType}
@@ -107,13 +108,12 @@ script.on_init(function()
 			on_new_entity(fakeEvent)
 		end
 		for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
-			table.insert(global.tibGrowthNodeList, node)
+			addNodeToGrowthList(node)
 		end
 		for _, wall in pairs(surface.find_entities_filtered{name = "tiberium-srf-wall"}) do
 			wall.destroy()  --Wipe out all lingering SRF so we can rebuild them
 		end
 	end
-	updateGrowthInterval()
 	
 	-- Define pack color for DiscoScience
 	if remote.interfaces["DiscoScience"] and remote.interfaces["DiscoScience"]["setIngredientColor"] then
@@ -299,6 +299,15 @@ script.on_configuration_changed(function(data)
 				force.recipes["tiberium-power-armor"].enabled = false
 			end
 			UpdateRecipeUnlocks(force)
+		end
+	end
+
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.6") then
+		for _, surface in pairs(game.surfaces) do
+			-- Register Growth Nodes for deletion detection
+			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
+				registerEntity(node)
+			end
 		end
 	end
 
@@ -562,10 +571,9 @@ function CreateNode(surface, position)
 		surface.destroy_decoratives{area = area}
 		-- Actual node creation
 		local node = surface.create_entity{name="tibGrowthNode", position = position, amount = 15000}
-		table.insert(global.tibGrowthNodeList, node)
+		addNodeToGrowthList(node)
 		-- Spawn tree entity when node is created
 		createBlossomTree(surface, position)
-		updateGrowthInterval()
 	end
 end
 
@@ -645,7 +653,7 @@ commands.add_command("tibRebuildLists",
 		global.tibDrills = {}
 		for _, surface in pairs(game.surfaces) do
 			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
-				table.insert(global.tibGrowthNodeList, node)
+				addNodeToGrowthList(node)
 			end
 			for _, srf in pairs(surface.find_entities_filtered{name = "tiberium-srf-emitter"}) do
 				table.insert(global.SRF_nodes, {emitter = srf, position = srf.position})
@@ -654,7 +662,6 @@ commands.add_command("tibRebuildLists",
 				table.insert(global.tibDrills, {entity = drill, name = drill.name, position = drill.position})
 			end
 		end
-		updateGrowthInterval()
 		game.print("Found " .. #global.tibGrowthNodeList .. " nodes")
 		game.print("Found " .. #global.SRF_nodes .. " SRF hubs")
 		game.print("Found " .. #global.tibDrills .. " drills")
@@ -728,16 +735,16 @@ script.on_event(defines.events.on_chunk_generated, function(event)
 		{event.area.right_bottom.x - 1, event.area.right_bottom.y - 1}
 	}
 	for _, newNode in pairs(surface.find_entities_filtered{area = area, name = "tibGrowthNode"}) do
-		table.insert(global.tibGrowthNodeList, newNode)
 		local position = newNode.position
+		registerEntity(newNode)
+		addNodeToGrowthList(newNode)
+		createBlossomTree(surface, position)
 		--Clear trees
 		for _, tree in pairs(surface.find_entities_filtered{area = areaAroundPosition(position, 0.9), type = "tree"}) do
 			if tree.valid then
 				tree.destroy()
 			end
 		end
-		--Spawn tree entity when node is placed
-		createBlossomTree(surface, position)
 		local howManyOre = math.min(math.max(10, (math.abs(position.x) + math.abs(position.y)) / 25), 200) --Start further nodes with more ore
 		PlaceOre(newNode, howManyOre)
 		--Cosmetic stuff
@@ -752,7 +759,6 @@ script.on_event(defines.events.on_chunk_generated, function(event)
 			surface.set_tiles(newTiles, true, false)
 		end
 	end
-	updateGrowthInterval()
 end)
 
 script.on_event(defines.events.on_tick, function(event)
@@ -860,10 +866,22 @@ function safeDamage(entityOrPlayer, damageAmount, damagingForce, damageType)
 	end
 end
 
+function addNodeToGrowthList(newNode)
+	for _, node in pairs(global.tibGrowthNodeList) do
+		if newNode == node then
+			return false
+		end
+	end
+	table.insert(global.tibGrowthNodeList, newNode)
+	updateGrowthInterval()  -- Move call to here so we always update when node count changes
+	return true
+end
+
 function removeNodeFromGrowthList(node)
 	for i = 1, #global.tibGrowthNodeList do
 		if global.tibGrowthNodeList[i] == node then
 			table.remove(global.tibGrowthNodeList, i)
+			updateGrowthInterval()  -- Move call to here so we always update when node count changes
 			if global.tibGrowthNodeListIndex >= i then
 				global.tibGrowthNodeListIndex = global.tibGrowthNodeListIndex - 1
 			end
@@ -917,10 +935,9 @@ script.on_nth_tick(60 * 300, function(event) --Global integrity check
 		global.tibGrowthNodeList = {}
 		for _, surface in pairs(game.surfaces) do
 			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
-				table.insert(global.tibGrowthNodeList, node)
+				addNodeToGrowthList(node)
 			end
 		end
-		updateGrowthInterval()
 	end
 end)
 
@@ -1009,7 +1026,6 @@ function on_new_entity(event)
 				raise_built = true
 			}
 		end
-		updateGrowthInterval()
 		--Place Beacon for Tiberium Control Network
 		ManageTCNBeacon(surface, position, force)
 	elseif (new_entity.name == "tiberium-growth-accelerator-node") then
@@ -1031,6 +1047,10 @@ function on_new_entity(event)
 			local module_count = force.technologies["tiberium-growth-acceleration-acceleration"].level - 1
 			UpdateBeaconSpeed(beacon, module_count)
 		end
+	elseif (new_entity.name == "tibGrowthNode") then
+		registerEntity(new_entity)
+		addNodeToGrowthList(new_entity)
+		createBlossomTree(surface, position)
 	end
 end
 
@@ -1076,42 +1096,23 @@ function on_remove_entity(event)
 				amount = math.floor(spikedNodeRichness / 10),
 				raise_built = true
 			}
-			table.insert(global.tibGrowthNodeList, newNode)
-			createBlossomTree(surface, position)
 		end
-		--Remove Beacon for Tiberium Control Network
-		local beacons = surface.find_entities_filtered{name = TCN_Beacon_Name, position = position}
-		for _, beacon in pairs(beacons) do
-			beacon.destroy()
-		end
-		updateGrowthInterval()
+		removeTCNBeacon(surface, position)
 	elseif (entity.name == "tiberium-node-harvester") then
 		--Spawn tree entity when node is uncovered
 		createBlossomTree(surface, position)
-		--Remove Beacon for Tiberium Control Network
-		local beacons = surface.find_entities_filtered{name = TCN_Beacon_Name, position = position}
-		for _, beacon in pairs(beacons) do
-			beacon.destroy()
-		end
+		removeTCNBeacon(surface, position)
 	elseif (entity.name == "tiberium-network-node") then
-		--Remove Beacon for Tiberium Control Network
-		local beacons = surface.find_entities_filtered{name = TCN_Beacon_Name, position = position}
-		for _, beacon in pairs(beacons) do
-			beacon.destroy()
-		end
+		removeTCNBeacon(surface, position)
 	elseif (entity.name == "tiberium-aoe-node-harvester") then
-		--Remove Beacon for Tiberium Control Network
-		local beacons = surface.find_entities_filtered{name = TCN_Beacon_Name, position = position}
-		for _, beacon in pairs(beacons) do
-			beacon.destroy()
-		end
+		removeTCNBeacon(surface, position)
 	elseif (entity.name == "tiberium-growth-accelerator") then
 		--Spawn tree entity when node is uncovered
 		createBlossomTree(surface, position)
-		local beacons = surface.find_entities_filtered{name = Beacon_Name, position = position}
-		for _, beacon in pairs(beacons) do
-			beacon.destroy()
-		end
+		removeTCNBeacon(surface, position)
+	elseif (entity.name == "tibGrowthNode") then
+		removeBlossomTree(surface, position)
+		removeNodeFromGrowthList(entity)
 	end
 	global.tibOnEntityDestroyed[event.registration_number] = nil  -- Avoid this global growing forever
 end
@@ -1130,6 +1131,14 @@ end
 function removeBlossomTree(surface, position)
 	for _, tree in pairs(surface.find_entities_filtered{area = areaAroundPosition(position), name = "tibNode_tree"}) do
 		tree.destroy()
+	end
+end
+
+function removeTCNBeacon(surface, position)
+	-- Remove Beacon for Tiberium Control Network
+	local beacons = surface.find_entities_filtered{name = TCN_Beacon_Name, position = position}
+	for _, beacon in pairs(beacons) do
+		beacon.destroy()
 	end
 end
 
