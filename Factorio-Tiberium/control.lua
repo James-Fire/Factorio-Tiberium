@@ -791,7 +791,6 @@ script.on_event(defines.events.on_tick, function(event)
 				end
 			else
 				removeNodeFromGrowthList(node)
-				global.tibGrowthNodeListIndex = global.tibGrowthNodeListIndex - 1
 			end
 		end
 	end
@@ -805,8 +804,7 @@ script.on_event(defines.events.on_tick, function(event)
 					safeDamage(enemy, TiberiumDamage * 6, game.forces.tiberium, "tiberium")
 				end
 			else
-				game.print("Invalid Tiberium node in list position #"..i)
-				game.print("Send save to Tiberium mod developers and then use /tibRebuildLists to fix it")
+				removeNodeFromGrowthList(node)
 			end
 			i = i + 60
 		end
