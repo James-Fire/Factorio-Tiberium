@@ -132,13 +132,33 @@ function giantSetupFunction()
 		end
 	end
 	for _, tree in pairs(data.raw["tree"]) do
-		if tree.autoplace and tree.minable and tree.minable.result then
-			free[tree.minable.result] = true
+		if tree.autoplace and tree.minable then
+			if tree.minable.results then
+				for _, result in pairs(tree.minable.results) do
+					if result[1] then
+						free[result[1]] = true
+					elseif result.name then
+						free[result.name] = true
+					end
+				end
+			elseif tree.minable.result then
+				free[tree.minable.result] = true
+			end
 		end
 	end
 	for _, fish in pairs(data.raw["fish"]) do
-		if fish.autoplace and fish.minable and fish.minable.result then
-			free[fish.minable.result] = true
+		if fish.autoplace and fish.minable then
+			if fish.minable.results then
+				for _, result in pairs(fish.minable.results) do
+					if result[1] then
+						free[result[1]] = true
+					elseif result.name then
+						free[result.name] = true
+					end
+				end
+			elseif fish.minable.result then
+				free[fish.minable.result] = true
+			end
 		end
 	end
 

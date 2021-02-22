@@ -640,7 +640,11 @@ commands.add_command("tibNodeList",
 	function()
 		game.print("There are " .. #global.tibGrowthNodeList .. " nodes in the list")
 		for i = 1, #global.tibGrowthNodeList do
-			game.print("#"..i.." x:" .. global.tibGrowthNodeList[i].position.x .. " y:" .. global.tibGrowthNodeList[i].position.y)
+			if global.tibGrowthNodeList[i].valid then
+				game.print("#"..i.." x:" .. global.tibGrowthNodeList[i].position.x .. " y:" .. global.tibGrowthNodeList[i].position.y)
+			else
+				game.print("Invalid node in global at position #"..i)
+			end
 		end
 	end
 )
@@ -674,10 +678,12 @@ commands.add_command("tibGrowAllNodes",
 		local placements = tonumber(invocationdata["parameter"]) or 300
 		game.print("There are " .. #global.tibGrowthNodeList .. " nodes in the list")
 		for i = 1, #global.tibGrowthNodeList, 1 do
-			if debugText then
-				game.print("Growing node x:" .. global.tibGrowthNodeList[i].position.x .. " y:" .. global.tibGrowthNodeList[i].position.y)
+			if global.tibGrowthNodeList[i].valid then
+				if debugText then
+					game.print("Growing node x:" .. global.tibGrowthNodeList[i].position.x .. " y:" .. global.tibGrowthNodeList[i].position.y)
+				end
+				PlaceOre(global.tibGrowthNodeList[i], placements)
 			end
-			PlaceOre(global.tibGrowthNodeList[i], placements)
 		end
 		game.print({"", timer, " end of tibGrowAllNodes"})
 	end
@@ -715,14 +721,16 @@ commands.add_command("tibChangeTerrain",
 		end
 		--Nodes
 		for _, node in pairs(global.tibGrowthNodeList) do
-			local position = node.position
-			local area = areaAroundPosition(position, 1)
-			local newTiles = {}
-			local oldTiles = node.surface.find_tiles_filtered{area = area, collision_mask = "ground-tile"}
-			for i, tile in pairs(oldTiles) do
-				newTiles[i] = {name = terrain, position = tile.position}
+			if node.valid then
+				local position = node.position
+				local area = areaAroundPosition(position, 1)
+				local newTiles = {}
+				local oldTiles = node.surface.find_tiles_filtered{area = area, collision_mask = "ground-tile"}
+				for i, tile in pairs(oldTiles) do
+					newTiles[i] = {name = terrain, position = tile.position}
+				end
+				node.surface.set_tiles(newTiles, true, false)
 			end
-			node.surface.set_tiles(newTiles, true, false)
 		end
 	end
 )
@@ -774,11 +782,16 @@ script.on_event(defines.events.on_tick, function(event)
 		end
 		if tibGrowthNodeCount >= 1 then
 			local node = global.tibGrowthNodeList[global.tibGrowthNodeListIndex]
-			PlaceOre(node, 10)
-			local position = node.position
-			local surface = node.surface
-			if surface.count_entities_filtered{area = areaAroundPosition(position), name = {"tibNode_tree", "tiberium-network-node", "tiberium-spike", "tiberium-growth-accelerator"}} == 0 then
-				createBlossomTree(surface, position)
+			if node.valid then
+				PlaceOre(node, 10)
+				local position = node.position
+				local surface = node.surface
+				if surface.count_entities_filtered{area = areaAroundPosition(position), name = {"tibNode_tree", "tiberium-node-harvester", "tiberium-spike", "tiberium-growth-accelerator"}} == 0 then
+					createBlossomTree(surface, position)
+				end
+			else
+				removeNodeFromGrowthList(node)
+				global.tibGrowthNodeListIndex = global.tibGrowthNodeListIndex - 1
 			end
 		end
 	end
