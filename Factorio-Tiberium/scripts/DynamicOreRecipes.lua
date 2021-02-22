@@ -20,6 +20,7 @@ local catalyst = {}
 local ingredientIndex = {}
 local resultIndex = {}
 local badRecipeCategories = {num = {}, div = {}}
+local badRecipeCount = 0
 local recipeDepth = {}
 local ingredientDepth = {}
 
@@ -170,9 +171,6 @@ function giantSetupFunction()
 		local resultList     = normalResults(recipe)
 		if next(ingredientList) == nil then
 			for result in pairs(resultList) do
-				if (tibComboPacks[result] or rawResources[result]) and markBadRecipe(recipe) then
-					break  -- Intervene against recipes that make resources/science free
-				end
 				if not free[result] then
 					free[result] = true
 					if debugText then log(result.." is free because there are no ingredients for "..recipe) end
@@ -180,40 +178,58 @@ function giantSetupFunction()
 			end
 		end
 	end
-	local newFreeItems = table.deepcopy(free)
-	local countFreeLoops = 0
-	while next(newFreeItems) do
-		countFreeLoops = countFreeLoops + 1
-		if debugText then log("On loop#"..countFreeLoops.." there were "..listLength(newFreeItems).." new free items") end
-		local nextLoopFreeItems = {}
-		for freeItem in pairs(newFreeItems) do
-			for recipe in pairs(ingredientIndex[freeItem] or {}) do
-				local actuallyFree = true
-				for ingredient in pairs(normalIngredients(recipe)) do
-					if not free[ingredient] then
-						actuallyFree = false
-						break
-					end
-				end
-				if actuallyFree then
-					for result in pairs(normalResults(recipe)) do
-						if (tibComboPacks[result] or rawResources[result]) and markBadRecipe(recipe) then
-							break  -- Intervene against recipes that make resources/science free
+
+	local cachedFree = table.deepcopy(free)  -- Cache free item list so we can rebuild until we reach a list without issues
+	local freeItemIterations = 0
+	if debugText then log(badRecipeCount.." bad recipes before building free item list") end
+
+	repeat
+		local previousBadRecipeCount = badRecipeCount  -- So we can check if new recipes were marked as bad during this loop
+		local newFreeItems = table.deepcopy(cachedFree)
+		local free = table.deepcopy(cachedFree)
+		local countFreeLoops = 0
+		freeItemIterations = freeItemIterations + 1
+		if debugText then log("$$ Building free item list. Attempt #"..freeItemIterations) end
+		while next(newFreeItems) do
+			countFreeLoops = countFreeLoops + 1
+			if debugText then log("On loop#"..countFreeLoops.." there were "..listLength(newFreeItems).." new free items") end
+			local nextLoopFreeItems = {}
+			for freeItem in pairs(newFreeItems) do
+				for recipe in pairs(ingredientIndex[freeItem] or {}) do
+					local actuallyFree = true
+					for ingredient in pairs(normalIngredients(recipe)) do
+						if not free[ingredient] then
+							actuallyFree = false
+							break
 						end
-						if not free[result] then
-							free[result] = true
-							nextLoopFreeItems[result] = true
-							if debugText then log(result.." is free via "..recipe.." since "..freeItem.." is free") end
+					end
+					if actuallyFree then
+						for result in pairs(normalResults(recipe)) do
+							if (tibComboPacks[result] or rawResources[result]) and markBadRecipe(recipe) then
+								break  -- Intervene against recipes that make resources/science free
+							end
+							if not free[result] then
+								free[result] = true
+								nextLoopFreeItems[result] = true
+								if debugText then log(result.." is free via "..recipe.." since "..freeItem.." is free") end
+							end
 						end
 					end
 				end
 			end
+			newFreeItems = nextLoopFreeItems
 		end
-		newFreeItems = nextLoopFreeItems
-	end
+		
+		removeBadRecipes() -- Pruning stupid recipes
+		if debugText then log(badRecipeCount.." bad recipes after free item list pass #"..freeItemIterations) end
+	until (badRecipeCount == previousBadRecipeCount)
 
-	-- Pruning stupid recipes 2nd pass
-	removeBadRecipes(2)
+	if debugText then  -- Log pruned recipe category info
+		for category, div in pairs(badRecipeCategories.div) do
+			local bs = (badRecipeCategories.num[category] / div > 0.2) and "**BS** " or ""
+			log(bs..category..": "..badRecipeCategories.num[category] .."/"..div)
+		end
+	end
 
 	-- Setup for depth calculations
 	local basicMaterials = table.deepcopy(rawResources)
@@ -366,7 +382,7 @@ function removeBadRecipes(pass)
 				end
 				local resultList = normalResults(recipe)
 				local numResults = listLength(resultList)
-				local sciencePackTypes, sciencePackCount  = 0, 0
+				local sciencePackTypes, sciencePackCount = 0, 0
 				for result, amount in pairs(resultList) do
 					if (result == "empty-barrel") and (numResults > 1) then  -- Bad recipes like unbarreling give empty barrels
 						markBadRecipe(recipe)
@@ -388,12 +404,6 @@ function removeBadRecipes(pass)
 					end
 				end
 			end
-		end
-	elseif pass == 2 then
-		--Only log table on second pass
-		for category, div in pairs(badRecipeCategories.div) do
-			local bs = (badRecipeCategories.num[category] / div > 0.2) and "**BS** " or ""
-			log(bs..category..": "..badRecipeCategories.num[category] .."/"..div)
 		end
 	end
 
@@ -435,6 +445,7 @@ function markBadRecipe(recipe)
 	if category then badRecipeCategories.num[category] = badRecipeCategories.num[category] + 1 end
 	local fullCategory = availableRecipes[recipe].fullCategory
 	if fullCategory then badRecipeCategories.num[fullCategory] = badRecipeCategories.num[fullCategory] + 1 end
+	badRecipeCount = badRecipeCount + 1
 	availableRecipes[recipe] = nil
 	return true
 end
