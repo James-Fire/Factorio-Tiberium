@@ -186,7 +186,7 @@ function giantSetupFunction()
 	repeat
 		local previousBadRecipeCount = badRecipeCount  -- So we can check if new recipes were marked as bad during this loop
 		local newFreeItems = table.deepcopy(cachedFree)
-		local free = table.deepcopy(cachedFree)
+		free = table.deepcopy(cachedFree)
 		local countFreeLoops = 0
 		freeItemIterations = freeItemIterations + 1
 		if debugText then log("$$ Building free item list. Attempt #"..freeItemIterations) end
