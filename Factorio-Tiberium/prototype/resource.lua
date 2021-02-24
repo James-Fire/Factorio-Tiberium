@@ -106,7 +106,7 @@ data:extend{
 		effect_darkness_multiplier = 2.0,
 		min_effect_alpha = 0.3,
 		max_effect_alpha = 0.5,
-		map_color = {r = 0, g = 0.9, b = 0}
+		map_color = {0.02, 1.0, 0.02}
 	},
 }
 	
@@ -176,7 +176,7 @@ data:extend{
 				variation_count = 1
 			}
 		},
-		map_color = {0, 0.9, 0},
+		map_color = {0.02, 1.0, 0.02},
 		map_grid = false
 	},
 	{
