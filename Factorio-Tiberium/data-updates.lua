@@ -273,4 +273,6 @@ for name, armor in pairs(data.raw.armor) do
 	end
 end
 
-data.raw.resource["uranium-ore"]["map_color"] = {0.0, 0.5, 0.0}  -- Desaturate uranium map color to make it not look like Tiberium
+if data.raw.resource["uranium-ore"] then  -- Desaturate uranium map color to make it not look like Tiberium
+	data.raw.resource["uranium-ore"]["map_color"] = {0.0, 0.5, 0.0}
+end
