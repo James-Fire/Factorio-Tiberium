@@ -560,11 +560,15 @@ data:extend{
 				recipe = "tiberium-rounds-magazine"
 			},
 			{
+				type = "unlock-recipe",
+				recipe = "tiberium-chemical-sprayer-ammo"
+			},
+			{
 				type = "nothing",
 				effect_description = {"technology-description.tiberium-military-partial-immunity", "80%"}
 			}
 		},
-		prerequisites = {"tiberium-thermal-research", "military-science-pack", "heavy-armor"},
+		prerequisites = {"tiberium-thermal-research", "flamethrower"},
 		unit = {
 			count = 100,
 			ingredients = {
@@ -602,12 +606,8 @@ data:extend{
 				type = "unlock-recipe",
 				recipe = "tiberium-rocket"
 			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-chemical-sprayer-ammo"
-			},
 		},
-		prerequisites = {"tiberium-chemical-research", "tiberium-military-1", "rocketry", "laser", "flamethrower"},
+		prerequisites = {"tiberium-chemical-research", "tiberium-military-1", "rocketry", "laser"},
 		unit = {
 			count = 300,
 			ingredients = {

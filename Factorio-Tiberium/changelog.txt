@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.14
+  Bugfixes:
+    - Fixed centrifuging recipes breaking when used with mods with specific recipe configurations (Krastorio 2, DeepMine, Bob's Mods, and Industrial Revolution 2)
+    - Less crashing and error message spam when deleting Tiberium nodes
+  Changes:
+    - Moved V2 Venom Chemical Sprayer Ammo from Tiberium Military 2 tech to Tiberium Military 1 tech and updated prerequisites
+    - Added missing Tiberium Ore icon to map generation screen
+    - Made Tiberium map color brighter and uranium map color darker to reduce confusion
+---------------------------------------------------------------------------------------------------
 Version: 1.1.13
   Features:
     - Added Obelisk of Light (Ion Beam Projector will be removed in a future update)
