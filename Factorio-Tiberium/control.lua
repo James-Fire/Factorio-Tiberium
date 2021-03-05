@@ -828,31 +828,31 @@ script.on_nth_tick(10, function(event) --Player damage 6 times per second
 				end
 			end
 			local damageMulti = global.tiberiumDamageTakenMulti[player.force.name]
-			if (damageMulti == 0) and player.character.grid then
-				break
-			elseif (damageMulti == 0) then
+			if (damageMulti == 0) and not player.character.grid then
 				damageMulti = 0.2
 			end
-			--Damage players that are standing on Tiberium Ore and not in vehicles
-			local nearby_ore_count = player.surface.count_entities_filtered{name = "tiberium-ore", position = player.position, radius = 1.5}
-			if nearby_ore_count > 0 and not player.character.vehicle and player.character.name ~= "jetpack-flying" then
-				safeDamage(player, TiberiumDamage * nearby_ore_count * 0.1 * damageMulti, game.forces.tiberium, "tiberium")
-			end
-			--Damage players with unsafe Tiberium products in their inventory
-			local damagingItems = 0
-			for _, inventory in pairs({player.get_inventory(defines.inventory.character_main), player.get_inventory(defines.inventory.character_trash)}) do
-				if inventory and inventory.valid then
-					for p = 1, #global.tiberiumProducts do
-						damagingItems = damagingItems + inventory.get_item_count(global.tiberiumProducts[p])
-						if damagingItems > 0 and not ItemDamageScale then break end
+			if damageMulti > 0 then
+				--Damage players that are standing on Tiberium Ore and not in vehicles
+				local nearby_ore_count = player.surface.count_entities_filtered{name = "tiberium-ore", position = player.position, radius = 1.5}
+				if nearby_ore_count > 0 and not player.character.vehicle and player.character.name ~= "jetpack-flying" then
+					safeDamage(player, TiberiumDamage * nearby_ore_count * 0.1 * damageMulti, game.forces.tiberium, "tiberium")
+				end
+				--Damage players with unsafe Tiberium products in their inventory
+				local damagingItems = 0
+				for _, inventory in pairs({player.get_inventory(defines.inventory.character_main), player.get_inventory(defines.inventory.character_trash)}) do
+					if inventory and inventory.valid then
+						for p = 1, #global.tiberiumProducts do
+							damagingItems = damagingItems + inventory.get_item_count(global.tiberiumProducts[p])
+							if damagingItems > 0 and not ItemDamageScale then break end
+						end
 					end
 				end
-			end
-			if damagingItems > 0 then
-				if ItemDamageScale then
-					safeDamage(player, math.ceil(damagingItems / 50) * TiberiumDamage * 0.3 * damageMulti, game.forces.tiberium, "tiberium")	
-				else
-					safeDamage(player, TiberiumDamage * 0.3 * damageMulti, game.forces.tiberium, "tiberium")
+				if damagingItems > 0 then
+					if ItemDamageScale then
+						safeDamage(player, math.ceil(damagingItems / 50) * TiberiumDamage * 0.3 * damageMulti, game.forces.tiberium, "tiberium")	
+					else
+						safeDamage(player, TiberiumDamage * 0.3 * damageMulti, game.forces.tiberium, "tiberium")
+					end
 				end
 			end
 		end

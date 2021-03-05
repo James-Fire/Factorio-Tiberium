@@ -3,7 +3,7 @@
     ["tiberium-separation-tech", "tiberium-slurry-centrifuging"],
     ["tiberium-processing-tech", "tiberium-molten-centrifuging"],
     ["tiberium-molten-processing", "tiberium-liquid-centrifuging"],
-    ["tiberium-power-tech", "tiberium-liquid-tiberium-tech"]
+    ["tiberium-power-tech", "tiberium-nuclear-research"]
   ],
   "item": [
     ["tiberium-armor", "heavy-armor"],
