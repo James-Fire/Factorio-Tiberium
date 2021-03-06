@@ -18,5 +18,7 @@ tiberiumSpike.energy_source = {
 	usage_priority = "secondary-input",
 	emissions_per_minute = 20
 }
+tiberiumSpike.next_upgrade = nil
+tiberiumSpike.fast_replaceable_group = nil
 
 data:extend{tiberiumSpike}

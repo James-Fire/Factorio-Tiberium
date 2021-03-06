@@ -13,5 +13,7 @@ tiberiumNetworkNode.energy_source = {
 	usage_priority = "secondary-input",
 	emissions_per_minute = 200
 }
+tiberiumNetworkNode.next_upgrade = nil
+tiberiumNetworkNode.fast_replaceable_group = nil
 
 data:extend{tiberiumNetworkNode}
