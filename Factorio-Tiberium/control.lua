@@ -53,6 +53,7 @@ script.on_init(function()
 	-- will stagnate instead of increasing with each new node found but updates will continue to happen for all fields.
 	global.minUpdateInterval = 1
 	global.intervalBetweenNodeUpdates = 18000
+	global.tibPerformanceMultiplier = 1
 	global.tiberiumTerrain = nil --"dirt-4" --Performance is awful, disabling this
 	global.oreType = "tiberium-ore"
 	global.tiberiumProducts = {global.oreType}
@@ -122,7 +123,8 @@ script.on_init(function()
 end)
 
 function updateGrowthInterval()
-	global.intervalBetweenNodeUpdates = math.floor(math.max(18000 / (#global.tibGrowthNodeList or 1), global.minUpdateInterval))
+	local performanceInterval = math.max(global.tibPerformanceMultiplier / 10, 1)  -- For performance multis over 10, space out the growth ticks more
+	global.intervalBetweenNodeUpdates = math.max(math.floor(18000 / (performanceInterval * (#global.tibGrowthNodeList or 1))), global.minUpdateInterval)
 end
 
 script.on_load(function()
@@ -311,6 +313,10 @@ script.on_configuration_changed(function(data)
 		end
 	end
 
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.15") then
+		global.tibPerformanceMultiplier = 1
+	end
+
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
 			(data["mod_changes"]["Factorio-Tiberium-Beta"] and data["mod_changes"]["Factorio-Tiberium-Beta"]["old_version"]) then
 		game.print("[Factorio-Tiberium] Successfully converted save from Beta Tiberium mod to Main Tiberium mod")
@@ -459,23 +465,33 @@ function PlaceOre(entity, howmany)
 	local position = entity.position
 
 	-- Scale growth rate based on distance from spawn
-	local growthRate = TiberiumGrowth * math.max(1, math.sqrt(math.abs(position.x) + math.abs(position.y)) / 20)
-			* math.max(1, TiberiumSpread / 50)
+	local growthRate = TiberiumGrowth * global.tibPerformanceMultiplier * math.max(1, TiberiumSpread / 50)
+			* math.max(1, math.sqrt(math.abs(position.x) + math.abs(position.y)) / 20)
 	-- Scale size based on distance from spawn, separate from density in case we end up wanting them to scale differently
 	local size = TiberiumRadius * math.max(1, math.sqrt(math.abs(position.x) + math.abs(position.y)) / 30)
 
 	local accelerator = surface.find_entity("tiberium-growth-accelerator", position)
 	if accelerator then
-		howmany = howmany + accelerator.products_finished
-		surface.create_entity{
-			name = "tiberium-growth-accelerator-text",
-			position = {x = position.x - 1.5, y = position.y - 1},
-			text = "Grew "..math.floor(accelerator.products_finished * growthRate).." extra ore",
-			color = {r = 0, g = 204, b = 255},
-		}
-		accelerator.products_finished = 0
+		-- Divide by tibPerformanceMultiplier to keep ore per credit constant
+		local extraAcceleratorOre = math.floor(accelerator.products_finished / global.tibPerformanceMultiplier)
+		if extraAcceleratorOre > 0 then
+			howmany = howmany + extraAcceleratorOre
+			surface.create_entity{
+				name = "tiberium-growth-accelerator-text",
+				position = {x = position.x - 1.5, y = position.y - 1},
+				text = "Grew "..math.floor(extraAcceleratorOre * growthRate).." extra ore",
+				color = {r = 0, g = 204, b = 255},
+			}
+			-- Only subtract for the whole ore increments that were used
+			accelerator.products_finished = math.fmod(accelerator.products_finished, global.tibPerformanceMultiplier)
+		end
 	end
 	
+	-- Spill excess growth amounts into extra ore tiles
+	if growthRate > TiberiumMaxPerTile then
+		howmany = math.floor(howmany * growthRate / TiberiumMaxPerTile)
+	end
+
 	for n = 1, howmany do
 		--Use polar coordinates to find a random angle and radius
 		local angle = math.random() * 2 * math.pi
@@ -675,7 +691,7 @@ commands.add_command("tibGrowAllNodes",
 	"Forces the mod to grow Tiberium ore at every node",
 	function(invocationdata)
 		local timer = game.create_profiler()
-		local placements = tonumber(invocationdata["parameter"]) or 300
+		local placements = tonumber(invocationdata["parameter"]) or math.ceil(300 / global.tibPerformanceMultiplier)
 		game.print("There are " .. #global.tibGrowthNodeList .. " nodes in the list")
 		for i = 1, #global.tibGrowthNodeList, 1 do
 			if global.tibGrowthNodeList[i].valid then
@@ -734,6 +750,15 @@ commands.add_command("tibChangeTerrain",
 		end
 	end
 )
+commands.add_command("tibPerformanceMultiplier",
+	"Reduces the number of updates made by Tiberium growth at the cost of Tiberium fields being uglier. Set the parameter to 1 to return to default growth behavior.",
+	function(invocationdata)
+		local multi = tonumber(invocationdata["parameter"]) or 10
+		global.tibPerformanceMultiplier = math.max(multi, 1)  -- Don't let them put the multiplier below 1
+		updateGrowthInterval()
+		game.print("Performance multiplier set to "..global.tibPerformanceMultiplier)
+	end
+)
 
 --initial chunk scan
 script.on_event(defines.events.on_chunk_generated, function(event)
@@ -783,7 +808,8 @@ script.on_event(defines.events.on_tick, function(event)
 		if tibGrowthNodeCount >= 1 then
 			local node = global.tibGrowthNodeList[global.tibGrowthNodeListIndex]
 			if node.valid then
-				PlaceOre(node, 10)
+				local oreCount = math.max(math.floor(10 / global.tibPerformanceMultiplier), 1)
+				PlaceOre(node, oreCount)
 				local position = node.position
 				local surface = node.surface
 				if surface.count_entities_filtered{area = areaAroundPosition(position), name = {"tibNode_tree", "tiberium-node-harvester", "tiberium-spike", "tiberium-growth-accelerator"}} == 0 then
