@@ -23,6 +23,7 @@ local badRecipeCategories = {num = {}, div = {}}
 local badRecipeCount = 0
 local recipeDepth = {}
 local ingredientDepth = {}
+local recipeUnlockTracker = {}
 
 local science = {{}, {}, {}}
 local allPacks = {}
@@ -65,8 +66,8 @@ if mods["space-exploration"] then
 	end
 end
 local TibCraftingTint = {
-	primary    = {r = 0.109804, g = 0.721567, b = 0.231373,  a = 1},
-	secondary  = {r = 0.098039, g = 1,        b = 0.278431,  a = 1},
+	primary    = {r = 0.109804, g = 0.721567, b = 0.231373,  a = 1.000000},
+	secondary  = {r = 0.098039, g = 1.000000, b = 0.278431,  a = 1.000000},
 	tertiary   = {r = 0.156863, g = 0.156863, b = 0.156863,  a = 0.235294},
 	quaternary = {r = 0.160784, g = 0.745098, b = 0.3058824, a = 0.345217},
 }
@@ -125,6 +126,8 @@ function giantSetupFunction()
 			end
 		end
 	end
+
+	if debugText then packHierarchy() end
 
 	-- Build a more comprehensive list of free items and ingredient index for later
 	for _, pump in pairs(data.raw["offshore-pump"]) do
@@ -273,18 +276,23 @@ function giantSetupFunction()
 	end
 end
 
---Modifies: availableRecipes, fakeRecipes, tibComboPacks
+--Modifies: availableRecipes, fakeRecipes, tibComboPacks, recipeUnlockTracker
 function allAvailableRecipes()
+	recipeUnlockTracker["default"] = {}
+	recipeUnlockTracker["fixed_recipe"] = {}
+	recipeUnlockTracker["technology"] = {}
 	-- Recipes unlocked by default
 	for recipe, recipeData in pairs(data.raw.recipe) do
 		if (recipeData.enabled ~= false) and (recipeData.hidden ~= true) then  -- Enabled and not hidden
 			availableRecipes[recipe] = true
+			recipeUnlockTracker["default"][recipe] = ""
 		end
 	end
-	-- Recipes nabled but only at a specific structure
+	-- Recipes enabled but only at a specific structure
 	for _, assembler in pairs(data.raw["assembling-machine"]) do
 		if assembler.fixed_recipe and data.raw.recipe[assembler.fixed_recipe] and (data.raw.recipe[assembler.fixed_recipe].enabled ~= false) then
 			availableRecipes[assembler.fixed_recipe] = true
+			recipeUnlockTracker["fixed_recipe"][assembler.fixed_recipe] = assembler.name
 		end
 	end
 	-- Recipes unlocked by a technology
@@ -294,6 +302,7 @@ function allAvailableRecipes()
 				if effect.recipe then
 					if data.raw.recipe[effect.recipe] then
 						availableRecipes[effect.recipe] = true
+						recipeUnlockTracker["technology"][effect.recipe] = tech
 						if data.raw.recipe[effect.recipe].result and tibComboPacks[data.raw.recipe[effect.recipe].result] then
 							tibComboPacks[data.raw.recipe[effect.recipe].result] = techData.unit.ingredients  --save for later
 						end
@@ -434,7 +443,7 @@ function markBadRecipe(recipe)
 		end
 	end
 	-- Now we are clear to remove it
-	log("Removing bad recipe "..recipe)
+	if debugText then log("Removing bad recipe "..recipe) end
 	for ingredient in pairs(availableRecipes[recipe]["ingredient"]) do
 		ingredientIndex[ingredient][recipe] = nil
 	end
@@ -448,6 +457,19 @@ function markBadRecipe(recipe)
 	badRecipeCount = badRecipeCount + 1
 	availableRecipes[recipe] = nil
 	return true
+end
+
+--Assumes: recipeUnlockTracker, tibComboPacks
+function packHierarchy()
+	for pack in pairs(tibComboPacks) do
+		local recipe = ""
+		if listLength(resultIndex[pack]) == 1 then
+			recipe = next(resultIndex[pack])
+			log(recipe.." is the only recipe for "..pack)
+		else
+			log("Multiple recipes for "..pack.." "..serpent.block(resultIndex[pack]))
+		end
+	end
 end
 
 -- Assumes: free, recipeDepth
