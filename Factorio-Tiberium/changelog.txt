@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.15
+  Bugfixes:
+    - Fixed crash that occurred when used with mods that remove uranium ore
+    - Fixed some players being unable to drive MARVs or take damage from Tiberium
+    - Fixed prototype copying to crash less often when other mods do bad things to vanilla prototypes
+  Features:
+    - Added /tibPerformanceMultiplier command that can improve UPS on servers with thousands of Tiberium nodes
+  Changes:
+    - Updated console commands to only display outputs to the player using them to avoid spamming servers
+    - Updated the /tibDeleteOre command to have a limit on the number of entities it will update at a time to prevent the command from permanently freezing on large maps
+---------------------------------------------------------------------------------------------------
 Version: 1.1.14
   Bugfixes:
     - Fixed centrifuging recipes breaking when used with mods with specific recipe configurations (Krastorio 2, DeepMine, Bob's Mods, and Industrial Revolution 2)

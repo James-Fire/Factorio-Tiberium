@@ -654,12 +654,12 @@ end)
 commands.add_command("tibNodeList",
 	"Print the list of known Tiberium nodes",
 	function()
-		game.print("There are " .. #global.tibGrowthNodeList .. " nodes in the list")
+		game.player.print("There are " .. #global.tibGrowthNodeList .. " nodes in the list")
 		for i = 1, #global.tibGrowthNodeList do
 			if global.tibGrowthNodeList[i].valid then
-				game.print("#"..i.." x:" .. global.tibGrowthNodeList[i].position.x .. " y:" .. global.tibGrowthNodeList[i].position.y)
+				game.player.print("#"..i.." x:" .. global.tibGrowthNodeList[i].position.x .. " y:" .. global.tibGrowthNodeList[i].position.y)
 			else
-				game.print("Invalid node in global at position #"..i)
+				game.player.print("Invalid node in global at position #"..i)
 			end
 		end
 	end
@@ -682,34 +682,41 @@ commands.add_command("tibRebuildLists",
 				table.insert(global.tibDrills, {entity = drill, name = drill.name, position = drill.position})
 			end
 		end
-		game.print("Found " .. #global.tibGrowthNodeList .. " nodes")
-		game.print("Found " .. #global.SRF_nodes .. " SRF hubs")
-		game.print("Found " .. #global.tibDrills .. " drills")
+		game.player.print("Found " .. #global.tibGrowthNodeList .. " nodes")
+		game.player.print("Found " .. #global.SRF_nodes .. " SRF hubs")
+		game.player.print("Found " .. #global.tibDrills .. " drills")
 	end
 )
 commands.add_command("tibGrowAllNodes",
-	"Forces the mod to grow Tiberium ore at every node",
+	"Forces multiple immediate Tiberium ore growth cycles at every node",
 	function(invocationdata)
 		local timer = game.create_profiler()
 		local placements = tonumber(invocationdata["parameter"]) or math.ceil(300 / global.tibPerformanceMultiplier)
-		game.print("There are " .. #global.tibGrowthNodeList .. " nodes in the list")
+		game.player.print("There are " .. #global.tibGrowthNodeList .. " nodes in the list")
 		for i = 1, #global.tibGrowthNodeList, 1 do
 			if global.tibGrowthNodeList[i].valid then
 				if debugText then
-					game.print("Growing node x:" .. global.tibGrowthNodeList[i].position.x .. " y:" .. global.tibGrowthNodeList[i].position.y)
+					game.player.print("Growing node x:" .. global.tibGrowthNodeList[i].position.x .. " y:" .. global.tibGrowthNodeList[i].position.y)
 				end
 				PlaceOre(global.tibGrowthNodeList[i], placements)
 			end
 		end
-		game.print({"", timer, " end of tibGrowAllNodes"})
+		game.player.print({"", timer, " end of tibGrowAllNodes"})
 	end
 )
 commands.add_command("tibDeleteOre",
-	"Deletes all the Tiberium ore on the map",
-	function()
+	"Deletes all the Tiberium ore on the map. May take a long time on maps with large amounts of Tiberium. Parameter is the max number of entity updates (10,000 by default)",
+	function(invocationdata)
+		local oreLimit = tonumber(invocationdata["parameter"]) or 10000
 		for _, surface in pairs(game.surfaces) do
+			local deletedOre = 0
 			for _, ore in pairs(surface.find_entities_filtered{name = "tiberium-ore"}) do
+				if deletedOre >= oreLimit then
+					game.player.print("Too much Tiberium, only deleting "..oreLimit.." ore tiles on this pass")
+					break
+				end
 				ore.destroy()
+				deletedOre = deletedOre + 1
 			end
 			-- Also destroy nodes if they aren't on valid terrain
 			for _, node in pairs(surface.find_entities_filtered{name = {"tibGrowthNode", "tibGrowthNode_infinite"}}) do
@@ -756,7 +763,7 @@ commands.add_command("tibPerformanceMultiplier",
 		local multi = tonumber(invocationdata["parameter"]) or 10
 		global.tibPerformanceMultiplier = math.max(multi, 1)  -- Don't let them put the multiplier below 1
 		updateGrowthInterval()
-		game.print("Performance multiplier set to "..global.tibPerformanceMultiplier)
+		game.player.print("Performance multiplier set to "..global.tibPerformanceMultiplier)
 	end
 )
 
