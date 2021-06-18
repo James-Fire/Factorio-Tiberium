@@ -1065,9 +1065,33 @@ function fugeRecipeTier(tier)
 	local ingredientAmount = (tier ~= 1) and math.max(160 / settings.startup["tiberium-value"].value, 1) or 16
 	local targetAmount = (tier == 1) and 32 or (tier == 2) and 64 or 128
 	local totalOre = 0
-	-- Total all resources for the tier
-	for pack in pairs(science[tier]) do
-		sumDicts(resources, allPacks[pack])
+	local overrideSetting = settings.startup["tiberium-centrifuge-override-"..tier].value
+	overrideSetting = string.gsub(overrideSetting, "\"", "")  -- Strip quotes
+	if string.len(overrideSetting) > 0 then
+		local delim = ","
+		local subDelim = ":"
+		for sub in string.gmatch(overrideSetting, "[^"..delim.."]+") do  -- Loop over comma-delimited substrings
+			local item = sub
+			local amount = 1
+			if string.find(sub, subDelim) then
+				item = string.match(sub, "^[^"..subDelim.."]+")  -- Before the colon
+				amount = tonumber(string.match(sub, "[^"..subDelim.."]+$"))  -- After the colon
+				if amount == 0 then  -- In case they put some non-numeric
+					amount = 1
+					log("tiberium-centrifuge-override-"..tier.." setting has an invalid number for item "..item)
+				end
+			end
+			if data.raw.item[item] or data.raw.fluid[item] then
+				resources[item] = amount
+			else
+				log("tiberium-centrifuge-override-"..tier.." setting has an invalid item: "..item)
+			end
+		end
+	else
+		-- Total all resources for the tier
+		for pack in pairs(science[tier]) do
+			sumDicts(resources, allPacks[pack])
+		end
 	end
 	-- Check number of fluids and weighted sum the resources
 	for res, amount in pairs(resources) do
