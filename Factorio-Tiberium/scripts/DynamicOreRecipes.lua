@@ -28,6 +28,9 @@ local recipeUnlockTracker = {}
 local science = {{}, {}, {}}
 local allPacks = {}
 local oreMult = {}
+for fluid in pairs(data.raw.fluid) do
+	oreMult[fluid] = 4
+end
 -- Lazy insert for rare ores
 oreMult["uranium-ore"] = 1 / 8
 if mods["bobores"] then
@@ -46,21 +49,9 @@ end
 if mods["space-exploration"] then
 	for itemName, item in pairs(data.raw.item) do
 		if item.subgroup == "core-fragments" then
-			if not item.flags then
+			if not item.flags or not LSlib.utils.table.hasValue(item.flags, "hidden") then
 				if debugText then log("Marked "..itemName.." as a raw resource") end
 				rawResources[itemName] = true
-			else
-				local skip = false
-				for _, flag in pairs(item.flags) do
-					if flag == "hidden" then
-						skip = true
-						break
-					end
-				end
-				if not skip then
-					if debugText then log("Marked "..itemName.." as a raw resource") end
-					rawResources[itemName] = true
-				end
 			end
 		end
 	end
@@ -78,14 +69,8 @@ function giantSetupFunction()
 	-- Raw resources
 	for _, resourceData in pairs(data.raw.resource) do
 		if resourceData.autoplace and resourceData.minable then
-			if resourceData.minable.result then
-				rawResources[resourceData.minable.result] = true
-			elseif resourceData.minable.results then --For fluids/multiple results
-				for _, result in pairs(resourceData.minable.results) do
-					if result.name then
-						rawResources[result.name] = true
-					end
-				end
+			for item in pairs(resultsToTable(resourceData.minable)) do
+				rawResources[item] = true
 			end
 		end
 	end
@@ -137,31 +122,15 @@ function giantSetupFunction()
 	end
 	for _, tree in pairs(data.raw["tree"]) do
 		if tree.autoplace and tree.minable then
-			if tree.minable.results then
-				for _, result in pairs(tree.minable.results) do
-					if result[1] then
-						free[result[1]] = true
-					elseif result.name then
-						free[result.name] = true
-					end
-				end
-			elseif tree.minable.result then
-				free[tree.minable.result] = true
+			for item in pairs(resultsToTable(tree.minable)) do
+				free[item] = true
 			end
 		end
 	end
 	for _, fish in pairs(data.raw["fish"]) do
 		if fish.autoplace and fish.minable then
-			if fish.minable.results then
-				for _, result in pairs(fish.minable.results) do
-					if result[1] then
-						free[result[1]] = true
-					elseif result.name then
-						free[result.name] = true
-					end
-				end
-			elseif fish.minable.result then
-				free[fish.minable.result] = true
+			for item in pairs(resultsToTable(fish.minable)) do
+				free[item] = true
 			end
 		end
 	end
@@ -596,191 +565,6 @@ function breadthFirst(itemList, recipesUsed, intermediates)
 	return breadthFirst(itemList, recipesUsed, intermediates)
 end
 
-function hybridSolve(targetList)
-	local recipesUsed = {}
-	local intermediates = {}
-	local initialSolve = table.deepcopy(targetList)
-	breadthFirst(initialSolve, recipesUsed, intermediates) --Already removes frees
-	local excess = false
-	local rawList = {}
-	
-	--log("target:"..serpent.block(targetList))
-	log("initial solve:"..serpent.block(initialSolve))
-	--Look for ways to use excess ingredients productively
-	for item, amount in pairs(initialSolve) do
-		if amount < 0 then
-			excess = true
-			for recipeName in pairs(ingredientIndex[item]) do
-				for result in pairs(normalResults(recipeName)) do
-					if intermediates[result] or targetList[result] then
-						recipesUsed[recipeName] = 0
-					end
-				end
-			end
-		end
-	end
-	if not excess then
-		return initialSolve  -- 4Head? The alternative is the super intense method that spins
-	end
-	for recipeName in pairs(recipesUsed) do
-		for ingredient in pairs(availableRecipes[recipeName]["ingredient"]) do
-			if rawResources[ingredient] and not free[ingredient] then
-				rawList[ingredient] = 0
-			elseif not rawResources[ingredient] and not targetList[ingredient] and not intermediates[ingredient] then
-				intermediates[ingredient] = true
-			end
-		end
-	end
-	
-	-- Determine row order
-	local resourceOrderList = {}
-	local rows = 1  -- Objective function row plus 1 row per item
-	for item in pairs(rawList) do
-		if not targetList[item] then
-			rows = rows + 1
-			resourceOrderList[item] = rows
-		end
-	end
-	for item in pairs(intermediates) do
-		if not targetList[item] then
-			rows = rows + 1
-			resourceOrderList[item] = rows
-		end
-	end
-	for item in pairs(targetList) do
-		rows = rows + 1
-		resourceOrderList[item] = rows
-	end
-	--log("Rows: "..rows)
-	local recipeOrderList = {}
-	local matrix = matrixZeroes(rows, 1)
-	matrix[1][1] = 1
-	--Build A and -c
-	for recipe in pairs(recipesUsed) do
-		local recipeMatrix = matrixZeroes(rows, 1)
-		for ingredient, amount in pairs(availableRecipes[recipe]["ingredient"]) do
-			if not free[ingredient] then
-				local row = resourceOrderList[ingredient]
-				if row then
-					recipeMatrix[row][1] = recipeMatrix[row][1] + amount  -- A
-					if rawList[ingredient] then
-						recipeMatrix[1][1] = recipeMatrix[1][1] + amount  -- -c
-					end
-				else log("extraneous ingredient "..ingredient.." for recipe "..recipe)
-				end
-			end
-		end
-		for result, amount in pairs(availableRecipes[recipe]["result"]) do
-			if not free[result] then
-				local row = resourceOrderList[result]
-				if row then  -- For now, ignoring byproducts not used by other recipes
-					recipeMatrix[row][1] = recipeMatrix[row][1] - amount  -- A
-					if rawList[result] then
-						local fluidMultiplier = data.raw.fluid[result] and 0.25 or 1  -- Reflect that liquids are cheaper
-						recipeMatrix[1][1] = recipeMatrix[1][1] - (amount * fluidMultiplier)  -- -c
-					end
-				end
-			end
-		end
-		matrixHorzAppend(matrix, recipeMatrix)
-		recipeOrderList[recipe] = #matrix[1] --Store which column each recipe is in?
-	end
-	for item in pairs(rawList) do
-		local row = resourceOrderList[item]
-		matrixScaleRow(matrix, row, -1)  -- Flipping inequality so slack variables are consistent
-	end
-	
-	local slackMatrix = matrixZeroes(1, rows - 1)
-	matrixVertAppend(slackMatrix, matrixIdentity(rows - 1))
-	matrixHorzAppend(matrix, slackMatrix)
-	
-	local bMatrix = matrixZeroes(rows, 1)
-	for item, amount in pairs(targetList) do
-		local row = resourceOrderList[item]
-		bMatrix[row][1] = -1 * amount
-	end
-	matrixHorzAppend(matrix, bMatrix)
-	
-	-- Standard matrix done, now make it canonical so we can start pivoting
-	-- Make b non-negative
-	local nonIdentityRows = {}
-	for i = 2, #matrix do
-		if matrix[i][#matrix[1]] < 0 then
-			matrixScaleRow(matrix, i, -1)
-			table.insert(nonIdentityRows, i)  -- I don't trust using numeric keys to iterate correctly
-		end
-	end
-	
-	-- local bVector = {}
-	-- for i = 1, #matrix do
-		-- bVector[i] = matrix[i][#matrix[1]]
-	-- end
-	--log("B vector before: "..serpent.block(bVector))
-	local pivotsToFeasible = 0
-	while next(nonIdentityRows) do  -- Is this going to infinite loop?
-		for _, i in pairs(nonIdentityRows) do
-			--log("Trying to fix missing identity on row "..i)
-			for j = 1, #matrix[1] - 1 do
-				if matrix[i][j] > 0.00000001 then
-					--log("Successfully found pivot on "..i..", "..j.." with value of "..matrix[i][j])
-					matrixDoPivot2(matrix, i, j)
-					pivotsToFeasible = pivotsToFeasible + 1
-					if matrix[i][j] ~= 1 then log("*** Precision error, lua stahp") end
-					break
-				end
-			end
-		end
-		if matrix[1][#matrix[1]] ~= matrix[1][#matrix[1]] then log("&&& We fucked up the objective at this point") end
-		nonIdentityRows = {}
-		for i = 2, #matrix do
-			if matrix[i][#matrix[1]] < 0 then
-				matrixScaleRow(matrix, i, -1)
-				table.insert(nonIdentityRows, i)
-			end
-		end
-	end
-	log("Took "..pivotsToFeasible.." pivots to reach a feasible solution")
-	log("Initial score: "..matrix[1][#matrix[1]])
-	--log("Available recipes: "..serpent.block(recipesUsed))
-	--log("Resource order list: "..serpent.block(resourceOrderList))
-	--log("Current matrix: "..serpent.block(matrix))
-	--Now we pivot simplex
-	pivotSimplex(matrix)
-	log("Final score: "..matrix[1][#matrix[1]])
-	--log("Final matrix: "..serpent.block(matrix))
-	
-	local finalSolve = {}
-	for row = 2, #matrix do
-		for col = 2, #matrix[1] - 1 do
-			if matrix[row][col] == 1 then
-				local inSolution = true
-				for i = 1, #matrix do
-					if i ~= row and matrix[i][col] ~= 0 then
-						inSolution = false
-						break
-					end
-				end
-				if inSolution then
-					--take row# look up items and add to final solve
-					for item, rowNum in pairs(resourceOrderList) do
-						if rowNum == row then
-							if rawResources[item] then
-								finalSolve[item] = matrix[row][#matrix[1]]
-							-- elseif not targetList[item] then
-								-- finalSolve[item] = -1 * matrix[row][#matrix[1]]
-							end
-							break
-						end
-					end
-					break -- found identity for this row, go to next
-				end
-			end
-		end
-	end
-	log("final solve:"..serpent.block(finalSolve))
-	return finalSolve
-end
-
 function normalIngredients(recipeName)
 	if fakeRecipes[recipeName] then
 		return availableRecipes[recipeName]["ingredient"]
@@ -807,31 +591,39 @@ function normalResults(recipeName)
 		return availableRecipes[recipeName]["result"]
 	end
 	local recipe = data.raw["recipe"][recipeName]
-	local result = recipe.normal and recipe.normal.result or recipe.result
-	if result then
-		resultAmount = recipe.normal and recipe.normal.result_count or recipe.result_count or 1
-		return {[result] = resultAmount}
+	local resultTable = resultsToTable(recipe.normal)
+	if next(resultTable) == nil then
+		resultTable = resultsToTable(recipe)
 	end
-	local results = recipe.normal and recipe.normal.results or recipe.results
-	if not results then
+	if next(resultTable) == nil then
 		log("#######Could not find results for "..recipeName)
-		return {}
-	end
-	local resultTable = {}
-	for _, result in pairs(results) do
-		if result[1] then
-			local amount = result[2]
-			if amount > 0 then
-				resultTable[result[1]] = amount
-			end
-		elseif result.name then
-			local amount = (result.amount or (result.amount_min + math.max(result.amount_min, result.amount_max)) / 2) * (result.probability or 1)
-			if amount > 0 then
-				resultTable[result.name] = amount
-			end
-		end
 	end
 	return resultTable
+end
+
+function resultsToTable(prototypeTable)
+	local out = {}
+	if type(prototypeTable) ~= "table" then
+		return out
+	end
+	if prototypeTable.results then
+		for _, result in pairs(prototypeTable.results) do
+			if result[1] then
+				local amount = result[2]
+				if amount > 0 then
+					out[result[1]] = amount
+				end
+			elseif result.name then
+				local amount = (result.amount or (result.amount_min + math.max(result.amount_min, result.amount_max)) / 2) * (result.probability or 1)
+				if amount > 0 then
+					out[result.name] = amount
+				end
+			end
+		end
+	elseif prototypeTable.result then
+		out[prototypeTable.result] = prototypeTable.result_count or prototypeTable.count or 1
+	end
+	return out
 end
 
 function sumDicts(dict1, dict2, logging)
@@ -872,124 +664,6 @@ function addPacksToTier(ingredients, collection)
 			collection[packName] = true
 		end
 	end
-end
-
-function pivotSimplex(matrix)
-	local pivotRow, pivotColumn = matrixFindPivot(matrix)
-	local pivotNumber = 0
-	while (pivotRow and pivotColumn) do
-		pivotNumber = pivotNumber + 1
-		log("Pivot #"..pivotNumber.." on "..pivotRow..", "..pivotColumn.." with objective function "..matrix[1][#matrix[1]])
-		matrixDoPivot2(matrix, pivotRow, pivotColumn)
-		pivotRow, pivotColumn = matrixFindPivot(matrix)
-	end
-	log("Took "..pivotNumber.." pivots to optimize")
-end
-
-function matrixScaleRow(matrix, row, scalar)
-	for i = 1, #matrix[row] do
-		matrix[row][i] = matrix[row][i] * scalar
-	end
-end
-
-function matrixFindPivot(matrix)
-	local bestRatio, pivotRow, pivotColumn
-	for j = 1, #matrix[1] - 1 do  -- Can't pivot on last column (b)
-		if matrix[1][j] < 0 then
-			for i = 2, #matrix do
-				if matrix[i][j] > 0 then
-					if not bestRatio or matrix[i][#matrix[i]] / matrix[i][j] < bestRatio then
-						bestRatio   = matrix[i][#matrix[i]] / matrix[i][j]
-						pivotRow    = i
-						pivotColumn = j
-					end
-				end
-			end
-		end
-	end
-	--log("Looked for pivot and found "..tostring(pivotRow)..", "..tostring(pivotColumn).." with a ratio of "..tostring(bestRatio))
-	return pivotRow, pivotColumn
-end
-
-function matrixDoPivot2(matrix, row, column) -- All in one function to avoid float issues
-	if matrix[row][column] == 0 then return end
-	matrixScaleRow(matrix, row, 1 / matrix[row][column])
-	for i = 1, #matrix do
-		if i ~= row then
-			for j = 1, #matrix[i] do
-				if j ~= column then
-					matrix[i][j] = matrix[i][j] - (matrix[row][j] * matrix[i][column] / matrix[row][column])
-				end
-			end
-			-- Do pivot column last because we need it for determining ratios for other columns
-			matrix[i][column] = 0
-		end
-	end
-	--Scale pivot row at the end, I guess we could also do it at the start
-	for j = 1, #matrix[row] do
-		if j ~= column then
-			matrix[row][j] = matrix[row][j] / matrix[row][column]
-		end
-	end
-	matrix[row][column] = 1
-end
-
-function matrixHorzAppend(matrix, append)
-	if #matrix ~= #append then  -- Row #s must match
-		log("Won't horz combine matrices with different sizes "..#matrix..", "..#append)
-		return
-	end
-	
-	local cols = #matrix[1]
-	for i = 1, #matrix do
-		for j = 1, #append[1] do
-			matrix[i][cols + j] = append[i][j]
-		end
-	end
-end
-
-function matrixVertAppend(matrix, append)
-	if #matrix[1] ~= #append[1] then  -- Col #s must match
-		log("Won't vert combine matrices with different sizes "..#matrix[1]..", "..#append[1])
-		return
-	end
-	
-	local rows = #matrix
-	for i = 1, #append do
-		matrix[rows + i] = append[i]
-	end
-end
-
--- Returns nxn identity matrix
-function matrixIdentity(n)
-	local matrix = {}
-	if type(n) == "number" then
-		for i = 1, n do
-			matrix[i] = {}
-			for j = 1, n do
-				if i == j then
-					matrix[i][j] = 1
-				else
-					matrix[i][j] = 0
-				end
-			end
-		end
-	else
-		log("Invalid identity call with "..tostring(n))
-	end
-	return matrix
-end
-
--- Returns a rowsxcols matrix of zeroes
-function matrixZeroes(rows, cols)
-	local matrix = {}
-	for i = 1, rows do
-		matrix[i] = {}
-		for j = 1, cols do
-			matrix[i][j] = 0
-		end
-	end
-	return matrix
 end
 
 function fugeTierSetup()
@@ -1131,58 +805,36 @@ function fugeRecipeTier(tier)
 		end
 	end
 	--Make actual recipe changes
-	LSlib.recipe.editEngergyRequired("tiberium-"..material.."-centrifuging", recipeMult)
-	LSlib.recipe.addIngredient("tiberium-"..material.."-centrifuging", item, ingredientAmount * recipeMult, "fluid")
+	local normalFugeRecipeName = "tiberium-"..material.."-centrifuging"
+	local sludgeFugeRecipeName = "tiberium-"..material.."-sludge-centrifuging"
+	LSlib.recipe.editEngergyRequired(normalFugeRecipeName, recipeMult)
+	LSlib.recipe.addIngredient(normalFugeRecipeName, item, ingredientAmount * recipeMult, "fluid")
 	if debugText then log("Tier "..tier.." centrifuge: "..ingredientAmount * recipeMult.." "..item) end
 	for resource, amount in pairs(resources) do
 		if (resource ~= "stone") and (amount > 1 / 128) then
 			local rounded = math.ceil(amount * recipeMult)
-			LSlib.recipe.addResult("tiberium-"..material.."-centrifuging", resource, rounded, fluids[resource] and "fluid" or "item")
+			LSlib.recipe.addResult(normalFugeRecipeName, resource, rounded, fluids[resource] and "fluid" or "item")
 			if debugText then log("> "..rounded.." "..resource) end
 		end
 	end
-	if resources["stone"] and (listLength(fluids) < 3) then
-		local stone = math.ceil(resources["stone"] * recipeMult)
-		LSlib.recipe.duplicate("tiberium-"..material.."-centrifuging", "tiberium-"..material.."-sludge-centrifuging")
-		data.raw.recipe["tiberium-"..material.."-sludge-centrifuging"].localised_name = {"recipe-name.tiberium-sludge-centrifuging", {"fluid-name."..item}}
-		LSlib.recipe.changeIcon("tiberium-"..material.."-sludge-centrifuging", tiberiumInternalName.."/graphics/icons/"..material.."-sludge-centrifuging.png", 32)
-		LSlib.recipe.addResult("tiberium-"..material.."-sludge-centrifuging", "tiberium-sludge", stone, "fluid")
-		LSlib.recipe.addResult("tiberium-"..material.."-centrifuging", "stone", stone, "item")
+	local stone = math.ceil((resources["stone"] or 0) * recipeMult)
+	if (stone > 0) and (listLength(fluids) < 3) then -- Only create sludge recipe if there is stone to convert and we have enough fluid boxes
+		LSlib.recipe.duplicate(normalFugeRecipeName, sludgeFugeRecipeName)
+		LSlib.recipe.setLocalisedName(sludgeFugeRecipeName, {"recipe-name.tiberium-sludge-centrifuging", {"fluid-name."..item}})
+		LSlib.recipe.changeIcon(sludgeFugeRecipeName, tiberiumInternalName.."/graphics/icons/"..material.."-sludge-centrifuging.png", 32)
+		LSlib.technology.addRecipeUnlock("tiberium-"..material.."-centrifuging", sludgeFugeRecipeName)
+		LSlib.recipe.addResult(sludgeFugeRecipeName, "tiberium-sludge", stone, "fluid")
+	end
+	if stone > 0 then  -- Add stone after duplicating bc LSlib change result doesn't support changing result types
+		LSlib.recipe.addResult(normalFugeRecipeName, "stone", stone, "item")
 		if debugText then log("> "..stone.." stone") end
-	else  -- Don't create sludge recipe if there is no stone to convert or we don't have enough fluid boxes
-		--data.raw["recipe"]["tiberium-"..material.."-sludge-centrifuging"] = nil  Don't delete recipe, just make it unavailable
-		local tech = "tiberium-"..material.."-centrifuging"
-		for i, effect in pairs(data.raw["technology"][tech]["effects"]) do
-			if effect.recipe == "tiberium-"..material.."-sludge-centrifuging" then
-				table.remove(data.raw["technology"][tech]["effects"], i)
-				break
-			end
-		end
-		if resources["stone"] then
-			local stone = math.ceil(resources["stone"] * recipeMult)
-			LSlib.recipe.addResult("tiberium-"..material.."-centrifuging", "stone", stone, "item")
-			if debugText then log("> "..stone.." stone") end
-		end
 	end
 end
 
 function singletonRecipes()
 	for resourceName, resourceData in pairs(data.raw.resource) do
 		if resourceData.autoplace and resourceData.minable then
-			local minableResults = {}
-			if resourceData.minable.result then
-				minableResults[resourceData.minable.result] = true
-			elseif resourceData.minable.results then --For fluids/multiple results
-				for _, result in pairs(resourceData.minable.results) do
-					if result.name then
-						minableResults[result.name] = true
-						if (result.type == "fluid") and not oreMult[result.name] then
-							oreMult[result.name] = 4
-						end
-					end
-				end
-			end
-			for ore in pairs(minableResults) do
+			for ore in pairs(resultsToTable(resourceData.minable)) do
 				if ore ~= "tiberium-ore" then
 					addDirectRecipe(ore)
 					addCreditRecipe(ore)

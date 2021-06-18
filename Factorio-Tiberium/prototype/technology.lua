@@ -15,10 +15,6 @@ data:extend{
 			},
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-slurry-sludge-centrifuging"
-			},
-			{
-				type = "unlock-recipe",
 				recipe = "tiberium-sludge-to-stone-brick"
 			},
 		},
@@ -45,10 +41,6 @@ data:extend{
 			{
 				type = "unlock-recipe",
 				recipe = "tiberium-molten-centrifuging"
-			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-molten-sludge-centrifuging"
 			},
 		},
 		prerequisites = {"tiberium-slurry-centrifuging", "tiberium-thermal-research", "advanced-electronics", "concrete"},
@@ -98,10 +90,6 @@ data:extend{
 			{
 				type = "unlock-recipe",
 				recipe = "tiberium-liquid-centrifuging"
-			},
-			{
-				type = "unlock-recipe",
-				recipe = "tiberium-liquid-sludge-centrifuging"
 			},
 		},
 		prerequisites = {"tiberium-molten-centrifuging", "tiberium-chemical-research"},
