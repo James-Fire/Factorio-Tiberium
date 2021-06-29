@@ -80,8 +80,8 @@ data:extend{
 	{
 		type = "string-setting",
 		name = "tiberium-centrifuge-override-1",
-		localised_name = {"mod-setting-name.tiberium-centrifuge-override", {"fluid-name.tiberium-slurry"}},
-		localised_description = {"mod-setting-description.tiberium-centrifuge-override", {"fluid-name.tiberium-slurry"}},
+		localised_name = {"mod-setting-name.tiberium-centrifuge-override", {"technology-name.tiberium-slurry-centrifuging"}},
+		localised_description = {"mod-setting-description.tiberium-centrifuge-override", {"technology-name.tiberium-slurry-centrifuging"}},
 		setting_type = "startup",
 		default_value = "",
 		allow_blank = true,
@@ -91,8 +91,8 @@ data:extend{
 	{
 		type = "string-setting",
 		name = "tiberium-centrifuge-override-2",
-		localised_name = {"mod-setting-name.tiberium-centrifuge-override", {"fluid-name.molten-tiberium"}},
-		localised_description = {"mod-setting-description.tiberium-centrifuge-override", {"fluid-name.molten-tiberium"}},
+		localised_name = {"mod-setting-name.tiberium-centrifuge-override", {"technology-name.tiberium-molten-centrifuging"}},
+		localised_description = {"mod-setting-description.tiberium-centrifuge-override", {"technology-name.tiberium-molten-centrifuging"}},
 		setting_type = "startup",
 		default_value = "",
 		allow_blank = true,
@@ -102,8 +102,8 @@ data:extend{
 	{
 		type = "string-setting",
 		name = "tiberium-centrifuge-override-3",
-		localised_name = {"mod-setting-name.tiberium-centrifuge-override", {"fluid-name.liquid-tiberium"}},
-		localised_description = {"mod-setting-description.tiberium-centrifuge-override", {"fluid-name.liquid-tiberium"}},
+		localised_name = {"mod-setting-name.tiberium-centrifuge-override", {"technology-name.tiberium-liquid-centrifuging"}},
+		localised_description = {"mod-setting-description.tiberium-centrifuge-override", {"technology-name.tiberium-liquid-centrifuging"}},
 		setting_type = "startup",
 		default_value = "",
 		allow_blank = true,
