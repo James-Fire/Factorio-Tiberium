@@ -61,7 +61,8 @@ script.on_init(function()
 	if not game.forces[global.damageForceName] then
 		game.create_force(global.damageForceName)
 	end
-	global.exemptDamageItems = {  -- List of prototypes that should not be damaged by growing Tiberium
+
+	global.exemptDamagePrototypes = {  -- List of prototypes that should not be damaged by growing Tiberium
 		["mining-drill"] = true,
 		["transport-belt"] = true,
 		["underground-belt"] = true,
@@ -73,9 +74,18 @@ script.on_init(function()
 		["inserter"] = true,
 		["straight-rail"] = true,
 		["curved-rail"] = true,
+		["rail-chain-signal"] = true,
+		["rail-signal"] = true,
 		["unit-spawner"] = true,  --Biters immune until both performance and evo factor are fixed
 		["turret"] = true
 	}
+	global.exemptDamageNames = {
+		["mining-depot"] = true,
+	}
+	for i = 1,100 do 
+		global.exemptDamageNames["tiberium-oremining-drone"..i] = true
+	end
+
 	global.tiberiumDamageTakenMulti = {}
 	for _, force in pairs(game.forces) do
 		global.tiberiumDamageTakenMulti[force.name] = 1
@@ -391,9 +401,9 @@ function AddOre(surface, position, growthRate)
 		end
 	end
 	
-	--Damage adjacent entities unless it's in the list of exemptDamageItems
+	--Damage adjacent entities unless it's in the list of exemptDamagePrototypes
 	for _, entity in pairs(surface.find_entities(area)) do
-		if entity.valid and not global.exemptDamageItems[entity.type] then
+		if entity.valid and not global.exemptDamagePrototypes[entity.type] and not global.exemptDamageNames[entity.name] then
 			if entity.type == "tree" then
 				safeDamage(entity, 9999, game.forces.tiberium, "tiberium")
 			else
