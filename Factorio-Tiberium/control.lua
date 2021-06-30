@@ -202,12 +202,13 @@ script.on_configuration_changed(function(data)
 	
 	if upgradingToVersion(data, tiberiumInternalName, "1.0.2") then
 		if not global.tibOnEntityDestroyed then global.tibOnEntityDestroyed = {} end
+		local entityNames = {"tiberium-srf-emitter", "tiberium-spike", "tiberium-growth-accelerator-node", "tiberium-growth-accelerator"}
 		for _, surface in pairs(game.surfaces) do
 			-- Registering entities correctly this time
 			for _, entity in pairs(surface.find_entities_filtered{type = "mining-drill"}) do
 				registerEntity(entity)
 			end
-			for _, entity in pairs(surface.find_entities_filtered{name = {"tiberium-srf-emitter", "tiberium-spike", "tiberium-growth-accelerator-node", "tiberium-growth-accelerator"}}) do
+			for _, entity in pairs(surface.find_entities_filtered{name = entityNames}) do
 				registerEntity(entity)
 			end
 		end
@@ -245,6 +246,7 @@ script.on_configuration_changed(function(data)
 	end
 	
 	if upgradingToVersion(data, tiberiumInternalName, "1.0.9") then
+		local treeBlockers = {"tibNode_tree", "tiberium-node-harvester", "tiberium-growth-accelerator"}
 		for _, surface in pairs(game.surfaces) do
 			-- Destroy Blossom Trees with no nodes
 			for _, blossom in pairs(surface.find_entities_filtered{name = "tibNode_tree"}) do
@@ -255,7 +257,7 @@ script.on_configuration_changed(function(data)
 			end
 			-- Place Blossom Trees on all bare nodes
 			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
-				if surface.count_entities_filtered{area = areaAroundPosition(node.position), name = {"tibNode_tree", "tiberium-node-harvester", "tiberium-growth-accelerator"}} == 0 then
+				if surface.count_entities_filtered{area = areaAroundPosition(node.position), name = treeBlockers} == 0 then
 					createBlossomTree(surface, node.position)
 					if debugText then game.print("created tree at x: "..node.position.x.." y: "..node.position.y) end
 				end
@@ -371,20 +373,26 @@ end
 function AddOre(surface, position, growthRate)
 	local area = areaAroundPosition(position)
 	local entities = surface.find_entities_filtered{area = area, name = "tiberium-ore"}
+	local tile = surface.get_tile(position)
+	growthRate = math.min(growthRate, TiberiumMaxPerTile)
 
 	if #entities >= 1 then
 		oreEntity = entities[1]
-		local newAmount = math.min(oreEntity.amount + growthRate, TiberiumMaxPerTile)
-		if newAmount > oreEntity.amount then --Don't reduce ore amount when growing node
-			oreEntity.amount = newAmount
+		if oreEntity.amount < TiberiumMaxPerTile then --Don't reduce ore amount when growing node
+			oreEntity.amount = math.min(oreEntity.amount + growthRate, TiberiumMaxPerTile)
 		end
 	elseif surface.count_entities_filtered{area = area, name = {"tibGrowthNode", "tibGrowthNode_infinite"}} > 0 then
 		return false --Don't place ore on top of nodes
+	elseif tile.collides_with("resource-layer") then
+		return false  -- Don't place on invalid tiles
 	else
 		--Tiberium destroys all other non-Tiberium resources as it spreads
 		local otherResources = surface.find_entities_filtered{area = area, type = "resource"}
 		for _, entity in pairs(otherResources) do
 			if (entity.name ~= "tiberium-ore") and (entity.name ~= "tibGrowthNode") and (entity.name ~= "tibGrowthNode_infinite") then
+				if entity.amount and entity.amount > 0 then
+					growthRate = math.min(growthRate + (0.5 * entity.amount), TiberiumMaxPerTile)
+				end
 				entity.destroy()
 			end
 		end
@@ -393,7 +401,7 @@ function AddOre(surface, position, growthRate)
 				and (math.random() < (TiberiumSpread / 100) ^ 4) then  -- Around 1% chance to turn a tree into a Blossom Tree
 			CreateNode(surface, newPosition)
 		else
-			oreEntity = surface.create_entity{name = "tiberium-ore", amount = math.min(growthRate, TiberiumMaxPerTile), position = position}
+			oreEntity = surface.create_entity{name = "tiberium-ore", amount = growthRate, position = position, enable_cliff_removal = false}
 			if global.tiberiumTerrain then
 				surface.set_tiles({{name = global.tiberiumTerrain, position = position}}, true, false)
 			end
@@ -606,33 +614,20 @@ end
 --Code for making the Liquid Seed spread tib
 function TiberiumSeedMissile(surface, position, resource, amount)
 	local radius = math.floor(amount^0.2)
-	for x = position.x - radius*radius, position.x + radius*radius do
-		for y = position.y - radius*radius, position.y + radius*radius do
-			if ((x-position.x)*(x-position.x))+((y-position.y)*(y-position.y))<(radius*radius) then
-				local intensity = math.floor(amount^0.9/radius - (position.x - x)^2 - (position.y - y)^2)
+	local r2 = radius * radius
+	for x = position.x - r2, position.x + r2 do
+		for y = position.y - r2, position.y + r2 do
+			if ((x - position.x)^2 + (y - position.y)^2) < r2 then
+				local intensity = math.floor(amount^0.9 / radius - (position.x - x)^2 - (position.y - y)^2)
 				if intensity > 0 then
-					local placePos = {x = math.floor(x)+0.5, y = math.floor(y)+0.5}
-					local oreEntity = surface.find_entity("tiberium-ore", placePos)
-					local node = surface.find_entity("tibGrowthNode", placePos)
+					local placePos = {x = math.floor(x) + 0.5, y = math.floor(y) + 0.5}
 					local spike = surface.find_entity("tibGrowthNode_infinite", placePos)
+					local node = surface.find_entity("tibGrowthNode", placePos)
 					if spike then
 					elseif node then
 						node.amount = node.amount + intensity
-					elseif oreEntity then
-						oreEntity.amount = oreEntity.amount + intensity
 					else
-						local tile = surface.get_tile(placePos)
-						if (not tile.collides_with("resource-layer")) then
-							for _, ore in pairs(surface.find_entities_filtered{position = placePos, type = "resource"}) do
-								ore.destroy()
-							end
-							surface.create_entity{name = resource, position = placePos, amount = intensity, enable_cliff_removal = false}
-							--Cosmetic changes
-							if global.tiberiumTerrain then
-								surface.set_tiles({{name = global.tiberiumTerrain, position = placePos}}, true, false)
-							end
-							surface.destroy_decoratives{position = placePos} --Remove decoration on tile on spread.
-						end
+						AddOre(surface, placePos, intensity)
 					end
 				end
 			end
@@ -829,7 +824,8 @@ script.on_event(defines.events.on_tick, function(event)
 				PlaceOre(node, oreCount)
 				local position = node.position
 				local surface = node.surface
-				if surface.count_entities_filtered{area = areaAroundPosition(position), name = {"tibNode_tree", "tiberium-node-harvester", "tiberium-spike", "tiberium-growth-accelerator"}} == 0 then
+				local treeBlockers = {"tibNode_tree", "tiberium-node-harvester", "tiberium-spike", "tiberium-growth-accelerator"}
+				if surface.count_entities_filtered{area = areaAroundPosition(position), name = treeBlockers} == 0 then
 					createBlossomTree(surface, position)
 				end
 			else
