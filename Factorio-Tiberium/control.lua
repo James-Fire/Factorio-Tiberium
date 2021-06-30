@@ -612,13 +612,12 @@ function CreateNode(surface, position)
 end
 
 --Code for making the Liquid Seed spread tib
-function TiberiumSeedMissile(surface, position, resource, amount)
-	local radius = math.floor(amount^0.2)
-	local r2 = radius * radius
-	for x = position.x - r2, position.x + r2 do
-		for y = position.y - r2, position.y + r2 do
-			if ((x - position.x)^2 + (y - position.y)^2) < r2 then
-				local intensity = math.floor(amount^0.9 / radius - (position.x - x)^2 - (position.y - y)^2)
+function TiberiumSeedMissile(surface, position, amount)
+	local radius = math.floor(amount^0.3)
+	for x = position.x - radius, position.x + radius do
+		for y = position.y - radius, position.y + radius do
+			if ((x - position.x)^2 + (y - position.y)^2) < radius then
+				local intensity = math.floor(amount^0.57 - (position.x - x)^2 - (position.y - y)^2)
 				if intensity > 0 then
 					local placePos = {x = math.floor(x) + 0.5, y = math.floor(y) + 0.5}
 					local spike = surface.find_entity("tibGrowthNode_infinite", placePos)
@@ -643,7 +642,7 @@ end
 script.on_event(defines.events.on_script_trigger_effect, function(event)
 	--Liquid Seed trigger
 	if event.effect_id == "seed-launch" then
-		TiberiumSeedMissile(game.surfaces[event.surface_index], event.target_position, "tiberium-ore", TiberiumMaxPerTile)
+		TiberiumSeedMissile(game.surfaces[event.surface_index], event.target_position, 4 * TiberiumMaxPerTile)
 		return
 	end
 end)
@@ -1193,6 +1192,27 @@ function removeTCNBeacon(surface, position)
 end
 
 script.on_event(defines.events.on_entity_destroyed, on_remove_entity)
+
+function on_pre_mined(event)
+	local entity = event.entity
+	if entity and entity.fluidbox then
+		local rawTibOreEquivalent = 0
+		local fluidContents = entity.get_fluid_contents()
+		local oreValueMulti = 10 / settings.startup["tiberium-value"].value
+		rawTibOreEquivalent = rawTibOreEquivalent + (fluidContents["tiberium-slurry"] or 0)
+		rawTibOreEquivalent = rawTibOreEquivalent + 2 * (fluidContents["molten-tiberium"] or 0)
+		rawTibOreEquivalent = rawTibOreEquivalent + 4 * (fluidContents["liquid-tiberium"] or 0)
+		rawTibOreEquivalent = rawTibOreEquivalent * oreValueMulti
+		if rawTibOreEquivalent > 0 then
+			game.print("Created "..tostring(rawTibOreEquivalent).." ore")
+			TiberiumSeedMissile(entity.surface, entity.position, rawTibOreEquivalent)
+		end
+	end
+end
+
+script.on_event(defines.events.on_pre_player_mined_item, on_pre_mined)
+script.on_event(defines.events.on_robot_pre_mined, on_pre_mined)
+script.on_event(defines.events.on_entity_died, on_pre_mined)
 
 -- Set modules in hidden beacons for Tiberium Control Network speed bonus
 function ManageTCNBeacon(surface, position, force)
