@@ -898,7 +898,7 @@ script.on_nth_tick(10, function(event) --Player damage 6 times per second
 					player.vehicle.insert{name = "tiberium-ore", count = math.floor(harvested_amount)}
 				end
 			end
-			local damageMulti = global.tiberiumDamageTakenMulti[player.force.name]
+			local damageMulti = global.tiberiumDamageTakenMulti[player.force.name] or 1  -- Full damage for forces that weren't initialized #ticket-0146
 			if (damageMulti == 0) and not player.character.grid then
 				damageMulti = 0.2
 			end

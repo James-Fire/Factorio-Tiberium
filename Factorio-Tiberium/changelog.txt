@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.16
+  Bugfixes:
+    - Tiberium growth no longer damages train signals or Klonan's mining drones/depots
+    - Made Tiberium processing recipes available at Oil Refineries when Industrial Revolution 2 is active. Thanks to Archie from our Discord for proactively implementing this as a patch mod
+    - Fixed Tiberium processing recipes being inaccessible when using other mods that mess with Refineries. The recipes will become available at Tiberium Centrifuges as a fallback
+    - Fixed a crash from other mods creating new forces
+  Features:
+    - New setting to override Tiberium Centrifuging outputs so users that know better than the algorithm can specify more balanced resource amounts
+    - When structures containing Tiberium fluids are destroyed, they spill to create Tiberium ore patches
+    - Other mods can now flag any item for conversion into sludge in centrifuging recipes by setting the "tiberium_sludge" property on the item prototype to "true"
+  Changes:
+    - Tiberium Seed Rocket behavior standardized so it now destroys trees and no longer cause ore patches to go above maximum richness
+    - Removed Ion Beam Projector (use Obelisk of Light instead)
+    - Improved centrifuging recipe generation to weight resources for science packs that are used more frequently and in larger amounts and to avoid different tiers having identical outputs
+---------------------------------------------------------------------------------------------------
 Version: 1.1.15
   Bugfixes:
     - Fixed crash that occurred when used with mods that remove uranium ore

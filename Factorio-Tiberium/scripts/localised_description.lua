@@ -5,10 +5,13 @@ prototypes["ammo"] = {
 	"tiberium-rounds-magazine",
 	"tiberium-rocket",
 	"tiberium-seed",
+	"tiberium-chemical-sprayer-ammo",
 }
 prototypes["technology"] = {
-	"tiberium-separation-tech",
-	"tiberium-processing-tech",
+	"tiberium-slurry-centrifuging",
+	"tiberium-molten-centrifuging",
+	"tiberium-liquid-centrifuging",
+	"tiberium-advanced-molten-processing",
 	"tiberium-control-network-tech",
 	"tiberium-power-tech",
 	"tiberium-sludge-processing",
@@ -26,10 +29,15 @@ prototypes["technology"] = {
 	"tiberium-containment-tech",
 	"tiberium-growth-acceleration-acceleration",
 	"tiberium-control-network-speed",
+	"tiberium-advanced-containment-tech",
 }
 prototypes["recipe"] = {
 	"tiberium-power-armor",
 	"tiberium-sludge-from-slurry",
+	"tiberium-science-thru-thermal",
+	"tiberium-science-thru-chemical",
+	"tiberium-science-thru-nuclear",
+	"tiberium-science-thru-EM",
 }
 prototypes["armor"] = {
 	"tiberium-armor",
@@ -41,7 +49,6 @@ prototypes["car"] = {
 prototypes["item"] = {
 	"tiberium-power-plant",
 	"tiberium-growth-credit",
-	"tiberium-growth-accelerator",
 	"tiberium-network-node",
 	"tiberium-node-harvester",
 	"tiberium-srf-emitter",
@@ -54,9 +61,11 @@ prototypes["item"] = {
 	"tiberium-empty-cell",
 	"tiberium-dirty-cell",
 	"tiberium-fuel-cell",
-	"tiberium-data",
-	"tiberium-aoe-node-harvester",
-	"tiberium-beacon-node",
+	"tiberium-data-mechanical",
+	"tiberium-data-thermal",
+	"tiberium-data-chemical",
+	"tiberium-data-nuclear",
+	"tiberium-data-EM",
 }
 prototypes["tool"] = {
 	"tiberium-science",
@@ -74,8 +83,12 @@ prototypes["mining-drill"] = {
 	"tiberium-aoe-node-harvester",
 	"tiberium-spike",
 }
+prototypes["ammo-turret"] = {
+	"tiberium-advanced-guard-tower",
+}
 prototypes["electric-turret"] = {
 	"tiberium-ion-turret",
+	"tiberium-obelisk-of-light",
 }
 prototypes["beacon"] = {
 	"tiberium-beacon-node",
