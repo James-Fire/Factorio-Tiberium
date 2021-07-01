@@ -33,4 +33,25 @@ if mods["alien-biomes"] then  -- Reverting this change so Tiberium can grow on l
 	end
 end
 
+-- If there is no refinery that can be set to Tiberium processing recipes, allow them to be made at our centrifuges
+local openRefinery = false
+for assemblerName, assembler in pairs(data.raw["assembling-machine"]) do
+	if (LSlib.utils.table.hasValue(assembler.crafting_categories or {}, "oil-processing") and 
+			assembler.minable and not assembler.fixed_recipe) then  -- Minable as the simplest proxy for it being a real entity that players can create
+		openRefinery = true
+		break
+	end
+end
+if not openRefinery then
+	for _, recipe in pairs({"molten-tiberium-processing", "tiberium-advanced-molten-processing", "tiberium-liquid-processing"}) do
+		if data.raw.recipe[recipe] then
+			LSlib.recipe.setCraftingCategory(recipe, "tiberium-centrifuge-1")
+			-- Rebalance from refinery to centrifuge to preserve power/pollution amounts
+			data.raw.recipe[recipe].emissions_multiplier = (data.raw.recipe[recipe].emissions_multiplier or 1) * 0.75
+			data.raw.recipe[recipe].energy_required = (data.raw.recipe[recipe].energy_required or 1) * 2
+			data.raw.recipe[recipe].always_show_made_in = true
+		end
+	end
+end
+
 require("scripts/DynamicOreRecipes")

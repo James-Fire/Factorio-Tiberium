@@ -170,6 +170,13 @@ if mods["pypetroleumhandling"] then
 	LSlib.recipe.setCraftingCategory("tiberium-advanced-molten-processing", "lor")
 end
 
+if mods["IndustrialRevolution"] then
+	if data.raw["assembling-machine"]["oil-refinery"] then
+	    data.raw["assembling-machine"]["oil-refinery"].fixed_recipe = nil
+	    data.raw["assembling-machine"]["oil-refinery"].show_recipe_icon = true
+	end
+end
+
 if mods["angelspetrochem"] then	
 	table.insert(TibBasicScience, "angels-chemical-plant")
 	table.insert(TibBasicScience, "angels-chemical-plant-2")
