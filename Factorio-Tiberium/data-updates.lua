@@ -155,6 +155,9 @@ if mods["MoreScience"] then
 	end
 end
 
+-- Flag any item as being convertible to sludge for centrifuging recipes by setting the tiberium_sludge property to true
+data.raw.item.stone.tiberium_sludge = true
+
 if mods["omnimatter"] then
 	omni.matter.add_ignore_resource("tiberium-ore")
     omni.matter.add_ignore_resource("tibGrowthNode")
