@@ -16,6 +16,7 @@ local availableRecipes = {}
 local fakeRecipes = {}
 local rawResources = {}
 local tibComboPacks = {}
+local techCosts = {}
 local catalyst = {}
 local ingredientIndex = {}
 local resultIndex = {}
@@ -86,6 +87,9 @@ function giantSetupFunction()
 		end
 	end
 
+	-- Record all tech costs for later use
+	allTechCosts()
+
 	-- Compile list of available recipes
 	allAvailableRecipes()
 
@@ -93,22 +97,26 @@ function giantSetupFunction()
 	for recipe in pairs(availableRecipes) do
 		local ingredientList = normalIngredients(recipe)
 		local resultList     = normalResults(recipe)
-		availableRecipes[recipe] = {ingredient = ingredientList, result = resultList}
-		for ingredient in pairs(ingredientList) do
-			if resultList[ingredient] then catalyst[recipe] = true end -- Keep track of enrichment/catalyst recipes
-			ingredientIndex[ingredient] = ingredientIndex[ingredient] or {}
-			ingredientIndex[ingredient][recipe] = true
-		end
-		for result in pairs(resultList) do
-			if not resultIndex[result] then resultIndex[result] = {} end
-			resultIndex[result][recipe] = true
-		end
-		if data.raw.recipe[recipe] and not fakeRecipes[recipe] then
-			local category = data.raw.recipe[recipe].category
-			availableRecipes[recipe].category = category
-			if category or data.raw.recipe[recipe].subgroup then
-				availableRecipes[recipe].fullCategory = (category or "").."|"..(data.raw.recipe[recipe].subgroup or "")
+		if next(resultList) then
+			availableRecipes[recipe] = {ingredient = ingredientList, result = resultList}
+			for ingredient in pairs(ingredientList) do
+				if resultList[ingredient] then catalyst[recipe] = true end -- Keep track of enrichment/catalyst recipes
+				ingredientIndex[ingredient] = ingredientIndex[ingredient] or {}
+				ingredientIndex[ingredient][recipe] = true
 			end
+			for result in pairs(resultList) do
+				if not resultIndex[result] then resultIndex[result] = {} end
+				resultIndex[result][recipe] = true
+			end
+			if data.raw.recipe[recipe] and not fakeRecipes[recipe] then
+				local category = data.raw.recipe[recipe].category
+				availableRecipes[recipe].category = category
+				if category or data.raw.recipe[recipe].subgroup then
+					availableRecipes[recipe].fullCategory = (category or "").."|"..(data.raw.recipe[recipe].subgroup or "")
+				end
+			end
+		else
+			availableRecipes[recipe] = nil  -- Remove recipes with no outputs
 		end
 	end
 
@@ -243,6 +251,74 @@ function giantSetupFunction()
 		end
 		basicMaterials = nextMaterials
 	end
+end
+
+--Assumes: tibComboPacks
+--Modifies: techCosts
+function allTechCosts()
+	for techName, tech in pairs(data.raw.technology) do
+		if string.sub(techName, 1, 9) ~= "tiberium-" and tech.enabled ~= false and tech.hidden ~= true then  -- idk probably avoid tib techs
+			-- tell whether it is subset of tibcombopacks
+			local skipTech = false
+			local packDict = {}
+			local packList = {}
+			for _, ingredient in pairs(tech.unit.ingredients) do
+				local packName = ingredient.name or ingredient[1]
+				if not tibComboPacks[packName] then
+					skipTech = true
+					log(techName.." contains "..packName.." which is not in tibComboPacks")
+					break
+				end
+				local packAmount = ingredient.amount or ingredient[2] or 1
+				packDict[packName] = packAmount
+				table.insert(packList, packName)
+			end
+			if not skipTech then
+				-- make key for techCosts
+				table.sort(packList)  -- Needed a list because we can't sort dicts
+				local multiPackKey = ""
+				if tech.max_level == "infinite" then
+					multiPackKey = "infinite"
+				end
+				for _, pack in pairs(packList) do
+					multiPackKey = multiPackKey..":"..pack
+				end
+				-- add dict to techCosts
+				local count = tech.unit.count or 0
+				if count == 0 then
+					local level = string.match(techName, "%d+$")
+					local max_level = tech.max_level
+					if (not max_level) or (max_level < level) then
+						max_level = level
+					elseif max_level == "infinite" then
+						max_level = level + 3  -- idk how I should deal with ones that start with high base costs
+					end
+					for i = level, max_level do
+						count = count + evaluateFormula(tech.unit.count_formula, level)
+					end
+				end
+				packDict = makeScaledList(packDict, count)
+				techCosts[multiPackKey] = sumOfDicts(techCosts[multiPackKey], packDict)
+			end
+		end
+	end
+	if debugText then log("techCosts: "..serpent.block(techCosts)) end
+end
+
+function evaluateFormula(formula, value)
+	-- Make formula Lua-readable
+	formula = string.gsub(string.upper(formula), " ", "")  -- Strip spaces and force uppercase
+	local pattern1 = "[%a%)][%a%d%(]" -- Multiplication because L or ) followed by L, #, or (
+	local pattern2 = "%d[%a%(]" -- Multiplication because # followed by L or (
+	local i = string.find(formula, pattern1) or string.find(formula, pattern2)
+	while i do  -- Make implicit multiplication explicit
+		formula = string.sub(formula, 1, i).."*"..string.sub(formula, i + 1, -1)
+		i = string.find(formula, pattern1) or string.find(formula, pattern2)
+	end
+
+	local funcString = "function count_formula(L) return "..formula.." end"
+	assert(load(funcString))()  -- Define this function and wrap in assert for debugging, I guess
+	return count_formula(value)
 end
 
 --Modifies: availableRecipes, fakeRecipes, tibComboPacks, recipeUnlockTracker
@@ -430,14 +506,70 @@ end
 
 --Assumes: recipeUnlockTracker, tibComboPacks
 function packHierarchy()
+	local recipeForPack = {}
+	local packDependencyTier = {}
 	for pack in pairs(tibComboPacks) do
 		local recipe = ""
 		if listLength(resultIndex[pack]) == 1 then
 			recipe = next(resultIndex[pack])
 			log(recipe.." is the only recipe for "..pack)
+			recipeForPack[pack] = recipe
 		else
 			log("Multiple recipes for "..pack.." "..serpent.block(resultIndex[pack]))
+			-- todo: add something for choosing lowest recipe, but determining "lowest" recipe seems like it would be dependent on the rest of this, idk
 		end
+		-- Packs unlocked by default are tier 0
+		if recipeUnlockTracker["default"][recipeForPack[pack]] then
+			packDependencyTier[pack] = 0
+		end
+	end
+	--Iteratively build up list of other pack tiers
+	local done = false
+	local maxloops = 99
+	while maxloops > 0 and not done do
+		done = true
+		maxloops = maxloops - 1 -- Don't get hardstuck
+		for pack in pairs(tibComboPacks) do
+			if not packDependencyTier[pack] then
+				done = false
+				local tech = recipeUnlockTracker["technology"][recipeForPack[pack]]
+				--log(pack.." from tech "..tostring(tech))
+				if tech then
+					local prereqDepth = 0
+					for techPack in pairs(packForTech(tech)) do
+						local depth = packDependencyTier[techPack]
+						--log("prereq pack "..techPack.." has a depth of "..tostring(depth))
+						if not depth then  -- Skip if it's still missing a prereq pack
+							prereqDepth = nil
+							break
+						elseif depth > prereqDepth then
+							prereqDepth = depth
+						end
+					end
+					if prereqDepth then
+						packDependencyTier[pack] = prereqDepth + 1
+					end
+				end
+			end
+		end
+	end
+	log("Combo packs:")
+	log(serpent.block(tibComboPacks))
+	log("Pack tiers:")
+	log(serpent.block(packDependencyTier))
+end
+
+-- Returns a list of packs required for a given tech (not counting prerequisites)
+function packForTech(techName)
+	local packList = {}
+	if not data.raw.technology[techName] then
+		return {}
+	else
+		for _, ingredient in pairs(data.raw.technology[techName].unit.ingredients) do
+			pack = ingredient.name or ingredient[1]
+			packList[pack] = ""
+		end
+		return packList
 	end
 end
 
@@ -548,8 +680,8 @@ function breadthFirst(itemList, recipesUsed, intermediates)
 		recipesUsed[recipeName] = (recipesUsed[recipeName] or 0) + recipeTimes
 	end
 	
-	sumDicts(itemList, makeScaledList(normalIngredients(recipeName), recipeTimes), "  ")
-	sumDicts(itemList, makeScaledList(normalResults(recipeName), -1 * recipeTimes), "  ")
+	itemList = sumOfDicts(itemList, makeScaledList(normalIngredients(recipeName), recipeTimes))
+	itemList = sumOfDicts(itemList, makeScaledList(normalResults(recipeName), -1 * recipeTimes))
 
 	if intermediates then
 		for ingredient in pairs(normalIngredients(recipeName)) do
@@ -596,7 +728,7 @@ function normalResults(recipeName)
 		resultTable = resultsToTable(recipe)
 	end
 	if next(resultTable) == nil then
-		log("#######Could not find results for "..recipeName)
+		log("### Could not find results for "..recipeName)
 	end
 	return resultTable
 end
@@ -626,23 +758,25 @@ function resultsToTable(prototypeTable)
 	return out
 end
 
-function sumDicts(dict1, dict2, logging)
-	if type(dict1) ~= "table" then dict1 = {} end
+function sumOfDicts(dict1, dict2, logging)  --Lists with numeric values
+	local out = {}
+	if type(dict1) == "table" then out = util.copy(dict1) end
 	if type(dict2) == "table" then
 		for k, v in pairs(dict2) do
-			dict1[k] = v + (dict1[k] or 0)
-			if logging then
+			out[k] = v + (out[k] or 0)
+			if debugText and logging then  -- Unused but leaving this for the future
 				local sign = v >= 0 and "+" or ""
-				--log(logging..sign..v.." "..k)
+				log(logging..sign..v.." "..k)
 			end
 		end
 	end
-	return dict1
+	return out
 end
 
 function makeScaledList(list, scalar)
-	if not scalar then log("bad scalar") return {} end
-	if type(list) ~= "table" then log("bad list") return {} end
+	if type(list) ~= "table" then log("bad list:"..tostring(list)) return {} end
+	scalar = tonumber(scalar)
+	if type(scalar) ~= "number" then log("bad scalar:"..tostring(scalar)) return list end
 
 	local scaledList = {}
 	for k, v in pairs(list) do
@@ -730,15 +864,82 @@ function fugeTierSetup()
 end
 
 function fugeRecipeTier(tier)
-	local resources, fluids = {}, {}
-	local smallResources = 0
-	local recipeMult = 1
-	local foundRecipeMult = false
+	-- Compile weights based on the relative frequency of the packs in the current tier
+	updatePackWeights(tier)
+
+	-- Return the raw resources needed for the packs or use the override from settings
+	local resourceList = fugeRawResources(tier)
+
+	-- Scale resourceList to give the desired amount of total resources and find other information for recipe creation
+	local recipeMult, resourceList, fluidList = fugeFindMultiplier(resourceList, tier)
+	
+	-- Make actual recipe changes
 	local material = (tier == 1) and "slurry" or (tier == 2) and "molten" or "liquid"
-	local item = (tier == 1) and "tiberium-slurry" or (tier == 2) and "molten-tiberium" or "liquid-tiberium"
+	local fluid = (tier == 1) and "tiberium-slurry" or (tier == 2) and "molten-tiberium" or "liquid-tiberium"
 	local ingredientAmount = (tier ~= 1) and math.max(160 / settings.startup["tiberium-value"].value, 1) or 16
-	local targetAmount = (tier == 1) and 32 or (tier == 2) and 64 or 128
-	local totalOre = 0
+	local normalFugeRecipeName = "tiberium-"..material.."-centrifuging"
+	local sludgeFugeRecipeName = "tiberium-"..material.."-sludge-centrifuging"
+	LSlib.recipe.editEngergyRequired(normalFugeRecipeName, recipeMult)
+	LSlib.recipe.addIngredient(normalFugeRecipeName, fluid, ingredientAmount * recipeMult, "fluid")
+	if debugText then log("Tier "..tier.." centrifuge: "..ingredientAmount * recipeMult.." "..fluid) end
+	for resource, amount in pairs(resourceList) do
+		if (resource ~= "stone") and (amount > 1 / 128) then
+			local rounded = math.ceil(amount * recipeMult)
+			LSlib.recipe.addResult(normalFugeRecipeName, resource, rounded, fluidList[resource] and "fluid" or "item")
+			if debugText then log("> "..rounded.." "..resource) end
+		end
+	end
+	local stone = math.ceil((resourceList["stone"] or 0) * recipeMult)
+	if (stone > 0) and (listLength(fluidList) < 3) then -- Only create sludge recipe if there is stone to convert and we have enough fluid boxes
+		LSlib.recipe.duplicate(normalFugeRecipeName, sludgeFugeRecipeName)
+		LSlib.recipe.setLocalisedName(sludgeFugeRecipeName, {"recipe-name.tiberium-sludge-centrifuging", {"fluid-name."..fluid}})
+		LSlib.recipe.changeIcon(sludgeFugeRecipeName, tiberiumInternalName.."/graphics/icons/"..material.."-sludge-centrifuging.png", 32)
+		LSlib.technology.addRecipeUnlock("tiberium-"..material.."-centrifuging", sludgeFugeRecipeName)  -- First argument is the technology name
+		LSlib.recipe.addResult(sludgeFugeRecipeName, "tiberium-sludge", stone, "fluid")
+	end
+	if stone > 0 then  -- Add stone after duplicating bc LSlib change result doesn't support changing result types
+		LSlib.recipe.addResult(normalFugeRecipeName, "stone", stone, "item")
+		if debugText then log("> "..stone.." stone") end
+	end
+end
+
+function updatePackWeights(tier)
+	--maybe remove the node from techCosts?
+	local packsFromSubsets = {}
+	local totalPacks = 0
+	for multiPackKey, packs in pairs(techCosts) do
+		if tier ~= 3 or (string.sub(multiPackKey, 1, 8) == "infinite") then  -- Tier 3 should only consider infinite techs
+			local subsetOfTierPacks = true
+			for pack in pairs(packs) do
+				if not science[tier][pack] then
+					subsetOfTierPacks = false
+					break
+				end
+			end
+			if subsetOfTierPacks then
+				packsFromSubsets = sumOfDicts(packsFromSubsets, packs)
+				if string.sub(multiPackKey, 1, 8) ~= "infinite" then  -- Blank out so all the tier 1 techs don't show up again in tier 2
+					techCosts[multiPackKey] = nil
+				end
+			end
+		end
+	end
+	for _, amount in pairs(packsFromSubsets) do
+		totalPacks = totalPacks + amount
+	end
+	packsFromSubsets = makeScaledList(packsFromSubsets, listLength(science[tier]) / totalPacks)
+	if debugText then log("tier "..tier.." pack distribution:"..serpent.block(packsFromSubsets)) end
+	for pack in pairs(science[tier]) do
+		if packsFromSubsets[pack] then
+			science[tier][pack] = packsFromSubsets[pack]
+		else
+			log(pack.." is in tier "..tier.." but isn't in any technologies with other packs from the same tier")
+		end
+	end
+end
+
+function fugeRawResources(tier)
+	local resourceList = {}
 	local overrideSetting = settings.startup["tiberium-centrifuge-override-"..tier].value
 	overrideSetting = string.gsub(overrideSetting, "\"", "")  -- Strip quotes
 	if string.len(overrideSetting) > 0 then
@@ -750,52 +951,62 @@ function fugeRecipeTier(tier)
 			if string.find(sub, subDelim) then
 				item = string.match(sub, "^[^"..subDelim.."]+")  -- Before the colon
 				amount = tonumber(string.match(sub, "[^"..subDelim.."]+$"))  -- After the colon
-				if amount == 0 then  -- In case they put some non-numeric
+				if not amount or amount <= 0 then  -- In case they put some non-numeric
 					amount = 1
 					log("tiberium-centrifuge-override-"..tier.." setting has an invalid number for item "..item)
 				end
 			end
 			if data.raw.item[item] or data.raw.fluid[item] then
-				resources[item] = amount
+				resourceList[item] = amount
 			else
 				log("tiberium-centrifuge-override-"..tier.." setting has an invalid item: "..item)
 			end
 		end
 	else
 		-- Total all resources for the tier
-		for pack in pairs(science[tier]) do
-			sumDicts(resources, allPacks[pack])
+		for pack, amount in pairs(science[tier]) do
+			local weightedResources = makeScaledList(allPacks[pack], amount)  -- TODO if setup fails, amount is true instead of a number. What should happen then?
+			resourceList = sumOfDicts(resourceList, weightedResources)
 		end
 	end
+	return resourceList
+end
+
+function fugeFindMultiplier(resourceList, tier)
+	local targetAmount = (tier == 1) and 32 or (tier == 2) and 64 or 128
+	local totalOre = 0
+	local smallResources = 0
+	local recipeMult = 1
+	local fluidList = {}
 	-- Check number of fluids and weighted sum the resources
-	for res, amount in pairs(resources) do
+	for res, amount in pairs(resourceList) do
 		if amount > 0 then
 			if data.raw.fluid[res] then
-				fluids[res] = amount
+				fluidList[res] = amount
 				totalOre = totalOre + (amount * 0.25)
 			else
 				totalOre = totalOre + amount
 			end
 		end
 	end
-	if listLength(fluids) > 2 then
-		log("Uh oh, your tier "..tier.." recipe has "..listLength(fluids).." fluids")
+	if listLength(fluidList) > 2 then
+		log("Uh oh, your tier "..tier.." recipe has "..listLength(fluidList).." fluids")
 		--idk what my plan is for handling this case
 	end
-	resources = makeScaledList(resources, targetAmount / math.max(totalOre, 1)) --Scale resources to match tier target amounts
+	local scaledResourceList = makeScaledList(resourceList, targetAmount / math.max(totalOre, 1)) --Scale resourceList to match tier target amounts
 	
-	for resource, amount in pairs(resources) do
+	for resource, amount in pairs(scaledResourceList) do
 		if amount < 1 / 128 then  -- Cutoff for amounts too small to scale up
-			resources[resource] = nil
+			scaledResourceList[resource] = nil
 		elseif amount <= 0.5 then
 			smallResources = smallResources + 1
 		end
 	end
 	--Find recipe multiplier to mitigate impact of later rounding
-	while ((smallResources > 1) or (smallResources > 0.2 * listLength(resources))) and (recipeMult ~= 64) do
+	while ((smallResources > 1) or (smallResources > 0.2 * listLength(scaledResourceList))) and (recipeMult ~= 64) do
 		recipeMult = 2 * recipeMult
 		smallResources = 0
-		for _, amount in pairs(resources) do
+		for _, amount in pairs(scaledResourceList) do
 			if (amount * recipeMult) <= 0.5 then
 				smallResources = smallResources + 1
 			elseif (amount * recipeMult) > 32000 then  -- Don't double if it would put us over stack limit
@@ -804,31 +1015,7 @@ function fugeRecipeTier(tier)
 			end
 		end
 	end
-	--Make actual recipe changes
-	local normalFugeRecipeName = "tiberium-"..material.."-centrifuging"
-	local sludgeFugeRecipeName = "tiberium-"..material.."-sludge-centrifuging"
-	LSlib.recipe.editEngergyRequired(normalFugeRecipeName, recipeMult)
-	LSlib.recipe.addIngredient(normalFugeRecipeName, item, ingredientAmount * recipeMult, "fluid")
-	if debugText then log("Tier "..tier.." centrifuge: "..ingredientAmount * recipeMult.." "..item) end
-	for resource, amount in pairs(resources) do
-		if (resource ~= "stone") and (amount > 1 / 128) then
-			local rounded = math.ceil(amount * recipeMult)
-			LSlib.recipe.addResult(normalFugeRecipeName, resource, rounded, fluids[resource] and "fluid" or "item")
-			if debugText then log("> "..rounded.." "..resource) end
-		end
-	end
-	local stone = math.ceil((resources["stone"] or 0) * recipeMult)
-	if (stone > 0) and (listLength(fluids) < 3) then -- Only create sludge recipe if there is stone to convert and we have enough fluid boxes
-		LSlib.recipe.duplicate(normalFugeRecipeName, sludgeFugeRecipeName)
-		LSlib.recipe.setLocalisedName(sludgeFugeRecipeName, {"recipe-name.tiberium-sludge-centrifuging", {"fluid-name."..item}})
-		LSlib.recipe.changeIcon(sludgeFugeRecipeName, tiberiumInternalName.."/graphics/icons/"..material.."-sludge-centrifuging.png", 32)
-		LSlib.technology.addRecipeUnlock("tiberium-"..material.."-centrifuging", sludgeFugeRecipeName)
-		LSlib.recipe.addResult(sludgeFugeRecipeName, "tiberium-sludge", stone, "fluid")
-	end
-	if stone > 0 then  -- Add stone after duplicating bc LSlib change result doesn't support changing result types
-		LSlib.recipe.addResult(normalFugeRecipeName, "stone", stone, "item")
-		if debugText then log("> "..stone.." stone") end
-	end
+	return recipeMult, scaledResourceList, fluidList
 end
 
 function singletonRecipes()
