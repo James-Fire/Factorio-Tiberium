@@ -580,10 +580,6 @@ data:extend{
 			},
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-ion-turret"
-			},
-			{
-				type = "unlock-recipe",
 				recipe = "tiberium-obelisk-of-light"
 			},
 			{

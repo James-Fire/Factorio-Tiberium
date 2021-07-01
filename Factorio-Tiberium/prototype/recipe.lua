@@ -727,19 +727,6 @@ data:extend{
 	},
 	{
 		type = "recipe",
-		name = "tiberium-ion-turret",
-		energy_required = 20,
-		enabled = false,
-		subgroup = "a-buildings",
-		ingredients = {
-			{"advanced-circuit", 40},
-			{"steel-plate", 40},
-			{"tiberium-ion-core", 1}
-		},
-		result = "tiberium-ion-turret"
-	},
-	{
-		type = "recipe",
 		name = "tiberium-obelisk-of-light",
 		energy_required = 20,
 		enabled = false,
