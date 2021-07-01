@@ -191,10 +191,10 @@ script.on_configuration_changed(function(data)
 		end
 		-- Unlock technologies that were split
 		for _, force in pairs(game.forces) do
-			if force.technologies["tiberium-processing-tech"].researched then
+			if force.technologies["tiberium-processing-tech"] and force.technologies["tiberium-processing-tech"].researched then
 				force.technologies["tiberium-sludge-processing"].researched = true
 			end
-			if force.technologies["tiberium-power-tech"].researched then
+			if force.technologies["tiberium-power-tech"] and force.technologies["tiberium-power-tech"].researched then
 				force.technologies["tiberium-sludge-recycling"].researched = true
 			end
 		end
@@ -327,6 +327,34 @@ script.on_configuration_changed(function(data)
 
 	if upgradingToVersion(data, tiberiumInternalName, "1.1.15") then
 		global.tibPerformanceMultiplier = 1
+	end
+
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.16") then
+		-- Changed global name
+		global.exemptDamagePrototypes = {
+			["mining-drill"] = true,
+			["transport-belt"] = true,
+			["underground-belt"] = true,
+			["splitter"] = true,
+			["wall"] = true,
+			["pipe"] = true,
+			["pipe-to-ground"] = true,
+			["electric-pole"] = true,
+			["inserter"] = true,
+			["straight-rail"] = true,
+			["curved-rail"] = true,
+			["rail-chain-signal"] = true,
+			["rail-signal"] = true,
+			["unit-spawner"] = true,
+			["turret"] = true
+		}
+		-- New global
+		global.exemptDamageNames = {
+			["mining-depot"] = true,
+		}
+		for i = 1,100 do 
+			global.exemptDamageNames["tiberium-oremining-drone"..i] = true
+		end
 	end
 
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
@@ -827,6 +855,11 @@ script.on_event(defines.events.on_tick, function(event)
 				if surface.count_entities_filtered{area = areaAroundPosition(position), name = treeBlockers} == 0 then
 					createBlossomTree(surface, position)
 				end
+				-- if remote.interfaces["mining_drones"] then  -- Klonan pls https://github.com/Klonan/Mining_Drones/pull/16
+				-- 	for _, depot in surface.find_entities_filtered{area = areaAroundPosition(position, 30 + TiberiumRadius), name = "mining-depot"} do
+				-- 		remote.call("mining_drones", "rescan_depot", depot)
+				-- 	end
+				-- end
 			else
 				removeNodeFromGrowthList(node)
 			end
