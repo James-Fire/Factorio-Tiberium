@@ -1237,7 +1237,7 @@ function on_pre_mined(event)
 		rawTibOreEquivalent = rawTibOreEquivalent + 4 * (fluidContents["liquid-tiberium"] or 0)
 		rawTibOreEquivalent = rawTibOreEquivalent * oreValueMulti
 		if rawTibOreEquivalent > 0 then
-			game.print("Created "..tostring(rawTibOreEquivalent).." ore")
+			if debugText then game.print("Created "..tostring(rawTibOreEquivalent).." ore") end
 			TiberiumSeedMissile(entity.surface, entity.position, rawTibOreEquivalent)
 		end
 	end

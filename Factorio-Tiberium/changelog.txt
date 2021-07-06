@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.17
+  Bugfixes:
+    - Fixed crashing when other mods named their repeatable technologies in an unexpected way
+    - Fixed displaying some debug messages when not in debug mode
+---------------------------------------------------------------------------------------------------
 Version: 1.1.16
   Bugfixes:
     - Tiberium growth no longer damages train signals or Klonan's mining drones/depots

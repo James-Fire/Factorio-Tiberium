@@ -292,7 +292,7 @@ function allTechCosts()
 				-- add dict to techCosts
 				local count = tech.unit.count or 0
 				if count == 0 then
-					local level = tonumber(string.match(techName, "%d+$"))
+					local level = tonumber(string.match(techName, "%d+$")) or 1
 					local max_level = tonumber(tech.max_level)
 					if (not max_level) or (max_level < level) then
 						max_level = level
