@@ -3,6 +3,12 @@ require("scripts/tib-map-gen-presets")  -- After other mods have added their res
 local TibBasicScience = {"chemical-plant", "assembling-machine-1", "assembling-machine-2", "assembling-machine-3"}
 local TibScience = {"chemical-plant"}
 
+function applyTiberiumValue(item, value)
+	if data.raw.item[item] and not data.raw.item[item].tiberium_multiplier then
+		data.raw.item[item].tiberium_multiplier = value
+	end
+end
+
 -- Orbital Ion Cannon
 if mods["Orbital Ion Cannon"] then
 	LSlib.technology.addPrerequisite("orbital-ion-cannon", "tiberium-military-2")
@@ -14,6 +20,10 @@ if mods["Orbital Ion Cannon"] then
 end
 
 if mods["Krastorio2"] then
+	-- Define ore values
+	applyTiberiumValue("raw-imersite", 8)
+	applyTiberiumValue("raw-rare-metals", 8)
+
 	-- Crafting machines
 	table.insert(TibBasicScience, "kr-advanced-assembling-machine")
 	table.insert(TibBasicScience, "kr-advanced-chemical-plant")
@@ -155,9 +165,6 @@ if mods["MoreScience"] then
 	end
 end
 
--- Flag any item as being convertible to sludge for centrifuging recipes by setting the tiberium_sludge property to true
-data.raw.item.stone.tiberium_sludge = true
-
 if mods["omnimatter"] then
 	omni.matter.add_ignore_resource("tiberium-ore")
     omni.matter.add_ignore_resource("tibGrowthNode")
@@ -219,51 +226,24 @@ for _, assembler in pairs(TibScience) do
 	LSlib.entity.addCraftingCategory("assembling-machine", assembler, "tiberium-science")
 end
 
---[[if (mods["Mining_Drones"]) then
-	data.raw["assembling-machine"][names.mining_depot].animation = make_4way_animation_from_spritesheet{
-    {
-      layers =
-      {
-        {
-          filename = tiberiumInternalName.."/graphics/entity/Refinery/Refinery.png",
-          width = 450,
-          height = 450,
-          frame_count = 1,
-          --shift = {2.515625, 0.484375},
-          hr_version =
-          {
-            filename = tiberiumInternalName.."/graphics/entity/Refinery/Refinery.png",
-            width = 450,
-			height = 450,
-            frame_count = 1,
-          --  shift = util.by_pixel(0, -7.5),
-            scale = 0.5
-          }
-        },
-        {
-          filename = tiberiumInternalName.."/graphics/entity/Refinery/RefineryShadow.png",
-          width = 450,
-          height = 450,
-          frame_count = 1,
-         -- shift = util.by_pixel(82.5, 26.5),
-          draw_as_shadow = true,
-          hr_version =
-          {
-            filename = tiberiumInternalName.."/graphics/entity/Refinery/RefineryShadow.png",
-			width = 450,
-			height = 450,
-            frame_count = 1,
-           -- shift = util.by_pixel(82.5, 26.5),
-            draw_as_shadow = true,
-            force_hr_shadow = true,
-            scale = 0.5
-          }
-        }
-      }
-    }
-	}
-	--data.raw["unit"][bot_name].icon =
-end]]
+if mods["bobores"] then
+	applyTiberiumValue("thorium-ore", 8)
+end
+
+if mods["dark-matter-replicators-18"] then
+	applyTiberiumValue("dmr18-tenemut", 32)
+end
+
+if mods["dark-matter-replicators-18-patch"] then
+	applyTiberiumValue("tenemut", 32)
+end
+
+if mods["bobplates"] then
+	if data.raw.item["gas-canister"] then
+		data.raw.item["gas-canister"].tiberium_empty_barrel = true
+	end
+end
+
 
 -- Below code isn't specific to any single mod
 for _, drill in pairs(data.raw["mining-drill"]) do
@@ -285,4 +265,15 @@ end
 
 if data.raw.resource["uranium-ore"] then  -- Desaturate uranium map color to make it not look like Tiberium
 	data.raw.resource["uranium-ore"]["map_color"] = {0.0, 0.5, 0.0}
+	applyTiberiumValue("uranium-ore", 8)
+end
+
+-- Flag any item as being convertible to sludge for centrifuging recipes by setting the tiberium_sludge property to true
+if data.raw.item.stone then
+	data.raw.item.stone.tiberium_sludge = true
+end
+
+-- Flag items as empty barrels for detecting un-barreling recipes in data-final-fixes
+if data.raw.item["empty-barrel"] then
+	data.raw.item["empty-barrel"].tiberium_empty_barrel = true
 end
