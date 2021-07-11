@@ -12,7 +12,7 @@ tiberiumNodeHarvester.order = "l"
 tiberiumNodeHarvester.energy_usage = "25000kW"
 tiberiumNodeHarvester.resource_categories = {}
 tiberiumNodeHarvester.minable.result = "tiberium-aoe-node-harvester"
-tiberiumNodeHarvester.resource_searching_radius = TiberiumRadius * 0.8
+tiberiumNodeHarvester.resource_searching_radius = math.floor(TiberiumRadius * 0.8) + 0.49
 table.insert(tiberiumNodeHarvester.resource_categories, "advanced-solid-tiberium")
 tiberiumNodeHarvester.energy_source = {
 	type = "electric",
