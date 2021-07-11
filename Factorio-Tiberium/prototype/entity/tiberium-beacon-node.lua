@@ -127,7 +127,6 @@ data:extend{
 			line_length = 1,
 			frame_count = 1,
 		},
-		-- 0.17 supports 0W entities
 		energy_source = {
 			type = "electric",
 			usage_priority = "secondary-input"
@@ -149,6 +148,6 @@ data:extend{
 		},
 		allowed_effects = {"speed", "consumption"},
 		selection_box = {{0, 0}, {0, 0}},
-		collision_box = {{-0.4, -0.4}, {0.4, 0.4}}, -- reduce size preventing inserters from picking modules, will not power unless center is covered
+		collision_box = {{-1.4, -1.4}, {1.4, 1.4}},
 	},
 }
