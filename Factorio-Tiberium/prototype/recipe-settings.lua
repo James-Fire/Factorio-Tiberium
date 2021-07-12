@@ -12,14 +12,14 @@ LSlib.recipe.addResult("tiberium-farming", "tiberium-data-chemical", OrePerCredi
 
 if settings.startup["tiberium-byproduct-1"].value == true then  -- Refining Sludge Waste setting
 	--LSlib.recipe.addResult("tiberium-ore-processing", "tiberium-sludge", WastePerCycle, "fluid")
-	LSlib.recipe.addResult("molten-tiberium-processing", "tiberium-sludge", WastePerCycle, "fluid")
+	LSlib.recipe.addResult("tiberium-molten-processing", "tiberium-sludge", WastePerCycle, "fluid")
 	LSlib.recipe.addResult("tiberium-advanced-molten-processing", "tiberium-sludge", WastePerCycle, "fluid")
 	LSlib.recipe.addResult("tiberium-liquid-processing", "tiberium-sludge", WastePerCycle, "fluid")
 end
 
 if settings.startup["tiberium-byproduct-2"].value == true then  -- Refining Sulfur Waste setting
 	--LSlib.recipe.addResult("tiberium-ore-processing", "sulfur", WastePerCycle, "item")
-	LSlib.recipe.addResult("molten-tiberium-processing", "sulfur", WastePerCycle, "item")
+	LSlib.recipe.addResult("tiberium-molten-processing", "sulfur", WastePerCycle, "item")
 	LSlib.recipe.addResult("tiberium-advanced-molten-processing", "sulfur", WastePerCycle, "item")
 	LSlib.recipe.addResult("tiberium-liquid-processing", "sulfur", WastePerCycle, "item")
 end

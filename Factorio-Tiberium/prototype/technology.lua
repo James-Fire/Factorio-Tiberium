@@ -374,7 +374,7 @@ data:extend{
 		effects = {
 			{
 				type = "unlock-recipe",
-				recipe = "molten-tiberium-processing"
+				recipe = "tiberium-molten-processing"
 			},
 			{
 				type = "unlock-recipe",
