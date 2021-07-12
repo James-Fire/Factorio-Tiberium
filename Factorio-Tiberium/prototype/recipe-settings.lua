@@ -1,5 +1,3 @@
-require("prototype/recipe")
-
 local RecipeMult = settings.startup["tiberium-value"].value / 10
 local OrePerCredit = settings.startup["tiberium-growth"].value * 10
 local CreditTime = RecipeMult * OrePerCredit  --Scale with OrePerCredit instead of just constant 100

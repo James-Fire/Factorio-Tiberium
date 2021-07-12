@@ -1,7 +1,5 @@
 --TODO:
 -- Make matrix solver more reliable
--- Better rounding for centrifuge
--- Handle mono-resource outputs with actual weights instead of just targets
 
 tableLS = LSlib.utils.table
 local debugText = settings.startup["tiberium-debug-text"].value
@@ -42,12 +40,6 @@ if mods["space-exploration"] then
 		end
 	end
 end
-local TibCraftingTint = {
-	primary    = {r = 0.109804, g = 0.721567, b = 0.231373,  a = 1.000000},
-	secondary  = {r = 0.098039, g = 1.000000, b = 0.278431,  a = 1.000000},
-	tertiary   = {r = 0.156863, g = 0.156863, b = 0.156863,  a = 0.235294},
-	quaternary = {r = 0.160784, g = 0.745098, b = 0.3058824, a = 0.345217},
-}
 
 -- Assumes: excludedCrafting
 -- Modifies: rawResources, availableRecipes, free, ingredientIndex, resultIndex, catalyst, ingredientDepth, recipeDepth, tibComboPacks
@@ -1107,7 +1099,7 @@ function addDirectRecipe(ore)
 	LSlib.recipe.setSubgroup(recipeName, "a-direct")
 	LSlib.recipe.setShowMadeIn(recipeName, true)
 	data.raw.recipe[recipeName].category = "chemistry"
-	data.raw.recipe[recipeName].crafting_machine_tint = TibCraftingTint
+	data.raw.recipe[recipeName].crafting_machine_tint = common.tibCraftingTint
 	data.raw.recipe[recipeName].allow_as_intermediate = false
 	data.raw.recipe[recipeName].allow_decomposition = false
 end
@@ -1160,7 +1152,7 @@ function addCreditRecipe(ore)
 	LSlib.recipe.setSubgroup(recipeName, "a-growth-credits")
 	LSlib.recipe.setShowMadeIn(recipeName, true)
 	data.raw.recipe[recipeName].category = "chemistry"
-	data.raw.recipe[recipeName].crafting_machine_tint = TibCraftingTint
+	data.raw.recipe[recipeName].crafting_machine_tint = common.tibCraftingTint
 	data.raw.recipe[recipeName].allow_decomposition = false
 end
 

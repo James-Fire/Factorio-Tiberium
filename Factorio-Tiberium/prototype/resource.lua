@@ -166,14 +166,7 @@ data:extend{
 		},
 		stage_counts = {0},
 		stages = {
-			sheet = {
-				filename = tiberiumInternalName.."/graphics/sonic wall/empty.png",
-				priority = "extra-high",
-				width = 32,
-				height = 32,
-				frame_count = 1,
-				variation_count = 1
-			}
+			sheet = common.blankAnimation
 		},
 		map_color = {0.02, 1.0, 0.02},
 		map_grid = false
@@ -210,14 +203,7 @@ data:extend{
 		selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
 		stage_counts = {0},
 		stages = {
-			sheet = {
-				filename = tiberiumInternalName.."/graphics/sonic wall/empty.png",
-				priority = "extra-high",
-				width = 32,
-				height = 32,
-				frame_count = 1,
-				variation_count = 1
-			}
+			sheet = common.blankAnimation
 		},
 		map_color = {0.2, 0.9, 0},
 		map_grid = false

@@ -38,36 +38,13 @@ data:extend{
 			}
 		},
 		call_for_help_radius = 40,
-		collision_box = {
-			{
-				-1.2,
-				-1.2
-			},
-			{
-				1.2,
-				1.2
-			}
-		},
+		collision_box = {{-1.2, -1.2}, {1.2, 1.2}},
 		corpse = "gun-turret-remnants",
 		damaged_trigger_effect = {
 			damage_type_filters = "fire",
 			entity_name = "spark-explosion",
-			offset_deviation = {
-				{
-					-0.5,
-					-0.5
-				},
-				{
-					0.5,
-					0.5
-				}
-			},
-			offsets = {
-				{
-					0,
-					1
-				}
-			},
+			offset_deviation = {{-0.5, -0.5}, {0.5, 0.5}},
+			offsets = {{0, 1}},
 			type = "create-entity"
 		},
 		dying_explosion = "gun-turret-explosion",
@@ -102,16 +79,7 @@ data:extend{
 		},
 		preparing_speed = 0.08,
 		rotation_speed = 0.015,
-		selection_box = {
-			{
-				-1.5,
-				-1.5
-			},
-			{
-				1.5,
-				1.5
-			}
-		},
+		selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
 		water_reflection = {
 			orientation_to_variation = false,
 			pictures = {

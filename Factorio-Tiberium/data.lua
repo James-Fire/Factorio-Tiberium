@@ -7,6 +7,9 @@ if mods["Factorio-Tiberium"] and mods["Factorio-Tiberium-Beta"] then
 end
 
 require("__LSlib__/LSlib")
+flib = require("__flib__/data-util")
+common = require("prototype/common")
+
 require("prototype/item-groups")
 require("prototype/item")
 require("prototype/fluid")
@@ -19,8 +22,8 @@ require("prototype/entity/entity-initialization")
 require("prototype/ammo-and-projectile")
 require("prototype/equipment")
 require("prototype/vehicle")
-require("prototype/recipe")
 require("prototype/damage-type")
+require("prototype/recipe")
 require("prototype/recipe-settings")
 require("prototype/sound")
 require("scripts/informatron/informatron")

@@ -1,5 +1,3 @@
-local hit_effects = require ("__base__.prototypes.entity.hit-effects")
-local sounds = require("__base__.prototypes.entity.sounds")
 local greenFugeTint = {r = 0.3, g = 0.8, b = 0.3, a = 0.8}
 
 --Tiberium Centrifuge
@@ -28,7 +26,7 @@ data:extend{
 		},
 		collision_box = {{-1.2, -1.2}, {1.2, 1.2}},
 		selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
-		damaged_trigger_effect = hit_effects.entity(),
+		damaged_trigger_effect = common.hit_effects.entity(),
 		drawing_box = {{-1.5, -2.2}, {1.5, 1.5}},
 		fluid_boxes = {
 			{
@@ -289,7 +287,7 @@ data:extend{
 		},
 		open_sound = {filename = "__base__/sound/machine-open.ogg", volume = 0.6},
 		close_sound = {filename = "__base__/sound/machine-close.ogg", volume = 0.6},
-		vehicle_impact_sound = sounds.generic_impact,
+		vehicle_impact_sound = common.sounds.generic_impact,
 		working_sound = {
 			sound = {
 				{

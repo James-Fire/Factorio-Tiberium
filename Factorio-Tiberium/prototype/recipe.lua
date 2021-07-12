@@ -40,13 +40,6 @@ for km, vm in pairs(data.raw.module) do
 	end
 end
 
-local TibCraftingTint = {
-	primary    = {r = 0.109804, g = 0.721567, b = 0.231373,  a = 1},
-	secondary  = {r = 0.098039, g = 1,        b = 0.278431,  a = 1},
-	tertiary   = {r = 0.156863, g = 0.156863, b = 0.156863,  a = 0.235294},
-	quaternary = {r = 0.160784, g = 0.745098, b = 0.3058824, a = 0.345217},
-}
-
 -- Science stuff
 local testingOrder = {["a"] = "mechanical", ["b"] = "thermal", ["c"] = "chemical", ["d"] = "nuclear", ["e"] = "EM"}
 local testingIngredients = {
@@ -88,7 +81,6 @@ for order, test in pairs(testingOrder) do
 				name = "tiberium-"..simpleName.."-"..test.."-data",
 				category = (test == "mechanical") and "basic-tiberium-science" or "tiberium-science",
 				always_show_made_in = true,
-				crafting_machine_tint = TibCraftingTint,
 				energy_required = 5,
 				enabled = false,
 				ingredients = ingredients,
@@ -111,7 +103,7 @@ for order, test in pairs(testingOrder) do
 			name = "tiberium-science-"..test,
 			category = "crafting",  -- Now hand-craftable
 			--always_show_made_in = true,
-			crafting_machine_tint = TibCraftingTint,
+			crafting_machine_tint = common.tibCraftingTint,
 			energy_required = 1,
 			enabled = false,
 			icons = {
@@ -157,7 +149,7 @@ for order, test in pairs(testingOrder) do
 				name = "tiberium-science-thru-"..test,
 				category = "crafting",  -- Now hand-craftable
 				--always_show_made_in = true,
-				crafting_machine_tint = TibCraftingTint,
+				crafting_machine_tint = common.tibCraftingTint,
 				energy_required = 1,
 				enabled = false,
 				icons = {
@@ -222,7 +214,6 @@ data:extend{
 		name = "tiberium-farming",
 		category = "tiberium-science",
 		always_show_made_in = true,
-		crafting_machine_tint = TibCraftingTint,
 		energy_required = 40,
 		enabled = false,
 		ingredients = {
@@ -246,7 +237,6 @@ data:extend{
 		localised_name = {"recipe-name.tiberium-ore-processing"},
 		category = "crafting-with-fluid",
 		energy_required = 5,
-		crafting_machine_tint = TibCraftingTint,
 		emissions_multiplier = 2,
 		enabled = false,
 		ingredients = {
@@ -266,7 +256,7 @@ data:extend{
 		type = "recipe",
 		name = "molten-tiberium-processing",
 		category = "oil-processing",
-		crafting_machine_tint = TibCraftingTint,
+		crafting_machine_tint = common.tibCraftingTint,
 		energy_required = 5,
 		emissions_multiplier = 2,
 		enabled = false,
@@ -286,7 +276,6 @@ data:extend{
 		type = "recipe",
 		name = "tiberium-advanced-molten-processing",
 		category = "oil-processing",
-		crafting_machine_tint = TibCraftingTint,
 		energy_required = 5,
 		emissions_multiplier = 2,
 		enabled = false,
@@ -307,7 +296,6 @@ data:extend{
 		type = "recipe",
 		name = "tiberium-liquid-processing",
 		category = "oil-processing",
-		crafting_machine_tint = TibCraftingTint,
 		energy_required = 20,
 		emissions_multiplier = 15,
 		enabled = false,
@@ -328,7 +316,6 @@ data:extend{
 		type = "recipe",
 		name = "tiberium-sludge-from-slurry",
 		category = "chemistry",
-		crafting_machine_tint = TibCraftingTint,
 		energy_required = 2,
 		enabled = false,
 		ingredients = {
@@ -348,7 +335,6 @@ data:extend{
 		type = "recipe",
 		name = "tiberium-waste-recycling",
 		category = "chemistry",
-		crafting_machine_tint = TibCraftingTint,
 		energy_required = 10,
 		enabled = false,
 		ingredients = {
@@ -369,7 +355,6 @@ data:extend{
 		type = "recipe",
 		name = "tiberium-sludge-to-stone-brick",
 		category = "crafting-with-fluid",
-		crafting_machine_tint = TibCraftingTint,
 		energy_required = 2,
 		enabled = false,
 		ingredients = {
@@ -390,7 +375,6 @@ data:extend{
 		type = "recipe",
 		name = "tiberium-sludge-to-concrete",
 		category = "crafting-with-fluid",
-		crafting_machine_tint = TibCraftingTint,
 		energy_required = 10,
 		enabled = false,
 		ingredients = {
@@ -409,7 +393,6 @@ data:extend{
 		type = "recipe",
 		name = "tiberium-sludge-to-refined-concrete",
 		category = "crafting-with-fluid",
-		crafting_machine_tint = TibCraftingTint,
 		energy_required = 10,
 		enabled = false,
 		ingredients = {
@@ -429,7 +412,6 @@ data:extend{
 		type = "recipe",
 		name = "tiberium-sludge-to-landfill",
 		category = "crafting-with-fluid",
-		crafting_machine_tint = TibCraftingTint,
 		energy_required = 2,
 		enabled = false,
 		ingredients = {
@@ -645,7 +627,6 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-srf-emitter",
-		crafting_machine_tint = TibCraftingTint,
 		enabled = false,
 		energy_required = 5,
 		ingredients = {
@@ -865,7 +846,6 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-nuclear-fuel",
-		crafting_machine_tint = TibCraftingTint,
 		category = "chemistry",
 		subgroup = "a-intermediates",
 		energy_required = 30,
@@ -885,7 +865,6 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-empty-cell",
-		crafting_machine_tint = TibCraftingTint,
 		category = "chemistry",
 		subgroup = "a-intermediates",
 		energy_required = 5,
@@ -903,7 +882,6 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-cell-cleaning",
-		crafting_machine_tint = TibCraftingTint,
 		category = "chemistry",
 		subgroup = "a-intermediates",
 		energy_required = 30,
@@ -926,7 +904,6 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-fuel-cell",
-		crafting_machine_tint = TibCraftingTint,
 		category = "chemistry",
 		subgroup = "a-intermediates",
 		energy_required = 10,
@@ -950,7 +927,6 @@ data:extend{
 		name = "tiberium-growth-credit-from-energy",
 		category = "chemistry",
 		subgroup = "a-growth-credits",
-		crafting_machine_tint = TibCraftingTint,
 		energy_required = 300,
 		enabled = false,
 		ingredients = {
@@ -968,7 +944,6 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-ion-core",
-		crafting_machine_tint = TibCraftingTint,
 		category = "chemistry",
 		subgroup = "a-intermediates",
 		energy_required = 20,
@@ -1002,6 +977,15 @@ data:extend{
 		},
 	},
 }
+
+for name, recipe in pairs(data.raw.recipe) do
+	if (string.sub(name, 1, 9) == "tiberium-") and not recipe.crafting_machine_tint then
+		if (recipe.category == "chemistry") or (recipe.category == "oil-processing") or (recipe.category == "crafting-with-fluid") 
+				or (recipe.category == "tiberium-science") or (recipe.category == "basic-tiberium-science") then
+			recipe.crafting_machine_tint = common.tibCraftingTint
+		end
+	end
+end
 
 --Cross Mod compatibility. Use Bob's materials, for instance.
 --[[for i, recipe in pairs(data.raw.recipe) do

@@ -168,32 +168,12 @@ data:extend{
 				percent = 100
 			}
 		},
-		animation = {
-			filename = "__core__/graphics/empty.png",
-			width = 1,
-			height = 1,
-			line_length = 1,
-			frame_count = 1,
-		},
-		animation_shadow = {
-			filename = "__core__/graphics/empty.png",
-			width = 1,
-			height = 1,
-			line_length = 1,
-			frame_count = 1,
-		},
+		animation = common.blankAnimation,
+		animation_shadow = common.blankAnimation,
 		energy_source = {type = "void"},
-		base_picture = {
-			filename = "__core__/graphics/empty.png",
-			width = 1,
-			height = 1,
-		},
+		base_picture = common.blankPicture,
 		supply_area_distance = 0,
-		radius_visualisation_picture = {
-			filename = "__core__/graphics/empty.png",
-			width = 1,
-			height = 1
-		},
+		radius_visualisation_picture = common.blankPicture,
 		distribution_effectivity = 1,
 		module_specification = {
 			module_slots = 65535,
