@@ -817,6 +817,7 @@ data:extend{
 		type = "recipe",
 		name = "tiberium-armor",
 		enabled = false,
+		hidden = true,
 		energy_required = 8,
 		ingredients = {
 			{"heavy-armor", 1},
@@ -829,6 +830,7 @@ data:extend{
 		type = "recipe",
 		name = "tiberium-power-armor",
 		enabled = false,
+		hidden = true,
 		energy_required = 25,
 		ingredients = {
 			{"power-armor-mk2", 1},
@@ -964,6 +966,7 @@ data:extend{
 		type = "recipe",
 		name = "tiberium-growth",
 		enabled = false,
+		hidden = true,
 		category = "growth",
 		ingredients = {{"tiberium-growth-credit", 1}},
 		energy_required = 15,	-- 20 credits every 5 minutes
@@ -998,7 +1001,7 @@ end]]
 
 "tiberium-ion-core"
 "tiberium-marv"
-"tiberium-ion-turret"
+"tiberium-obelisk-of-light"
 "tiberium-power-plant"
 "tiberium-growth-accelerator"
 "tiberium-network-node"
@@ -1036,7 +1039,7 @@ end
 if data.raw.item["aluminium-plate"] then
 LSlib.recipe.editIngredient("tiberium-growth-accelerator", "steel-plate", "aluminium-plate", 1)
 LSlib.recipe.editIngredient("tiberium-srf-emitter", "steel-plate", "aluminium-plate", 1)
-LSlib.recipe.editIngredient("tiberium-ion-turret", "steel-plate", "aluminium-plate", 1)
+LSlib.recipe.editIngredient("tiberium-obelisk-of-light", "steel-plate", "aluminium-plate", 1)
 
 LSlib.recipe.editIngredient("tiberium-node-harvester", "iron-plate", "aluminium-plate", 1)
 end
