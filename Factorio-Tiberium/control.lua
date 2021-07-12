@@ -357,6 +357,15 @@ script.on_configuration_changed(function(data)
 		end
 	end
 
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.17") then
+		for _, surface in pairs(game.surfaces) do
+			-- Make existing Blossom Trees indestructible
+			for _, blossomTree in pairs(surface.find_entities_filtered{name = "tibNode_tree"}) do
+				blossomTree.destructible = false
+			end
+		end
+	end
+
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
 			(data["mod_changes"]["Factorio-Tiberium-Beta"] and data["mod_changes"]["Factorio-Tiberium-Beta"]["old_version"]) then
 		game.print("[Factorio-Tiberium] Successfully converted save from Beta Tiberium mod to Main Tiberium mod")
@@ -1207,12 +1216,13 @@ end
 
 function createBlossomTree(surface, position)
 	if surface and surface.valid and surface.count_entities_filtered{area = areaAroundPosition(position), name = "tibGrowthNode"} > 0 then
-		surface.create_entity{
+		local blossomTree = surface.create_entity{
 			name = "tibNode_tree",
 			position = position,
 			force = game.forces.neutral,
 			raise_built = false
 		}
+		blossomTree.destructible = false
 	end
 end
 
