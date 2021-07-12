@@ -8,6 +8,7 @@ local GA_Beacon_Name = "tiberium-growth-accelerator-beacon"
 local Speed_Module_Name = "tiberium-growth-accelerator-speed-module"
 local TCN_Beacon_Name = "TCN-beacon"
 local TCN_affected_entities = {"tiberium-aoe-node-harvester", "tiberium-spike", "tiberium-node-harvester", "tiberium-network-node"}
+local tiberiumNodeNames = {"tibGrowthNode", "tibGrowthNode_infinite"}
 
 local TiberiumDamage = settings.startup["tiberium-damage"].value
 local TiberiumGrowth = settings.startup["tiberium-growth"].value * 10
@@ -409,16 +410,15 @@ end
 
 function AddOre(surface, position, growthRate)
 	local area = areaAroundPosition(position)
-	local entities = surface.find_entities_filtered{area = area, name = "tiberium-ore"}
+	local oreEntity = surface.find_entities_filtered{area = area, name = "tiberium-ore"}[1]
 	local tile = surface.get_tile(position)
 	growthRate = math.min(growthRate, TiberiumMaxPerTile)
 
-	if #entities >= 1 then
-		oreEntity = entities[1]
+	if oreEntity then
 		if oreEntity.amount < TiberiumMaxPerTile then --Don't reduce ore amount when growing node
 			oreEntity.amount = math.min(oreEntity.amount + growthRate, TiberiumMaxPerTile)
 		end
-	elseif surface.count_entities_filtered{area = area, name = {"tibGrowthNode", "tibGrowthNode_infinite"}} > 0 then
+	elseif surface.count_entities_filtered{area = area, name = tiberiumNodeNames} > 0 then
 		return false --Don't place ore on top of nodes
 	elseif tile.collides_with("resource-layer") then
 		return false  -- Don't place on invalid tiles
@@ -434,9 +434,9 @@ function AddOre(surface, position, growthRate)
 			end
 		end
 		if (surface.count_entities_filtered{area = area, type = "tree"} > 0)
-				and (surface.count_entities_filtered{position = position, radius = TiberiumRadius * 0.8, name = nodeNames} == 0)
+				and (surface.count_entities_filtered{position = position, radius = TiberiumRadius * 0.8, name = tiberiumNodeNames} == 0)
 				and (math.random() < (TiberiumSpread / 100) ^ 4) then  -- Around 1% chance to turn a tree into a Blossom Tree
-			CreateNode(surface, newPosition)
+			CreateNode(surface, position)
 		else
 			oreEntity = surface.create_entity{name = "tiberium-ore", amount = growthRate, position = position, enable_cliff_removal = false}
 			if global.tiberiumTerrain then
@@ -450,9 +450,9 @@ function AddOre(surface, position, growthRate)
 	for _, entity in pairs(surface.find_entities(area)) do
 		if entity.valid and not global.exemptDamagePrototypes[entity.type] and not global.exemptDamageNames[entity.name] then
 			if entity.type == "tree" then
-				safeDamage(entity, 9999, game.forces.tiberium, "tiberium")
+				safeDamage(entity, 9999)
 			else
-				safeDamage(entity, TiberiumDamage, game.forces.tiberium, "tiberium")
+				safeDamage(entity, TiberiumDamage)
 			end
 		end
 	end
@@ -555,33 +555,27 @@ function PlaceOre(entity, howmany)
 		--Convert to cartesian and determine roughly how many tiles we travel through
 		local dx = radius * math.cos(angle)
 		local dy = radius * math.sin(angle)
-		step = math.max(math.abs(dx), math.abs(dy))
+		local step = math.max(math.abs(dx), math.abs(dy))
 		dx = dx / step
 		dy = dy / step
 		
 		local lastValidPosition = position
-		local x = position.x + dx
-		local y = position.y + dx
-		local i = 1
+		local placedOre = false
 		--Check each tile along the line and stop when we've added ore one time
-		while (i < step) do
-			newPosition = {x = x, y = y}
-			done = CheckPoint(surface, newPosition, lastValidPosition, growthRate)
-			if done then break end
-			
+		repeat
+			local newPosition = {x = lastValidPosition.x + dx, y = lastValidPosition.y + dy}
+			placedOre = CheckPoint(surface, newPosition, lastValidPosition, growthRate)
 			lastValidPosition = newPosition
-			x = x + dx
-			y = y + dy
-			i = i + 1
-		end
+			step = step - 1
+		until placedOre or (step < 0)
+
 		--Walked all the way to the end of the line, placing ore at the last valid position
-		if not done then
-			oreEntity = AddOre(surface, lastValidPosition, growthRate)
+		if not placedOre then
+			local oreEntity = AddOre(surface, lastValidPosition, growthRate)
 			--Spread setting makes spawning new nodes more likely
-			if oreEntity and (math.random() < ((oreEntity.amount / TiberiumMaxPerTile) + (TiberiumSpread / 50 - 0.9))) then
-				local nodeNames = {"tibGrowthNode", "tibGrowthNode_infinite"}
-				if (surface.count_entities_filtered{position = newPosition, radius = TiberiumRadius * 0.8, name = nodeNames} == 0) then
-					CreateNode(surface, newPosition)  --Use standard function to also remove overlapping ore
+			if oreEntity and (TiberiumSpread > 0) and (math.random() < ((oreEntity.amount / TiberiumMaxPerTile) + (TiberiumSpread / 50 - 0.9))) then
+				if (surface.count_entities_filtered{position = lastValidPosition, radius = TiberiumRadius * 0.8, name = tiberiumNodeNames} == 0) then
+					CreateNode(surface, lastValidPosition)  --Use standard function to also remove overlapping ore
 				end
 			end
 		end
@@ -612,8 +606,7 @@ end
 function CreateNode(surface, position)
 	local area = areaAroundPosition(position, 0.9)
 	-- Avoid overlapping with other nodes
-	local nodeNames = {"tibGrowthNode", "tibGrowthNode_infinite"}
-	if surface.count_entities_filtered{area = area, name = nodeNames} == 0 then
+	if surface.count_entities_filtered{area = area, name = tiberiumNodeNames} == 0 then
 		-- Check if another entity would block the node
 		local blocked = false
 		for _, entity in pairs(surface.find_entities_filtered{area = area, collision_mask = {"object-layer"}}) do
@@ -760,7 +753,7 @@ commands.add_command("tibDeleteOre",
 				deletedOre = deletedOre + 1
 			end
 			-- Also destroy nodes if they aren't on valid terrain
-			for _, node in pairs(surface.find_entities_filtered{name = {"tibGrowthNode", "tibGrowthNode_infinite"}}) do
+			for _, node in pairs(surface.find_entities_filtered{name = tiberiumNodeNames}) do
 				local tile = surface.find_tiles_filtered{position = node.position}[1]
 				if tile.collides_with("resource-layer") then
 					removeBlossomTree(surface, node.position)
@@ -881,7 +874,7 @@ script.on_event(defines.events.on_tick, function(event)
 			if node.valid then
 				local enemies = node.surface.find_entities_filtered{position = node.position, radius = TiberiumRadius, force = game.forces.enemy}
 				for _, enemy in pairs(enemies) do
-					safeDamage(enemy, TiberiumDamage * 6, game.forces.tiberium, "tiberium")
+					safeDamage(enemy, TiberiumDamage * 6)
 				end
 			else
 				removeNodeFromGrowthList(node)
@@ -907,53 +900,50 @@ script.on_nth_tick(10, function(event) --Player damage 6 times per second
 					player.vehicle.insert{name = "tiberium-ore", count = math.floor(harvested_amount)}
 				end
 			end
-			local damageMulti = global.tiberiumDamageTakenMulti[player.force.name] or 1  -- Full damage for forces that weren't initialized #ticket-0146
-			if (damageMulti == 0) and not player.character.grid then
-				damageMulti = 0.2
+			--Damage players that are standing on Tiberium Ore and not in vehicles
+			local nearby_ore_count = player.surface.count_entities_filtered{name = "tiberium-ore", position = player.position, radius = 1.5}
+			if nearby_ore_count > 0 and not player.character.vehicle and player.character.name ~= "jetpack-flying" then
+				safeDamage(player, nearby_ore_count * TiberiumDamage * 0.1)
 			end
-			if damageMulti > 0 then
-				--Damage players that are standing on Tiberium Ore and not in vehicles
-				local nearby_ore_count = player.surface.count_entities_filtered{name = "tiberium-ore", position = player.position, radius = 1.5}
-				if nearby_ore_count > 0 and not player.character.vehicle and player.character.name ~= "jetpack-flying" then
-					safeDamage(player, TiberiumDamage * nearby_ore_count * 0.1 * damageMulti, game.forces.tiberium, "tiberium")
-				end
-				--Damage players with unsafe Tiberium products in their inventory
-				local damagingItems = 0
-				for _, inventory in pairs({player.get_inventory(defines.inventory.character_main), player.get_inventory(defines.inventory.character_trash)}) do
-					if inventory and inventory.valid then
-						for p = 1, #global.tiberiumProducts do
-							damagingItems = damagingItems + inventory.get_item_count(global.tiberiumProducts[p])
-							if damagingItems > 0 and not ItemDamageScale then break end
-						end
+			--Damage players with unsafe Tiberium products in their inventory
+			local damagingItems = 0
+			for _, inventory in pairs({player.get_inventory(defines.inventory.character_main), player.get_inventory(defines.inventory.character_trash)}) do
+				if inventory and inventory.valid then
+					for _, dangerousItem in pairs(global.tiberiumProducts) do
+						damagingItems = damagingItems + inventory.get_item_count(dangerousItem)
 					end
 				end
-				if damagingItems > 0 then
-					if ItemDamageScale then
-						safeDamage(player, math.ceil(damagingItems / 50) * TiberiumDamage * 0.3 * damageMulti, game.forces.tiberium, "tiberium")	
-					else
-						safeDamage(player, TiberiumDamage * 0.3 * damageMulti, game.forces.tiberium, "tiberium")
-					end
+			end
+			if damagingItems > 0 then
+				if ItemDamageScale then
+					safeDamage(player, math.ceil(damagingItems / 50) * TiberiumDamage * 0.3)	
+				else
+					safeDamage(player, TiberiumDamage * 0.3)
 				end
 			end
 		end
 	end
 end)
 
-function safeDamage(entityOrPlayer, damageAmount, damagingForce, damageType)
+function safeDamage(entityOrPlayer, damageAmount)
 	if not entityOrPlayer.valid then return end
-	local entity
+	if damageAmount <= 0 then return end
+	local entity = entityOrPlayer
+	local damageMulti = 1
 	if entityOrPlayer.is_player() then
-		if entityOrPlayer.character then
-			entity = entityOrPlayer.character
+		entity = entityOrPlayer.character  -- Need to damage character instead of player
+		if entity and entity.valid then  -- Reduce/prevent growth damage for players with immunity technologies
+			damageMulti = global.tiberiumDamageTakenMulti[entity.force.name] or 1
+			if (damageMulti == 0) and not entity.grid then
+				damageMulti = 0.2
+			end
 		else
 			return
 		end
-	else
-		entity = entityOrPlayer
 	end
 	
-	if entity.valid and entity.health and entity.health > 0 then
-		entity.damage(damageAmount, damagingForce, damageType)
+	if entity.valid and entity.health and entity.health > 0 and damageMulti > 0 then
+		entity.damage(damageAmount * damageMulti, game.forces.tiberium, "tiberium")
 	end
 end
 
