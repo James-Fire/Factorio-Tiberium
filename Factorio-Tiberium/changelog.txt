@@ -3,6 +3,27 @@ Version: 1.1.17
   Bugfixes:
     - Fixed crashing when other mods named their repeatable technologies in an unexpected way
     - Fixed displaying some debug messages when not in debug mode
+    - Fixed crash that occurred when deleting surfaces containing Tiberium nodes (mainly from SE)
+    - Fixed bug where placing and removing drills near multiple TCN beacons could cause other drills to lose beacon effects
+    - Fixed bug where removing Growth Accelerator left behind a hidden beacon that affected the next drill placed on top of the Tiberium node
+    - Fixed bug where drills affected by TCN beacon would indicate no power if the powered area did not extend to the center of the drill
+    - Fixed bug where researching Growth Accelerator/TCN speed would only update one entity per surface to the new speed
+    - Fixed centrifuging recipes giving science packs or giving nothing with certain mod combinations
+    - Fixed TNN and AOE Node Harvester areas not lining up with the grid
+    - Fixed bug where we weren't smart enough to make Blossom Trees indestructible
+    - Fixed deprecated recipes not being hidden
+    - Fixed bug where new Tiberium nodes could still spawn when the spread setting was set to 0
+    - Fixed bug where some damage to players from Tiberium growth was not mitigated by Tiberium military technologies
+    - Fixed Tiberium science recipes missing shadows in their icons
+  Features:
+    - Other mods can now define the relative of their modded ores and fluids by setting the "tiberium_multiplier" property to a number.  Higher numbers mean we give less of it and math.huge means that we won't allow Tiberium to be converted into the ore at all.
+    - Other mods can now flag and item as used in barreling recipes by setting the "tiberium_empty_barrel" property on the item prototype to "true". This will help improve the accuracy of Tiberium centrifuging recipes when both mods are active
+    - Added compatibility for Obelisks of Light mod, so you can have nicer Obelisks with animations. (Shoutout to Sacredanarchy for creating the animations)
+    - You can now craft Tiberium science in relevant assembling machines from most other mods, instead of just Angels/Bobs/Krastorio2. (Thanks to Honktown for pointing out how simple this was)
+  Changes:
+    - Centrifuging recipes now always cost a fixed amount and have a percent chance to give rarer ores instead of scaling up the cost until the rare ores could be rounded to a whole number.
+    - We no longer scale the resource amounts from the Override Centrifuging Outputs setting
+    - Growth Accelerators now make noise when they are running
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.16
   Bugfixes:
