@@ -54,6 +54,17 @@ data:extend{growthAcceleratorNode,
 		allowed_effects = {"speed", "consumption"},
 		open_sound = {filename = "__base__/sound/machine-open.ogg", volume = 0.85},
 		close_sound = {filename = "__base__/sound/machine-close.ogg", volume = 0.75},
+		working_sound = {
+			sound = {
+				{
+					filename = tiberiumInternalName.."/sound/Accelerator.ogg",
+					volume = 1
+				}
+			},
+			audible_distance_modifier = 0.33,
+			max_sounds_per_type = 3,
+			match_speed_to_activity = true
+		},
 		vehicle_impact_sound = {filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65},
 		resistances = {
 			{
