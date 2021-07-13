@@ -28,4 +28,35 @@ common.tibCraftingTint = {
 	quaternary = {r = 0.160784, g = 0.745098, b = 0.3058824, a = 0.345217},
 }
 
+common.scaleUpSprite = function(sprite, scalar)
+	if sprite.layers then
+		for layerIndex, layerSprite in pairs(sprite.layers) do
+			sprite.layers[layerIndex] = common.scaleUpSprite(layerSprite, scalar)
+		end
+	else
+		sprite.scale = scalar * (sprite.scale or 1)
+		if sprite.hr_version then
+			sprite.hr_version.scale = scalar * (sprite.hr_version.scale or 1)
+		end
+	end
+	return sprite
+end
+
+common.scaleUpSprite4Way = function(sprite4Way, scalar)
+	if sprite4Way.sheet then
+		sprite4Way.sheet = common.scaleUpSprite(sprite4Way.sheet, scalar)
+	elseif sprite4Way.sheets then
+		for sheetIndex, sheet in pairs(sprite4Way.sheets) do
+			sprite4Way.sheets[sheetIndex] = common.scaleUpSprite(sheet, scalar)
+		end
+	elseif not sprite4Way.north then
+		sprite4Way = common.scaleUpSprite(sprite4Way, scalar)
+	else
+		for direction, sprite in pairs(sprite4Way) do
+			sprite4Way[direction] = common.scaleUpSprite(sprite, scalar)
+		end
+	end
+	return sprite4Way
+end
+
 return common
