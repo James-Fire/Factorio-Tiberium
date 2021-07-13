@@ -59,4 +59,10 @@ common.scaleUpSprite4Way = function(sprite4Way, scalar)
 	return sprite4Way
 end
 
+common.applyTiberiumValue = function(item, value)
+	if data.raw.item[item] and not data.raw.item[item].tiberium_multiplier then
+		data.raw.item[item].tiberium_multiplier = value
+	end
+end
+
 return common
