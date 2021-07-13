@@ -108,15 +108,8 @@ for order, test in pairs(testingOrder) do
 			enabled = false,
 			icons = {
 				{
-					icon = "__core__/graphics/empty.png",
-					icon_size = 1,
-					scale = 32,
-				},
-				{
-					icon = tiberiumInternalName.."/graphics/icons/tacitus.png",
+					icon = tiberiumInternalName.."/graphics/icons/tacitus-recipe.png",
 					icon_size = 32,
-					scale = 20 / 32,
-					shift = {-4, 4},
 				},
 				{
 					icon = tiberiumInternalName.."/graphics/icons/tiberium-data-"..test..".png",
@@ -154,15 +147,8 @@ for order, test in pairs(testingOrder) do
 				enabled = false,
 				icons = {
 					{
-						icon = "__core__/graphics/empty.png",
-						icon_size = 1,
-						scale = 32,
-					},
-					{
-						icon = tiberiumInternalName.."/graphics/icons/tacitus.png",
+						icon = tiberiumInternalName.."/graphics/icons/tacitus-recipe.png",
 						icon_size = 32,
-						scale = 20 / 32,
-						shift = {-4, 4},
 					},
 					{
 						icon = tiberiumInternalName.."/graphics/icons/tiberium-data-"..test..".png",
