@@ -367,6 +367,30 @@ script.on_configuration_changed(function(data)
 		end
 	end
 
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.18") then
+		for _, surface in pairs(game.surfaces) do
+			-- Register nodes that were missed
+			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
+				local needToRegister = true
+				for _, registeredEntity in pairs(global.tibOnEntityDestroyed) do
+					if table.compare(node.position, registeredEntity.position) and (node.name == registeredEntity.name) then
+						needToRegister = false
+						break
+					end
+				end
+				if needToRegister then
+					registerEntity(node)
+				end
+			end
+			-- Clean up trees that weren't properly removed by the script
+			for _, blossomTree in pairs(surface.find_entities_filtered{name = "tibNode_tree"}) do
+				if surface.count_entities_filtered{name = "tibGrowthNode", position = blossomTree.position} == 0 then
+					blossomTree.destroy()
+				end
+			end
+		end
+	end
+
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
 			(data["mod_changes"]["Factorio-Tiberium-Beta"] and data["mod_changes"]["Factorio-Tiberium-Beta"]["old_version"]) then
 		game.print("[Factorio-Tiberium] Successfully converted save from Beta Tiberium mod to Main Tiberium mod")
@@ -634,10 +658,7 @@ function CreateNode(surface, position)
 		end
 		surface.destroy_decoratives{area = area}
 		-- Actual node creation
-		local node = surface.create_entity{name="tibGrowthNode", position = position, amount = 15000}
-		addNodeToGrowthList(node)
-		-- Spawn tree entity when node is created
-		createBlossomTree(surface, position)
+		surface.create_entity{name = "tibGrowthNode", position = position, amount = 15000, raise_built = true}
 	end
 end
 
@@ -1143,7 +1164,7 @@ function on_remove_entity(event)
 	local force = entity.force
 	if (entity.type == "mining-drill") then
 		for i, drill in pairs(global.tibDrills) do
-			if (drill.position.x == position.x) and (drill.position.y == position.y) and (drill.name == entity.name) then
+			if table.compare(drill.position, position) and (drill.name == entity.name) then
 				table.remove(global.tibDrills, i)
 				break
 			end
