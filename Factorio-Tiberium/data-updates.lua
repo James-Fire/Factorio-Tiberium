@@ -5,10 +5,11 @@ require("scripts/compatibility/Krastorio2")
 require("scripts/compatibility/Obelisks-of-light")
 
 -- Orbital Ion Cannon
-if mods["Orbital Ion Cannon"] then
+if mods["Orbital Ion Cannon"] or mods["Kux-OrbitalIonCannon"] then
 	LSlib.technology.addPrerequisite("orbital-ion-cannon", "tiberium-military-2")
 	if mods["bobwarfare"] then
 		LSlib.recipe.editIngredient("orbital-ion-cannon", "bob-laser-turret-5", "tiberium-ion-core", 1)
+		LSlib.technology.removePrerequisite("orbital-ion-cannon", "bob-laser-turrets-5")
 	else
 		LSlib.recipe.editIngredient("orbital-ion-cannon", "laser-turret", "tiberium-ion-core", 1)
 	end
