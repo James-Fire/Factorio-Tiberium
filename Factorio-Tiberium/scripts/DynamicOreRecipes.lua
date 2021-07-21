@@ -306,8 +306,8 @@ function allTechCosts()
 				local count = tech.unit.count or 0
 				if count == 0 then
 					local level = tonumber(string.match(techName, "%d+$")) or 1
-					local max_level = tonumber(tech.max_level)
-					if (not max_level) or (max_level < level) then
+					local max_level = tonumber(tech.max_level) or 1
+					if max_level < level then
 						max_level = level
 					elseif max_level == "infinite" then
 						max_level = level + 3  -- idk how I should deal with ones that start with high base costs
@@ -383,7 +383,8 @@ function allAvailableRecipes()
 			local launchResults = itemPrototypesFromTable(itemData.rocket_launch_products)
 			if tableLS.isEmpty(launchResults) then
 				local launchProduct = itemData.rocket_launch_product[1] or itemData.rocket_launch_product.name
-				local launchAmount  = math.max(itemData.rocket_launch_product[2] or itemData.rocket_launch_product.amount, 1)
+				local launchAmount  = tonumber(itemData.rocket_launch_product[2]) or tonumber(itemData.rocket_launch_product.amount) or 1
+				launchAmount = math.max(launchAmount, 1)
 				if launchProduct then
 					launchResults[launchProduct] = launchAmount
 				end
@@ -393,7 +394,7 @@ function allAvailableRecipes()
 					if siloData.fixed_recipe and siloData.rocket_result_inventory_size and (siloData.rocket_result_inventory_size > 0) then
 						local fakeRecipeName = "dummy-recipe-launching-"..item.."-from-"..silo
 						local partName = next(normalResults(siloData.fixed_recipe))
-						local numParts = (siloData.rocket_parts_required or 1) / siloData.rocket_result_inventory_size
+						local numParts = tonumber(siloData.rocket_parts_required) or 1
 						fakeRecipes[fakeRecipeName] = true
 						availableRecipes[fakeRecipeName] = {ingredient = {[item] = 1, [partName] = numParts}, result = launchResults}
 					end
@@ -605,15 +606,13 @@ end
 -- Returns a list of packs required for a given tech (not counting prerequisites)
 function packForTech(techName)
 	local packList = {}
-	if not data.raw.technology[techName] then
-		return {}
-	else
+	if data.raw.technology[techName] then
 		for _, ingredient in pairs(data.raw.technology[techName].unit.ingredients) do
-			pack = ingredient.name or ingredient[1]
+			local pack = ingredient.name or ingredient[1]
 			packList[pack] = ""
 		end
-		return packList
 	end
+	return packList
 end
 
 -- Assumes: free, recipeDepth
@@ -762,7 +761,7 @@ function resultsToTable(prototypeTable)
 	if type(prototypeTable) ~= "table" then	return {} end
 	local out = itemPrototypesFromTable(prototypeTable.results)
 	if tableLS.isEmpty(out) and prototypeTable.result then
-		out[prototypeTable.result] = prototypeTable.result_count or prototypeTable.count or 1
+		out[prototypeTable.result] = tonumber(prototypeTable.result_count) or tonumber(prototypeTable.count) or 1
 	end
 	return out
 end
@@ -774,12 +773,24 @@ function itemPrototypesFromTable(prototypeTable)
 	end
 	for _, item in pairs(prototypeTable) do
 		if item[1] then
-			local amount = item[2]
-			if amount > 0 then
-				out[item[1]] = amount
+			local amount = tonumber(item[2])
+			if amount and amount >= 1 then
+				out[item[1]] = math.floor(amount)
 			end
 		elseif item.name then
-			local amount = (item.amount or (item.amount_min + math.max(item.amount_min, item.amount_max)) / 2) * (item.probability or 1)
+			local amount = tonumber(item.amount)
+			if amount then
+				amount = math.floor(amount)
+			else
+				local min = tonumber(item.amount_min) or 1  -- I don't think the "or 1"s will ever be reached, but playing it safe 
+				local max = tonumber(item.amount_max) or 1
+				amount = (min + math.max(min, max)) / 2
+			end
+			local probability = tonumber(item.probability)
+			if probability then
+				probability = math.max(0, math.min(1, probability))  -- Clamp to actual 0 to 1 range
+				amount = amount * probability
+			end
 			if amount > 0 then
 				out[item.name] = amount
 			end
