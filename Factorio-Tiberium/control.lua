@@ -135,7 +135,7 @@ end)
 
 function updateGrowthInterval()
 	local performanceInterval = math.max(global.tibPerformanceMultiplier / 10, 1)  -- For performance multis over 10, space out the growth ticks more
-	global.intervalBetweenNodeUpdates = math.max(math.floor(18000 / (performanceInterval * (#global.tibGrowthNodeList or 1))), global.minUpdateInterval)
+	global.intervalBetweenNodeUpdates = math.max(math.floor(18000 * performanceInterval / (#global.tibGrowthNodeList or 1)), global.minUpdateInterval)
 end
 
 script.on_load(function()
