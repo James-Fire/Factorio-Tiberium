@@ -852,7 +852,7 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-empty-cell",
-		category = "chemistry",
+		category = "crafting",
 		subgroup = "a-intermediates",
 		energy_required = 5,
 		enabled = false,
