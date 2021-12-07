@@ -756,6 +756,9 @@ commands.add_command("tibGrowAllNodes",
 				PlaceOre(global.tibGrowthNodeList[i], placements)
 			end
 		end
+		if game.active_mods["Mining-Drones-Tiberium"] then
+			remote.call("mining_drones", "rescan_all_depots")
+		end
 		game.player.print({"", timer, " end of tibGrowAllNodes"})
 	end
 )
@@ -878,11 +881,9 @@ script.on_event(defines.events.on_tick, function(event)
 				if surface.count_entities_filtered{area = areaAroundPosition(position), name = treeBlockers} == 0 then
 					createBlossomTree(surface, position)
 				end
-				-- if remote.interfaces["mining_drones"] then  -- Klonan pls https://github.com/Klonan/Mining_Drones/pull/16
-				-- 	for _, depot in surface.find_entities_filtered{area = areaAroundPosition(position, 30 + TiberiumRadius), name = "mining-depot"} do
-				-- 		remote.call("mining_drones", "rescan_depot", depot)
-				-- 	end
-				-- end
+				if game.active_mods["Mining-Drones-Tiberium"] then
+					remote.call("mining_drones", "rescan_all_depots")
+				end
 			else
 				removeNodeFromGrowthList(node)
 			end
