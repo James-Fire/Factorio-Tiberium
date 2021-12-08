@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.18
+  Bugfixes:
+    - Fixed a visual issue where Blossom Tree sprites would remain after the node was mined out
+    - Fixed crash that occurred when other mods had strings in fields that didn't support them
+    - Fixed modded rocket silos causing incorrectly weighted centrifuging recipes
+    - Fixed bug where setting tibPerformanceMultiplier to a number over 10 made performance worse (Thanks to Dullahan from our Discord for investigating this)
+  Features:
+    - Added compatibility for the more commonly used Kux-OrbitalIonCannon mod
+    - Added compatibility for new Mining-Drones-Tiberium mod that supports mining drones mining from newly grown Tiberium Ore patches
+  Changes:
+    - Empty Fuel Cells can now be crafted in Assemblers or by hand instead of requiring a Chemical Plant
+---------------------------------------------------------------------------------------------------
 Version: 1.1.17
   Bugfixes:
     - Fixed crashing when other mods named their repeatable technologies in an unexpected way
