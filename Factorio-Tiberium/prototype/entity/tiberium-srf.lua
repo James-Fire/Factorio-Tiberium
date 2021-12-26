@@ -43,6 +43,21 @@ data:extend{
 		repair_sound = {filename = "__base__/sound/manual-repair-simple.ogg"},
 		mined_sound = {filename = "__base__/sound/deconstruct-bricks.ogg"},
 		vehicle_impact_sound = {filename = "__base__/sound/car-stone-impact.ogg", volume = 1.0},
+		working_sound =	{
+		  sound = {
+			filename = "__base__/sound/substation.ogg",
+			volume = 0.4
+		  },
+		  idle_sound = {
+			filename = "__base__/sound/accumulator-idle.ogg",
+			volume = 0.4
+		  },
+		  max_sounds_per_type = 3,
+		  audible_distance_modifier = 0.5,
+		  fade_in_ticks = 30,
+		  fade_out_ticks = 40,
+		  use_doppler_shift = false
+		},
 		energy_source = {
 			type = "electric",
 			buffer_capacity = "5MJ",
@@ -95,6 +110,28 @@ data:extend{
 		selection_priority = 1,
 		collision_box = {{-0.4, -0.4}, {0.4, 0.4}},
 		collision_mask = {"layer-15"},
+		created_effect = {
+			type = "direct",
+			action_delivery = {
+				type = "instant",
+				source_effects = {
+					type = "play-sound",
+					sound = {
+						filename = "__base__/sound/spidertron/spidertron-activate.ogg",
+						-- "__base__/sound/fight/laser-2.ogg" 
+						-- "__base__/sound/nightvision-on.ogg",
+						-- "__base__/sound/lamp-activate.ogg",
+						-- "__base__/sound/spidertron/spidertron-activate.ogg",
+						volume = 0.2,
+						speed = 1.2,
+						aggregation = {
+							max_count = 3,
+							remove = true,
+						},
+					},
+				},
+			},
+		},
 		pictures = {
 			{
 				filename = tiberiumInternalName.."/graphics/sonic wall/wall horz.png",
