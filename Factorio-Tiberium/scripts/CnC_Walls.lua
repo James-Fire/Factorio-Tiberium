@@ -123,7 +123,7 @@ function CnC_SonicWall_DeleteNode(entity, tick)
 	--Tell connected walls to reevaluate their connections
 	local connected_nodes = CnC_SonicWall_FindNodes(entity.surface, entity.position, entity.force, horz_wall + vert_wall)
 	for i = 1, #connected_nodes do
-		if not find_value_in_table(global.SRF_node_ticklist, connected_nodes[i], "emitter") then
+		if not find_value_in_table(global.SRF_node_ticklist, connected_nodes[i].position, "position") then
 			table.insert(global.SRF_node_ticklist, {emitter = connected_nodes[i], position = connected_nodes[i].position, tick = tick + 10})
 		end
 	end
@@ -281,7 +281,7 @@ function CnC_SonicWall_OnTick(event)
 																charging.emitter.force, horz_wall + vert_wall)
 				for _, node in pairs(connected_nodes) do
 					if node.energy > 0 then  --Doesn't need to be fully powered as long as it was once fully powered
-						if not find_value_in_table(global.SRF_node_ticklist, node, "emitter") then
+						if not find_value_in_table(global.SRF_node_ticklist, node.position, "position") then
 							tryCnC_SonicWall_MakeWall(charging.emitter, node)
 						end
 					end
@@ -297,7 +297,7 @@ function CnC_SonicWall_OnTick(event)
 		for _, entry in pairs(global.SRF_nodes) do
 			local ticks_rem = entry.emitter.energy / entry.emitter.electric_drain
 			if ticks_rem > 5 and ticks_rem <= 65 then
-				if not find_value_in_table(global.SRF_low_power_ticklist, entry.emitter, "emitter") then
+				if not find_value_in_table(global.SRF_low_power_ticklist, entry.emitter.position, "position") then
 					table.insert(global.SRF_low_power_ticklist, {emitter = entry.emitter, position = entry.position, tick = cur_tick + ceil(ticks_rem)})
 				end
 			end
