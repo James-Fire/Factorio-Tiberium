@@ -170,6 +170,27 @@ data:extend{
 	},
 	{
 		type = "item",
+		name = "tiberium-sonic-emitter",
+		icons =  common.layeredIcons(tiberiumInternalName.."/graphics/entity/sonic-emitter/CNCTW_Sonic_Emitter_Cameo.png", 128,
+			tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "ne", 12),
+		icon_size = 128,
+		subgroup = "a-buildings",
+		order = "b[srf]-2",
+		place_result = "tiberium-sonic-emitter",
+		stack_size = 50
+	},
+	{
+		type = "item",
+		name = "tiberium-sonic-emitter-blue",
+		icons =  common.layeredIcons(tiberiumInternalName.."/graphics/entity/sonic-emitter/CNCTW_Sonic_Emitter_Cameo.png", 128,
+			tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "ne", 12),
+		subgroup = "a-buildings",
+		order = "b[srf]-3",
+		place_result = "tiberium-sonic-emitter-blue",
+		stack_size = 50
+	},
+	{
+		type = "item",
 		name = "tiberium-network-node",
 		icon = "__base__/graphics/icons/electric-mining-drill.png",
 		icon_mipmaps = 4,
@@ -319,6 +340,16 @@ data:extend{
 	},
 	{
 		type = "item",
+		name = "tiberium-blue-explosives",
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-brick.png",
+		icon_size = 32,
+		flags = {},
+		subgroup = "a-intermediates",
+		order = "a[tiberium-ore]",
+		stack_size = 100
+	},
+	{
+		type = "item",
 		name = "tiberium-ore",
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore.png",
 		icon_size = 64,
@@ -331,11 +362,34 @@ data:extend{
 		fuel_category = "chemical",
 		fuel_emissions_multiplier = 5,
 	},
+	{
+		type = "item",
+		name = "tiberium-ore-blue",
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png",
+		icon_size = 64,
+		icon_mipmaps = 4,
+		flags = {},
+		subgroup = "raw-resource",
+		order = "a[tiberium-ore]",
+		stack_size = 50,
+		fuel_value = "8MJ",
+		fuel_category = "chemical",
+		fuel_emissions_multiplier = 20,
+	},
 	--Dummy Items
 	{
 		type = "item",
 		name = "tiberium-growth-credit-void",
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore.png",
+		icon_size = 64,
+		flags = {"hidden"},
+		subgroup = "a-items",
+		stack_size = 200
+	},
+	{
+		type = "item",
+		name = "tiberium-shatter-void",
+		icon = tiberiumInternalName.."/graphics/entity/sonic-emitter/CNCKW_Supersonic_Air_Attack_Cameo.png",
 		icon_size = 64,
 		flags = {"hidden"},
 		subgroup = "a-items",

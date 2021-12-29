@@ -203,16 +203,123 @@ data:extend{
 		energy_required = 40,
 		enabled = false,
 		ingredients = {
+			{type = "item", name = "tiberium-ore-blue", amount = 1},
 			{type = "item", name = "tiberium-ore", amount = 100},
 			{type = "item", name = "tiberium-growth-credit", amount = 1},
 		},
-		results = {},
+		results = {
+			{type = "item", name = "tiberium-ore-blue", amount = 1},
+			-- Green Tiberium Ore and Tiberium Chemical Data are added to recipe during recipe-autogeneration since they vary based on the settings
+		},
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-farming.png",
 		icon_size = 64,
 		allow_decomposition = false,
 		subgroup = "a-mixed-science",
 		order = "a"
 	}
+}
+
+-- Blue Tiberium recipes
+data:extend{
+	{
+		type = "recipe",
+		name = "tiberium-ore-processing-blue",
+		localised_name = {"recipe-name.tiberium-ore-processing-blue"},
+		category = "crafting-with-fluid",
+		energy_required = 5,
+		emissions_multiplier = 2,
+		enabled = false,
+		ingredients = {
+			-- The Blue Tiberium Ore is added to recipe during recipe-autogeneration since it varies based on the settings
+			{type = "fluid", name = "water", amount = 32},
+		},
+		results = {
+			{type = "fluid", name = "tiberium-slurry-blue", amount = 16},
+		},
+		icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-slurry-blue.png",
+		icon_size = 64,
+		main_product = "",
+		subgroup = "a-refining",
+		order = "a-2"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-liquid-processing-blue",
+		category = "oil-processing",
+		energy_required = 10,
+		emissions_multiplier = 8,
+		enabled = false,
+		ingredients = {
+			{type = "fluid", name = "tiberium-slurry-blue", amount = 16},
+			{type = "fluid", name = "crude-oil", amount = 32},
+		},
+		results = {
+			{type = "fluid", name = "liquid-tiberium", amount = 16},
+		},
+		main_product = "",
+		icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-refining-blue.png",
+		icon_size = 64,
+		subgroup = "a-refining",
+		order = "c-2"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-blue-explosives",
+		category = "chemistry",
+		energy_required = 10,
+		emissions_multiplier = 8,
+		enabled = false,
+		ingredients = {
+			{type = "fluid", name = "tiberium-slurry-blue", amount = 16},
+			{type = "fluid", name = "tiberium-sludge", amount = 10},
+		},
+		results = {
+			{type = "item", name = "tiberium-blue-explosives", amount = 16},
+		},
+		subgroup = "a-intermediates",
+		order = "a2[tiberium-blue-explosives]"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-enrich-blue-seed",
+		category = "tiberium-science",
+		always_show_made_in = true,
+		energy_required = 40,
+		enabled = false,
+		ingredients = {
+			{type = "item", name = "tiberium-ore", amount = 100},
+			{type = "item", name = "tiberium-growth-credit", amount = 1},
+		},
+		result = "tiberium-ore-blue",
+		main_product = "",
+		icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64,
+			tiberiumInternalName.."/graphics/icons/growth-credit.png", 64, "ne"),
+		allow_decomposition = false,
+		subgroup = "a-mixed-science",
+		order = "z-1"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-enrich-blue",
+		category = "tiberium-science",
+		always_show_made_in = true,
+		energy_required = 40,
+		enabled = false,
+		ingredients = {
+			{type = "item", name = "tiberium-ore-blue", amount = 3},
+			{type = "item", name = "tiberium-ore", amount = 20},
+			--{type = "item", name = "tiberium-growth-credit", amount = 1},
+		},
+		results = {
+			{type = "item", name = "tiberium-ore-blue", amount = 5},
+			{type = "item", name = "tiberium-ore", amount = 12},
+		},
+		icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64,
+				tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "ne"),
+		allow_decomposition = false,
+		subgroup = "a-mixed-science",
+		order = "z-2"
+	},
 }
 
 -- Refining/fluid recipes
@@ -624,6 +731,30 @@ data:extend{
 	},
 	{
 		type = "recipe",
+		name = "tiberium-sonic-emitter",
+		enabled = false,
+		energy_required = 5,
+		ingredients = {
+			{"copper-plate", 25},
+			{"steel-plate", 25},
+			{"advanced-circuit", 10},
+		},
+		result = "tiberium-sonic-emitter"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-sonic-emitter-blue",
+		enabled = false,
+		energy_required = 5,
+		ingredients = {
+			{"copper-plate", 25},
+			{"steel-plate", 25},
+			{"advanced-circuit", 10},
+		},
+		result = "tiberium-sonic-emitter-blue"
+	},
+	{
+		type = "recipe",
 		name = "tiberium-growth-accelerator",
 		enabled = false,
 		subgroup = "a-buildings",
@@ -750,15 +881,13 @@ data:extend{
 		type = "recipe",
 		name = "tiberium-rocket",
 		enabled = false,
-		category = "crafting-with-fluid",
-		energy_required = 50,
+		category = "crafting",
+		energy_required = 5,
 		ingredients = {
-			{"rocket", 10},
-			{type = "fluid", name = "liquid-tiberium", amount = 1}
+			{"tiberium-blue-explosives", 2},
+			{"rocket", 1},
 		},
-		results = {
-			{"tiberium-rocket", 10},
-		}
+		result= "tiberium-rocket",
 	},
 	{
 		type = "recipe",
@@ -767,9 +896,9 @@ data:extend{
 		category = "crafting-with-fluid",
 		energy_required = 50,
 		ingredients = {
+			{"rocket", 1},
 			{"rocket-control-unit", 10},
-			{"explosives", 10},
-			{type = "fluid", name = "liquid-tiberium", amount = 1000}
+			{"tiberium-blue-explosives", 100},
 		},
 		result = "tiberium-nuke"
 	},
@@ -781,9 +910,71 @@ data:extend{
 		energy_required = 50,
 		ingredients = {
 			{"rocket-control-unit", 10},
-			{type = "fluid", name = "liquid-tiberium", amount = 400}
+			{"tiberium-ore", 100},
+			{type = "fluid", name = "liquid-tiberium", amount = 300}
 		},
 		result = "tiberium-seed"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-seed-blue",
+		enabled = false,
+		category = "crafting-with-fluid",
+		energy_required = 50,
+		ingredients = {
+			{"rocket-control-unit", 10},
+			{"tiberium-ore-blue", 100},
+			{type = "fluid", name = "liquid-tiberium", amount = 300}
+		},
+		result = "tiberium-seed-blue"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-grenade-all",
+		enabled = false,
+		category = "crafting",
+		energy_required = 5,
+		ingredients = {
+			{"tiberium-blue-explosives", 2},
+			{"grenade", 1},
+		},
+		result= "tiberium-grenade-all",
+	},
+	{
+		type = "recipe",
+		name = "tiberium-grenade-blue",
+		enabled = false,
+		category = "crafting",
+		energy_required = 5,
+		ingredients = {
+			{"tiberium-blue-explosives", 2},
+			{"grenade", 1},
+		},
+		result= "tiberium-grenade-blue",
+	},
+	{
+		type = "recipe",
+		name = "tiberium-catalyst-missile-all",
+		enabled = false,
+		category = "crafting",
+		energy_required = 5,
+		ingredients = {
+			{"tiberium-blue-explosives", 2},
+			{"rocket", 1},
+		},
+		result= "tiberium-catalyst-missile-all",
+	},
+	{
+		type = "recipe",
+		name = "tiberium-catalyst-missile-blue",
+		enabled = false,
+		category = "crafting",
+		energy_required = 5,
+		ingredients = {
+			{"tiberium-blue-explosives", 2},
+			{"rocket", 1},
+		},
+		result= "tiberium-catalyst-missile-blue",
 	},
 	{
 		type = "recipe",
@@ -959,6 +1150,22 @@ data:extend{
 		results = {
 			{
 				name = "tiberium-growth-credit-void",
+				amount = 1,
+				probability = 0
+			}
+		},
+	},
+	{
+		type = "recipe",
+		name = "tiberium-shatter",
+		enabled = false,
+		hidden = true,
+		category = "growth",
+		ingredients = {{type = "fluid", name = "liquid-tiberium", amount = 1}},
+		energy_required = 5,
+		results = {
+			{
+				name = "tiberium-shatter-void",
 				amount = 1,
 				probability = 0
 			}

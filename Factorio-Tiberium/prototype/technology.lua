@@ -131,7 +131,7 @@ data:extend{
 				recipe = "tiberium-nuclear-fuel"
 			},
 		},
-		prerequisites = {"tiberium-liquid-centrifuging", "tiberium-nuclear-research"},
+		prerequisites = {"tiberium-nuclear-research"},
 		unit = {
 			count = 600,
 			ingredients = {
@@ -213,6 +213,14 @@ data:extend{
 			},
 			{
 				type = "unlock-recipe",
+				recipe = "tiberium-sonic-emitter"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-sonic-emitter-blue"
+			},
+			{
+				type = "unlock-recipe",
 				recipe = "tiberium-node-harvester"
 			},
 		},
@@ -260,6 +268,33 @@ data:extend{
 			},
 		},
 		prerequisites = {"tiberium-chemical-research"},
+		unit = {
+			count = 800,
+			ingredients = {
+				{"tiberium-science", 1},
+				{"automation-science-pack", 1},
+				{"logistic-science-pack", 1},
+				{"chemical-science-pack", 1},
+			},
+			time = 30
+		}
+	},
+	{
+		type = "technology",
+		name = "tiberium-mutation",
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png",
+		icon_size = 64,
+		effects = {
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-enrich-blue-seed"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-enrich-blue"
+			},
+		},
+		prerequisites = {"tiberium-growth-acceleration"},
 		unit = {
 			count = 800,
 			ingredients = {
@@ -323,7 +358,7 @@ data:extend{
 				recipe = "tiberium-growth-credit-from-energy"
 			},
 		},
-		prerequisites = {"tiberium-electromagnetic-research", "tiberium-growth-acceleration"},
+		prerequisites = {"tiberium-electromagnetic-research", "tiberium-mutation"},
 		unit = {
 			count = 1200,
 			ingredients = {
@@ -347,6 +382,10 @@ data:extend{
 			{
 				type = "unlock-recipe",
 				recipe = "tiberium-ore-processing"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-ore-processing-blue"
 			},
 			{
 				type = "unlock-recipe",
@@ -416,6 +455,10 @@ data:extend{
 			{
 				type = "unlock-recipe",
 				recipe = "tiberium-liquid-processing"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-liquid-processing-blue"
 			},
 			{
 				type = "unlock-recipe",
@@ -580,6 +623,10 @@ data:extend{
 			},
 			{
 				type = "unlock-recipe",
+				recipe = "tiberium-blue-explosives"
+			},
+			{
+				type = "unlock-recipe",
 				recipe = "tiberium-obelisk-of-light"
 			},
 			{
@@ -589,6 +636,22 @@ data:extend{
 			{
 				type = "unlock-recipe",
 				recipe = "tiberium-rocket"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-grenade-all"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-grenade-blue"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-catalyst-missile-all"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-catalyst-missile-blue"
 			},
 		},
 		prerequisites = {"tiberium-chemical-research", "tiberium-military-1", "rocketry", "laser"},
@@ -617,6 +680,10 @@ data:extend{
 			{
 				type = "unlock-recipe",
 				recipe = "tiberium-seed"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-seed-blue"
 			},
 			{
 				type = "unlock-recipe",

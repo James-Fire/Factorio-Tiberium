@@ -481,6 +481,50 @@ data:extend{tibSeedProjectile,
 	},
 }
 
+local tibSeedBlueProjectile = flib.copy_prototype(genericRocketProjectile, "tiberium-seed-blue")
+tibSeedBlueProjectile.action = {
+	type = "direct",
+	action_delivery = {
+		type = "instant",
+		target_effects = {
+			{
+				type = "script",
+				effect_id = "seed-launch-blue"
+			},
+		}
+	}
+}
+
+data:extend{tibSeedBlueProjectile,
+	{
+		type = "ammo",
+		name = "tiberium-seed-blue",
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-seed-rocket-blue.png",
+		icon_size = 64,
+		ammo_type = {
+			range_modifier = 5,
+			cooldown_modifier = 3,
+			target_type = "position",
+			category = "rocket",
+			action = {
+				type = "direct",
+				action_delivery = {
+					type = "projectile",
+					projectile = "tiberium-seed-blue",
+					starting_speed = 0.05,
+					source_effects = {
+						type = "create-entity",
+						entity_name = "explosion-hit"
+					}
+				}
+			}
+		},
+		subgroup = "a-items",
+		order = "c[rocket-launcher]-c[seed-missile]",
+		stack_size = 10
+	},
+}
+
 --Chemsprayer Ammo
 data:extend{
 	{
@@ -521,5 +565,193 @@ data:extend{
 		order = "e[flamethrower]",
 		stack_size = 100,
 		subgroup = "a-items",
+	},
+}
+
+local genericGrenadeCapsule = table.deepcopy(data.raw.capsule.grenade) --TODO icons for this
+genericGrenadeCapsule.cooldown = 10
+genericGrenadeCapsule.subgroup = "a-items"
+genericGrenadeCapsule.icon = nil
+genericGrenadeCapsule.icon_size = nil
+
+local destroyBlueCapsule = flib.copy_prototype(genericGrenadeCapsule, "tiberium-grenade-blue")
+destroyBlueCapsule.capsule_action.attack_parameters.ammo_type.action[1].action_delivery.projectile = "tiberium-grenade-blue"
+destroyBlueCapsule.icons = common.layeredIcons("__base__/graphics/icons/grenade.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "sw")
+
+local destroyGreenCapsule = flib.copy_prototype(genericGrenadeCapsule, "tiberium-grenade-all")
+destroyGreenCapsule.capsule_action.attack_parameters.ammo_type.action[1].action_delivery.projectile = "tiberium-grenade-all"
+destroyGreenCapsule.icons = common.layeredIcons("__base__/graphics/icons/grenade.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "sw")
+
+local genericGrenadeProjectile = table.deepcopy(data.raw.projectile.grenade)
+genericGrenadeProjectile.action[2] = {
+	type = "direct",
+	action_delivery = {
+		type = "instant",
+		target_effects = {
+			{
+				type = "script",
+				effect_id = "ore-destruction-blue-small"
+			},
+		}
+	}
+}
+
+local destroyBlueProjectile = flib.copy_prototype(genericGrenadeProjectile, "tiberium-grenade-blue")
+
+local destroyGreenProjectile = flib.copy_prototype(genericGrenadeProjectile, "tiberium-grenade-all")
+destroyGreenProjectile.action[2].action_delivery.target_effects[1].effect_id = "ore-destruction-all-small"
+
+local sonicProjectile = flib.copy_prototype(genericGrenadeProjectile, "tiberium-sonic-emitter-projectile")
+sonicProjectile.animation = {
+	animation_speed = 0.5,
+	--draw_as_glow = true,
+	filename = "__base__/graphics/entity/beam/hr-tileable-beam-END-light.png",
+	frame_count = 16,
+	height = 93,
+	width = 91,
+	line_length = 4,
+	priority = "high",
+	--shift = {0.03125, 0.03125},
+}
+sonicProjectile.created_effect = {
+	type = "direct",
+	action_delivery = {
+		type = "instant",
+		source_effects = {
+			type = "play-sound",
+			sound = {
+				aggregation = {
+					max_count = 3,
+					remove = true
+				},
+				variations = {
+					{
+						filename = "__base__/sound/fight/robot-explosion-4.ogg",
+						volume = 0.5
+					},
+					{
+						filename = "__base__/sound/fight/robot-explosion-5.ogg",
+						volume = 0.5
+					}
+				}
+			}
+		}
+	}
+}
+sonicProjectile.action[1] = {
+	type = "direct",
+	action_delivery = {
+		type = "instant",
+		target_effects = {
+			{
+				type = "create-entity",
+				entity_name = "wall-explosion",
+			},
+			{
+				type = "create-entity",
+				check_buildability = true,
+				entity_name = "small-scorchmark-tintable",
+			},
+			-- {
+			-- 	type = "invoke-tile-trigger",
+			-- 	repeat_count = 1,
+			-- },
+			{
+				type = "destroy-decoratives",
+				decoratives_with_trigger_only = false,
+				from_render_layer = "decorative",
+				include_decals = false,
+				include_soft_decoratives = true,
+				invoke_decorative_trigger = true,
+				radius = 1.5,
+				to_render_layer = "object",
+			}
+		}
+	}
+}
+sonicProjectile.action[2].action_delivery.target_effects[1].effect_id = "ore-destruction-sonic-emitter"
+
+data:extend{destroyBlueCapsule, destroyGreenCapsule, destroyBlueProjectile, destroyGreenProjectile, sonicProjectile}
+
+local catalystBlue = flib.copy_prototype(genericRocketProjectile, "tiberium-catalyst-missile-blue")
+catalystBlue.action = {
+	type = "direct",
+	action_delivery = {
+		type = "instant",
+		target_effects = {
+			{
+				type = "script",
+				effect_id = "ore-destruction-blue-large"
+			},
+		}
+	}
+}
+
+local catalystAll = flib.copy_prototype(genericRocketProjectile, "tiberium-catalyst-missile-all")
+catalystAll.action = {
+	type = "direct",
+	action_delivery = {
+		type = "instant",
+		target_effects = {
+			{
+				type = "script",
+				effect_id = "ore-destruction-all-large"
+			},
+		}
+	}
+}
+
+data:extend{catalystAll, catalystBlue,
+	{
+		type = "ammo",
+		name = "tiberium-catalyst-missile-all",
+		icons = common.layeredIcons("__base__/graphics/icons/explosive-rocket.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "ne", 10),
+		ammo_type = {
+			category = "rocket",
+			range_modifier = 5,
+			cooldown_modifier = 3,
+			target_type = "position",
+			action = {
+				type = "direct",
+				action_delivery = {
+					type = "projectile",
+					projectile = "tiberium-catalyst-missile-all",
+					starting_speed = 0.1,
+					source_effects = {
+						type = "create-entity",
+						entity_name = "explosion-hit",
+					}
+				}
+			}
+		},
+		subgroup = "a-items",
+		order = "c[rocket-launcher]-a[basic]",
+		stack_size = 200
+	},
+	{
+		type = "ammo",
+		name = "tiberium-catalyst-missile-blue",
+		icons = common.layeredIcons("__base__/graphics/icons/explosive-rocket.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "ne", 10),
+		ammo_type = {
+			category = "rocket",
+			range_modifier = 5,
+			cooldown_modifier = 3,
+			target_type = "position",
+			action = {
+				type = "direct",
+				action_delivery = {
+					type = "projectile",
+					projectile = "tiberium-catalyst-missile-blue",
+					starting_speed = 0.1,
+					source_effects = {
+						type = "create-entity",
+						entity_name = "explosion-hit",
+					}
+				}
+			}
+		},
+		subgroup = "a-items",
+		order = "c[rocket-launcher]-a[basic]",
+		stack_size = 200
 	},
 }

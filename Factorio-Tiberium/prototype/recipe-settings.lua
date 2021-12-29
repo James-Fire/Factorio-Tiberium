@@ -6,6 +6,7 @@ local WastePerCycle = math.max(1 / RecipeMult, 1)
 
 LSlib.recipe.addIngredient("tiberium-rounds-magazine", "tiberium-ore", math.max(16 / RecipeMult, 1), "item") --So it doesn't crash for large RecipeMults
 LSlib.recipe.addIngredient("tiberium-ore-processing", "tiberium-ore", math.max(16 / RecipeMult, 1), "item")
+LSlib.recipe.addIngredient("tiberium-ore-processing-blue", "tiberium-ore-blue", math.max(16 / RecipeMult, 1), "item")
 LSlib.recipe.setEngergyRequired("tiberium-growth-credit-from-energy", EnergyCreditCost)
 LSlib.recipe.addResult("tiberium-farming", "tiberium-ore", 100 + (OrePerCredit * 0.5), "item") --Changed this so the 100 base tiberium ore isn't multiplied
 LSlib.recipe.addResult("tiberium-farming", "tiberium-data-chemical", OrePerCredit * 0.04, "item")

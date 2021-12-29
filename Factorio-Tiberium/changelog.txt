@@ -1,4 +1,26 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.19
+  Bugfixes:
+    - Fixed SRF Emitters not connecting after Factorio 1.1.49
+  Features:
+    - Added Sonic Grenades, Tiberium Catalyst Missiles, and Anti-Tiberium Sonic Emitters as additional ways to quickly destroy Tiberium Ore
+    - Sonic Grenades are thrown and affect a small area. They are unlocked at Tiberium Military 2
+    - Tiberium Catalyst Missiles are shot from a rocket launcher and affect a large area. They are also unlocked at Tiberium Military 2
+    - Anti-Tiberium Sonic Emitters are turrets that attack nearby Tiberium Ore. Good for both pushing back Tiberium as well as maintaining a front. They are unlocked at Tiberium Containment
+    - Added Blue Tiberium, a rare, energy-dense variant of Tiberium with explosive properties
+    - Blue Tiberium starts spawning over top of existing Tiberium fields when the Evolution Factor is above 50%
+    - As the Evolution Factor approaches 100% Blue Tiberium expands more rapidly, completely overtaking Green Tiberium Fields
+    - Blue Tiberium has it's own refining recipes and can be turned into Liquid Tiberium or Tiberium Explosives
+    - There are separate versions of Sonic Grenades, Tiberium Catalyst Missiles, and Anti-Tiberium Sonic Emitters that only destroy Blue Tiberium if you want to defend your Green Tiberium fields from infection
+    - If you want to embrace the Blue Tiberium, we've added Blue Tiberium farming, enrichment, and seed missiles
+    - Added Blue Tiberium Mutation technology that unlocks synthesizing and farming Blue Tiberium, require Tiberium Growth Acceleration
+  Changes:
+    - Liquid Tiberium Power technology no longer requires Liquid Tiberium Centrifuging
+    - Advanced Tiberium Containment technology now require Blue Tiberium Mutation instead of Tiberium Growth Acceleration
+    - Tiberium Obersvation Farming now requires 1 Blue Tiberium Ore as a catalyst
+    - Tiberium Core Missile and Liquid Tiberium Bomb recipes now use Tiberium Explosives instead of Liquid Tiberium
+    - Liquid Green Tiberium Seed Rocket recipe now uses Tiberium Ore and less Liquid Tiberium
+---------------------------------------------------------------------------------------------------
 Version: 1.1.18
   Bugfixes:
     - Fixed a visual issue where Blossom Tree sprites would remain after the node was mined out

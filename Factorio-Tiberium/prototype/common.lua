@@ -65,4 +65,26 @@ common.applyTiberiumValue = function(item, value)
 	end
 end
 
+common.layeredIcons = function(baseImg, baseSize, layerImg, layerSize, corner, targetSize)
+	targetSize = targetSize or 16
+	local base = {
+		icon = baseImg,
+		icon_size = baseSize,
+	}
+	local corners = {ne = {x = 1, y = -1}, se = {x = 1, y = 1}, sw = {x = -1, y = 1}, nw = {x = -1, y = -1}}
+	local offset = {}
+	if corner and corners[corner] then
+		offset = {0.5 * (32 - targetSize) * corners[corner].x, 0.5 * (32 - targetSize) * corners[corner].y}
+	else
+		offset = {0, 0}
+	end
+	local layer = {
+		icon = layerImg,
+		icon_size = layerSize,
+		scale = targetSize / layerSize,
+		shift = offset,
+	}
+	return {base, layer}
+end
+
 return common
