@@ -79,6 +79,12 @@ if mods["dark-matter-replicators-18-patch"] then
 	common.applyTiberiumValue("tenemut", 32)
 end
 
+if mods["RampantResources"] then
+	for _, name in pairs({"tiberium-ore", "tiberium-ore-blue", "tibGrowthNode", "tibGrowthNode_infinite"}) do
+		data.raw.resource[name].exclude_from_rampant_resources = true
+	end
+end
+
 -- Below code isn't specific to any single mod
 table.insert(data.raw.character.character.mining_categories, "basic-solid-tiberium")
 
