@@ -58,6 +58,7 @@ script.on_init(function()
 	global.intervalBetweenNodeUpdates = 18000
 	global.tibPerformanceMultiplier = 1
 	global.tiberiumTerrain = nil --"dirt-4" --Performance is awful, disabling this
+	global.wildBlue = false
 	global.oreTypes = {"tiberium-ore", "tiberium-ore-blue"}
 	global.tiberiumProducts = global.oreTypes
 	global.damageForceName = "tiberium"
@@ -404,6 +405,10 @@ script.on_configuration_changed(function(data)
 		end
 	end
 
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.20") then
+		global.wildBlue = false
+	end
+
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
 			(data["mod_changes"]["Factorio-Tiberium-Beta"] and data["mod_changes"]["Factorio-Tiberium-Beta"]["old_version"]) then
 		game.print("[Factorio-Tiberium] Successfully converted save from Beta Tiberium mod to Main Tiberium mod")
@@ -448,8 +453,14 @@ end
 function AddOre(surface, position, growthRate, oreName)
 	if not oreName then
 		local evo = game.forces.enemy.evolution_factor
-		if evo > 0.5 and (math.random() < 0.04 * (evo - 0.5) ^ 2) then  -- Random <1% chance to spawn Blue Tiberium at high evolution factors
+		if evo > 0.4 and (math.random() < 0.03 * (evo - 0.4) ^ 2) then  -- Random <1% chance to spawn Blue Tiberium at high evolution factors
 			oreName = "tiberium-ore-blue"
+			if not global.wildBlue then
+				global.wildBlue = true
+				TiberiumSeedMissile(surface, position, 4 * TiberiumMaxPerTile, oreName)
+				game.print("The first wild mutation of [img=item.tiberium-ore-blue] Blue Tiberium has occurred at [gps="..math.floor(position.x)..","..math.floor(position.y).."]")
+				return false  -- We'll just say that this event can't spawn 
+			end
 		elseif surface.count_entities_filtered{area = areaAroundPosition(position, 1), name = "tiberium-ore-blue"} > 0 then  -- Blue will infect neighbors
 			oreName = "tiberium-ore-blue"
 		else

@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.20
+  Bugfixes:
+  Features:
+    - Added notification for when Blue Tiberium begins spawning in the wild
+    - The first wild growth of Blue Tiberium has significantly increased size to be more noticeable
+    - Added compatibility for RampantResources to make Tiberium Ore still function in the normal way
+  Changes:
+---------------------------------------------------------------------------------------------------
 Version: 1.1.19
   Bugfixes:
     - Fixed SRF Emitters not connecting after Factorio 1.1.49
@@ -20,6 +28,8 @@ Version: 1.1.19
     - Tiberium Obersvation Farming now requires 1 Blue Tiberium Ore as a catalyst
     - Tiberium Core Missile and Liquid Tiberium Bomb recipes now use Tiberium Explosives instead of Liquid Tiberium
     - Liquid Green Tiberium Seed Rocket recipe now uses Tiberium Ore and less Liquid Tiberium
+    - Added charging and working sounds to SRF Emitters
+    - Added a sound for SRF walls successfully connecting
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.18
   Bugfixes:
