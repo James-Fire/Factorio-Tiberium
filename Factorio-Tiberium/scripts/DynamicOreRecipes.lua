@@ -1168,12 +1168,12 @@ function addCreditRecipe(ore)
 end
 
 giantSetupFunction()
-singletonRecipes()
 log("%%% Setup complete beginning recipe parse")
 fugeTierSetup()
 fugeRecipeTier(1)
 fugeRecipeTier(2)
 fugeRecipeTier(3)
+singletonRecipes()  -- So fluid recipes come after sludge recipes for molten centrifuging
 
 for k,v in pairs(resultIndex) do
 	if tableLS.isEmpty(v) and not rawResources[k] then log("~~~ No remaining recipes create "..k) end

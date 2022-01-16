@@ -386,13 +386,4 @@ data:extend{
 		subgroup = "a-items",
 		stack_size = 200
 	},
-	{
-		type = "item",
-		name = "tiberium-shatter-void",
-		icon = tiberiumInternalName.."/graphics/entity/sonic-emitter/CNCKW_Supersonic_Air_Attack_Cameo.png",
-		icon_size = 64,
-		flags = {"hidden"},
-		subgroup = "a-items",
-		stack_size = 200
-	},
 }

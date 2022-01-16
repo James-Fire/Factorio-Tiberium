@@ -407,6 +407,18 @@ script.on_configuration_changed(function(data)
 
 	if upgradingToVersion(data, tiberiumInternalName, "1.1.20") then
 		global.wildBlue = false
+		for _, force in pairs(game.forces) do
+			if force.technologies["tiberium-mutation"] and force.technologies["tiberium-mutation"].researched then
+				force.technologies["tiberium-refining-blue"].researched = true
+			end
+			if force.technologies["tiberium-military-3"] and force.technologies["tiberium-military-3"].researched then
+				force.technologies["tiberium-nuke"].researched = true
+			end
+			if force.technologies["tiberium-military-2"] and force.technologies["tiberium-military-2"].researched then
+				force.technologies["tiberium-rocketry"].researched = true
+				force.technologies["tiberium-refining-blue"].researched = true
+			end
+		end
 	end
 
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
