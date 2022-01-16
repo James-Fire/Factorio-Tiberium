@@ -59,6 +59,7 @@ script.on_init(function()
 	global.tibPerformanceMultiplier = 1
 	global.tiberiumTerrain = nil --"dirt-4" --Performance is awful, disabling this
 	global.wildBlue = false
+	global.rocketTime = false
 	global.oreTypes = {"tiberium-ore", "tiberium-ore-blue"}
 	global.tiberiumProducts = global.oreTypes
 	global.damageForceName = "tiberium"
@@ -91,8 +92,10 @@ script.on_init(function()
 	end
 
 	global.tiberiumDamageTakenMulti = {}
+	global.technologyTimes = {}
 	for _, force in pairs(game.forces) do
 		global.tiberiumDamageTakenMulti[force.name] = 1
+		global.technologyTimes[force.name] = {}
 	end
 	
 	-- Use interface to give starting items if possible
@@ -407,6 +410,11 @@ script.on_configuration_changed(function(data)
 
 	if upgradingToVersion(data, tiberiumInternalName, "1.1.20") then
 		global.wildBlue = false
+		global.rocketTime = false
+		if game.finished or game.finished_but_continuing then
+			global.rocketTime = -1
+		end
+		global.technologyTimes = {}
 		for _, force in pairs(game.forces) do
 			if force.technologies["tiberium-mutation"] and force.technologies["tiberium-mutation"].researched then
 				force.technologies["tiberium-refining-blue"].researched = true
@@ -417,6 +425,12 @@ script.on_configuration_changed(function(data)
 			if force.technologies["tiberium-military-2"] and force.technologies["tiberium-military-2"].researched then
 				force.technologies["tiberium-rocketry"].researched = true
 				force.technologies["tiberium-refining-blue"].researched = true
+			end
+			global.technologyTimes[force.name] = {}
+			for name, tech in pairs(force.technologies) do
+				if tech.researched then
+					table.insert(global.technologyTimes[force.name], {name, -1})
+				end
 			end
 		end
 	end
@@ -468,7 +482,7 @@ function AddOre(surface, position, growthRate, oreName)
 		if evo > 0.4 and (math.random() < 0.03 * (evo - 0.4) ^ 2) then  -- Random <1% chance to spawn Blue Tiberium at high evolution factors
 			oreName = "tiberium-ore-blue"
 			if not global.wildBlue then
-				global.wildBlue = true
+				global.wildBlue = math.floor(game.tick / 3600)
 				TiberiumSeedMissile(surface, position, 4 * TiberiumMaxPerTile, oreName)
 				game.print("The first wild mutation of [img=item.tiberium-ore-blue] Blue Tiberium has occurred at [gps="..math.floor(position.x)..","..math.floor(position.y).."]")
 				return false  -- We'll just say that this event can't spawn 
@@ -916,6 +930,78 @@ commands.add_command("tibPerformanceMultiplier",
 		global.tibPerformanceMultiplier = math.max(multi, 1)  -- Don't let them put the multiplier below 1
 		updateGrowthInterval()
 		game.player.print("Performance multiplier set to "..global.tibPerformanceMultiplier)
+	end
+)
+commands.add_command("tibShareStats",
+	"Generate a string of data with stats your current Factorio game to share with Tiberium mod developers.",
+	function(invocationdata)
+		local fileName = "Tiberium Stats.txt"
+		game.write_file(fileName, "", false, game.player.index)
+		-- General game state
+		local str = ""
+		str = str .. "version," .. game.active_mods[tiberiumInternalName] .. "|"
+		str = str .. "submitted by," .. game.player.name .. "|"
+		str = str .. "# players," .. #game.players .. "|"
+		str = str .. "time," .. math.floor(game.tick / 3600) .. "|"
+		str = str .. "rocket," .. tostring(global.rocketTime) .. "|"
+		str = str .. "blue spawn," .. tostring(global.wildBlue) .. "|"
+		str = str .. "evo factor," .. game.forces.enemy.evolution_factor .. "|"
+		game.write_file(fileName, str, true, game.player.index)
+		-- Mod list
+		str = "\n"
+		for name, version in pairs(game.active_mods) do
+			str = str .. name .. "," .. version .. "|"
+		end
+		game.write_file(fileName, str, true, game.player.index)
+		-- Mod settings
+		str = "\n"
+		local playerSettings = {}
+		for _,source in pairs({settings.get_player_settings(game.player.index), settings.startup, settings.global}) do
+			for k,v in pairs(source) do
+				playerSettings[k] = v.value
+			end
+		end
+		for name, _ in pairs(game.get_filtered_mod_setting_prototypes{{filter="mod", mod=tiberiumInternalName}}) do
+			str = str..name..","..tostring(playerSettings[name]).."|"
+		end
+		game.write_file(fileName, str, true, game.player.index)
+		-- Entities
+		str = "\n"
+		for name, _ in pairs(game.get_filtered_entity_prototypes{{filter="name", name="test", invert=true}}) do
+			if string.sub(name, 1, 3) == "tib" then
+				str = str..name..","..game.surfaces[1].count_entities_filtered{name = name}.."|"
+			end
+		end
+		game.write_file(fileName, str, true, game.player.index)
+		-- Recipes
+		local recipeTable = {}
+		for _, surface in pairs(game.surfaces) do
+			for _, entity in pairs(surface.find_entities_filtered{type={"assembling-machine", "rocket-silo"}} or {}) do
+				local speed = entity.crafting_speed or 1
+				local recipe = entity.get_recipe()
+				if recipe and recipe.name then
+					if recipeTable[recipe.name] then
+						recipeTable[recipe.name] = recipeTable[recipe.name] + speed
+					else
+						recipeTable[recipe.name] = speed
+					end
+				end
+			end
+		end
+		str = "\n"
+		for name, speed in pairs(recipeTable) do
+			str = str..name..","..speed.."|"
+		end
+		game.write_file(fileName, str, true, game.player.index)
+		-- Technologies
+		str = "\n"
+		table.sort(global.technologyTimes[game.player.force.name], function(a,b) return (a[2] == b[2]) and (a[1] < b[1]) or (a[2] < b[2]) end)
+		for _, tech in pairs(global.technologyTimes[game.player.force.name]) do
+			str = str .. tech[1] .. "," .. tech[2] .. "|"
+		end
+		game.write_file(fileName, str, true, game.player.index)
+		game.player.print("Saved stats to %AppData%/Roaming/Factorio/script-output/"..fileName)
+		game.player.print("You can share your stats with Tiberium mods here: https://discord.gg/ed4pNP3KrH")
 	end
 )
 
@@ -1455,6 +1541,7 @@ end
 function OnResearchFinished(event)
 	-- TODO: delay execution when event.by_script == true
 	local force = event.research.force
+	local name = event.research.name
 	if force and force.get_entity_count(GA_Beacon_Name) > 0 then -- only update when beacons exist for force
 		local module_count = force.technologies["tiberium-growth-acceleration-acceleration"].level - 1
 		for _, surface in pairs(game.surfaces) do
@@ -1472,14 +1559,23 @@ function OnResearchFinished(event)
 			end
 		end
 	end
-	if event.research.name == "tiberium-military-1" then  --Caching this so we don't check it constantly
-		global.tiberiumDamageTakenMulti[event.research.force.name] = 0.2
-	elseif event.research.name == "tiberium-military-3" then
-		global.tiberiumDamageTakenMulti[event.research.force.name] = 0
+	if name == "tiberium-military-1" then  --Caching this so we don't check it constantly
+		global.tiberiumDamageTakenMulti[force.name] = 0.2
+	elseif name == "tiberium-military-3" then
+		global.tiberiumDamageTakenMulti[force.name] = 0
+	end
+	if string.sub(name, 1, 9) == "tiberium-" then
+		table.insert(global.technologyTimes[force.name], {name, math.floor(game.tick / 3600)})
 	end
 end
 
 script.on_event({defines.events.on_research_finished}, OnResearchFinished)
+
+script.on_event(defines.events.on_rocket_launched, function(event)
+	if not global.rocketTime then
+		global.rocketTime = math.floor(event.tick / 3600)
+	end
+end)
 
 function OnForceReset(event)
 	local force = event.force or event.destination
