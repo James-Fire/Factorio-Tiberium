@@ -226,6 +226,7 @@ data:extend{
 		name = "tiberium-ore-processing-blue",
 		localised_name = {"recipe-name.tiberium-ore-processing-blue"},
 		category = "crafting-with-fluid",
+		crafting_machine_tint = common.tibCraftingBlueTint,
 		energy_required = 5,
 		emissions_multiplier = 2,
 		enabled = false,
@@ -246,6 +247,7 @@ data:extend{
 		type = "recipe",
 		name = "tiberium-liquid-processing-blue",
 		category = "oil-processing",
+		crafting_machine_tint = common.tibCraftingBlueTint,
 		energy_required = 10,
 		emissions_multiplier = 8,
 		enabled = false,
@@ -266,6 +268,7 @@ data:extend{
 		type = "recipe",
 		name = "tiberium-blue-explosives",
 		category = "chemistry",
+		crafting_machine_tint = common.tibCraftingBlueTint,
 		energy_required = 10,
 		emissions_multiplier = 8,
 		enabled = false,
@@ -283,6 +286,7 @@ data:extend{
 		type = "recipe",
 		name = "tiberium-enrich-blue-seed",
 		category = "tiberium-science",
+		crafting_machine_tint = common.tibCraftingBlueTint,
 		always_show_made_in = true,
 		energy_required = 40,
 		enabled = false,
@@ -302,6 +306,7 @@ data:extend{
 		type = "recipe",
 		name = "tiberium-enrich-blue",
 		category = "tiberium-science",
+		crafting_machine_tint = common.tibCraftingBlueTint,
 		always_show_made_in = true,
 		energy_required = 40,
 		enabled = false,
@@ -1150,22 +1155,6 @@ data:extend{
 		results = {
 			{
 				name = "tiberium-growth-credit-void",
-				amount = 1,
-				probability = 0
-			}
-		},
-	},
-	{
-		type = "recipe",
-		name = "tiberium-shatter",
-		enabled = false,
-		hidden = true,
-		category = "growth",
-		ingredients = {{type = "fluid", name = "liquid-tiberium", amount = 1}},
-		energy_required = 5,
-		results = {
-			{
-				name = "tiberium-shatter-void",
 				amount = 1,
 				probability = 0
 			}

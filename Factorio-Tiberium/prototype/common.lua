@@ -28,6 +28,13 @@ common.tibCraftingTint = {
 	quaternary = {r = 0.160784, g = 0.745098, b = 0.3058824, a = 0.345217},
 }
 
+common.tibCraftingBlueTint = {
+	primary    = {r = 0.2, g = 0.2, b = 1, a = 1},
+	secondary  = {r = 0.04, g = 0.4, b = 1, a = 1},
+	tertiary   = {r = 0.3, g = 0.4, b = 1, a = 0.3},
+	quaternary = {r = 0.3, g = 0.2, b = 1, a = 0.4},
+}
+
 common.scaleUpSprite = function(sprite, scalar)
 	if sprite.layers then
 		for layerIndex, layerSprite in pairs(sprite.layers) do
