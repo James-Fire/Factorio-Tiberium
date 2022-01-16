@@ -1,11 +1,29 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.20
-  Bugfixes:
   Features:
     - Added notification for when Blue Tiberium begins spawning in the wild
     - The first wild growth of Blue Tiberium has significantly increased size to be more noticeable
     - Added compatibility for RampantResources to make Tiberium Ore still function in the normal way
+    - Added /tibShareStats command to generate a shareable text file with information about the current game
+    - Catalyst Missiles now start a chain reaction of Tiberium-destroying explosions instead of just an initial blast
   Changes:
+    - Blue Tiberium spawns 20% sooner
+    - Chem Plants crafting Blue Tiberium recipes now have blue smoke
+    - Tiberium Sludge Processing now only requires Tiberium Mechanical Research instead of Tiberium Slurry Centrifuging
+    - Tiberium Sludge to Stone Brick is now unlocked by Tiberium Sludge Processing
+    - Recipes related to processing Blue Tiberium moved to new Blue Tiberium Refining tech
+    - Advanced Guard Tower and Tiberium Core Rockets split from Tiberium Military 2 into a new tech called Tiberium Rocketry
+    - Tiberium Seed Rockets and Liquid Tiberium Bombs split from Tiberium Military 3 into a new tech called Advanced Tiberium Rocketry 
+    - Tiberium infinite techs changed to require Tiberium Military 3 instead of Tiberium Military 2
+    - Sonic Emitters and Catalyst Missiles moved to a new tech called, well, Sonic Emitters and Catalyst Missiles
+    - Tiberium Military tech line made cheaper to reflect the having fewer recipes
+    - Blue Tiberium refining recipes are now slower and more expensive
+    - Catalyst Missiles now require significantly more Tiberium Explosives
+    - Tiberium Core Missiles and Sonic Grenades are now significantly cheaper and faster to craft
+    - Changed Sonic Emitter recipe to require Electric Engines
+  Bugfixes:
+    - Fixed Tiberium Waste Recycling missing a prerequisite for Chemical Science Packs
+    - Fixed the Molten Tiberium Centrifuging tech listing it's recipes in an annoying order
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.19
   Bugfixes:

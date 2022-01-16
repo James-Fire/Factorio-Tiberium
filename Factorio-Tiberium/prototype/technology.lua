@@ -322,7 +322,7 @@ data:extend{
 				recipe = "tiberium-enrich-blue"
 			},
 		},
-		prerequisites = {"tiberium-growth-acceleration", "tiberium-refining-blue"},
+		prerequisites = {"tiberium-growth-acceleration", "tiberium-refining-blue", "production-science-pack"},
 		unit = {
 			count = 400,
 			ingredients = {
@@ -330,6 +330,7 @@ data:extend{
 				{"automation-science-pack", 1},
 				{"logistic-science-pack", 1},
 				{"chemical-science-pack", 1},
+				{"production-science-pack", 1},
 			},
 			time = 30
 		}
@@ -747,7 +748,7 @@ data:extend{
 				recipe = "tiberium-catalyst-missile-blue"
 			},
 		},
-		prerequisites = {"tiberium-containment-tech", "tiberium-military-2", "tiberium-refining-blue"},
+		prerequisites = {"tiberium-containment-tech", "tiberium-military-2", "tiberium-refining-blue", "electric-engine"},
 		unit = {
 			count = 200,
 			ingredients = {

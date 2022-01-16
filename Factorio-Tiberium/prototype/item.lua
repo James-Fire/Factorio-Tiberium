@@ -374,7 +374,7 @@ data:extend{
 		stack_size = 50,
 		fuel_value = "8MJ",
 		fuel_category = "chemical",
-		fuel_emissions_multiplier = 20,
+		fuel_emissions_multiplier = 5,
 	},
 	--Dummy Items
 	{

@@ -29,7 +29,12 @@ local TibProductivity = {
 	"tiberium-liquid-thermal-data",
 	"tiberium-liquid-chemical-data",
 	"tiberium-liquid-nuclear-data",
-	"tiberium-liquid-EM-data"
+	"tiberium-liquid-EM-data",
+	"tiberium-ore-processing-blue",
+	"tiberium-liquid-processing-blue",
+	"tiberium-blue-explosives",
+	"tiberium-enrich-blue-seed",
+	"tiberium-enrich-blue"
 }
 
 for km, vm in pairs(data.raw.module) do
@@ -248,7 +253,7 @@ data:extend{
 		name = "tiberium-liquid-processing-blue",
 		category = "oil-processing",
 		crafting_machine_tint = common.tibCraftingBlueTint,
-		energy_required = 10,
+		energy_required = 30,
 		emissions_multiplier = 8,
 		enabled = false,
 		ingredients = {
@@ -269,15 +274,15 @@ data:extend{
 		name = "tiberium-blue-explosives",
 		category = "chemistry",
 		crafting_machine_tint = common.tibCraftingBlueTint,
-		energy_required = 10,
+		energy_required = 4,
 		emissions_multiplier = 8,
 		enabled = false,
 		ingredients = {
-			{type = "fluid", name = "tiberium-slurry-blue", amount = 16},
-			{type = "fluid", name = "tiberium-sludge", amount = 10},
+			{type = "fluid", name = "tiberium-slurry-blue", amount = 2},
+			{type = "fluid", name = "tiberium-sludge", amount = 1},
 		},
 		results = {
-			{type = "item", name = "tiberium-blue-explosives", amount = 16},
+			{type = "item", name = "tiberium-blue-explosives", amount = 1},
 		},
 		subgroup = "a-intermediates",
 		order = "a2[tiberium-blue-explosives]"
@@ -296,7 +301,7 @@ data:extend{
 		},
 		result = "tiberium-ore-blue",
 		main_product = "",
-		icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64,
+		icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-75%.png", 64,
 			tiberiumInternalName.."/graphics/icons/growth-credit.png", 64, "ne"),
 		allow_decomposition = false,
 		subgroup = "a-mixed-science",
@@ -319,7 +324,7 @@ data:extend{
 			{type = "item", name = "tiberium-ore-blue", amount = 5},
 			{type = "item", name = "tiberium-ore", amount = 12},
 		},
-		icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64,
+		icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-75%.png", 64,
 				tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "ne"),
 		allow_decomposition = false,
 		subgroup = "a-mixed-science",
@@ -743,6 +748,7 @@ data:extend{
 			{"copper-plate", 25},
 			{"steel-plate", 25},
 			{"advanced-circuit", 10},
+			{"electric-engine-unit", 1},
 		},
 		result = "tiberium-sonic-emitter"
 	},
@@ -755,6 +761,7 @@ data:extend{
 			{"copper-plate", 25},
 			{"steel-plate", 25},
 			{"advanced-circuit", 10},
+			{"electric-engine-unit", 1},
 		},
 		result = "tiberium-sonic-emitter-blue"
 	},
@@ -887,9 +894,9 @@ data:extend{
 		name = "tiberium-rocket",
 		enabled = false,
 		category = "crafting",
-		energy_required = 5,
+		energy_required = 1,
 		ingredients = {
-			{"tiberium-blue-explosives", 2},
+			{"tiberium-blue-explosives", 1},
 			{"rocket", 1},
 		},
 		result= "tiberium-rocket",
@@ -938,9 +945,9 @@ data:extend{
 		name = "tiberium-grenade-all",
 		enabled = false,
 		category = "crafting",
-		energy_required = 5,
+		energy_required = 1,
 		ingredients = {
-			{"tiberium-blue-explosives", 2},
+			{"tiberium-blue-explosives", 1},
 			{"grenade", 1},
 		},
 		result= "tiberium-grenade-all",
@@ -950,9 +957,9 @@ data:extend{
 		name = "tiberium-grenade-blue",
 		enabled = false,
 		category = "crafting",
-		energy_required = 5,
+		energy_required = 1,
 		ingredients = {
-			{"tiberium-blue-explosives", 2},
+			{"tiberium-blue-explosives", 1},
 			{"grenade", 1},
 		},
 		result= "tiberium-grenade-blue",
@@ -964,7 +971,7 @@ data:extend{
 		category = "crafting",
 		energy_required = 5,
 		ingredients = {
-			{"tiberium-blue-explosives", 2},
+			{"tiberium-blue-explosives", 7},
 			{"rocket", 1},
 		},
 		result= "tiberium-catalyst-missile-all",
@@ -976,7 +983,7 @@ data:extend{
 		category = "crafting",
 		energy_required = 5,
 		ingredients = {
-			{"tiberium-blue-explosives", 2},
+			{"tiberium-blue-explosives", 7},
 			{"rocket", 1},
 		},
 		result= "tiberium-catalyst-missile-blue",
