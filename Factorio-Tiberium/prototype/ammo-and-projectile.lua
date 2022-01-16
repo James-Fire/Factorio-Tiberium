@@ -583,15 +583,17 @@ destroyGreenCapsule.capsule_action.attack_parameters.ammo_type.action[1].action_
 destroyGreenCapsule.icons = common.layeredIcons("__base__/graphics/icons/grenade.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "sw")
 
 local genericGrenadeProjectile = table.deepcopy(data.raw.projectile.grenade)
-genericGrenadeProjectile.action[2] = {
-	type = "direct",
-	action_delivery = {
-		type = "instant",
-		target_effects = {
-			{
-				type = "script",
-				effect_id = "ore-destruction-blue-small"
-			},
+genericGrenadeProjectile.action = {
+	{
+		type = "direct",
+		action_delivery = {
+			type = "instant",
+			target_effects = {
+				{
+					type = "script",
+					effect_id = "ore-destruction-blue"
+				},
+			}
 		}
 	}
 }
@@ -599,7 +601,7 @@ genericGrenadeProjectile.action[2] = {
 local destroyBlueProjectile = flib.copy_prototype(genericGrenadeProjectile, "tiberium-grenade-blue")
 
 local destroyGreenProjectile = flib.copy_prototype(genericGrenadeProjectile, "tiberium-grenade-all")
-destroyGreenProjectile.action[2].action_delivery.target_effects[1].effect_id = "ore-destruction-all-small"
+destroyGreenProjectile.action[1].action_delivery.target_effects[1].effect_id = "ore-destruction-all"
 
 local sonicProjectile = flib.copy_prototype(genericGrenadeProjectile, "tiberium-sonic-emitter-projectile")
 sonicProjectile.animation = {
@@ -638,7 +640,7 @@ sonicProjectile.created_effect = {
 		}
 	}
 }
-sonicProjectile.action[1] = {
+sonicProjectile.action[2] = {
 	type = "direct",
 	action_delivery = {
 		type = "instant",
@@ -669,39 +671,80 @@ sonicProjectile.action[1] = {
 		}
 	}
 }
-sonicProjectile.action[2].action_delivery.target_effects[1].effect_id = "ore-destruction-sonic-emitter"
+sonicProjectile.action[1].action_delivery.target_effects[1].effect_id = "ore-destruction-sonic-emitter"
 
 data:extend{destroyBlueCapsule, destroyGreenCapsule, destroyBlueProjectile, destroyGreenProjectile, sonicProjectile}
 
+local invisibleChainReactionBlue = flib.copy_prototype(genericGrenadeProjectile, "tiberium-catalyst-chain-blue")
+invisibleChainReactionBlue.acceleration = 0.0005
+invisibleChainReactionBlue.animation = common.blankAnimation
+invisibleChainReactionBlue.shadow = common.blankAnimation
+
+local invisibleChainReactionAll = flib.copy_prototype(genericGrenadeProjectile, "tiberium-catalyst-chain-all")
+invisibleChainReactionAll.action[1].action_delivery.target_effects[1].effect_id = "ore-destruction-all"
+invisibleChainReactionAll.acceleration = 0.0005
+invisibleChainReactionAll.animation = common.blankAnimation
+invisibleChainReactionAll.shadow = common.blankAnimation
+
 local catalystBlue = flib.copy_prototype(genericRocketProjectile, "tiberium-catalyst-missile-blue")
 catalystBlue.action = {
-	type = "direct",
-	action_delivery = {
-		type = "instant",
-		target_effects = {
-			{
-				type = "script",
-				effect_id = "ore-destruction-blue-large"
-			},
+	{
+		type = "direct",
+		action_delivery = {
+			type = "instant",
+			target_effects = {
+				{
+					type = "script",
+					effect_id = "ore-destruction-blue"
+				},
+			}
 		}
+	},
+	{
+		type = "cluster",
+		action_delivery = {
+			type = "projectile",
+			projectile = "tiberium-catalyst-chain-blue",
+			direction_deviation = 0.6,
+			starting_speed = 0.01,
+			starting_speed_deviation = 0.04
+		},
+		cluster_count = 16,
+		distance = 8,
+		distance_deviation = 12,
 	}
 }
 
 local catalystAll = flib.copy_prototype(genericRocketProjectile, "tiberium-catalyst-missile-all")
 catalystAll.action = {
-	type = "direct",
-	action_delivery = {
-		type = "instant",
-		target_effects = {
-			{
-				type = "script",
-				effect_id = "ore-destruction-all-large"
-			},
+	{
+		type = "direct",
+		action_delivery = {
+			type = "instant",
+			target_effects = {
+				{
+					type = "script",
+					effect_id = "ore-destruction-all"
+				},
+			}
 		}
+	},
+	{
+		type = "cluster",
+		action_delivery = {
+			type = "projectile",
+			projectile = "tiberium-catalyst-chain-all",
+			direction_deviation = 0.6,
+			starting_speed = 0.01,
+			starting_speed_deviation = 0.04
+		},
+		cluster_count = 16,
+		distance = 8,
+		distance_deviation = 12,
 	}
 }
 
-data:extend{catalystAll, catalystBlue,
+data:extend{catalystAll, catalystBlue, invisibleChainReactionAll, invisibleChainReactionBlue,
 	{
 		type = "ammo",
 		name = "tiberium-catalyst-missile-all",

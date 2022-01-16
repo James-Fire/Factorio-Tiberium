@@ -731,8 +731,32 @@ function TiberiumSeedMissile(surface, position, amount, oreName)
 end
 
 function TiberiumDestructionMissile(surface, position, radius, names)
+	local green = 0
+	local blue = 0
 	for _, ore in pairs(surface.find_entities_filtered{position = position, radius = radius, name = names}) do
+		if ore.name == "tiberium-ore" then
+			green = green + 1
+		else
+			blue = blue + 1
+		end
 		ore.destroy()
+	end
+	if green + blue > 0 then
+		-- Scorchmark
+		surface.create_entity{name = "small-scorchmark-tintable", position = position}
+		surface.create_entity{name = "wall-explosion", position = position}
+		-- Tinted explosion
+		if green > blue then
+			surface.create_entity{name = "tiberium-explosion-green", position = position}
+		else
+			surface.create_entity{name = "tiberium-explosion-blue", position = position}
+		end
+		-- Destroy decoratives
+		surface.destroy_decoratives{area = areaAroundPosition(position, radius)}
+		-- AOE damage scaling off amount of tib destroyed
+		for _, entity in pairs(surface.find_entities(areaAroundPosition(position, radius))) do
+			safeDamage(entity, TiberiumDamage * (green + blue))
+		end
 	end
 end
 
@@ -744,14 +768,10 @@ script.on_event(defines.events.on_script_trigger_effect, function(event)
 		TiberiumSeedMissile(game.surfaces[event.surface_index], event.target_position, 4 * TiberiumMaxPerTile, "tiberium-ore-blue")
 	elseif event.effect_id == "ore-destruction-sonic-emitter" then
 		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 1.5, {"tiberium-ore", "tiberium-ore-blue"})
-	elseif event.effect_id == "ore-destruction-blue-small" then
-		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 5, "tiberium-ore-blue")
-	elseif event.effect_id == "ore-destruction-blue-large" then
-		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 12, "tiberium-ore-blue")
-	elseif event.effect_id == "ore-destruction-all-small" then
-		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 5, {"tiberium-ore", "tiberium-ore-blue"})
-	elseif event.effect_id == "ore-destruction-all-large" then
-		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 12, {"tiberium-ore", "tiberium-ore-blue"})
+	elseif event.effect_id == "ore-destruction-blue" then
+		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 3, "tiberium-ore-blue")
+	elseif event.effect_id == "ore-destruction-all" then
+		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 3, {"tiberium-ore", "tiberium-ore-blue"})
 	end
 end)
 
