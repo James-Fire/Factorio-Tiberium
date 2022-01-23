@@ -3,6 +3,7 @@
 
 tableLS = LSlib.utils.table
 local debugText = settings.startup["tiberium-debug-text"].value
+local easyMode = settings.startup["tiberium-easy-recipes"].value
 local free = {}
 local excludedCrafting = {["transport-drone-request"] = true} --Rigorous way to do this?
 
@@ -30,6 +31,20 @@ local science = {{}, {}, {}}
 local allPacks = {}
 local oreMult = {}
 
+local function normalIngredients(recipeName)
+	if fakeRecipes[recipeName] then
+		return availableRecipes[recipeName]["ingredient"]
+	end
+	return common.normalIngredients(recipeName)
+end
+
+local function normalResults(recipeName)
+	if fakeRecipes and fakeRecipes[recipeName] then
+		return availableRecipes[recipeName]["result"]
+	end
+	return common.normalResults(recipeName)
+end
+
 if mods["space-exploration"] then
 	for itemName, item in pairs(data.raw.item) do
 		if item.subgroup == "core-fragments" then
@@ -50,7 +65,7 @@ function giantSetupFunction()
 	-- Raw resources
 	for _, resourceData in pairs(data.raw.resource) do
 		if resourceData.autoplace and resourceData.minable then
-			for item in pairs(resultsToTable(resourceData.minable)) do
+			for item in pairs(common.resultsToTable(resourceData.minable)) do
 				rawResources[item] = true
 			end
 		end
@@ -110,14 +125,14 @@ function giantSetupFunction()
 	end
 	for _, tree in pairs(data.raw["tree"]) do
 		if tree.autoplace and tree.minable then
-			for item in pairs(resultsToTable(tree.minable)) do
+			for item in pairs(common.resultsToTable(tree.minable)) do
 				free[item] = true
 			end
 		end
 	end
 	for _, fish in pairs(data.raw["fish"]) do
 		if fish.autoplace and fish.minable then
-			for item in pairs(resultsToTable(fish.minable)) do
+			for item in pairs(common.resultsToTable(fish.minable)) do
 				free[item] = true
 			end
 		end
@@ -283,7 +298,7 @@ function allTechCosts()
 			local skipTech = false
 			local packDict = {}
 			local packList = {}
-			for packName, packAmount in pairs(itemPrototypesFromTable(tech.unit.ingredients)) do
+			for packName, packAmount in pairs(common.itemPrototypesFromTable(tech.unit.ingredients)) do
 				if not tibComboPacks[packName] then
 					if debugText then log(techName.." contains "..packName.." which is not in tibComboPacks") end
 					skipTech = true
@@ -380,7 +395,7 @@ function allAvailableRecipes()
 	for item, itemData in pairs(data.raw.item) do
 		-- Dummy recipes for rocket launch products
 		if itemData.rocket_launch_product or itemData.rocket_launch_products then
-			local launchResults = itemPrototypesFromTable(itemData.rocket_launch_products)
+			local launchResults = common.itemPrototypesFromTable(itemData.rocket_launch_products)
 			if tableLS.isEmpty(launchResults) then
 				local launchProduct = itemData.rocket_launch_product[1] or itemData.rocket_launch_product.name
 				local launchAmount  = tonumber(itemData.rocket_launch_product[2]) or tonumber(itemData.rocket_launch_product.amount) or 1
@@ -674,7 +689,7 @@ function findRecipe(item, itemList)
 	end
 	if recipes[1] then
 		if catalyst[recipes[1]] then  -- Scale properly for catalyst/enrichment
-			local itemIn = normalIngredients(recipeName)[item] or 0
+			local itemIn =normalIngredients(recipeName)[item] or 0
 			return recipes[1]["name"], recipes[1]["count"] - itemIn
 		else
 			return recipes[1]["name"], recipes[1]["count"]
@@ -735,68 +750,6 @@ function breadthFirst(itemList, recipesUsed, intermediates)
 		if free[item] or (math.abs(amount) < 0.0001) then itemList[item] = nil end  -- Clean up list
 	end
 	return breadthFirst(itemList, recipesUsed, intermediates)
-end
-
-function normalIngredients(recipeName)
-	if fakeRecipes[recipeName] then
-		return availableRecipes[recipeName]["ingredient"]
-	end
-	local recipe = data.raw["recipe"][recipeName]
-	local ingredientTable = itemPrototypesFromTable(recipe.normal and recipe.normal.ingredients or recipe.ingredients)
-	if debugText and tableLS.isEmpty(ingredientTable) then log("### Could not find ingredients for "..recipeName) end
-	return ingredientTable
-end
-
-function normalResults(recipeName)
-	if fakeRecipes[recipeName] then
-		return availableRecipes[recipeName]["result"]
-	end
-	local recipe = data.raw["recipe"][recipeName]
-	local resultTable = resultsToTable(recipe.normal or recipe)
-	if debugText and tableLS.isEmpty(resultTable) then log("### Could not find results for "..recipeName) end
-	return resultTable
-end
-
-function resultsToTable(prototypeTable)
-	if type(prototypeTable) ~= "table" then	return {} end
-	local out = itemPrototypesFromTable(prototypeTable.results)
-	if tableLS.isEmpty(out) and prototypeTable.result then
-		out[prototypeTable.result] = tonumber(prototypeTable.result_count) or tonumber(prototypeTable.count) or 1
-	end
-	return out
-end
-
-function itemPrototypesFromTable(prototypeTable)
-	local out = {}
-	if type(prototypeTable) ~= "table" then
-		return out
-	end
-	for _, item in pairs(prototypeTable) do
-		if item[1] then
-			local amount = tonumber(item[2])
-			if amount and amount >= 1 then
-				out[item[1]] = math.floor(amount)
-			end
-		elseif item.name then
-			local amount = tonumber(item.amount)
-			if amount then
-				amount = math.floor(amount)
-			else
-				local min = tonumber(item.amount_min) or 1  -- I don't think the "or 1"s will ever be reached, but playing it safe 
-				local max = tonumber(item.amount_max) or 1
-				amount = (min + math.max(min, max)) / 2
-			end
-			local probability = tonumber(item.probability)
-			if probability then
-				probability = math.max(0, math.min(1, probability))  -- Clamp to actual 0 to 1 range
-				amount = amount * probability
-			end
-			if amount > 0 then
-				out[item.name] = amount
-			end
-		end
-	end
-	return out
 end
 
 function sumOfDicts(dict1, dict2, loggingIndent)  --Lists with numeric values
@@ -1073,11 +1026,14 @@ end
 function singletonRecipes()
 	for resourceName, resourceData in pairs(data.raw.resource) do
 		if resourceData.autoplace and resourceData.minable then
-			for ore in pairs(resultsToTable(resourceData.minable)) do
+			for ore in pairs(common.resultsToTable(resourceData.minable)) do
 				if ore ~= "tiberium-ore" then
 					if not oreMult[ore] or (oreMult[ore] ~= math.huge and oreMult[ore] ~= 0) then  -- Don't create recipes for infinite or zero ore
-						addDirectRecipe(ore)
+						addDirectRecipe(ore, false)
 						addCreditRecipe(ore)
+						if easyMode then
+							addDirectRecipe(ore, true)
+						end
 					end
 				end
 			end
@@ -1087,16 +1043,26 @@ end
 
 --Creates recipes to turn Molten Tiberium directly into raw materials
 --Assumes oreMult
-function addDirectRecipe(ore)
+function addDirectRecipe(ore, easy)
 	local recipeName = "tiberium-molten-to-"..ore
+	local ingredient = "molten-tiberium"
 	local oreAmount = 64 / (oreMult[ore] or 1)
 	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"
 	local tech = data.raw.fluid[ore] and "tiberium-molten-centrifuging" or "tiberium-transmutation-tech"
 	local energy = 12
 	local order = (not oreMult[ore] and "a-" or oreMult[ore] > 1 and "b-" or "c-")..ore
-	
+	local subgroup = "a-direct"
+
+	if easy then
+		recipeName = "tiberium-slurry-to-"..ore
+		ingredient = "tiberium-slurry"
+		oreAmount = oreAmount / 2
+		tech = "tiberium-easy-transmutation-tech"
+		subgroup = "a-direct-easy"
+	end
+
 	LSlib.recipe.create(recipeName)
-	LSlib.recipe.addIngredient(recipeName, "molten-tiberium", 16, "fluid")
+	LSlib.recipe.addIngredient(recipeName, ingredient, 16, "fluid")
 	recipeAddResult(recipeName, ore, oreAmount, itemOrFluid)
 	LSlib.recipe.setMainResult(recipeName, ore)
 	if settings.startup["tiberium-byproduct-direct"].value then  -- Direct Sludge Waste setting
@@ -1107,7 +1073,7 @@ function addDirectRecipe(ore)
 	LSlib.recipe.setEngergyRequired(recipeName, energy)
 	LSlib.recipe.setOrderstring(recipeName, order)
 	LSlib.recipe.disable(recipeName)
-	LSlib.recipe.setSubgroup(recipeName, "a-direct")
+	LSlib.recipe.setSubgroup(recipeName, subgroup)
 	LSlib.recipe.setShowMadeIn(recipeName, true)
 	data.raw.recipe[recipeName].category = "chemistry"
 	data.raw.recipe[recipeName].crafting_machine_tint = common.tibCraftingTint

@@ -94,4 +94,70 @@ common.layeredIcons = function(baseImg, baseSize, layerImg, layerSize, corner, t
 	return {base, layer}
 end
 
+common.normalIngredients = function(recipeName)
+	local recipe = data.raw["recipe"][recipeName]
+	if recipe then
+		local ingredientTable = common.itemPrototypesFromTable(recipe.normal and recipe.normal.ingredients or recipe.ingredients)
+		if debugText and LSlib.utils.table.isEmpty(ingredientTable) then log("### Could not find ingredients for "..recipeName) end
+		return ingredientTable
+	else
+		log("### Could not find recipe with name "..recipeName)
+		return {}
+	end
+end
+
+common.normalResults = function(recipeName)
+	local recipe = data.raw["recipe"][recipeName]
+	if recipe then
+		local resultTable = common.resultsToTable(recipe.normal or recipe)
+		if debugText and LSlib.utils.table.isEmpty(resultTable) then log("### Could not find results for "..recipeName) end
+		return resultTable
+	else
+		log("### Could not find recipe with name "..recipeName)
+		return {}
+	end
+end
+
+common.resultsToTable = function(prototypeTable)
+	if type(prototypeTable) ~= "table" then	return {} end
+	local out = common.itemPrototypesFromTable(prototypeTable.results)
+	if LSlib.utils.table.isEmpty(out) and prototypeTable.result then
+		out[prototypeTable.result] = tonumber(prototypeTable.result_count) or tonumber(prototypeTable.count) or 1
+	end
+	return out
+end
+
+common.itemPrototypesFromTable = function(prototypeTable)
+	local out = {}
+	if type(prototypeTable) ~= "table" then
+		return out
+	end
+	for _, item in pairs(prototypeTable) do
+		if item[1] then
+			local amount = tonumber(item[2])
+			if amount and amount >= 1 then
+				out[item[1]] = math.floor(amount)
+			end
+		elseif item.name then
+			local amount = tonumber(item.amount)
+			if amount then
+				amount = math.floor(amount)
+			else
+				local min = tonumber(item.amount_min) or 1  -- I don't think the "or 1"s will ever be reached, but playing it safe 
+				local max = tonumber(item.amount_max) or 1
+				amount = (min + math.max(min, max)) / 2
+			end
+			local probability = tonumber(item.probability)
+			if probability then
+				probability = math.max(0, math.min(1, probability))  -- Clamp to actual 0 to 1 range
+				amount = amount * probability
+			end
+			if amount > 0 then
+				out[item.name] = amount
+			end
+		end
+	end
+	return out
+end
+
 return common

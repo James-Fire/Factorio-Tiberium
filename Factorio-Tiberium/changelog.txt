@@ -1,6 +1,10 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.20
   Features:
+    - Added "Easy Mode" setting that simplifies recipes and adds early game transmutation recipes
+---------------------------------------------------------------------------------------------------
+Version: 1.1.20
+  Features:
     - Added notification for when Blue Tiberium begins spawning in the wild
     - The first wild growth of Blue Tiberium has significantly increased size to be more noticeable
     - Added compatibility for RampantResources to make Tiberium Ore still function in the normal way

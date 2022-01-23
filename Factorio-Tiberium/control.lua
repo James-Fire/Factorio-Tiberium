@@ -18,6 +18,7 @@ local TiberiumRadius = 20 + settings.startup["tiberium-spread"].value * 0.4 --Tr
 local TiberiumSpread = settings.startup["tiberium-spread"].value
 local bitersImmune = settings.startup["tiberium-wont-damage-biters"].value
 local ItemDamageScale = settings.global["tiberium-item-damage-scale"].value
+local easyMode = settings.startup["tiberium-easy-recipes"].value
 local debugText = settings.startup["tiberium-debug-text"].value
 -- Starting items, if the option is ticked.
 local tiberium_start = {
@@ -39,6 +40,9 @@ local tiberium_start = {
 	["pipe"] = 50,
 	["offshore-pump"] = 1
 }
+if easyMode then
+	tiberium_start["chemical-plant"] = 10
+end
 
 script.on_init(function()
 	register_with_picker()
@@ -428,7 +432,7 @@ script.on_configuration_changed(function(data)
 			end
 			global.technologyTimes[force.name] = {}
 			for name, tech in pairs(force.technologies) do
-				if tech.researched then
+				if tech.researched and string.sub(name, 1, 9) == "tiberium-" then
 					table.insert(global.technologyTimes[force.name], {name, -1})
 				end
 			end
@@ -1609,6 +1613,9 @@ script.on_event(defines.events.on_player_created, function(event)
 		end
 		UnlockTechnologyAndPrereqs(player.force, "tiberium-mechanical-research")
 		UnlockTechnologyAndPrereqs(player.force, "tiberium-slurry-centrifuging")
+		if easyMode then
+			UnlockTechnologyAndPrereqs(player.force, "tiberium-easy-transmutation-tech")
+		end
 	end
 end)
 

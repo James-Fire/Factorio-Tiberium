@@ -24,3 +24,29 @@ if settings.startup["tiberium-byproduct-2"].value == true then  -- Refining Sulf
 	LSlib.recipe.addResult("tiberium-advanced-molten-processing", "sulfur", WastePerCycle, "item")
 	LSlib.recipe.addResult("tiberium-liquid-processing", "sulfur", WastePerCycle, "item")
 end
+
+local easyMode = settings.startup["tiberium-easy-recipes"].value
+if easyMode then
+	-- Find recipes with catalysts
+	-- Use lslib functions to remove catalyst amounts
+	for recipeName, _ in pairs(data.raw.recipe) do
+		if string.sub(recipeName, 1, 9) == "tiberium-" then
+			local ingredients = common.normalIngredients(recipeName)
+			local results = common.normalResults(recipeName)
+			for item, after in pairs(results) do
+				local before = ingredients[item]
+				if before then
+					local reduce = math.min(before, after)
+					log(recipeName.." reducing "..item.." by "..reduce)
+					-- Safe to do this inside of the for loop because we are changing the recipe and not the results var
+					if before == reduce then
+						LSlib.recipe.removeIngredient(recipeName, item)
+					else
+						LSlib.recipe.editIngredient(recipeName, item, item, (before - reduce) / before)
+					end
+					LSlib.recipe.editResult(recipeName, item, item, (after - reduce) / after)
+				end
+			end
+		end
+	end
+end
