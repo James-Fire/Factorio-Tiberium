@@ -1,5 +1,4 @@
-local tiberiumSpike = table.deepcopy(data.raw["mining-drill"]["pumpjack"])
-tiberiumSpike.name = "tiberium-spike"
+local tiberiumSpike = flib.copy_prototype(data.raw["mining-drill"]["pumpjack"], "tiberium-spike")
 tiberiumSpike.icon_size = 128
 tiberiumSpike.icon = tiberiumInternalName.."/graphics/icons/tiberium-spike.png"
 tiberiumSpike.icon_mipmaps = nil
@@ -8,7 +7,6 @@ tiberiumSpike.mining_speed = 5
 tiberiumSpike.subgroup = "a-buildings"
 tiberiumSpike.order = "g[tiberium-spike]"
 tiberiumSpike.resource_categories = {}
-tiberiumSpike.minable.result = "tiberium-spike"
 tiberiumSpike.resource_searching_radius = 0.49
 tiberiumSpike.collision_mask = {"water-tile", "player-layer"}
 table.insert(tiberiumSpike.resource_categories, "advanced-liquid-tiberium")

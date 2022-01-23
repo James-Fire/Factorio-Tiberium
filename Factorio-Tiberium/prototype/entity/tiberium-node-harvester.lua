@@ -1,6 +1,5 @@
-local tiberiumNodeHarvester = table.deepcopy(data.raw["mining-drill"]["electric-mining-drill"])
-tiberiumNodeHarvester.name = "tiberium-node-harvester"
-tiberiumNodeHarvester.icon = data.raw["mining-drill"]["pumpjack"].icon
+local tiberiumNodeHarvester = flib.copy_prototype(data.raw["mining-drill"]["electric-mining-drill"], "tiberium-node-harvester")
+tiberiumNodeHarvester.icons = LSlib.item.getIcons("mining-drill", "pumpjack")
 tiberiumNodeHarvester.icon_size = 64
 tiberiumNodeHarvester.icon_mipmaps = nil
 tiberiumNodeHarvester.base_picture = data.raw["mining-drill"]["pumpjack"].base_picture
@@ -11,7 +10,6 @@ tiberiumNodeHarvester.subgroup = "a-buildings"
 tiberiumNodeHarvester.order = "e"
 tiberiumNodeHarvester.energy_usage = "5000kW"
 tiberiumNodeHarvester.resource_categories = {}
-tiberiumNodeHarvester.minable.result = "tiberium-node-harvester"
 tiberiumNodeHarvester.resource_searching_radius = 0.49
 tiberiumNodeHarvester.collision_mask = {"water-tile", "player-layer"}
 table.insert(tiberiumNodeHarvester.resource_categories, "advanced-solid-tiberium")

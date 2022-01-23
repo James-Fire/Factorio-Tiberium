@@ -1,5 +1,7 @@
 ---------------------------------------------------------------------------------------------------
-Version: 1.1.20
+Version: 1.1.21
+  Bugfixes:
+    - Fixed crash resulting from other mods changing the pumpjack icon structure earlier than expected
   Features:
     - Added "Easy Mode" setting that simplifies recipes and adds early game transmutation recipes
 ---------------------------------------------------------------------------------------------------
