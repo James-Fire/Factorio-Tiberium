@@ -351,17 +351,83 @@ data:extend{
 	{
 		type = "item",
 		name = "tiberium-ore",
-		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore.png",
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore-basic.png",
 		icon_size = 64,
 		icon_mipmaps = 4,
 		flags = {},
-		subgroup = "raw-resource",
-		order = "a[tiberium-ore]",
-		stack_size = 50,
 		fuel_value = "2MJ",
 		fuel_category = "chemical",
 		fuel_emissions_multiplier = 5,
+		pictures =
+		{
+			{
+				layers =
+				{
+				  {
+					filename = tiberiumInternalName.."/graphics/icons/tiberium-ore.png",
+					size = 64,
+					scale = 0.25,
+					mipmap_count = 4
+				  },
+				  {
+					filename = tiberiumInternalName.."/graphics/icons/tiberium-ore-glow.png",
+					blend_mode = "additive",
+					draw_as_light = true,
+					tint = {r = 0.3, g = 0.6, b = 0.3, a = 0.3},
+					size = 64,
+					scale = 0.25,
+					mipmap_count = 4
+		    },
+        }
+      },
+      {
+			  layers =
+				{
+				  {
+					filename = tiberiumInternalName.."/graphics/icons/tiberium-ore-2.png",
+					size = 64,
+					scale = 0.25,
+					mipmap_count = 4
+				  },
+				  {
+					filename = tiberiumInternalName.."/graphics/icons/tiberium-ore-glow-2.png",
+					blend_mode = "additive",
+					draw_as_light = true,
+					tint = {r = 0.3, g = 0.6, b = 0.3, a = 0.3},
+					size = 64,
+					scale = 0.25,
+					mipmap_count = 4
+		    },
+        }
+      },
+      {
+			layers =
+				{
+				  {
+					filename = tiberiumInternalName.."/graphics/icons/tiberium-ore-3.png",
+					size = 64,
+					scale = 0.25,
+					mipmap_count = 4
+				  },
+				  {
+					filename = tiberiumInternalName.."/graphics/icons/tiberium-ore-glow-3.png",
+					blend_mode = "additive",
+					draw_as_light = true,
+					tint = {r = 0.3, g = 0.6, b = 0.3, a = 0.3},
+					size = 64,
+					scale = 0.25,
+					mipmap_count = 4
+          },
+        }
+      }
+    },
+		subgroup = "raw-resource",
+		order = "a[tiberium-ore]",
+		stack_size = 50
 	},
+			
+			
+			
 	{
 		type = "item",
 		name = "tiberium-ore-blue",
@@ -374,8 +440,77 @@ data:extend{
 		stack_size = 50,
 		fuel_value = "8MJ",
 		fuel_category = "chemical",
-		fuel_emissions_multiplier = 5,
+		fuel_emissions_multiplier = 5, 
+				pictures =
+		{
+			{
+				layers =
+				{
+				  {
+					filename = tiberiumInternalName.."/graphics/icons/tiberium-ore-blue.png",
+					size = 64,
+					scale = 0.25,
+					mipmap_count = 4
+				  },
+				  {
+					filename = tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-glow.png",
+					blend_mode = "additive",
+					draw_as_light = true,
+					tint = {r = 0.3, g = 0.3, b = 0.6, a = 0.3},
+					size = 64,
+					scale = 0.25,
+					mipmap_count = 4
+		    },
+        }
+      },
+      {
+			  layers =
+				{
+				  {
+					filename = tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-2.png",
+					size = 64,
+					scale = 0.25,
+					mipmap_count = 4
+				  },
+				  {
+					filename = tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-glow-2.png",
+					blend_mode = "additive",
+					draw_as_light = true,
+					tint = {r = 0.3, g = 0.3, b = 0.6, a = 0.3},
+					size = 64,
+					scale = 0.25,
+					mipmap_count = 4
+		    },
+        }
+      },
+      {
+			layers =
+				{
+				  {
+					filename = tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-3.png",
+					size = 64,
+					scale = 0.25,
+					mipmap_count = 4
+				  },
+				  {
+					filename = tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-glow-3.png",
+					blend_mode = "additive",
+					draw_as_light = true,
+					tint = {r = 0.3, g = 0.3, b = 0.6, a = 0.3},
+					size = 64,
+					scale = 0.25,
+					mipmap_count = 4
+          },
+        }
+      }
+    },
+		subgroup = "raw-resource",
+		order = "a[tiberium-ore]",
+		stack_size = 50
 	},
+			
+			
+			
 	--Dummy Items
 	{
 		type = "item",
