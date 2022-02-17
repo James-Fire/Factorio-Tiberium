@@ -298,41 +298,43 @@ function allTechCosts()
 			local skipTech = false
 			local packDict = {}
 			local packList = {}
-			for packName, packAmount in pairs(common.itemPrototypesFromTable(tech.unit.ingredients)) do
-				if not tibComboPacks[packName] then
-					if debugText then log(techName.." contains "..packName.." which is not in tibComboPacks") end
-					skipTech = true
-					break
-				end
-				packDict[packName] = packAmount
-				table.insert(packList, packName)
-			end
-			if not skipTech then
-				-- make key for techCosts
-				table.sort(packList)  -- Needed a list because we can't sort dicts
-				local multiPackKey = ""
-				if tech.max_level == "infinite" then
-					multiPackKey = "infinite"
-				end
-				for _, pack in pairs(packList) do
-					multiPackKey = multiPackKey..":"..pack
-				end
-				-- add dict to techCosts
-				local count = tech.unit.count or 0
-				if count == 0 then
-					local level = tonumber(string.match(techName, "%d+$")) or 1
-					local max_level = tonumber(tech.max_level) or 1
-					if max_level < level then
-						max_level = level
-					elseif max_level == "infinite" then
-						max_level = level + 3  -- idk how I should deal with ones that start with high base costs
+			if tech.unit and tech.unit.ingredients then
+				for packName, packAmount in pairs(common.itemPrototypesFromTable(tech.unit.ingredients)) do
+					if not tibComboPacks[packName] then
+						if debugText then log(techName.." contains "..packName.." which is not in tibComboPacks") end
+						skipTech = true
+						break
 					end
-					for i = level, max_level do
-						count = count + evaluateFormula(tech.unit.count_formula, level)
-					end
+					packDict[packName] = packAmount
+					table.insert(packList, packName)
 				end
-				packDict = makeScaledList(packDict, count)
-				techCosts[multiPackKey] = sumOfDicts(techCosts[multiPackKey], packDict)
+				if not skipTech then
+					-- make key for techCosts
+					table.sort(packList)  -- Needed a list because we can't sort dicts
+					local multiPackKey = ""
+					if tech.max_level == "infinite" then
+						multiPackKey = "infinite"
+					end
+					for _, pack in pairs(packList) do
+						multiPackKey = multiPackKey..":"..pack
+					end
+					-- add dict to techCosts
+					local count = tech.unit.count or 0
+					if count == 0 then
+						local level = tonumber(string.match(techName, "%d+$")) or 1
+						local max_level = tonumber(tech.max_level) or 1
+						if max_level < level then
+							max_level = level
+						elseif max_level == "infinite" then
+							max_level = level + 3  -- idk how I should deal with ones that start with high base costs
+						end
+						for i = level, max_level do
+							count = count + evaluateFormula(tech.unit.count_formula, level)
+						end
+					end
+					packDict = makeScaledList(packDict, count)
+					techCosts[multiPackKey] = sumOfDicts(techCosts[multiPackKey], packDict)
+				end
 			end
 		end
 	end

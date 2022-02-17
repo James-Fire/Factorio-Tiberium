@@ -2,6 +2,7 @@
 Version: 1.1.21
   Bugfixes:
     - Fixed crash resulting from other mods changing the pumpjack icon structure earlier than expected
+    - Fixed crash that occurred when parsing blank technologies
   Features:
     - Added "Easy Mode" setting that simplifies recipes and adds early game transmutation recipes
 ---------------------------------------------------------------------------------------------------
