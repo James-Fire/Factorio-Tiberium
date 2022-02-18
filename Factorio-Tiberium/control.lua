@@ -61,6 +61,7 @@ script.on_init(function()
 	global.minUpdateInterval = 1
 	global.intervalBetweenNodeUpdates = 18000
 	global.tibPerformanceMultiplier = 1
+	global.tibGrowing = true
 	global.tiberiumTerrain = nil --"dirt-4" --Performance is awful, disabling this
 	global.wildBlue = false
 	global.rocketTime = false
@@ -437,6 +438,10 @@ script.on_configuration_changed(function(data)
 				end
 			end
 		end
+	end
+
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.21") then
+		global.tibGrowing = true
 	end
 
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
@@ -936,6 +941,13 @@ commands.add_command("tibPerformanceMultiplier",
 		game.player.print("Performance multiplier set to "..global.tibPerformanceMultiplier)
 	end
 )
+commands.add_command("tibPauseGrowth",
+	"Toggle natural Tiberium growth for cases where you are overwhelmed or UPS issues couldn't be resolved using tibPerformanceMultiplier. Use the command a second time to unpause.",
+	function()
+		global.tibGrowing = not global.tibGrowing
+		game.print(game.player.name.." has turned Tiberium growth "..(global.tibGrowing and "back on." or "off."))
+	end
+)
 commands.add_command("tibShareStats",
 	"Generate a string of data with stats your current Factorio game to share with Tiberium mod developers.",
 	function(invocationdata)
@@ -1065,7 +1077,7 @@ script.on_event(defines.events.on_tick, function(event)
 	end
 			
 	-- Spawn ore check
-	if (event.tick % global.intervalBetweenNodeUpdates == 0) then
+	if global.tibGrowing and (event.tick % global.intervalBetweenNodeUpdates == 0) then
 		-- Step through the list of growth nodes, one each update
 		local tibGrowthNodeCount = #global.tibGrowthNodeList
 		global.tibGrowthNodeListIndex = global.tibGrowthNodeListIndex + 1
