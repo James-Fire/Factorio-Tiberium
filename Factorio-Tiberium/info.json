@@ -24,7 +24,7 @@
 		"? Krastorio2",
 		"? Kux-OrbitalIonCannon",
 		"? Mining-Drones-Tiberium",
-		"? Obelisks-of-light",
+		"? Obelisks-of-light >= 1.0.8",
 		"? Orbital Ion Cannon",
 		"? omnimatter >= 4.1.9",
 		"? Prospector >= 1.0.26",
