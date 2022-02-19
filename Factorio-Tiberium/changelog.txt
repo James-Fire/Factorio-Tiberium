@@ -5,10 +5,11 @@ Version: 1.1.21
     - Fixed crash that occurred when parsing blank technologies
   Changes:
     - MARV now creates pollution while running
-    - Updated compatibility for Obelisks of Light mod
   Features:
     - Added "Easy Mode" setting that simplifies recipes and adds early game transmutation recipes
     - Added /tibPauseGrowth command to toggle Tiberium growth
+    - Updated compatibility for Obelisks of Light mod
+    - Updated French and Russian translations thanks to Fr_Dae and CV514, respectively
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.20
   Features:

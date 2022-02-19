@@ -1,5 +1,5 @@
 -- Change when uploading to main/beta version, no underscores for this one
-tiberiumInternalName = "Factorio-Tiberium-Beta"
+tiberiumInternalName = "Factorio-Tiberium"
 
 local migration = require("__flib__.migration")
 require("scripts/CnC_Walls") --Note, to make SonicWalls work / be passable
