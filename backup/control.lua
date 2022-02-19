@@ -505,8 +505,7 @@ function AddOre(surface, position, growthRate, oreName)
 		end
 	elseif surface.count_entities_filtered{area = area, name = tiberiumNodeNames} > 0 then
 		return false --Don't place ore on top of nodes
-	elseif tile.collides_with("resource-layer")
-			or tile.collides_with("water-tile") then
+	elseif tile.collides_with("resource-layer") then
 		return false  -- Don't place on invalid tiles
 	else
 		--Tiberium destroys all other non-Tiberium resources as it spreads
@@ -559,8 +558,7 @@ function CheckPoint(surface, position, lastValidPosition, growthRate)
 		return true
 	end
 	
-	if tile.collides_with("resource-layer") 
-		or tile.collides_with("water-tile") then
+	if tile.collides_with("resource-layer") then
 		AddOre(surface, lastValidPosition, growthRate)
 		return true  --Hit edge of water, add to previous ore
 	end
@@ -889,8 +887,7 @@ commands.add_command("tibDeleteOre",
 			-- Also destroy nodes if they aren't on valid terrain
 			for _, node in pairs(surface.find_entities_filtered{name = tiberiumNodeNames}) do
 				local tile = surface.find_tiles_filtered{position = node.position}[1]
-				if tile.collides_with("water-tile") 
-					or tile.collides_with("resource-layer") then
+				if tile.collides_with("resource-layer") then
 					removeBlossomTree(surface, node.position)
 					removeNodeFromGrowthList(node)
 					node.destroy()
