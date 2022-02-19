@@ -1,4 +1,3 @@
-local tiberiumInternalName = "Factorio-Tiberium"
 local Informatron = {} -- informatron pages implementation.
 
 function Informatron.menu(player_index)

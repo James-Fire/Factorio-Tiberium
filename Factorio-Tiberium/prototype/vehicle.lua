@@ -15,6 +15,7 @@ marvEntity.weight = 50000
 marvEntity.collision_box = {{-1.4, -1.8}, {1.4, 1.8}}
 marvEntity.drawing_box = {{-2.3, -2.3}, {2.3, 2}}
 marvEntity.selection_box = {{-1.4, -1.8}, {1.4, 1.8}}
+marvEntity.burner.emissions_per_minute = 60
 marvEntity.burner.smoke[1].position = {0, 2.2}
 for _, layer in pairs(marvEntity.animation.layers) do
 	layer.scale = 0.75

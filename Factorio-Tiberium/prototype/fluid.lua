@@ -89,4 +89,26 @@ data:extend{
 		order = "a[fluid]-d[crude-oil]",
 		pressure_to_speed_ratio = 0.05,
 	},
+	{
+		type = "fluid",
+		name = "tiberium-slurry-blue",
+		base_color = {
+			b = 1.0,
+			g = 0.9,
+			r = 0.1
+		},
+		default_temperature = 50,
+		flow_color = {
+			b = 1.0,
+			g = 0.9,
+			r = 0.1
+		},
+		flow_to_energy_ratio = 0.5,
+		heat_capacity = "4KJ",
+		icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-slurry-blue.png",
+		icon_size = 64,
+		max_temperature = 1000,
+		order = "a[fluid]-d[crude-oil]",
+		pressure_to_speed_ratio = 0.05,
+	},
 }

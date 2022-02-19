@@ -1,8 +1,9 @@
+-- Change when uploading to main/beta version, no underscores for this one
+tiberiumInternalName = "Factorio-Tiberium"
+
+local migration = require("__flib__.migration")
 require("scripts/CnC_Walls") --Note, to make SonicWalls work / be passable
 require("scripts/informatron/informatron_remote_interface")
-local migration = require("__flib__.migration")
-
-local tiberiumInternalName = "Factorio-Tiberium"  --No underscores for this one
 
 local GA_Beacon_Name = "tiberium-growth-accelerator-beacon"
 local Speed_Module_Name = "tiberium-growth-accelerator-speed-module"
@@ -17,6 +18,7 @@ local TiberiumRadius = 20 + settings.startup["tiberium-spread"].value * 0.4 --Tr
 local TiberiumSpread = settings.startup["tiberium-spread"].value
 local bitersImmune = settings.startup["tiberium-wont-damage-biters"].value
 local ItemDamageScale = settings.global["tiberium-item-damage-scale"].value
+local easyMode = settings.startup["tiberium-easy-recipes"].value
 local debugText = settings.startup["tiberium-debug-text"].value
 -- Starting items, if the option is ticked.
 local tiberium_start = {
@@ -38,6 +40,9 @@ local tiberium_start = {
 	["pipe"] = 50,
 	["offshore-pump"] = 1
 }
+if easyMode then
+	tiberium_start["chemical-plant"] = 10
+end
 
 script.on_init(function()
 	register_with_picker()
@@ -46,6 +51,7 @@ script.on_init(function()
 	global.tibMineNodeListIndex = 0
 	global.tibMineNodeList = {}
 	global.tibDrills = {}
+	global.tibSonicEmitters = {}
 	global.tibOnEntityDestroyed = {}
 
 	-- Each node should spawn tiberium once every 5 minutes (give or take a handful of ticks rounded when dividing)
@@ -55,9 +61,12 @@ script.on_init(function()
 	global.minUpdateInterval = 1
 	global.intervalBetweenNodeUpdates = 18000
 	global.tibPerformanceMultiplier = 1
+	global.tibGrowing = true
 	global.tiberiumTerrain = nil --"dirt-4" --Performance is awful, disabling this
-	global.oreType = "tiberium-ore"
-	global.tiberiumProducts = {global.oreType}
+	global.wildBlue = false
+	global.rocketTime = false
+	global.oreTypes = {"tiberium-ore", "tiberium-ore-blue"}
+	global.tiberiumProducts = global.oreTypes
 	global.damageForceName = "tiberium"
 	if not game.forces[global.damageForceName] then
 		game.create_force(global.damageForceName)
@@ -88,8 +97,10 @@ script.on_init(function()
 	end
 
 	global.tiberiumDamageTakenMulti = {}
+	global.technologyTimes = {}
 	for _, force in pairs(game.forces) do
 		global.tiberiumDamageTakenMulti[force.name] = 1
+		global.technologyTimes[force.name] = {}
 	end
 	
 	-- Use interface to give starting items if possible
@@ -391,6 +402,48 @@ script.on_configuration_changed(function(data)
 		end
 	end
 
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.19") then
+		global.oreTypes = {"tiberium-ore", "tiberium-ore-blue"}
+		global.tiberiumProducts = global.oreTypes
+		global.tibSonicEmitters = {}
+		for _, force in pairs(game.forces) do
+			if force.technologies["tiberium-control-network-tech"] and force.technologies["tiberium-control-network-tech"].researched then
+				force.technologies["tiberium-mutation"].researched = true
+			end
+		end
+	end
+
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.20") then
+		global.wildBlue = false
+		global.rocketTime = false
+		if game.finished or game.finished_but_continuing then
+			global.rocketTime = -1
+		end
+		global.technologyTimes = {}
+		for _, force in pairs(game.forces) do
+			if force.technologies["tiberium-mutation"] and force.technologies["tiberium-mutation"].researched then
+				force.technologies["tiberium-refining-blue"].researched = true
+			end
+			if force.technologies["tiberium-military-3"] and force.technologies["tiberium-military-3"].researched then
+				force.technologies["tiberium-nuke"].researched = true
+			end
+			if force.technologies["tiberium-military-2"] and force.technologies["tiberium-military-2"].researched then
+				force.technologies["tiberium-rocketry"].researched = true
+				force.technologies["tiberium-refining-blue"].researched = true
+			end
+			global.technologyTimes[force.name] = {}
+			for name, tech in pairs(force.technologies) do
+				if tech.researched and string.sub(name, 1, 9) == "tiberium-" then
+					table.insert(global.technologyTimes[force.name], {name, -1})
+				end
+			end
+		end
+	end
+
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.21") then
+		global.tibGrowing = true
+	end
+
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
 			(data["mod_changes"]["Factorio-Tiberium-Beta"] and data["mod_changes"]["Factorio-Tiberium-Beta"]["old_version"]) then
 		game.print("[Factorio-Tiberium] Successfully converted save from Beta Tiberium mod to Main Tiberium mod")
@@ -432,13 +485,30 @@ function UpdateRecipeUnlocks(force)
 	end
 end
 
-function AddOre(surface, position, growthRate)
+function AddOre(surface, position, growthRate, oreName)
+	if not oreName then
+		local evo = game.forces.enemy.evolution_factor
+		if evo > 0.4 and (math.random() < 0.03 * (evo - 0.4) ^ 2) then  -- Random <1% chance to spawn Blue Tiberium at high evolution factors
+			oreName = "tiberium-ore-blue"
+			if not global.wildBlue then
+				global.wildBlue = math.floor(game.tick / 3600)
+				TiberiumSeedMissile(surface, position, 4 * TiberiumMaxPerTile, oreName)
+				game.print("The first wild mutation of [img=item.tiberium-ore-blue] Blue Tiberium has occurred at [gps="..math.floor(position.x)..","..math.floor(position.y).."]")
+				return false  -- We'll just say that this event can't spawn 
+			end
+		elseif surface.count_entities_filtered{area = areaAroundPosition(position, 1), name = "tiberium-ore-blue"} > 0 then  -- Blue will infect neighbors
+			oreName = "tiberium-ore-blue"
+		else
+			oreName = "tiberium-ore"
+		end
+	end
 	local area = areaAroundPosition(position)
-	local oreEntity = surface.find_entities_filtered{area = area, name = "tiberium-ore"}[1]
+	local oreEntity = surface.find_entities_filtered{area = area, name = global.oreTypes}[1]
 	local tile = surface.get_tile(position)
 	growthRate = math.min(growthRate, TiberiumMaxPerTile)
 
-	if oreEntity then
+	if oreEntity and (oreEntity.name == oreName or oreEntity.name == "tiberium-blue-ore") then
+		-- Grow existing tib except for the case where blue needs to replace green instead of growing it
 		if oreEntity.amount < TiberiumMaxPerTile then --Don't reduce ore amount when growing node
 			oreEntity.amount = math.min(oreEntity.amount + growthRate, TiberiumMaxPerTile)
 		end
@@ -450,9 +520,13 @@ function AddOre(surface, position, growthRate)
 		--Tiberium destroys all other non-Tiberium resources as it spreads
 		local otherResources = surface.find_entities_filtered{area = area, type = "resource"}
 		for _, entity in pairs(otherResources) do
-			if (entity.name ~= "tiberium-ore") and (entity.name ~= "tibGrowthNode") and (entity.name ~= "tibGrowthNode_infinite") then
+			if (entity.name ~= oreName) and (entity.name ~= "tibGrowthNode") and (entity.name ~= "tibGrowthNode_infinite") then
 				if entity.amount and entity.amount > 0 then
-					growthRate = math.min(growthRate + (0.5 * entity.amount), TiberiumMaxPerTile)
+					if LSlib.utils.table.hasValue(global.oreTypes, entity.name) then
+						growthRate = math.min(growthRate + entity.amount, TiberiumMaxPerTile)
+					else
+						growthRate = math.min(growthRate + (0.5 * entity.amount), TiberiumMaxPerTile)
+					end
 				end
 				entity.destroy()
 			end
@@ -462,7 +536,7 @@ function AddOre(surface, position, growthRate)
 				and (math.random() < (TiberiumSpread / 100) ^ 4) then  -- Around 1% chance to turn a tree into a Blossom Tree
 			CreateNode(surface, position)
 		else
-			oreEntity = surface.create_entity{name = "tiberium-ore", amount = growthRate, position = position, enable_cliff_removal = false}
+			oreEntity = surface.create_entity{name = oreName, amount = growthRate, position = position, enable_cliff_removal = false}
 			if global.tiberiumTerrain then
 				surface.set_tiles({{name = global.tiberiumTerrain, position = position}}, true, false)
 			end
@@ -526,7 +600,7 @@ function CheckPoint(surface, position, lastValidPosition, growthRate)
 		return false  --Don't grow on top of active node, keep going
 	end
 	
-	if surface.count_entities_filtered{area = area, name = "tiberium-ore"} == 0 then
+	if surface.count_entities_filtered{area = area, name = global.oreTypes} == 0 then
 		AddOre(surface, position, growthRate)
 		return true  --Reached edge of patch, place new ore
 	else
@@ -663,7 +737,8 @@ function CreateNode(surface, position)
 end
 
 --Code for making the Liquid Seed spread tib
-function TiberiumSeedMissile(surface, position, amount)
+function TiberiumSeedMissile(surface, position, amount, oreName)
+	oreName = oreName or "tiberium-ore"
 	local radius = math.floor(amount^0.3)
 	for x = position.x - radius, position.x + radius do
 		for y = position.y - radius, position.y + radius do
@@ -677,16 +752,46 @@ function TiberiumSeedMissile(surface, position, amount)
 					elseif node then
 						node.amount = node.amount + intensity
 					else
-						AddOre(surface, placePos, intensity)
+						AddOre(surface, placePos, intensity, oreName)
 					end
 				end
 			end
 		end
 	end
 	local center = {x = math.floor(position.x) + 0.5, y = math.floor(position.y) + 0.5}
-	local oreEntity = surface.find_entity("tiberium-ore", center)
+	local oreEntity = surface.find_entity(oreName, center)
 	if oreEntity and (oreEntity.amount >= TiberiumMaxPerTile) then
 		CreateNode(surface, center)
+	end
+end
+
+function TiberiumDestructionMissile(surface, position, radius, names)
+	local green = 0
+	local blue = 0
+	for _, ore in pairs(surface.find_entities_filtered{position = position, radius = radius, name = names}) do
+		if ore.name == "tiberium-ore" then
+			green = green + 1
+		else
+			blue = blue + 1
+		end
+		ore.destroy()
+	end
+	if green + blue > 0 then
+		-- Scorchmark
+		surface.create_entity{name = "small-scorchmark-tintable", position = position}
+		surface.create_entity{name = "wall-explosion", position = position}
+		-- Tinted explosion
+		if green > blue then
+			surface.create_entity{name = "tiberium-explosion-green", position = position}
+		else
+			surface.create_entity{name = "tiberium-explosion-blue", position = position}
+		end
+		-- Destroy decoratives
+		surface.destroy_decoratives{area = areaAroundPosition(position, radius)}
+		-- AOE damage scaling off amount of tib destroyed
+		for _, entity in pairs(surface.find_entities(areaAroundPosition(position, radius))) do
+			safeDamage(entity, TiberiumDamage * (green + blue))
+		end
 	end
 end
 
@@ -694,7 +799,14 @@ script.on_event(defines.events.on_script_trigger_effect, function(event)
 	--Liquid Seed trigger
 	if event.effect_id == "seed-launch" then
 		TiberiumSeedMissile(game.surfaces[event.surface_index], event.target_position, 4 * TiberiumMaxPerTile)
-		return
+	elseif event.effect_id == "seed-launch-blue" then
+		TiberiumSeedMissile(game.surfaces[event.surface_index], event.target_position, 4 * TiberiumMaxPerTile, "tiberium-ore-blue")
+	elseif event.effect_id == "ore-destruction-sonic-emitter" then
+		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 1.5, {"tiberium-ore", "tiberium-ore-blue"})
+	elseif event.effect_id == "ore-destruction-blue" then
+		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 3, "tiberium-ore-blue")
+	elseif event.effect_id == "ore-destruction-all" then
+		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 3, {"tiberium-ore", "tiberium-ore-blue"})
 	end
 end)
 
@@ -726,6 +838,7 @@ commands.add_command("tibRebuildLists",
 		global.tibMineNodeList = {}
 		global.SRF_nodes = {}
 		global.tibDrills = {}
+		global.tibSonicEmitter = {}
 		for _, surface in pairs(game.surfaces) do
 			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
 				addNodeToGrowthList(node)
@@ -736,10 +849,14 @@ commands.add_command("tibRebuildLists",
 			for _, drill in pairs(surface.find_entities_filtered{type = "mining-drill"}) do
 				table.insert(global.tibDrills, {entity = drill, name = drill.name, position = drill.position})
 			end
+			for _, sonic in pairs(surface.find_entities_filtered{name = "tiberium-sonic-emitter"}) do
+				table.insert(global.tibSonicEmitter, sonic.position)
+			end
 		end
 		game.player.print("Found " .. #global.tibGrowthNodeList .. " nodes")
 		game.player.print("Found " .. #global.SRF_nodes .. " SRF hubs")
 		game.player.print("Found " .. #global.tibDrills .. " drills")
+		game.player.print("Found " .. #global.tibSonicEmitter .. " drills")
 	end
 )
 commands.add_command("tibGrowAllNodes",
@@ -768,7 +885,7 @@ commands.add_command("tibDeleteOre",
 		local oreLimit = tonumber(invocationdata["parameter"]) or 10000
 		for _, surface in pairs(game.surfaces) do
 			local deletedOre = 0
-			for _, ore in pairs(surface.find_entities_filtered{name = "tiberium-ore"}) do
+			for _, ore in pairs(surface.find_entities_filtered{name = global.oreTypes}) do
 				if deletedOre >= oreLimit then
 					game.player.print("Too much Tiberium, only deleting "..oreLimit.." ore tiles on this pass")
 					break
@@ -796,7 +913,7 @@ commands.add_command("tibChangeTerrain",
 		global.tiberiumTerrain = terrain
 		--Ore
 		for _, surface in pairs(game.surfaces) do
-			for _, ore in pairs(surface.find_entities_filtered{name = "tiberium-ore"}) do
+			for _, ore in pairs(surface.find_entities_filtered{name = global.oreTypes}) do
 				ore.surface.set_tiles({{name = terrain, position = ore.position}}, true, false)
 			end
 		end
@@ -822,6 +939,85 @@ commands.add_command("tibPerformanceMultiplier",
 		global.tibPerformanceMultiplier = math.max(multi, 1)  -- Don't let them put the multiplier below 1
 		updateGrowthInterval()
 		game.player.print("Performance multiplier set to "..global.tibPerformanceMultiplier)
+	end
+)
+commands.add_command("tibPauseGrowth",
+	"Toggle natural Tiberium growth for cases where you are overwhelmed or UPS issues couldn't be resolved using tibPerformanceMultiplier. Use the command a second time to unpause.",
+	function()
+		global.tibGrowing = not global.tibGrowing
+		game.print(game.player.name.." has turned Tiberium growth "..(global.tibGrowing and "back on." or "off."))
+	end
+)
+commands.add_command("tibShareStats",
+	"Generate a string of data with stats your current Factorio game to share with Tiberium mod developers.",
+	function(invocationdata)
+		local fileName = "Tiberium Stats.txt"
+		game.write_file(fileName, "", false, game.player.index)
+		-- General game state
+		local str = ""
+		str = str .. "version," .. game.active_mods[tiberiumInternalName] .. "|"
+		str = str .. "submitted by," .. game.player.name .. "|"
+		str = str .. "# players," .. #game.players .. "|"
+		str = str .. "time," .. math.floor(game.tick / 3600) .. "|"
+		str = str .. "rocket," .. tostring(global.rocketTime) .. "|"
+		str = str .. "blue spawn," .. tostring(global.wildBlue) .. "|"
+		str = str .. "evo factor," .. game.forces.enemy.evolution_factor .. "|"
+		game.write_file(fileName, str, true, game.player.index)
+		-- Mod list
+		str = "\n"
+		for name, version in pairs(game.active_mods) do
+			str = str .. name .. "," .. version .. "|"
+		end
+		game.write_file(fileName, str, true, game.player.index)
+		-- Mod settings
+		str = "\n"
+		local playerSettings = {}
+		for _,source in pairs({settings.get_player_settings(game.player.index), settings.startup, settings.global}) do
+			for k,v in pairs(source) do
+				playerSettings[k] = v.value
+			end
+		end
+		for name, _ in pairs(game.get_filtered_mod_setting_prototypes{{filter="mod", mod=tiberiumInternalName}}) do
+			str = str..name..","..tostring(playerSettings[name]).."|"
+		end
+		game.write_file(fileName, str, true, game.player.index)
+		-- Entities
+		str = "\n"
+		for name, _ in pairs(game.get_filtered_entity_prototypes{{filter="name", name="test", invert=true}}) do
+			if string.sub(name, 1, 3) == "tib" then
+				str = str..name..","..game.surfaces[1].count_entities_filtered{name = name}.."|"
+			end
+		end
+		game.write_file(fileName, str, true, game.player.index)
+		-- Recipes
+		local recipeTable = {}
+		for _, surface in pairs(game.surfaces) do
+			for _, entity in pairs(surface.find_entities_filtered{type={"assembling-machine", "rocket-silo"}} or {}) do
+				local speed = entity.crafting_speed or 1
+				local recipe = entity.get_recipe()
+				if recipe and recipe.name then
+					if recipeTable[recipe.name] then
+						recipeTable[recipe.name] = recipeTable[recipe.name] + speed
+					else
+						recipeTable[recipe.name] = speed
+					end
+				end
+			end
+		end
+		str = "\n"
+		for name, speed in pairs(recipeTable) do
+			str = str..name..","..speed.."|"
+		end
+		game.write_file(fileName, str, true, game.player.index)
+		-- Technologies
+		str = "\n"
+		table.sort(global.technologyTimes[game.player.force.name], function(a,b) return (a[2] == b[2]) and (a[1] < b[1]) or (a[2] < b[2]) end)
+		for _, tech in pairs(global.technologyTimes[game.player.force.name]) do
+			str = str .. tech[1] .. "," .. tech[2] .. "|"
+		end
+		game.write_file(fileName, str, true, game.player.index)
+		game.player.print("Saved stats to %AppData%/Roaming/Factorio/script-output/"..fileName)
+		game.player.print("You can share your stats with Tiberium mods here: https://discord.gg/ed4pNP3KrH")
 	end
 )
 
@@ -862,8 +1058,26 @@ end)
 script.on_event(defines.events.on_tick, function(event)
 	-- Update SRF Walls
 	CnC_SonicWall_OnTick(event)
+	-- Sonic Emitters
+	for i, location in pairs(global.tibSonicEmitters) do
+		if i % 60 == event.tick % 60 then
+			local emitter = location.surface.find_entities_filtered{name = {"tiberium-sonic-emitter", "tiberium-sonic-emitter-blue"}, position = location.position}[1]
+			if emitter and emitter.energy >= emitter.electric_buffer_size then
+				local targetOres = (emitter.name == "tiberium-sonic-emitter-blue") and "tiberium-ore-blue" or global.oreTypes
+				local ore = location.surface.find_entities_filtered{name = targetOres, position = location.position, radius = 12}
+				if #ore > 0 then
+					local targetOre = ore[math.random(1, #ore)]
+					local dummy = location.surface.create_entity{name ="tiberium-target-dummy", position = targetOre.position}
+					location.surface.create_entity{name = "tiberium-sonic-emitter-projectile", position = location.position, speed = 0.2, target = dummy}
+					dummy.destroy()
+					emitter.energy = 0
+				end
+			end
+		end
+	end
+			
 	-- Spawn ore check
-	if (event.tick % global.intervalBetweenNodeUpdates == 0) then
+	if global.tibGrowing and (event.tick % global.intervalBetweenNodeUpdates == 0) then
 		-- Step through the list of growth nodes, one each update
 		local tibGrowthNodeCount = #global.tibGrowthNodeList
 		global.tibGrowthNodeListIndex = global.tibGrowthNodeListIndex + 1
@@ -912,18 +1126,20 @@ script.on_nth_tick(10, function(event) --Player damage 6 times per second
 		if player.valid and player.character and player.character.valid then
 			--MARV ore deletion
 			if player.vehicle and (player.vehicle.name == "tiberium-marv") and (player.vehicle.get_driver() == player.character) then
-				local deleted_ore = player.surface.find_entities_filtered{name = "tiberium-ore", position = player.position, radius = 4}
-				local harvested_amount = 0
-				for _, ore in pairs(deleted_ore) do
-					harvested_amount = harvested_amount + ore.amount * 0.01
-					ore.destroy()
-				end
-				if harvested_amount >= 1 then
-					player.vehicle.insert{name = "tiberium-ore", count = math.floor(harvested_amount)}
+				for _, oreName in pairs(global.oreTypes) do
+					local deleted_ore = player.surface.find_entities_filtered{name = oreName, position = player.position, radius = 4}
+					local harvested_amount = 0
+					for _, ore in pairs(deleted_ore) do
+						harvested_amount = harvested_amount + ore.amount * 0.01
+						ore.destroy()
+					end
+					if harvested_amount >= 1 then
+						player.vehicle.insert{name = oreName, count = math.floor(harvested_amount)}
+					end
 				end
 			end
 			--Damage players that are standing on Tiberium Ore and not in vehicles
-			local nearby_ore_count = player.surface.count_entities_filtered{name = "tiberium-ore", position = player.position, radius = 1.5}
+			local nearby_ore_count = player.surface.count_entities_filtered{name = global.oreTypes, position = player.position, radius = 1.5}
 			if nearby_ore_count > 0 and not player.character.vehicle and player.character.name ~= "jetpack-flying" then
 				safeDamage(player, nearby_ore_count * TiberiumDamage * 0.1)
 			end
@@ -1149,6 +1365,9 @@ function on_new_entity(event)
 		registerEntity(new_entity)
 		addNodeToGrowthList(new_entity)
 		createBlossomTree(surface, position)
+	elseif (new_entity.name == "tiberium-sonic-emitter") or (new_entity.name == "tiberium-sonic-emitter-blue") then
+		registerEntity(new_entity)
+		table.insert(global.tibSonicEmitters, {position = new_entity.position, surface = surface})
 	end
 end
 
@@ -1204,6 +1423,13 @@ function on_remove_entity(event)
 	elseif (entity.name == "tibGrowthNode") then
 		removeBlossomTree(surface, position)
 		removeNodeFromGrowthList(entity)
+	elseif (entity.name == "tiberium-sonic-emitter") or (entity.name == "tiberium-sonic-emitter-blue") then
+		for i = 1, #global.tibSonicEmitters do
+			if LSlib.utils.table.areEqual(global.tibSonicEmitters[i].position, entity.position) then
+				table.remove(global.tibSonicEmitters, i)
+				break
+			end
+		end
 	end
 	global.tibOnEntityDestroyed[event.registration_number] = nil  -- Avoid this global growing forever
 end
@@ -1331,6 +1557,7 @@ end
 function OnResearchFinished(event)
 	-- TODO: delay execution when event.by_script == true
 	local force = event.research.force
+	local name = event.research.name
 	if force and force.get_entity_count(GA_Beacon_Name) > 0 then -- only update when beacons exist for force
 		local module_count = force.technologies["tiberium-growth-acceleration-acceleration"].level - 1
 		for _, surface in pairs(game.surfaces) do
@@ -1348,14 +1575,23 @@ function OnResearchFinished(event)
 			end
 		end
 	end
-	if event.research.name == "tiberium-military-1" then  --Caching this so we don't check it constantly
-		global.tiberiumDamageTakenMulti[event.research.force.name] = 0.2
-	elseif event.research.name == "tiberium-military-3" then
-		global.tiberiumDamageTakenMulti[event.research.force.name] = 0
+	if name == "tiberium-military-1" then  --Caching this so we don't check it constantly
+		global.tiberiumDamageTakenMulti[force.name] = 0.2
+	elseif name == "tiberium-military-3" then
+		global.tiberiumDamageTakenMulti[force.name] = 0
+	end
+	if string.sub(name, 1, 9) == "tiberium-" then
+		table.insert(global.technologyTimes[force.name], {name, math.floor(game.tick / 3600)})
 	end
 end
 
 script.on_event({defines.events.on_research_finished}, OnResearchFinished)
+
+script.on_event(defines.events.on_rocket_launched, function(event)
+	if not global.rocketTime then
+		global.rocketTime = math.floor(event.tick / 3600)
+	end
+end)
 
 function OnForceReset(event)
 	local force = event.force or event.destination
@@ -1389,6 +1625,9 @@ script.on_event(defines.events.on_player_created, function(event)
 		end
 		UnlockTechnologyAndPrereqs(player.force, "tiberium-mechanical-research")
 		UnlockTechnologyAndPrereqs(player.force, "tiberium-slurry-centrifuging")
+		if easyMode then
+			UnlockTechnologyAndPrereqs(player.force, "tiberium-easy-transmutation-tech")
+		end
 	end
 end)
 

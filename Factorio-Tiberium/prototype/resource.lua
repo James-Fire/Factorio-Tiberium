@@ -108,6 +108,75 @@ data:extend{
 		max_effect_alpha = 0.5,
 		map_color = {0.02, 1.0, 0.02}
 	},
+	{
+		type = "resource",
+		name = "tiberium-ore-blue",
+		category = "basic-solid-tiberium",
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png",
+		icon_size = 64,
+		icon_mipmaps = 4,
+		flags = {"placeable-neutral"},
+		order="a-b-f",
+		minable = {
+			hardness = 0.05,
+			mining_particle = "stone-particle",
+			mining_time = 1,
+			result = "tiberium-ore-blue",
+		},
+		collision_box = {{-0.1, -0.1}, {0.1, 0.1}},
+		selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
+		stage_counts = {
+			TiberiumMaxPerTile * 0.9,
+			TiberiumMaxPerTile * 0.75,
+			TiberiumMaxPerTile * 0.6,
+			TiberiumMaxPerTile * 0.47,
+			TiberiumMaxPerTile * 0.35,
+			TiberiumMaxPerTile * 0.25,
+			TiberiumMaxPerTile * 0.15,
+			TiberiumMaxPerTile * 0.8,
+			TiberiumMaxPerTile * 0.4,
+			TiberiumMaxPerTile * 0.2,
+			TiberiumMaxPerTile * 0.1,
+			1
+		},
+		stages = {
+			sheet = {
+				filename = tiberiumInternalName.."/graphics/entity/ores/tiberium-ore-blue-20-114-0.png",
+				priority = "extra-high",
+				width = 64,
+				height = 64,
+				frame_count = 12,
+				variation_count = 12,
+				-- hr_version = {
+				-- 	filename = tiberiumInternalName.."/graphics/entity/ores/hr-tiberium-ore.png",
+				-- 	priority = "extra-high",
+				-- 	width = 128,
+				-- 	height = 128,
+				-- 	frame_count = 12,
+				-- 	variation_count = 12,
+				-- 	scale = 0.5
+				-- }
+			}
+		},
+		stages_effect = {
+			sheet = {
+				filename = tiberiumInternalName.."/graphics/entity/ores/tiberium-ore-glow-blue-61-139-20.png",
+				priority = "extra-high",
+				width = 64,
+				height = 64,
+				frame_count = 12,
+				variation_count = 12,
+				blend_mode = "additive",
+				flags = {"light"},
+			}
+		},
+		effect_animation_period = 4,
+		effect_animation_period_deviation = 1,
+		effect_darkness_multiplier = 2.0,
+		min_effect_alpha = 0.3,
+		max_effect_alpha = 0.5,
+		map_color = {0.15, 0.45, 1.0}
+	},
 }
 	
 local noise = require("noise");
