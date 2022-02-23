@@ -406,7 +406,14 @@ script.on_configuration_changed(function(data)
 		global.oreTypes = {"tiberium-ore", "tiberium-ore-blue"}
 		global.tiberiumProducts = global.oreTypes
 		global.tibSonicEmitters = {}
+		global.technologyTimes = {}
 		for _, force in pairs(game.forces) do
+			global.technologyTimes[force.name] = {}
+			for name, tech in pairs(force.technologies) do
+				if tech.researched and string.sub(name, 1, 9) == "tiberium-" then
+					table.insert(global.technologyTimes[force.name], {name, -1})
+				end
+			end
 			if force.technologies["tiberium-control-network-tech"] and force.technologies["tiberium-control-network-tech"].researched then
 				force.technologies["tiberium-mutation"].researched = true
 			end
@@ -419,14 +426,7 @@ script.on_configuration_changed(function(data)
 		if game.finished or game.finished_but_continuing then
 			global.rocketTime = -1
 		end
-		global.technologyTimes = {}
 		for _, force in pairs(game.forces) do
-			global.technologyTimes[force.name] = {}
-			for name, tech in pairs(force.technologies) do
-				if tech.researched and string.sub(name, 1, 9) == "tiberium-" then
-					table.insert(global.technologyTimes[force.name], {name, -1})
-				end
-			end
 			if force.technologies["tiberium-mutation"] and force.technologies["tiberium-mutation"].researched then
 				force.technologies["tiberium-refining-blue"].researched = true
 			end
