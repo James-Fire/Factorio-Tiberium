@@ -2,6 +2,8 @@
 Version: 1.1.22
   Bugfixes:
     - Fixed crash that occurred when converting technologies
+  Features:
+    - Added Chinese translation, thanks to BubbleDragon
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.21
   Bugfixes:
