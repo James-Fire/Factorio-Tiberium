@@ -421,6 +421,12 @@ script.on_configuration_changed(function(data)
 		end
 		global.technologyTimes = {}
 		for _, force in pairs(game.forces) do
+			global.technologyTimes[force.name] = {}
+			for name, tech in pairs(force.technologies) do
+				if tech.researched and string.sub(name, 1, 9) == "tiberium-" then
+					table.insert(global.technologyTimes[force.name], {name, -1})
+				end
+			end
 			if force.technologies["tiberium-mutation"] and force.technologies["tiberium-mutation"].researched then
 				force.technologies["tiberium-refining-blue"].researched = true
 			end
@@ -430,12 +436,6 @@ script.on_configuration_changed(function(data)
 			if force.technologies["tiberium-military-2"] and force.technologies["tiberium-military-2"].researched then
 				force.technologies["tiberium-rocketry"].researched = true
 				force.technologies["tiberium-refining-blue"].researched = true
-			end
-			global.technologyTimes[force.name] = {}
-			for name, tech in pairs(force.technologies) do
-				if tech.researched and string.sub(name, 1, 9) == "tiberium-" then
-					table.insert(global.technologyTimes[force.name], {name, -1})
-				end
 			end
 		end
 	end
