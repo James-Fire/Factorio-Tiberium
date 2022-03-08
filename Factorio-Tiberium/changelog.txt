@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.22
+  Bugfixes:
+    - Fixed crash that occurred when converting technologies
+  Features:
+    - Added Chinese translation, thanks to BubbleDragon
+---------------------------------------------------------------------------------------------------
 Version: 1.1.21
   Bugfixes:
     - Fixed crash resulting from other mods changing the pumpjack icon structure earlier than expected
