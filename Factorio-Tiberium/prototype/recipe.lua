@@ -1002,33 +1002,6 @@ data:extend{
 		result = "tiberium-marv",
 		subgroup = "a-items",
 	},
-	{
-		type = "recipe",
-		name = "tiberium-armor",
-		enabled = false,
-		hidden = true,
-		energy_required = 8,
-		ingredients = {
-			{"heavy-armor", 1},
-			{"plastic-bar", 50},
-			{"pipe", 2},
-		},
-		result = "tiberium-armor",
-	},
-	{
-		type = "recipe",
-		name = "tiberium-power-armor",
-		enabled = false,
-		hidden = true,
-		energy_required = 25,
-		ingredients = {
-			{"power-armor-mk2", 1},
-			{"plastic-bar", 50},
-			{"pipe", 2},
-		},
-		requester_paste_multiplier = 1,
-		result = "tiberium-power-armor",
-	},
 }
 
 -- Power recipes

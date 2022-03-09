@@ -32,16 +32,11 @@ prototypes["technology"] = {
 	"tiberium-advanced-containment-tech",
 }
 prototypes["recipe"] = {
-	"tiberium-power-armor",
 	"tiberium-sludge-from-slurry",
 	"tiberium-science-thru-thermal",
 	"tiberium-science-thru-chemical",
 	"tiberium-science-thru-nuclear",
 	"tiberium-science-thru-EM",
-}
-prototypes["armor"] = {
-	"tiberium-armor",
-	"tiberium-power-armor",
 }
 prototypes["car"] = {
 	"tiberium-marv",

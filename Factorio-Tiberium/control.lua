@@ -318,10 +318,10 @@ script.on_configuration_changed(function(data)
 				force.technologies["tiberium-advanced-molten-processing"].researched = true
 			end
 			--Disable deprecated recipes
-			if force.recipes["tiberium-armor"].enabled then
+			if force.recipes["tiberium-armor"] and force.recipes["tiberium-armor"].enabled then
 				force.recipes["tiberium-armor"].enabled = false
 			end
-			if force.recipes["tiberium-power-armor"].enabled then
+			if force.recipes["tiberium-power-armor"] and force.recipes["tiberium-power-armor"].enabled then
 				force.recipes["tiberium-power-armor"].enabled = false
 			end
 			UpdateRecipeUnlocks(force)

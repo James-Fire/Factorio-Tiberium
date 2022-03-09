@@ -96,11 +96,9 @@ end
 
 -- Add Tiberium resistance to armors
 for name, armor in pairs(data.raw.armor) do
-	if (name ~= "tiberium-armor") and (name ~= "tiberium-power-armor") then
-		for _, resistance in pairs (armor.resistances or {}) do
-			if resistance.type == "acid" then
-				table.insert(armor.resistances, {type= "tiberium", decrease = resistance.decrease, percent = resistance.percent})
-			end
+	for _, resistance in pairs (armor.resistances or {}) do
+		if resistance.type == "acid" then
+			table.insert(armor.resistances, {type = "tiberium", decrease = resistance.decrease, percent = resistance.percent})
 		end
 	end
 end
