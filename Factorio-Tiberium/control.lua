@@ -1,5 +1,5 @@
 -- Change when uploading to main/beta version, no underscores for this one
-tiberiumInternalName = "Factorio-Tiberium-Beta"
+tiberiumInternalName = "Factorio-Tiberium"
 
 local migration = require("__flib__.migration")
 require("scripts/CnC_Walls") --Note, to make SonicWalls work / be passable
@@ -18,6 +18,7 @@ local TiberiumRadius = 20 + settings.startup["tiberium-spread"].value * 0.4 --Tr
 local TiberiumSpread = settings.startup["tiberium-spread"].value
 local bitersImmune = settings.startup["tiberium-wont-damage-biters"].value
 local ItemDamageScale = settings.global["tiberium-item-damage-scale"].value
+local easyMode = settings.startup["tiberium-easy-recipes"].value
 local debugText = settings.startup["tiberium-debug-text"].value
 -- Starting items, if the option is ticked.
 local tiberium_start = {
@@ -39,6 +40,9 @@ local tiberium_start = {
 	["pipe"] = 50,
 	["offshore-pump"] = 1
 }
+if easyMode then
+	tiberium_start["chemical-plant"] = 10
+end
 
 script.on_init(function()
 	register_with_picker()
@@ -57,6 +61,7 @@ script.on_init(function()
 	global.minUpdateInterval = 1
 	global.intervalBetweenNodeUpdates = 18000
 	global.tibPerformanceMultiplier = 1
+	global.tibGrowing = true
 	global.tiberiumTerrain = nil --"dirt-4" --Performance is awful, disabling this
 	global.wildBlue = false
 	global.rocketTime = false
@@ -433,6 +438,10 @@ script.on_configuration_changed(function(data)
 				force.technologies["tiberium-refining-blue"].researched = true
 			end
 		end
+	end
+
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.21") then
+		global.tibGrowing = true
 	end
 
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
@@ -935,6 +944,13 @@ commands.add_command("tibPerformanceMultiplier",
 		game.player.print("Performance multiplier set to "..global.tibPerformanceMultiplier)
 	end
 )
+commands.add_command("tibPauseGrowth",
+	"Toggle natural Tiberium growth for cases where you are overwhelmed or UPS issues couldn't be resolved using tibPerformanceMultiplier. Use the command a second time to unpause.",
+	function()
+		global.tibGrowing = not global.tibGrowing
+		game.print(game.player.name.." has turned Tiberium growth "..(global.tibGrowing and "back on." or "off."))
+	end
+)
 commands.add_command("tibShareStats",
 	"Generate a string of data with stats your current Factorio game to share with Tiberium mod developers.",
 	function(invocationdata)
@@ -1064,7 +1080,7 @@ script.on_event(defines.events.on_tick, function(event)
 	end
 			
 	-- Spawn ore check
-	if (event.tick % global.intervalBetweenNodeUpdates == 0) then
+	if global.tibGrowing and (event.tick % global.intervalBetweenNodeUpdates == 0) then
 		-- Step through the list of growth nodes, one each update
 		local tibGrowthNodeCount = #global.tibGrowthNodeList
 		global.tibGrowthNodeListIndex = global.tibGrowthNodeListIndex + 1
@@ -1612,6 +1628,9 @@ script.on_event(defines.events.on_player_created, function(event)
 		end
 		UnlockTechnologyAndPrereqs(player.force, "tiberium-mechanical-research")
 		UnlockTechnologyAndPrereqs(player.force, "tiberium-slurry-centrifuging")
+		if easyMode then
+			UnlockTechnologyAndPrereqs(player.force, "tiberium-easy-transmutation-tech")
+		end
 	end
 end)
 
