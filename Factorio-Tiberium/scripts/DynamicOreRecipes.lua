@@ -5,7 +5,7 @@ tableLS = LSlib.utils.table
 local debugText = settings.startup["tiberium-debug-text"].value
 local easyMode = settings.startup["tiberium-easy-recipes"].value
 local free = {}
-local excludedCrafting = {["transport-drone-request"] = true} --Rigorous way to do this?
+local excludedCrafting = {["transport-drone-request"] = true, ["auto-fabricator"] = true} --Rigorous way to do this?
 
 --Debugging for findRecipe
 local unreachable = {}
