@@ -20,9 +20,12 @@ if mods["Obelisks-of-light"] then
 	end
 	--Entity: Translate his sprites/animations but use my sounds
 	data.raw["electric-turret"]["tiberium-obelisk-of-light"].minable.result = "obelisk-of-light"
-	for _, name in pairs({"obelisk-nw", "obelisk-ne", "obelisk-se", "obelisk-sw"}) do
-		for _, property in pairs({"attack_parameters", "max_health", "collision_box", "selection_box", "energy_source", "map_color", "starting_attack_sound"}) do
-			data.raw["electric-turret"][name][property] = table.deepcopy(data.raw["electric-turret"]["tiberium-obelisk-of-light"][property])
+	for _, name in pairs({"obelisk-nw", "obelisk-ne", "obelisk-se", "obelisk-sw", "obelisk-of-light"}) do
+		local turret = data.raw["electric-turret"][name]
+		if turret then
+			for _, property in pairs({"attack_parameters", "max_health", "collision_box", "selection_box", "energy_source", "map_color", "starting_attack_sound"}) do
+				turret[property] = table.deepcopy(data.raw["electric-turret"]["tiberium-obelisk-of-light"][property])
+			end
 		end
 	end
 	--Fix offsets, since I overwrote his attack parameters

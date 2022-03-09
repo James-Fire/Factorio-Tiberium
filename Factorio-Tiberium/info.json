@@ -1,6 +1,6 @@
 {
     "name": "Factorio-Tiberium",
-    "version": "1.1.22",
+    "version": "1.1.23",
     "title": "Factorio and Conquer: Tiberian Dawn",
     "author": "JamesFire",
     "contact": "",
@@ -24,7 +24,7 @@
 		"? Krastorio2",
 		"? Kux-OrbitalIonCannon",
 		"? Mining-Drones-Tiberium",
-		"? Obelisks-of-light >= 1.0.8",
+		"? Obelisks-of-light >= 1.1.2",
 		"? Orbital Ion Cannon",
 		"? omnimatter >= 4.1.9",
 		"? Prospector >= 1.0.26",
