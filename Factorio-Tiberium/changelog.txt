@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.23
+  Bugfixes:
+    - Fixed Tiberium ore growing on top of water when certain mods were active (Thanks to Tazzer93 for fixing this with a pull request!)
+    - Fixed centrifuging recipes missing ores when Extended Rocket Payloads Continued was active
+    - Fixed Tiberium Armor items and recipes still showing up in certain menus after they were removed
+  Features:
+    - Updated compatibility for new version of Obelisks of Light mod
+    - Made AAI miners immune to damage from Tiberium growth so they stop dying while mining Tiberium
+    - Created add_tiberium_immunity and add_tiberium_immunity_prototype remote interface functions so other mods can flag their entities as unaffected by the damage from Tiberium growth
+---------------------------------------------------------------------------------------------------
 Version: 1.1.22
   Bugfixes:
     - Fixed crash that occurred when converting technologies

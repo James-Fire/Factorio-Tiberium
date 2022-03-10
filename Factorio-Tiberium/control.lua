@@ -89,11 +89,16 @@ script.on_init(function()
 		["unit-spawner"] = true,  --Biters immune until both performance and evo factor are fixed
 		["turret"] = true
 	}
+	-- Immunity for Mining Drones
 	global.exemptDamageNames = {
 		["mining-depot"] = true,
 	}
 	for i = 1,100 do 
 		global.exemptDamageNames["tiberium-oremining-drone"..i] = true
+	end
+	-- Immunity for AAI Miners
+	for _, name in pairs({"vehicle-miner", "vehicle-miner-mk2", "vehicle-miner-mk3", "vehicle-miner-mk4", "vehicle-miner-mk5"}) do
+		global.exemptDamageNames[name] = true
 	end
 
 	global.tiberiumDamageTakenMulti = {}
@@ -444,6 +449,13 @@ script.on_configuration_changed(function(data)
 		global.tibGrowing = true
 	end
 
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.23") then
+		-- Immunity for AAI Miners
+		for _, name in pairs({"vehicle-miner", "vehicle-miner-mk2", "vehicle-miner-mk3", "vehicle-miner-mk4", "vehicle-miner-mk5"}) do
+			global.exemptDamageNames[name] = true
+		end
+	end
+
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
 			(data["mod_changes"]["Factorio-Tiberium-Beta"] and data["mod_changes"]["Factorio-Tiberium-Beta"]["old_version"]) then
 		game.print("[Factorio-Tiberium] Successfully converted save from Beta Tiberium mod to Main Tiberium mod")
@@ -484,6 +496,14 @@ function UpdateRecipeUnlocks(force)
 		end
 	end
 end
+
+local interface = {}
+-- Flag entities with specific names to not take damage from growing Tiberium
+interface.add_tiberium_immunity = function(entity_name) if entity_name then global.exemptDamageNames[entity_name] = true end end
+-- Flag prototypes with specific names to not take damage from growing Tiberium
+interface.add_tiberium_immunity_prototype = function(prototype_name) if prototype_name then global.exemptDamagePrototypes[prototype_name] = true end end
+
+remote.add_interface("Tiberium", interface)
 
 function AddOre(surface, position, growthRate, oreName)
 	if not oreName then
