@@ -1,4 +1,8 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.24
+  Bugfixes:
+    - Fixed SRF emitters being disabled by AOE damage
+---------------------------------------------------------------------------------------------------
 Version: 1.1.23
   Bugfixes:
     - Fixed Tiberium ore growing on top of water when certain mods were active (Thanks to Tazzer93 for fixing this with a pull request!)

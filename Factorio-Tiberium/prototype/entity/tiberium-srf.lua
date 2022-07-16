@@ -237,9 +237,10 @@ data:extend{
 		localised_description = {"entity-description.tiberium-srf-emitter"},
 		icon = tiberiumInternalName.."/graphics/sonic wall/node icon.png",
 		icon_size = 32,
-		flags = {"placeable-neutral", "player-creation"},
+		flags = {"placeable-neutral", "player-creation", "not-deconstructable"},
 		collision_box = {{-0.3, -0.3}, {0.3, 0.3}},
 		collision_mask = {"item-layer", "object-layer", "water-tile"}, -- disable collision
+		placeable_by = {item = "tiberium-srf-emitter", count = 1},
 		fluid_box = {
 			filter = "fluid-unknown",
 			pipe_connections = {

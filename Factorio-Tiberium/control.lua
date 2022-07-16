@@ -93,7 +93,7 @@ script.on_init(function()
 	global.exemptDamageNames = {
 		["mining-depot"] = true,
 	}
-	for i = 1,100 do 
+	for i = 1,100 do
 		global.exemptDamageNames["tiberium-oremining-drone"..i] = true
 	end
 	-- Immunity for AAI Miners
@@ -369,7 +369,7 @@ script.on_configuration_changed(function(data)
 		global.exemptDamageNames = {
 			["mining-depot"] = true,
 		}
-		for i = 1,100 do 
+		for i = 1,100 do
 			global.exemptDamageNames["tiberium-oremining-drone"..i] = true
 		end
 	end
@@ -456,6 +456,41 @@ script.on_configuration_changed(function(data)
 		end
 	end
 
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.24") then
+		for _, surface in pairs(game.surfaces) do
+			-- Convert ghosts
+			for _, ghost in pairs(surface.find_entities_filtered{ghost_name = "tiberium-srf-emitter"}) do
+				local force = ghost.force.name
+				local position = ghost.position
+				ghost.destroy()
+				surface.create_entity{
+					name = "entity-ghost",
+					inner_name = "tiberium-srf-connector",
+					force = force,
+					position = position,
+					create_build_effect_smoke = false
+				}
+			end
+			-- Re-pair missing connectors
+			for _, post in pairs(surface.find_entities_filtered{name = "tiberium-srf-emitter"}) do
+				local force = post.force.name
+				if not surface.find_entity("tiberium-srf-connector", post.position) then
+					surface.create_entity{
+						name = "tiberium-srf-connector",
+						force = force,
+						position = post.position,
+						create_build_effect_smoke = false
+					}
+					registerEntity(post)
+					CnC_SonicWall_AddNode(post, game.tick)
+				end
+			end
+			for _, connector in pairs(surface.find_entities_filtered{name = "tiberium-srf-connector"}) do
+				connector.destructible = false
+			end
+		end
+	end
+
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
 			(data["mod_changes"]["Factorio-Tiberium-Beta"] and data["mod_changes"]["Factorio-Tiberium-Beta"]["old_version"]) then
 		game.print("[Factorio-Tiberium] Successfully converted save from Beta Tiberium mod to Main Tiberium mod")
@@ -514,7 +549,7 @@ function AddOre(surface, position, growthRate, oreName)
 				global.wildBlue = math.floor(game.tick / 3600)
 				TiberiumSeedMissile(surface, position, 4 * TiberiumMaxPerTile, oreName)
 				game.print("The first wild mutation of [img=item.tiberium-ore-blue] Blue Tiberium has occurred at [gps="..math.floor(position.x)..","..math.floor(position.y).."]")
-				return false  -- We'll just say that this event can't spawn 
+				return false  -- We'll just say that this event can't spawn
 			end
 		elseif surface.count_entities_filtered{area = areaAroundPosition(position, 1), name = "tiberium-ore-blue"} > 0 then  -- Blue will infect neighbors
 			oreName = "tiberium-ore-blue"
@@ -588,7 +623,7 @@ function CheckPoint(surface, position, lastValidPosition, growthRate)
 		return true
 	end
 	
-	if tile.collides_with("resource-layer") 
+	if tile.collides_with("resource-layer")
 		or tile.collides_with("water-tile") then
 		AddOre(surface, lastValidPosition, growthRate)
 		return true  --Hit edge of water, add to previous ore
@@ -904,7 +939,7 @@ commands.add_command("tibGrowAllNodes",
 commands.add_command("tibDeleteOre",
 	"Deletes all the Tiberium ore on the map. May take a long time on maps with large amounts of Tiberium. Parameter is the max number of entity updates (10,000 by default)",
 	function(invocationdata)
-		local oreLimit = tonumber(invocationdata["parameter"]) or 10000
+		local oreLimit = tonumber(invocationdata["parameter"]) or 1000
 		for _, surface in pairs(game.surfaces) do
 			local deletedOre = 0
 			for _, ore in pairs(surface.find_entities_filtered{name = global.oreTypes}) do
@@ -918,7 +953,7 @@ commands.add_command("tibDeleteOre",
 			-- Also destroy nodes if they aren't on valid terrain
 			for _, node in pairs(surface.find_entities_filtered{name = tiberiumNodeNames}) do
 				local tile = surface.find_tiles_filtered{position = node.position}[1]
-				if tile.collides_with("water-tile") 
+				if tile.collides_with("water-tile")
 					or tile.collides_with("resource-layer") then
 					removeBlossomTree(surface, node.position)
 					removeNodeFromGrowthList(node)
@@ -1316,6 +1351,7 @@ function on_new_entity(event)
 		if not duplicate then table.insert(global.tibDrills, {entity = new_entity, name = new_entity.name, position = position}) end
 	end
 	if (new_entity.name == "tiberium-srf-connector") then
+		new_entity.destructible = false
 		local emitter = surface.create_entity{
 			name = "tiberium-srf-emitter",
 			position = position,
@@ -1415,8 +1451,17 @@ function on_remove_entity(event)
 	end
 	if (entity.name == "tiberium-srf-emitter") or (entity.name == "CnC_SonicWall_Hub") then
 		if surface and surface.valid then
-			for _, connector in pairs(surface.find_entities_filtered{name = "tiberium-srf-connector", position = position}) do
-				connector.destroy()
+			local ghost = surface.find_entities_filtered{position = entity.position, ghost_name = entity.name}[1]
+			for _, connector in pairs(surface.find_entities_filtered{name = "tiberium-srf-connector", position = position, force = force}) do
+				if ghost then
+					connector.destructible = true
+					connector.die()
+				else
+					connector.destroy()
+				end
+			end
+			if ghost then
+				ghost.destroy()
 			end
 		end
 		CnC_SonicWall_DeleteNode(entity, event.tick)
