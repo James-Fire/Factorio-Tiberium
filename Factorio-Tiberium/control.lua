@@ -104,8 +104,7 @@ script.on_init(function()
 	global.tiberiumDamageTakenMulti = {}
 	global.technologyTimes = {}
 	for _, force in pairs(game.forces) do
-		global.tiberiumDamageTakenMulti[force.name] = 1
-		global.technologyTimes[force.name] = {}
+		initializeForce(force)
 	end
 	
 	-- Use interface to give starting items if possible
@@ -152,6 +151,20 @@ end)
 function updateGrowthInterval()
 	local performanceInterval = math.max(global.tibPerformanceMultiplier / 10, 1)  -- For performance multis over 10, space out the growth ticks more
 	global.intervalBetweenNodeUpdates = math.max(math.floor(18000 * performanceInterval / (#global.tibGrowthNodeList or 1)), global.minUpdateInterval)
+end
+
+function initializeForce(force)
+	if not global.tiberiumDamageTakenMulti[force.name] then
+		updateResistanceLevel(force)
+	end
+	if not global.technologyTimes[force.name] then
+		global.technologyTimes[force.name] = {}
+		for name, tech in pairs(force.technologies) do
+			if tech.researched and string.sub(name, 1, 9) == "tiberium-" then
+				table.insert(global.technologyTimes[force.name], {name, -1})
+			end
+		end
+	end
 end
 
 script.on_load(function()
@@ -202,7 +215,7 @@ script.on_configuration_changed(function(data)
 				local beacon = accelerator.surface.create_entity{name = GA_Beacon_Name, position = accelerator.position, force = accelerator.force}
 				beacon.destructible = false
 				beacon.minable = false
-				local module_count = accelerator.force.technologies["tiberium-growth-acceleration-acceleration"].level - 1
+				local module_count = upgradeLevel(accelerator.force, "tiberium-growth-acceleration-acceleration")
 				UpdateBeaconSpeed(beacon, module_count)
 			end
 		end
@@ -286,14 +299,7 @@ script.on_configuration_changed(function(data)
 		if not global.tiberiumDamageTakenMulti then
 			global.tiberiumDamageTakenMulti = {}
 			for _, force in pairs(game.forces) do
-				global.tiberiumDamageTakenMulti[force.name] = 1
-			end
-		end
-		for _, force in pairs(game.forces) do
-			if force.technologies["tiberium-military-3"].researched then
-				global.tiberiumDamageTakenMulti[force.name] = 0
-			elseif force.technologies["tiberium-military-1"].researched then
-				global.tiberiumDamageTakenMulti[force.name] = 0.2
+				initializeForce(force)
 			end
 		end
 	end
@@ -488,6 +494,10 @@ script.on_configuration_changed(function(data)
 			for _, connector in pairs(surface.find_entities_filtered{name = "tiberium-srf-connector"}) do
 				connector.destructible = false
 			end
+		end
+		-- Fix forces missing from globals
+		for _, force in pairs(game.forces) do
+			initializeForce(force)
 		end
 	end
 
@@ -963,6 +973,44 @@ commands.add_command("tibDeleteOre",
 		end
 	end
 )
+commands.add_command("tibDeleteOre2",
+	"Deletes all the Tiberium ore on the map. May take a long time on maps with large amounts of Tiberium. Parameter is the max number of entity updates (10,000 by default)",
+	function(invocationdata)
+		local oreLimit = tonumber(invocationdata["parameter"]) or 10000
+		local timer = game.create_profiler()
+		for _, surface in pairs(game.surfaces) do
+			-- Also destroy nodes if they aren't on valid terrain
+			for _, node in pairs(surface.find_entities_filtered{name = tiberiumNodeNames}) do
+				local tile = surface.find_tiles_filtered{position = node.position}[1]
+				if tile.collides_with("water-tile")
+					or tile.collides_with("resource-layer") then
+					removeBlossomTree(surface, node.position)
+					removeNodeFromGrowthList(node)
+					node.destroy()
+				end
+			end
+			game.player.print({"", timer, "finished node culling for", surface.name})
+			local chunkCnt = 0
+			for chunk in surface.get_chunks() do
+				local deletedOre = 0
+				chunkCnt = chunkCnt + 1
+				local oreCnt = surface.count_entities_filtered{name = global.oreTypes, area = chunk.area}
+				if oreCnt > 0 then
+					game.player.print({"", "In chunk ", chunkCnt, " found ", oreCnt, " ore"})
+					for _, ore in pairs(surface.find_entities_filtered{name = global.oreTypes, area = chunk.area}) do
+						if deletedOre >= oreLimit then
+							game.player.print("Too much Tiberium, only deleting "..oreLimit.." ore tiles on this pass")
+							break
+						end
+						ore.destroy()
+						deletedOre = deletedOre + 1
+					end
+					game.player.print({"", timer, "Surface", surface.name, "chunk #", chunkCnt, "deleted ore", deletedOre})
+				end
+			end
+		end
+	end
+)
 commands.add_command("tibChangeTerrain",
 	"Changes terrain under Tiberium growths, can use internal name of any tile. Awful performance",
 	function(invocationdata)
@@ -1417,7 +1465,7 @@ function on_new_entity(event)
 			local beacon = surface.create_entity{name = GA_Beacon_Name, position = position, force = force}
 			beacon.destructible = false
 			beacon.minable = false
-			local module_count = force.technologies["tiberium-growth-acceleration-acceleration"].level - 1
+			local module_count = upgradeLevel(force, "tiberium-growth-acceleration-acceleration")
 			UpdateBeaconSpeed(beacon, module_count)
 		end
 	elseif (new_entity.name == "tibGrowthNode") then
@@ -1604,7 +1652,7 @@ function TCNModules(beacon, tcnCount)
 		end
 		local tcnMulti = math.min(tcnCount, 3)
 		local force = beacon.force
-		local module_count = (force.technologies["tiberium-control-network-speed"].level + 5) * tcnMulti
+		local module_count = (upgradeLevel(force, "tiberium-control-network-speed") + 6) * tcnMulti
 		UpdateBeaconSpeed(beacon, module_count)
 	end
 end
@@ -1622,49 +1670,50 @@ function UpdateBeaconSpeed(beacon, total_modules)
 	end
 end
 
-function OnResearchFinished(event)
-	-- TODO: delay execution when event.by_script == true
-	local force = event.research.force
-	local name = event.research.name
-	if force and force.get_entity_count(GA_Beacon_Name) > 0 then -- only update when beacons exist for force
-		local module_count = force.technologies["tiberium-growth-acceleration-acceleration"].level - 1
-		for _, surface in pairs(game.surfaces) do
-			local beacons = surface.find_entities_filtered{name = GA_Beacon_Name, force = force}
-			for _, beacon in pairs(beacons) do
-				UpdateBeaconSpeed(beacon, module_count)
-			end
-		end
-	end
-	if force and force.get_entity_count(TCN_Beacon_Name) > 0 then -- only update when beacons exist for force
-		for _, surface in pairs(game.surfaces) do
-			local beacons = surface.find_entities_filtered{name = TCN_Beacon_Name, force = force}
-			for _, beacon in pairs(beacons) do
-				TCNModules(beacon)
-			end
-		end
-	end
-	if name == "tiberium-military-1" then  --Caching this so we don't check it constantly
-		global.tiberiumDamageTakenMulti[force.name] = 0.2
-	elseif name == "tiberium-military-3" then
-		global.tiberiumDamageTakenMulti[force.name] = 0
-	end
-	if string.sub(name, 1, 9) == "tiberium-" then
-		table.insert(global.technologyTimes[force.name], {name, math.floor(game.tick / 3600)})
-	end
-end
+script.on_event({defines.events.on_technology_effects_reset, defines.events.on_forces_merged, defines.events.on_force_reset}, function(event)
+	updateBeacons(event.force or event.destination)
+end)
 
-script.on_event({defines.events.on_research_finished}, OnResearchFinished)
-
-script.on_event(defines.events.on_rocket_launched, function(event)
-	if not global.rocketTime then
-		global.rocketTime = math.floor(event.tick / 3600)
+script.on_event({defines.events.on_research_finished, defines.events.on_research_reversed}, function(event)
+	local tech = event.research
+	updateBeacons(tech.force)
+	updateResistanceLevel(tech.force)
+	if string.sub(tech.name, 1, 9) == "tiberium-" and tech.researched then
+		table.insert(global.technologyTimes[tech.force.name], {tech.name, math.floor(game.tick / 3600)})
 	end
 end)
 
-function OnForceReset(event)
-	local force = event.force or event.destination
+function updateResistanceLevel(force)
+	local level = upgradeLevel(force, "tiberium-military")
+	if level >= 3 then
+		global.tiberiumDamageTakenMulti[force.name] = 0
+	elseif level >= 1 then
+		global.tiberiumDamageTakenMulti[force.name] = 0.2
+	else
+		global.tiberiumDamageTakenMulti[force.name] = 1
+	end
+end
+
+function upgradeLevel(force, techName)
+	local best = 0
+	if not (force and force.valid and techName) then return best end
+
+	while true do
+		local upgrade = force.technologies[techName.."-"..(best + 1)] or ((best == 0) and force.technologies[techName])
+		if not upgrade then
+			return best
+		end
+		if upgrade.researched then
+			best = upgrade.prototype.max_level
+		else
+			return upgrade.level - 1
+		end
+	end
+end
+
+function updateBeacons(force)
 	if force and force.get_entity_count(GA_Beacon_Name) > 0 then -- only update when beacons exist for force
-		local module_count = force.technologies["tiberium-growth-acceleration-acceleration"].level - 1
+		local module_count = upgradeLevel(force, "tiberium-growth-acceleration-acceleration")
 		for _, surface in pairs(game.surfaces) do
 			for _, beacon in pairs(surface.find_entities_filtered{name = GA_Beacon_Name, force = force}) do
 				UpdateBeaconSpeed(beacon, module_count)
@@ -1680,7 +1729,15 @@ function OnForceReset(event)
 	end
 end
 
-script.on_event({defines.events.on_technology_effects_reset, defines.events.on_forces_merging}, OnForceReset)
+script.on_event(defines.events.on_rocket_launched, function(event)
+	if not global.rocketTime then
+		global.rocketTime = math.floor(event.tick / 3600)
+	end
+end)
+
+script.on_event(defines.events.on_force_created, function(event)
+	initializeForce(event.force)
+end)
 
 script.on_event(defines.events.on_player_created, function(event)
 	local player = game.players[event.player_index]

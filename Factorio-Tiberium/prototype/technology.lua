@@ -854,7 +854,7 @@ data:extend{
 		effects = {
 			{
 				type = "nothing",
-				effect_description = {"technology-description.tiberium-control-network-speed-effect", "+25%"}
+				effect_description = {"technology-description.tiberium-control-network-speed-effect", "+25%", "+40%"}
 			}
 		},
 		prerequisites = {"tiberium-control-network-tech", "space-science-pack"},

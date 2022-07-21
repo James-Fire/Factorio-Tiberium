@@ -2,6 +2,8 @@
 Version: 1.1.24
   Bugfixes:
     - Fixed SRF emitters being disabled by AOE damage
+    - Fixed crashes occurring when new forces were created
+    - Fixed speed upgrades not working when Space Exploration is active
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.23
   Bugfixes:
