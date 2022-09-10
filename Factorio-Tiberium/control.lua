@@ -16,6 +16,8 @@ local TiberiumGrowth = settings.startup["tiberium-growth"].value * 10
 local TiberiumMaxPerTile = settings.startup["tiberium-growth"].value * 100 --Force 10:1 ratio with growth
 local TiberiumRadius = 20 + settings.startup["tiberium-spread"].value * 0.4 --Translates to 20-60 range
 local TiberiumSpread = settings.startup["tiberium-spread"].value
+local BlueTiberiumSaturation = settings.startup["tiberium-blue-saturation-point"].value / 100
+local BlueTiberiumSaturationGrowth = settings.startup["tiberium-blue-saturation-slowdown"].value / 100
 local bitersImmune = settings.startup["tiberium-wont-damage-biters"].value
 local ItemDamageScale = settings.global["tiberium-item-damage-scale"].value
 local easyMode = settings.startup["tiberium-easy-recipes"].value
@@ -63,7 +65,10 @@ script.on_init(function()
 	global.tibPerformanceMultiplier = 1
 	global.tibGrowing = true
 	global.tiberiumTerrain = nil --"dirt-4" --Performance is awful, disabling this
-	global.wildBlue = false
+	global.blueProgress = {}
+	for index, _ in pairs(game.surfaces) do
+		global.blueProgress[index] = 0
+	end
 	global.rocketTime = false
 	global.oreTypes = {"tiberium-ore", "tiberium-ore-blue"}
 	global.tiberiumProducts = global.oreTypes
@@ -93,8 +98,10 @@ script.on_init(function()
 	global.exemptDamageNames = {
 		["mining-depot"] = true,
 	}
-	for i = 1,100 do
-		global.exemptDamageNames["tiberium-oremining-drone"..i] = true
+	for _, oreName in pairs(global.oreTypes) do
+		for i = 1,100 do
+			global.exemptDamageNames[oreName.."mining-drone"..i] = true
+		end
 	end
 	-- Immunity for AAI Miners
 	for _, name in pairs({"vehicle-miner", "vehicle-miner-mk2", "vehicle-miner-mk3", "vehicle-miner-mk4", "vehicle-miner-mk5"}) do
@@ -501,6 +508,22 @@ script.on_configuration_changed(function(data)
 		end
 	end
 
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.25") then
+		global.blueProgress = {}
+		for index, surface in pairs(game.surfaces) do
+			local resources = surface.get_resource_counts()
+			local blue = resources["tiberium-ore-blue"] or 0
+			local green = resources["tiberium-ore"] or 1
+			if blue > (blue + green) * BlueTiberiumSaturation then
+				global.blueProgress[index] = 2
+			elseif blue > 0 then
+				global.blueProgress[index] = 1
+			else
+				global.blueProgress[index] = 0
+			end
+		end
+	end
+
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
 			(data["mod_changes"]["Factorio-Tiberium-Beta"] and data["mod_changes"]["Factorio-Tiberium-Beta"]["old_version"]) then
 		game.print("[Factorio-Tiberium] Successfully converted save from Beta Tiberium mod to Main Tiberium mod")
@@ -553,10 +576,12 @@ remote.add_interface("Tiberium", interface)
 function AddOre(surface, position, growthRate, oreName)
 	if not oreName then
 		local evo = game.forces.enemy.evolution_factor
-		if evo > 0.4 and (math.random() < 0.03 * (evo - 0.4) ^ 2) then  -- Random <1% chance to spawn Blue Tiberium at high evolution factors
+		local blueSlowdown = global.blueProgress[surface.index] == 2 and BlueTiberiumSaturationGrowth or 1  -- If surface has reached saturation, use saturation rate multiplier
+		if evo > 0.4 and (math.random() < 0.03 * blueSlowdown * (evo - 0.4) ^ 2) then  -- Random <1% chance to spawn Blue Tiberium at high evolution factors
 			oreName = "tiberium-ore-blue"
-			if not global.wildBlue then
-				global.wildBlue = math.floor(game.tick / 3600)
+			if global.blueProgress[surface.index] == 0 then
+				global.blueProgress[surface.index] = 1
+				if not global.wildBlue then global.wildBlue = math.floor(game.tick / 3600) end
 				TiberiumSeedMissile(surface, position, 4 * TiberiumMaxPerTile, oreName)
 				game.print("The first wild mutation of [img=item.tiberium-ore-blue] Blue Tiberium has occurred at [gps="..math.floor(position.x)..","..math.floor(position.y).."]")
 				return false  -- We'll just say that this event can't spawn
@@ -1362,6 +1387,19 @@ script.on_nth_tick(60 * 300, function(event) --Global integrity check
 			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
 				addNodeToGrowthList(node)
 			end
+		end
+	end
+	-- Update blue tiberium progress every 5 minutes
+	for index, surface in pairs(game.surfaces) do
+		local resources = surface.get_resource_counts()
+		local blue = resources["tiberium-ore-blue"] or 0
+		local green = resources["tiberium-ore"] or 1
+		if blue > (blue + green) * BlueTiberiumSaturation then
+			global.blueProgress[index] = 2
+		elseif blue > 0 then
+			global.blueProgress[index] = 1
+		else
+			global.blueProgress[index] = 0
 		end
 	end
 end)

@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.25
+  Bugfixes:
+    - Fixed Mining Drones dying to Blue Tiberium
+  Features:
+    - Added settings for customizing the growth rate of Blue Tiberium
+---------------------------------------------------------------------------------------------------
 Version: 1.1.24
   Bugfixes:
     - Fixed SRF emitters being disabled by AOE damage
