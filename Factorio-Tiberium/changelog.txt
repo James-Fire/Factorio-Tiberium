@@ -4,6 +4,7 @@ Version: 1.1.25
     - Fixed Mining Drones dying to Blue Tiberium
   Features:
     - Added settings for customizing the growth rate of Blue Tiberium
+    - Added setting for improving end-game UPS
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.24
   Bugfixes:

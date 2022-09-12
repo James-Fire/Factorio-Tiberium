@@ -97,6 +97,13 @@ data:extend{
 	},
 	{
 		type = "bool-setting",
+		name = "tiberium-auto-scale-performance",
+		setting_type = "startup",
+		default_value = false,
+		order = "b7",
+	},
+	{
+		type = "bool-setting",
 		name = "tiberium-debug-text",
 		setting_type = "startup",
 		default_value = false,

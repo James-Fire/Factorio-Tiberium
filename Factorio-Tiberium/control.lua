@@ -21,6 +21,7 @@ local BlueTiberiumSaturationGrowth = settings.startup["tiberium-blue-saturation-
 local bitersImmune = settings.startup["tiberium-wont-damage-biters"].value
 local ItemDamageScale = settings.global["tiberium-item-damage-scale"].value
 local easyMode = settings.startup["tiberium-easy-recipes"].value
+local performanceMode = settings.startup["tiberium-auto-scale-performance"].value
 local debugText = settings.startup["tiberium-debug-text"].value
 -- Starting items, if the option is ticked.
 local tiberium_start = {
@@ -156,6 +157,9 @@ script.on_init(function()
 end)
 
 function updateGrowthInterval()
+	if performanceMode and #global.tibGrowthNodeList and #global.tibGrowthNodeList > 50 then
+		global.tibPerformanceMultiplier = #global.tibGrowthNodeList / 50
+	end
 	local performanceInterval = math.max(global.tibPerformanceMultiplier / 10, 1)  -- For performance multis over 10, space out the growth ticks more
 	global.intervalBetweenNodeUpdates = math.max(math.floor(18000 * performanceInterval / (#global.tibGrowthNodeList or 1)), global.minUpdateInterval)
 end
@@ -586,7 +590,8 @@ function AddOre(surface, position, growthRate, oreName)
 				game.print("The first wild mutation of [img=item.tiberium-ore-blue] Blue Tiberium has occurred at [gps="..math.floor(position.x)..","..math.floor(position.y).."]")
 				return false  -- We'll just say that this event can't spawn
 			end
-		elseif surface.count_entities_filtered{area = areaAroundPosition(position, 1), name = "tiberium-ore-blue"} > 0 then  -- Blue will infect neighbors
+		elseif surface.count_entities_filtered{area = areaAroundPosition(position, 1), name = "tiberium-ore-blue"} > 0 and
+				(math.random() <= blueSlowdown) then  -- Blue will infect neighbors
 			oreName = "tiberium-ore-blue"
 		else
 			oreName = "tiberium-ore"
