@@ -2,7 +2,10 @@
 Version: 1.1.25
   Bugfixes:
     - Fixed Mining Drones dying to Blue Tiberium
+  Changes:
+    - Improved balance when used with Space Exploration
   Features:
+    - Added Tiberium Detonation Charge for destroying Tiberium Blossom Trees
     - Added settings for customizing the growth rate of Blue Tiberium
     - Added setting for improving end-game UPS
 ---------------------------------------------------------------------------------------------------

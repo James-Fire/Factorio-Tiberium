@@ -79,6 +79,18 @@ if mods["dark-matter-replicators-18-patch"] then
 	common.applyTiberiumValue("tenemut", 32)
 end
 
+if mods["space-exploration"] then
+	common.applyTiberiumValue("se-water-ice", 32)
+	common.applyTiberiumValue("se-methane-ice", 32)
+	common.applyTiberiumValue("se-cryonite", 32)
+	common.applyTiberiumValue("se-vulcanite", 32)
+	common.applyTiberiumValue("se-vitamelange", 32)
+	common.applyTiberiumValue("se-beryllium-ore", 32)
+	common.applyTiberiumValue("se-holmium-ore", 32)
+	common.applyTiberiumValue("se-iridium-ore", 32)
+	common.applyTiberiumValue("se-naquium-ore", 32)
+end
+
 if mods["RampantResources"] then
 	for _, name in pairs({"tiberium-ore", "tiberium-ore-blue", "tibGrowthNode", "tibGrowthNode_infinite"}) do
 		data.raw.resource[name].exclude_from_rampant_resources = true
