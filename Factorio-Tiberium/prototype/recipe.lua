@@ -861,6 +861,19 @@ data:extend{
 		},
 		result = "tiberium-advanced-guard-tower"
 	},
+	{
+		type = "recipe",
+		name = "tiberium-detonation-charge",
+		energy_required = 8,
+		enabled = false,
+		subgroup = "a-buildings",
+		ingredients = {
+			{"empty-barrel", 1},
+			{"tiberium-blue-explosives", 10},
+			{"grenade", 1},
+		},
+		result = "tiberium-detonation-charge"
+	},
 }
 
 -- Military

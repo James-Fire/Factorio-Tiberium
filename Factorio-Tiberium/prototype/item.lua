@@ -272,6 +272,16 @@ data:extend{
 		place_result = "tiberium-advanced-guard-tower",
 		stack_size = 50
 	},
+	{
+		type = "item",
+		name = "tiberium-detonation-charge",
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-spike.png",
+		icon_size = 128,
+		order = "g[tiberium-detonation-charge]",
+		place_result = "tiberium-detonation-charge",
+		stack_size = 20,
+		subgroup = "a-buildings",
+	},
 	--Military
 	{
 		type = "item-with-entity-data",

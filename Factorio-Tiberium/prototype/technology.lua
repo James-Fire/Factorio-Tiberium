@@ -747,6 +747,10 @@ data:extend{
 				type = "unlock-recipe",
 				recipe = "tiberium-catalyst-missile-blue"
 			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-detonation-charge",
+			},
 		},
 		prerequisites = {"tiberium-containment-tech", "tiberium-military-2", "tiberium-refining-blue", "electric-engine"},
 		unit = {

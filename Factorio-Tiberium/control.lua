@@ -1211,6 +1211,19 @@ script.on_event(defines.events.on_tick, function(event)
 			end
 		end
 	end
+	-- Detonation charges
+	for _, surface in pairs(game.surfaces) do
+		for _, timer in pairs(surface.find_entities_filtered{name = "tiberium-detonation-timer"}) do
+			if timer.energy == timer.electric_buffer_size then
+				-- Destroy tiberium node
+				for _, node in pairs(surface.find_entities_filtered{area = areaAroundPosition(timer.position), name = "tibGrowthNode"}) do
+					node.destroy{raise_destroy = true}
+				end
+				-- Destroy detonation charge
+				timer.destroy{raise_destroy = true}
+			end
+		end
+	end
 			
 	-- Spawn ore check
 	if global.tibGrowing and (event.tick % global.intervalBetweenNodeUpdates == 0) then
@@ -1518,6 +1531,18 @@ function on_new_entity(event)
 	elseif (new_entity.name == "tiberium-sonic-emitter") or (new_entity.name == "tiberium-sonic-emitter-blue") then
 		registerEntity(new_entity)
 		table.insert(global.tibSonicEmitters, {position = new_entity.position, surface = surface})
+	elseif (new_entity.name == "tiberium-detonation-charge") then
+		new_entity.destroy()
+		surface.create_entity{
+			name = "tiberium-detonation-timer",
+			position = position,
+			force = force,
+			raise_built = true
+		}
+	elseif (new_entity.name == "tiberium-detonation-timer") then
+		registerEntity(new_entity)
+		--Remove tree entity when node is covered
+		removeBlossomTree(surface, position)
 	end
 end
 
@@ -1589,6 +1614,8 @@ function on_remove_entity(event)
 				break
 			end
 		end
+	elseif (entity.name == "tiberium-detonation-timer") then
+		createBlossomTree(surface, position)
 	end
 	global.tibOnEntityDestroyed[event.registration_number] = nil  -- Avoid this global growing forever
 end
