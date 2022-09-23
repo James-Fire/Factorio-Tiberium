@@ -10,7 +10,7 @@
 		"base >= 1.1.0",
 		"LSlib >= 2020.8.22",
 		"flib >= 0.3.0",
-		"informatron",
+		"? informatron",
 		"? 5dim_battlefield >= 1.0.4",
 		"? alien-biomes",
 		"? angelsindustries",

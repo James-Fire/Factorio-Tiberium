@@ -3,6 +3,7 @@ Version: 1.1.25
   Bugfixes:
     - Fixed Mining Drones dying to Blue Tiberium
   Changes:
+    - Changed Informatron to an optional dependency
     - Improved balance when used with Space Exploration
     - Tiberium Seed Rockets can no longer spawn Tiberium Blossom Trees close together
   Features:

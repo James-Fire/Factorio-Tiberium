@@ -27,5 +27,5 @@ require("prototype/damage-type")
 require("prototype/recipe")
 require("prototype/recipe-settings")
 require("prototype/sound")
-require("scripts/informatron/informatron")
+if mods["informatron"] then require("scripts/informatron/informatron") end
 if mods["rusty-locale"] then require("scripts/localised_description") end

@@ -204,6 +204,10 @@ function OnEntityMoved(event)
 end
 
 script.on_configuration_changed(function(data)
+	if not game.active_mods["informatron"] then
+		game.print({"tiberium-strings.tiberium-informatron-reminder"})
+	end
+	
 	if upgradingToVersion(data, tiberiumInternalName, "1.0.0") then
 		game.print("Successfully ran conversion for "..tiberiumInternalName.." version 1.0.0")
 		for _, surface in pairs(game.surfaces) do
@@ -1833,6 +1837,10 @@ script.on_event(defines.events.on_player_created, function(event)
 		if easyMode then
 			UnlockTechnologyAndPrereqs(player.force, "tiberium-easy-transmutation-tech")
 		end
+	end
+	-- Optional Informatron reminder
+	if player and player.connected and not game.active_mods["informatron"] then
+		player.print({"tiberium-strings.tiberium-informatron-reminder"})
 	end
 end)
 
