@@ -148,8 +148,9 @@ data:extend{growthAcceleratorNode,
 		type = "flying-text",
 		name = "tiberium-growth-accelerator-text",
 		flags = {"not-on-map", "placeable-off-grid"},
-		time_to_live = 180,
+		time_to_live = 300,
 		speed = 1 / 60,
+		text_alignment = "center",
 	}
 }
 

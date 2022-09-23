@@ -628,7 +628,6 @@ function AddOre(surface, position, growthRate, oreName)
 			end
 		end
 		if (surface.count_entities_filtered{area = area, type = "tree"} > 0)
-				and (surface.count_entities_filtered{position = position, radius = TiberiumRadius * 0.8, name = tiberiumNodeNames} == 0)
 				and (math.random() < (TiberiumSpread / 100) ^ 4) then  -- Around 1% chance to turn a tree into a Blossom Tree
 			CreateNode(surface, position)
 		else
@@ -728,7 +727,7 @@ function PlaceOre(entity, howmany)
 			howmany = howmany + extraAcceleratorOre
 			surface.create_entity{
 				name = "tiberium-growth-accelerator-text",
-				position = {x = position.x - 1.5, y = position.y - 1},
+				position = {x = position.x, y = position.y - 1},
 				text = "Grew "..math.floor(extraAcceleratorOre * growthRate).." extra ore",
 				color = {r = 0, g = 204, b = 255},
 			}
@@ -769,9 +768,7 @@ function PlaceOre(entity, howmany)
 			local oreEntity = AddOre(surface, lastValidPosition, growthRate)
 			--Spread setting makes spawning new nodes more likely
 			if oreEntity and (TiberiumSpread > 0) and (math.random() < ((oreEntity.amount / TiberiumMaxPerTile) + (TiberiumSpread / 50 - 0.9))) then
-				if (surface.count_entities_filtered{position = lastValidPosition, radius = TiberiumRadius * 0.8, name = tiberiumNodeNames} == 0) then
-					CreateNode(surface, lastValidPosition)  --Use standard function to also remove overlapping ore
-				end
+				CreateNode(surface, lastValidPosition)  --Use standard function to also remove overlapping ore
 			end
 		end
 	end
@@ -798,9 +795,22 @@ function PlaceOre(entity, howmany)
 	end
 end
 
-function CreateNode(surface, position)
-	local area = areaAroundPosition(position, 0.9)
+function CreateNode(surface, position, displayError)
+	-- Enforce minimum distance between nodes
+	if surface.count_entities_filtered{position = position, radius = TiberiumRadius * 0.8, name = tiberiumNodeNames} > 0 then
+		if displayError then
+			surface.create_entity{
+				name = "tiberium-growth-accelerator-text",
+				position = {x = position.x, y = position.y - 1},
+				text = "Cannot sprout a Tiberium Blossom Tree so close to another Tiberium Blossom Tree",
+				color = {r = 255, g = 20, b = 20},
+			}
+		end
+		return
+	end
+
 	-- Avoid overlapping with other nodes
+	local area = areaAroundPosition(position, 0.9)
 	if surface.count_entities_filtered{area = area, name = tiberiumNodeNames} == 0 then
 		-- Check if another entity would block the node
 		local blocked = false
@@ -858,7 +868,7 @@ function TiberiumSeedMissile(surface, position, amount, oreName)
 	local center = {x = math.floor(position.x) + 0.5, y = math.floor(position.y) + 0.5}
 	local oreEntity = surface.find_entity(oreName, center)
 	if oreEntity and (oreEntity.amount >= TiberiumMaxPerTile) then
-		CreateNode(surface, center)
+		CreateNode(surface, center, true)
 	end
 end
 
