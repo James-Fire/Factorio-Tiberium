@@ -2,6 +2,7 @@
 Version: 1.1.25
   Bugfixes:
     - Fixed Mining Drones dying to Blue Tiberium
+    - Fixed Tiberium Centrifuge icon colors being in the wrong order
   Changes:
     - Changed Informatron to an optional dependency
     - Improved balance when used with Space Exploration
