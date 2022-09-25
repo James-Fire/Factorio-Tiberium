@@ -1097,7 +1097,7 @@ data:extend{
 
 -- Other
 data:extend{
-	-- Growth Credit recipes
+	-- Tiberium Substrate recipes
 	{
 		type = "recipe",
 		name = "tiberium-growth-credit-from-energy",

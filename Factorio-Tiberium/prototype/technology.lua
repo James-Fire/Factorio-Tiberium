@@ -262,7 +262,7 @@ data:extend{
 				type = "unlock-recipe",
 				recipe = "tiberium-growth-accelerator"
 			},
-			--  Growth credit recipes created and added to this tech by /scripts/DynamicOreRecipes
+			--  Tiberium Substrate recipes created and added to this tech by /scripts/DynamicOreRecipes
 		},
 		prerequisites = {"tiberium-chemical-research"},
 		unit = {

@@ -7,6 +7,7 @@ Version: 1.1.25
     - Changed Informatron to an optional dependency
     - Improved balance when used with Space Exploration
     - Tiberium Seed Rockets can no longer spawn Tiberium Blossom Trees close together
+    - Renamed Growth Credits to Tiberium Substrate
   Features:
     - Added Tiberium Detonation Charge for destroying Tiberium Blossom Trees
     - Added settings for customizing the growth rate of Blue Tiberium

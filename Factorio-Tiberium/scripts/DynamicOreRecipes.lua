@@ -1083,7 +1083,7 @@ function addDirectRecipe(ore, easy)
 	data.raw.recipe[recipeName].allow_decomposition = false
 end
 
---Creates recipes to turn raw materials into Growth Credits
+--Creates recipes to turn raw materials into Tiberium Substrate
 --Assumes oreMult
 function addCreditRecipe(ore)
 	local recipeName = "tiberium-growth-credit-from-"..ore
