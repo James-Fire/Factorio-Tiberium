@@ -160,6 +160,16 @@ data:extend{
 	},
 	{
 		type = "item",
+		name = "tiberium-reprocessor",
+		icon = tiberiumInternalName.."/graphics/icons/crusher.png",
+		icon_size = 64,
+		subgroup = "a-buildings",
+		order = "b[srf]",
+		place_result = "tiberium-reprocessor",
+		stack_size = 50
+	},
+	{
+		type = "item",
 		name = "tiberium-srf-emitter",
 		icon = tiberiumInternalName.."/graphics/sonic wall/node icon.png",
 		icon_size = 32,

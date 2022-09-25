@@ -262,6 +262,10 @@ data:extend{
 				type = "unlock-recipe",
 				recipe = "tiberium-growth-accelerator"
 			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-reprocessor"
+			},
 			--  Tiberium Substrate recipes created and added to this tech by /scripts/DynamicOreRecipes
 		},
 		prerequisites = {"tiberium-chemical-research"},

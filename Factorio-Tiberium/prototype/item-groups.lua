@@ -107,6 +107,10 @@ data:extend{
 	},
 	{
 		type = "recipe-category",
+		name = "tiberium-reprocessing"
+	},
+	{
+		type = "recipe-category",
 		name = "basic-tiberium-science"
 	},
 	{

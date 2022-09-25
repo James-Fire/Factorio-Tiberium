@@ -920,11 +920,11 @@ function roundResults(number)
 end
 
 -- Wrapper for LSlib.recipe.addResult that also does rounding and handles probabilities for results with amounts less than 1
-function recipeAddResult(recipeName, item, amount, type)
-	local rounded = roundResults(amount)
-	LSlib.recipe.addResult(recipeName, item, math.ceil(rounded), type)
-	if rounded < 1 then
-		LSlib.recipe.setResultProbability(recipeName, item, rounded)
+function recipeAddResult(recipeName, item, amount, type, exact)
+	if not exact then amount = roundResults(amount) end
+	LSlib.recipe.addResult(recipeName, item, math.ceil(amount), type)
+	if amount < 1 then
+		LSlib.recipe.setResultProbability(recipeName, item, amount)
 	end
 end
 
@@ -1072,7 +1072,7 @@ function addDirectRecipe(ore, easy)
 		LSlib.recipe.addResult(recipeName, "tiberium-sludge", WastePerCycle, "fluid")
 	end
 	LSlib.technology.addRecipeUnlock(tech, recipeName)
-	LSlib.recipe.setEngergyRequired(recipeName, energy)
+	LSlib.recipe.setEnergyRequired(recipeName, energy)
 	LSlib.recipe.setOrderstring(recipeName, order)
 	LSlib.recipe.disable(recipeName)
 	LSlib.recipe.setSubgroup(recipeName, subgroup)
@@ -1123,16 +1123,29 @@ function addCreditRecipe(ore)
 	LSlib.recipe.create(recipeName)
 	LSlib.recipe.addIngredient(recipeName, ore, oreAmount, itemOrFluid)
 	LSlib.technology.addRecipeUnlock("tiberium-growth-acceleration", recipeName)
-	LSlib.recipe.setEngergyRequired(recipeName, energy)
+	LSlib.recipe.setEnergyRequired(recipeName, energy)
 	LSlib.recipe.setOrderstring(recipeName, order)
 	LSlib.recipe.changeIcons(recipeName, icons, 64)
 	LSlib.recipe.addResult(recipeName, "tiberium-growth-credit", 1, "item")
 	LSlib.recipe.disable(recipeName)
 	LSlib.recipe.setSubgroup(recipeName, "a-growth-credits")
 	LSlib.recipe.setShowMadeIn(recipeName, true)
-	data.raw.recipe[recipeName].category = "chemistry"
+	LSlib.recipe.setCraftingCategory(recipeName, "chemistry")
 	data.raw.recipe[recipeName].crafting_machine_tint = common.tibCraftingTint
 	data.raw.recipe[recipeName].allow_decomposition = false
+
+	if itemOrFluid == "item" then
+		-- Make reprocessor recipe
+		local reprocessingName = "tiberium-reprocessinng-"..ore
+		LSlib.recipe.create(reprocessingName)
+		LSlib.recipe.addIngredient(reprocessingName, ore, 1, "item")
+		LSlib.recipe.setEnergyRequired(reprocessingName, energy / oreAmount)  -- Preserve the energy-per-input-ore from the other recipe
+		recipeAddResult(reprocessingName, "tiberium-growth-credit", 1 / oreAmount, "item", true)
+		LSlib.recipe.setCraftingCategory(reprocessingName, "tiberium-reprocessing")
+		data.raw.recipe[reprocessingName].crafting_machine_tint = common.tibCraftingTint
+		data.raw.recipe[reprocessingName].allow_decomposition = false
+		data.raw.recipe[reprocessingName].hidden = true
+	end
 end
 
 giantSetupFunction()

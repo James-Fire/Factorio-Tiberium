@@ -836,6 +836,19 @@ data:extend{
 	},
 	{
 		type = "recipe",
+		name = "tiberium-reprocessor",
+		energy_required = 10,
+		enabled = false,
+		subgroup = "a-buildings",
+		ingredients = {
+			{"refined-concrete", 50},
+			{"steel-plate", 40},
+			{"electric-engine-unit", 10},
+		},
+		result = "tiberium-reprocessor"
+	},
+	{
+		type = "recipe",
 		name = "tiberium-obelisk-of-light",
 		energy_required = 20,
 		enabled = false,
