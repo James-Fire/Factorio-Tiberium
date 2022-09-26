@@ -621,7 +621,7 @@ data:extend{
 			},
 			{
 				type = "nothing",
-				effect_description = {"technology-description.tiberium-military-partial-immunity", "80%"}
+				effect_description = {"technology-description.tiberium-military-partial-immunity", "75%"}
 			}
 		},
 		prerequisites = {"tiberium-thermal-research", "flamethrower"},

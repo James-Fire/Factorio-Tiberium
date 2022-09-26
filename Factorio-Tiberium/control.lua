@@ -114,7 +114,7 @@ script.on_init(function()
 	for _, force in pairs(game.forces) do
 		initializeForce(force)
 	end
-	
+
 	-- Use interface to give starting items if possible
 	if (settings.startup["tiberium-advanced-start"].value or settings.startup["tiberium-ore-removal"].value)
 			and remote.interfaces["freeplay"] then
@@ -124,10 +124,10 @@ script.on_init(function()
 		end
 		remote.call("freeplay", "set_created_items", freeplayStartItems)
 	end
-	
+
 	-- CnC SonicWalls Init
 	CnC_SonicWall_OnInit(event)
-	
+
 	-- For drills that were present before Tiberium mod was added or converting from Beta save
 	for _, surface in pairs(game.surfaces) do
 		for _, drill in pairs(surface.find_entities_filtered{type = "mining-drill"}) do
@@ -149,7 +149,7 @@ script.on_init(function()
 			wall.destroy()  --Wipe out all lingering SRF so we can rebuild them
 		end
 	end
-	
+
 	-- Define pack color for DiscoScience
 	if remote.interfaces["DiscoScience"] and remote.interfaces["DiscoScience"]["setIngredientColor"] then
 		remote.call("DiscoScience", "setIngredientColor", "tiberium-science", {r = 0.0, g = 1.0, b = 0.0})
@@ -207,7 +207,7 @@ script.on_configuration_changed(function(data)
 	if not game.active_mods["informatron"] then
 		game.print({"tiberium-strings.informatron-reminder"})
 	end
-	
+
 	if upgradingToVersion(data, tiberiumInternalName, "1.0.0") then
 		game.print("Successfully ran conversion for "..tiberiumInternalName.." version 1.0.0")
 		for _, surface in pairs(game.surfaces) do
@@ -244,7 +244,7 @@ script.on_configuration_changed(function(data)
 			end
 		end
 	end
-	
+
 	if upgradingToVersion(data, tiberiumInternalName, "1.0.2") then
 		if not global.tibOnEntityDestroyed then global.tibOnEntityDestroyed = {} end
 		local entityNames = {"tiberium-srf-emitter", "tiberium-spike", "tiberium-growth-accelerator-node", "tiberium-growth-accelerator"}
@@ -278,18 +278,18 @@ script.on_configuration_changed(function(data)
 		end
 		global.SRF_nodes = new_SRF_nodes
 	end
-	
+
 	if upgradingToVersion(data, tiberiumInternalName, "1.0.5") then
 		-- Define pack color for DiscoScience
 		if remote.interfaces["DiscoScience"] and remote.interfaces["DiscoScience"]["setIngredientColor"] then
 			remote.call("DiscoScience", "setIngredientColor", "tiberium-science", {r = 0.0, g = 1.0, b = 0.0})
 		end
 	end
-	
+
 	if upgradingToVersion(data, tiberiumInternalName, "1.0.7") then
 		global.tiberiumProducts = {global.oreType}
 	end
-	
+
 	if upgradingToVersion(data, tiberiumInternalName, "1.0.9") then
 		local treeBlockers = {"tibNode_tree", "tiberium-node-harvester", "tiberium-growth-accelerator"}
 		for _, surface in pairs(game.surfaces) do
@@ -309,7 +309,7 @@ script.on_configuration_changed(function(data)
 			end
 		end
 	end
-	
+
 	if upgradingToVersion(data, tiberiumInternalName, "1.1.0") then
 		if not global.tiberiumDamageTakenMulti then
 			global.tiberiumDamageTakenMulti = {}
@@ -530,6 +530,11 @@ script.on_configuration_changed(function(data)
 				global.blueProgress[index] = 0
 			end
 		end
+		for _, force in pairs(game.forces) do
+			if global.tiberiumDamageTakenMulti[force.name] == 0.2 then
+				global.tiberiumDamageTakenMulti[force.name] = 0.25
+			end
+		end
 	end
 
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
@@ -652,7 +657,7 @@ function AddOre(surface, position, amount, oreName, cascaded)
 			end
 		end
 	end
-	
+
 	--Damage adjacent entities unless it's in the list of exemptDamagePrototypes
 	for _, entity in pairs(surface.find_entities(area)) do
 		if entity.valid and not global.exemptDamagePrototypes[entity.type] and not global.exemptDamageNames[entity.name] then
@@ -670,12 +675,11 @@ end
 function CheckPoint(surface, position, lastValidPosition, growthRate)
 	-- These checks are in roughly the order of guessed expense
 	local tile = surface.get_tile(position)
-	
 	if not tile or not tile.valid then
 		AddOre(surface, lastValidPosition, growthRate)
 		return true
 	end
-	
+
 	if tile.collides_with("resource-layer")
 		or tile.collides_with("water-tile") then
 		AddOre(surface, lastValidPosition, growthRate)
@@ -688,7 +692,7 @@ function CheckPoint(surface, position, lastValidPosition, growthRate)
 		AddOre(surface, lastValidPosition, growthRate * 0.5)  --50% lost
 		return true  --Hit fence or cliff or spiked node, add to previous ore
 	end
-	
+
 	local emitterHubs = surface.find_entities_filtered{area = area, name = "tiberium-srf-emitter"}
 	for _, emitter in pairs(emitterHubs) do
 		if emitter.valid then
@@ -705,11 +709,11 @@ function CheckPoint(surface, position, lastValidPosition, growthRate)
 			end
 		end
 	end
-	
+
 	if surface.count_entities_filtered{area = area, name = "tibGrowthNode"} > 0 then
 		return false  --Don't grow on top of active node, keep going
 	end
-	
+
 	if surface.count_entities_filtered{area = area, name = global.oreTypes} == 0 then
 		AddOre(surface, position, growthRate)
 		return true  --Reached edge of patch, place new ore
@@ -722,7 +726,7 @@ function PlaceOre(entity, howmany)
 	--local timer = game.create_profiler()
 
 	if not entity.valid then return end
-	
+
 	howmany = howmany or 1
 	local surface = entity.surface
 	local position = entity.position
@@ -749,7 +753,7 @@ function PlaceOre(entity, howmany)
 			accelerator.products_finished = math.fmod(accelerator.products_finished, global.tibPerformanceMultiplier)
 		end
 	end
-	
+
 	-- Spill excess growth amounts into extra ore tiles
 	if growthRate > TiberiumMaxPerTile then
 		howmany = math.floor(howmany * growthRate / TiberiumMaxPerTile)
@@ -759,14 +763,14 @@ function PlaceOre(entity, howmany)
 		--Use polar coordinates to find a random angle and radius
 		local angle = math.random() * 2 * math.pi
 		local radius = 2.2 + math.sqrt(math.random()) * size -- A little over 2 to avoid putting too much on the node itself
-	
+
 		--Convert to cartesian and determine roughly how many tiles we travel through
 		local dx = radius * math.cos(angle)
 		local dy = radius * math.sin(angle)
 		local step = math.max(math.abs(dx), math.abs(dy))
 		dx = dx / step
 		dy = dy / step
-		
+
 		local lastValidPosition = position
 		local placedOre = false
 		--Check each tile along the line and stop when we've added ore one time
@@ -835,7 +839,7 @@ function CreateNode(surface, position, displayError)
 			end
 		end
 		if blocked then return end
-		
+
 		-- Clear other resources
 		for _, entity in pairs(surface.find_entities_filtered{area = area, type = {"resource", "tree"}}) do
 			if entity.valid then
@@ -1248,7 +1252,7 @@ script.on_event(defines.events.on_tick, function(event)
 			end
 		end
 	end
-			
+
 	-- Spawn ore check
 	if global.tibGrowing and (event.tick % global.intervalBetweenNodeUpdates == 0) then
 		-- Step through the list of growth nodes, one each update
@@ -1294,7 +1298,7 @@ script.on_event(defines.events.on_tick, function(event)
 end
 )
 
-script.on_nth_tick(10, function(event) --Player damage 6 times per second
+script.on_nth_tick(20, function(event) --Player damage 3 times per second
 	for _, player in pairs(game.connected_players) do
 		if player.valid and player.character and player.character.valid then
 			--MARV ore deletion
@@ -1314,7 +1318,7 @@ script.on_nth_tick(10, function(event) --Player damage 6 times per second
 			--Damage players that are standing on Tiberium Ore and not in vehicles
 			local nearby_ore_count = player.surface.count_entities_filtered{name = global.oreTypes, position = player.position, radius = 1.5}
 			if nearby_ore_count > 0 and not player.character.vehicle and player.character.name ~= "jetpack-flying" then
-				safeDamage(player, nearby_ore_count * TiberiumDamage * 0.1)
+				safeDamage(player, nearby_ore_count * TiberiumDamage * 0.2)
 			end
 			--Damage players with unsafe Tiberium products in their inventory
 			local damagingItems = 0
@@ -1327,9 +1331,9 @@ script.on_nth_tick(10, function(event) --Player damage 6 times per second
 			end
 			if damagingItems > 0 then
 				if ItemDamageScale then
-					safeDamage(player, math.ceil(damagingItems / 50) * TiberiumDamage * 0.3)	
+					safeDamage(player, math.ceil(damagingItems / 50) * TiberiumDamage * 0.6)
 				else
-					safeDamage(player, TiberiumDamage * 0.3)
+					safeDamage(player, TiberiumDamage * 0.6)
 				end
 			end
 		end
@@ -1346,13 +1350,20 @@ function safeDamage(entityOrPlayer, damageAmount)
 		if entity and entity.valid then  -- Reduce/prevent growth damage for players with immunity technologies
 			damageMulti = global.tiberiumDamageTakenMulti[entity.force.name] or 1
 			if (damageMulti == 0) and not entity.grid then
-				damageMulti = 0.2
+				damageMulti = 0.25
 			end
 		else
 			return
 		end
+		-- Alert player about Tiberium damage
+		entityOrPlayer.add_custom_alert(
+			entity,
+        	{type = "virtual", name = "tiberium-radiation"},
+        	{"tiberium-strings.taking-tiberium-radiation-damage"},
+        	false
+        )
 	end
-	
+
 	if entity.valid and entity.health and entity.health > 0 and damageMulti > 0 then
 		entity.damage(damageAmount * damageMulti, game.forces.tiberium, "tiberium")
 	end
@@ -1728,7 +1739,7 @@ function ManageTCNBeacon(surface, position, force)
 					newHiddenBeacon.destructible = false
 					newHiddenBeacon.minable = false
 					TCNModules(newHiddenBeacon, tcnCount)
-				end					
+				end
 			elseif tcnCount == 0 then
 				for _, beacon in pairs(hiddenBeacon) do
 					beacon.destroy()
@@ -1766,6 +1777,7 @@ end
 
 script.on_event({defines.events.on_technology_effects_reset, defines.events.on_forces_merged, defines.events.on_force_reset}, function(event)
 	updateBeacons(event.force or event.destination)
+	updateResistanceLevel(event.force or event.destination)
 end)
 
 script.on_event({defines.events.on_research_finished, defines.events.on_research_reversed}, function(event)
@@ -1782,7 +1794,7 @@ function updateResistanceLevel(force)
 	if level >= 3 then
 		global.tiberiumDamageTakenMulti[force.name] = 0
 	elseif level >= 1 then
-		global.tiberiumDamageTakenMulti[force.name] = 0.2
+		global.tiberiumDamageTakenMulti[force.name] = 0.25
 	else
 		global.tiberiumDamageTakenMulti[force.name] = 1
 	end

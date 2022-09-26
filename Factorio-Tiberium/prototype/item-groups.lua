@@ -92,6 +92,21 @@ data:extend{
 		group = "tiberium",
 		order = "h-0",
 	},
+	-- Signal for alert
+	{
+		type = "item-subgroup",
+		name = "tiberium-signals",
+		group = "signals",
+		order = "z",
+	},
+	{
+		type = "virtual-signal",
+		name = "tiberium-radiation",
+		icon = tiberiumInternalName .. "/graphics/technology/tiberium-tech.png",
+		icon_size = 128,
+		subgroup = "tiberium-signals",
+		order = "a[tiberium-radiation]"
+	},
 	-- Categories
 	{
 		type = "recipe-category",
