@@ -581,7 +581,7 @@ interface.add_tiberium_immunity_prototype = function(prototype_name) if prototyp
 
 remote.add_interface("Tiberium", interface)
 
-function AddOre(surface, position, growthRate, oreName)
+function AddOre(surface, position, amount, oreName, cascaded)
 	if not oreName then
 		local evo = game.forces.enemy.evolution_factor
 		local blueSlowdown = global.blueProgress[surface.index] == 2 and BlueTiberiumSaturationGrowth or 1  -- If surface has reached saturation, use saturation rate multiplier
@@ -604,7 +604,7 @@ function AddOre(surface, position, growthRate, oreName)
 	local area = areaAroundPosition(position)
 	local oreEntity = surface.find_entities_filtered{area = area, name = global.oreTypes}[1]
 	local tile = surface.get_tile(position)
-	growthRate = math.min(growthRate, TiberiumMaxPerTile)
+	local growthRate = math.min(amount, TiberiumMaxPerTile)
 
 	if oreEntity and (oreEntity.name == oreName or oreEntity.name == "tiberium-blue-ore") then
 		-- Grow existing tib except for the case where blue needs to replace green instead of growing it
@@ -619,9 +619,11 @@ function AddOre(surface, position, growthRate, oreName)
 	else
 		--Tiberium destroys all other non-Tiberium resources as it spreads
 		local otherResources = surface.find_entities_filtered{area = area, type = "resource"}
+		local doCascade = false
 		for _, entity in pairs(otherResources) do
 			if (entity.name ~= oreName) and (entity.name ~= "tibGrowthNode") and (entity.name ~= "tibGrowthNode_infinite") then
 				if entity.amount and entity.amount > 0 then
+					doCascade = true  -- If we are consuming an ore
 					if LSlib.utils.table.hasValue(global.oreTypes, entity.name) then
 						growthRate = math.min(growthRate + entity.amount, TiberiumMaxPerTile)
 					else
@@ -640,6 +642,14 @@ function AddOre(surface, position, growthRate, oreName)
 				surface.set_tiles({{name = global.tiberiumTerrain, position = position}}, true, false)
 			end
 			surface.destroy_decoratives{position = position} --Remove decoration on tile on spread.
+		end
+
+		if doCascade and not cascaded then
+			for _, entity in pairs(surface.find_entities_filtered{area = areaAroundPosition(position, 1), type = "resource"}) do
+				if (entity.name ~= oreName) and (entity.name ~= "tibGrowthNode") and (entity.name ~= "tibGrowthNode_infinite") then
+					AddOre(surface, entity.position, amount, oreName, true)
+				end
+			end
 		end
 	end
 	

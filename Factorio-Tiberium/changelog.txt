@@ -8,6 +8,7 @@ Version: 1.1.25
     - Improved balance when used with Space Exploration
     - Tiberium Seed Rockets can no longer spawn Tiberium Blossom Trees close together
     - Renamed Growth Credits to Tiberium Substrate
+    - Tiberium now spreads much more rapidly when consuming resource patches
   Features:
     - Added Tiberium Detonation Charge for destroying Tiberium Blossom Trees
     - Added Tiberium Reprocessor structure for more rapidly recycling unused ores into Tiberium Substrate
