@@ -205,7 +205,7 @@ end
 
 script.on_configuration_changed(function(data)
 	if not game.active_mods["informatron"] then
-		game.print({"tiberium-strings.tiberium-informatron-reminder"})
+		game.print({"tiberium-strings.informatron-reminder"})
 	end
 	
 	if upgradingToVersion(data, tiberiumInternalName, "1.0.0") then
@@ -591,7 +591,7 @@ function AddOre(surface, position, amount, oreName, cascaded)
 				global.blueProgress[surface.index] = 1
 				if not global.wildBlue then global.wildBlue = math.floor(game.tick / 3600) end
 				TiberiumSeedMissile(surface, position, 4 * TiberiumMaxPerTile, oreName)
-				game.print("The first wild mutation of [img=item.tiberium-ore-blue] Blue Tiberium has occurred at [gps="..math.floor(position.x)..","..math.floor(position.y).."]")
+				game.print({"tiberium-strings.wild-blue-notification", "[img=item.tiberium-ore-blue]", "[gps="..math.floor(position.x)..","..math.floor(position.y).."]"})
 				return false  -- We'll just say that this event can't spawn
 			end
 		elseif surface.count_entities_filtered{area = areaAroundPosition(position, 1), name = "tiberium-ore-blue"} > 0 and
@@ -742,7 +742,7 @@ function PlaceOre(entity, howmany)
 			surface.create_entity{
 				name = "tiberium-growth-accelerator-text",
 				position = {x = position.x, y = position.y - 1},
-				text = "Grew "..math.floor(extraAcceleratorOre * growthRate).." extra ore",
+				text = {"tiberium-strings.growth-accelerator-gains", math.floor(extraAcceleratorOre * growthRate)},
 				color = {r = 0, g = 204, b = 255},
 			}
 			-- Only subtract for the whole ore increments that were used
@@ -816,7 +816,7 @@ function CreateNode(surface, position, displayError)
 			surface.create_entity{
 				name = "tiberium-growth-accelerator-text",
 				position = {x = position.x, y = position.y - 1},
-				text = "Cannot sprout a Tiberium Blossom Tree so close to another Tiberium Blossom Tree",
+				text = {"tiberium-strings.node-placement-error"},
 				color = {r = 255, g = 20, b = 20},
 			}
 		end
@@ -1850,7 +1850,7 @@ script.on_event(defines.events.on_player_created, function(event)
 	end
 	-- Optional Informatron reminder
 	if player and player.connected and not game.active_mods["informatron"] then
-		player.print({"tiberium-strings.tiberium-informatron-reminder"})
+		player.print({"tiberium-strings.informatron-reminder"})
 	end
 end)
 
