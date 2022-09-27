@@ -1089,7 +1089,7 @@ function addCreditRecipe(ore)
 	local recipeName = "tiberium-growth-credit-from-"..ore
 	local oreAmount = math.min(65535, math.ceil(settings.startup["tiberium-growth"].value * settings.startup["tiberium-value"].value / (oreMult[ore] or 1)))
 	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"
-	local energy = settings.startup["tiberium-growth"].value * settings.startup["tiberium-value"].value
+	local energy = 0.5 * settings.startup["tiberium-growth"].value * settings.startup["tiberium-value"].value
 	local order = (not oreMult[ore] and "a-" or oreMult[ore] > 1 and "b-" or "c-")..ore
 	local oreIcon, oreIconSize, oreTint
 	if data.raw["item"][ore] then
