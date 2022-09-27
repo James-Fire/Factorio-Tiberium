@@ -1046,25 +1046,22 @@ end
 --Creates recipes to turn Molten Tiberium directly into raw materials
 --Assumes oreMult
 function addDirectRecipe(ore, easy)
-	local recipeName = "tiberium-molten-to-"..ore
-	local ingredient = "molten-tiberium"
+	local recipeName = (easy and "tiberium-slurry" or "tiberium").."-tranmutation-to-"..ore
 	local oreAmount = 64 / (oreMult[ore] or 1)
 	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"
-	local tech = data.raw.fluid[ore] and "tiberium-molten-centrifuging" or "tiberium-transmutation-tech"
+	local tech = easy and "tiberium-easy-transmutation-tech" or data.raw.fluid[ore] and "tiberium-molten-centrifuging" or "tiberium-transmutation-tech"
 	local energy = 12
 	local order = (not oreMult[ore] and "a-" or oreMult[ore] > 1 and "b-" or "c-")..ore
-	local subgroup = "a-direct"
-
-	if easy then
-		recipeName = "tiberium-slurry-to-"..ore
-		ingredient = "tiberium-slurry"
-		oreAmount = oreAmount / 2
-		tech = "tiberium-easy-transmutation-tech"
-		subgroup = "a-direct-easy"
-	end
+	local subgroup = easy and "a-direct-easy" or "a-direct"
 
 	LSlib.recipe.create(recipeName)
-	LSlib.recipe.addIngredient(recipeName, ingredient, 16, "fluid")
+	if easy then
+		LSlib.recipe.addIngredient(recipeName, "tiberium-slurry", 32, "fluid")
+	elseif data.raw.fluid[ore] then
+		LSlib.recipe.addIngredient(recipeName, "molten-tiberium", 16, "fluid")
+	else
+		LSlib.recipe.addIngredient(recipeName, "tiberium-primed-reactant", 1, "item")
+	end
 	recipeAddResult(recipeName, ore, oreAmount, itemOrFluid)
 	LSlib.recipe.setMainResult(recipeName, ore)
 	if settings.startup["tiberium-byproduct-direct"].value then  -- Direct Sludge Waste setting

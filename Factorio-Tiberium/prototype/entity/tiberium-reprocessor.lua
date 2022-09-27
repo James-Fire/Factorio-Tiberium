@@ -85,7 +85,7 @@ data:extend{
 			orientation_to_variation = false
 		},
 		energy_usage = "1MW",
-		module_specification = { module_slots = 4, module_info_icon_shift = {0, 1.7}, module_info_icon_scale = 1 },
+		module_specification = {module_slots = 4, module_info_icon_shift = {0, 1.7}, module_info_icon_scale = 1},
 		allowed_effects = {"consumption", "speed", "productivity", "pollution"},
     }
 }

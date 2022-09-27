@@ -34,12 +34,15 @@ local TibProductivity = {
 	"tiberium-liquid-processing-blue",
 	"tiberium-blue-explosives",
 	"tiberium-enrich-blue-seed",
-	"tiberium-enrich-blue"
+	"tiberium-enrich-blue",
+	"tiberium-primed-reactant",
+	"tiberium-primed-reactant-blue",
+	"tiberium-primed-reactant-conversion"
 }
 
 for km, vm in pairs(data.raw.module) do
 	if vm.effect.productivity and vm.limitation then
-		for _, recipe in ipairs(TibProductivity) do
+		for _, recipe in pairs(TibProductivity) do
 			table.insert(vm.limitation, recipe)
 		end
 	end
@@ -841,9 +844,9 @@ data:extend{
 		enabled = false,
 		subgroup = "a-buildings",
 		ingredients = {
-			{"refined-concrete", 50},
-			{"steel-plate", 40},
-			{"electric-engine-unit", 10},
+			{"stone-brick", 50},
+			{"steel-plate", 20},
+			{"engine-unit", 10},
 		},
 		result = "tiberium-reprocessor"
 	},
@@ -1020,9 +1023,9 @@ data:extend{
 		enabled = false,
 		energy_required = 40,
 		ingredients = {
-			{"engine-unit", 100},
+			{"engine-unit", 20},
 			{"steel-plate", 100},
-			{"iron-gear-wheel", 50},
+			{"processing-unit", 10},
 			{"tiberium-node-harvester", 4},
 		},
 		result = "tiberium-marv",
@@ -1148,6 +1151,69 @@ data:extend{
 		icon = tiberiumInternalName.."/graphics/icons/nuclear-reactor.png",
 		icon_size = 32,
 		order = "a[tiberium-ion-core]"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-primed-reactant-easy",
+		category = "chemistry",
+		subgroup = "a-intermediates",
+		energy_required = 10,
+		enabled = false,
+		ingredients = {
+			{type = "fluid", name = "tiberium-slurry", amount = 16},
+		},
+		results = {
+			{type = "item", name = "tiberium-primed-reactant", amount = 1},
+		},
+		order = "a[tiberium-primed-reactant]"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-primed-reactant",
+		category = "chemistry",
+		subgroup = "a-intermediates",
+		energy_required = 10,
+		enabled = false,
+		ingredients = {
+			{type = "fluid", name = "molten-tiberium", amount = 16},
+			{type = "item", name = "tiberium-growth-credit", amount = 1},
+		},
+		results = {
+			{type = "item", name = "tiberium-primed-reactant", amount = 1},
+		},
+		order = "a[tiberium-primed-reactant]"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-primed-reactant-blue",
+		category = "chemistry",
+		subgroup = "a-intermediates",
+		energy_required = 10,
+		enabled = false,
+		ingredients = {
+			{type = "fluid", name = "tiberium-slurry-blue", amount = 16},
+			{type = "item", name = "tiberium-growth-credit", amount = 1},
+		},
+		results = {
+			{type = "item", name = "tiberium-primed-reactant-blue", amount = 1},
+		},
+		order = "a[tiberium-primed-reactant]"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-primed-reactant-conversion",
+		category = "chemistry",
+		subgroup = "a-intermediates",
+		energy_required = 10,
+		enabled = false,
+		ingredients = {
+			{type = "fluid", name = "molten-tiberium", amount = 16},
+			{type = "item", name = "tiberium-primed-reactant-blue", amount = 1},
+		},
+		results = {
+			{type = "item", name = "tiberium-primed-reactant", amount = 2},
+		},
+		order = "a[tiberium-primed-reactant]"
 	},
 	-- Void recipe for consuming energy credits
 	{

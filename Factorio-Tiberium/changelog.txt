@@ -4,6 +4,7 @@ Version: 1.1.25
     - Fixed Mining Drones dying to Blue Tiberium
     - Fixed Tiberium Centrifuge icon colors being in the wrong order
     - Added missing localisation for some alerts
+    - Fixed Growth Accelerators being 5 times too loud
   Changes:
     - Changed Informatron to an optional dependency
     - Improved balance when used with Space Exploration
@@ -12,10 +13,14 @@ Version: 1.1.25
     - Made the Tiberium Substrate recipes twice as fast (except for the ingredientless recipe)
     - Tiberium now spreads much more rapidly when consuming resource patches
     - Tiberium Military 1 now reduces Tiberium damage taken by 75% instead of 80%
-    - Reduced some emission multipliers
+    - Reduced some of the higher emission multipliers
+    - Adjusted MARV recipe
+    - Tiberium Growth Acceleration is now required for Tiberium Nuclear Physics
   Features:
     - Added Tiberium Detonation Charge for destroying Tiberium Blossom Trees
     - Added Tiberium Reprocessor structure for more rapidly recycling unused ores into Tiberium Substrate
+    - Added Tiberium-Primed Reactant, a new ingredient for the ore transmutation recipes
+    - Added a new recipe for using Blue Tiberium in the transmutation process
     - Added an alert for players who are taking damage from Tiberium radiation
     - Added settings for customizing the growth rate of Blue Tiberium
     - Added setting for improving end-game UPS

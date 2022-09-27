@@ -237,9 +237,13 @@ data:extend{
 		icon = tiberiumInternalName.."/graphics/technology/tiberium-transmutation.png",
 		icon_size = 128,
 		effects = {
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-primed-reactant"
+			},
 			-- Transmutation recipes created and added to this tech by /scripts/DynamicOreRecipes
 		},
-		prerequisites = {"tiberium-molten-centrifuging", "tiberium-nuclear-research"},
+		prerequisites = {"tiberium-molten-centrifuging", "tiberium-nuclear-research", "tiberium-growth-acceleration"},
 		unit = {
 			count = 5000,
 			ingredients = {
@@ -324,6 +328,14 @@ data:extend{
 			{
 				type = "unlock-recipe",
 				recipe = "tiberium-enrich-blue"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-primed-reactant-blue"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-primed-reactant-conversion"
 			},
 		},
 		prerequisites = {"tiberium-growth-acceleration", "tiberium-refining-blue", "production-science-pack"},

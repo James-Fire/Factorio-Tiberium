@@ -55,13 +55,14 @@ data:extend{growthAcceleratorNode,
 		open_sound = {filename = "__base__/sound/machine-open.ogg", volume = 0.85},
 		close_sound = {filename = "__base__/sound/machine-close.ogg", volume = 0.75},
 		working_sound = {
+			fade_in_ticks = 4,
+			fade_out_ticks = 20,
 			sound = {
 				{
 					filename = tiberiumInternalName.."/sound/Accelerator.ogg",
-					volume = 1
+					volume = 0.2
 				}
 			},
-			audible_distance_modifier = 0.33,
 			max_sounds_per_type = 3,
 			match_speed_to_activity = true
 		},
