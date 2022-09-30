@@ -285,8 +285,9 @@ data:extend{
 	{
 		type = "item",
 		name = "tiberium-detonation-charge",
-		icon = tiberiumInternalName.."/graphics/icons/tiberium-spike.png",
-		icon_size = 128,
+		icon = "__base__/graphics/icons/crash-site-chest.png",
+		icon_mipmaps = 4,
+		icon_size = 64,
 		order = "g[tiberium-detonation-charge]",
 		place_result = "tiberium-detonation-charge",
 		stack_size = 20,
