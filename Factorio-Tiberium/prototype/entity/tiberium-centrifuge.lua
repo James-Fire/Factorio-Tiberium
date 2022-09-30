@@ -4,11 +4,11 @@ local greenFugeTint = {r = 0.3, g = 0.8, b = 0.3, a = 0.8}
 data:extend{
 	{
 		type = "assembling-machine",
-		name = "tiberium-centrifuge",
-		icons = data.raw.item["tiberium-centrifuge"].icons,
+		name = "tiberium-centrifuge-1",
+		icons = data.raw.item["tiberium-centrifuge-1"].icons,
 		icon_size = 32,
 		flags = {"placeable-neutral", "placeable-player", "player-creation"},
-		minable = {mining_time = 0.1, result = "tiberium-centrifuge"},
+		minable = {mining_time = 0.1, result = "tiberium-centrifuge-1"},
 		max_health = 350,
 		corpse = "centrifuge-remnants",
 		dying_explosion = "centrifuge-explosion",
@@ -332,7 +332,7 @@ data:extend{
 }
 
 --Tiberium Centrifuge 2
-local centrifuge2Entity = util.table.deepcopy(data.raw["assembling-machine"]["tiberium-centrifuge"])
+local centrifuge2Entity = util.table.deepcopy(data.raw["assembling-machine"]["tiberium-centrifuge-1"])
 centrifuge2Entity.name = "tiberium-centrifuge-2"
 centrifuge2Entity.next_upgrade = "tiberium-centrifuge-3"
 centrifuge2Entity.energy_usage = tostring(500 * (30 / 31)).."kW"  -- Scale for nice max consumption
@@ -352,7 +352,7 @@ for k, v in pairs(centrifuge2Entity.idle_animation.layers) do
 end
 
 --Tiberium Centrifuge 3
-local centrifuge3Entity = util.table.deepcopy(data.raw["assembling-machine"]["tiberium-centrifuge"])
+local centrifuge3Entity = util.table.deepcopy(data.raw["assembling-machine"]["tiberium-centrifuge-1"])
 centrifuge3Entity.name = "tiberium-centrifuge-3"
 centrifuge3Entity.next_upgrade = nil
 centrifuge3Entity.energy_usage = tostring(700 * (30 / 31)).."kW"  -- Scale for nice max consumption
@@ -372,3 +372,41 @@ for k, v in pairs(centrifuge3Entity.idle_animation.layers) do
 end
 
 data:extend{centrifuge2Entity, centrifuge3Entity}
+
+local tierZero = settings.startup["tiberium-tier-zero"].value
+if tierZero then
+	local centrifuge0Entity = util.table.deepcopy(data.raw["assembling-machine"]["tiberium-centrifuge-1"])
+	centrifuge0Entity.name = "tiberium-centrifuge-0"
+	centrifuge0Entity.next_upgrade = "tiberium-centrifuge-1"
+	centrifuge0Entity.energy_usage = "150kW"
+	centrifuge0Entity.crafting_speed = 0.5
+	centrifuge0Entity.crafting_categories = {"tiberium-centrifuge-0"}
+	centrifuge0Entity.energy_source = {
+		type = "burner",
+		usage_priority = "secondary-input",
+		emissions_per_minute = 4,
+		fuel_inventory_size = 1,
+		smoke = {
+			{
+				deviation = {0.1, 0.1},
+				frequency = 5,
+				name = "smoke",
+				position = {0, -1},
+				starting_frame_deviation = 60,
+				starting_vertical_speed = 0.08
+			}
+		}
+	}
+	centrifuge0Entity.icons = nil
+	centrifuge0Entity.icon = "__base__/graphics/icons/centrifuge.png"
+	centrifuge0Entity.icon_mipmaps = 4
+	centrifuge0Entity.icon_size = 64
+	centrifuge0Entity.module_specification = nil
+	centrifuge0Entity.minable.result = "tiberium-centrifuge-0"
+	centrifuge0Entity.idle_animation = data.raw["assembling-machine"].centrifuge.idle_animation
+	data:extend{centrifuge0Entity}
+
+	for _, fuge in pairs({"tiberium-centrifuge-1", "tiberium-centrifuge-2", "tiberium-centrifuge-3"}) do
+		table.insert(data.raw["assembling-machine"][fuge].crafting_categories, "tiberium-centrifuge-0")
+	end
+end

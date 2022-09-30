@@ -1,0 +1,11 @@
+{
+  "recipe": [
+    ["tiberium-centrifuge", "tiberium-centrifuge-1"]
+  ],
+  "item": [
+    ["tiberium-centrifuge", "tiberium-centrifuge-1"]
+  ],
+  "entity": [
+    ["tiberium-centrifuge", "tiberium-centrifuge-1"]
+  ]
+}

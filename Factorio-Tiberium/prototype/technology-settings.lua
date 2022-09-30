@@ -22,3 +22,34 @@ if easyMode then
         }
     }
 end
+
+local tierZero = settings.startup["tiberium-tier-zero"].value
+if tierZero then
+	data:extend{
+        {
+            type = "technology",
+            name = "tiberium-ore-centrifuging",
+            icon = tiberiumInternalName.."/graphics/icons/tiberium-ore.png",
+            icon_size = 64,
+            effects = {
+                {
+                    type = "unlock-recipe",
+                    recipe = "tiberium-centrifuge-0"
+                },
+                {
+                    type = "unlock-recipe",
+                    recipe = "tiberium-ore-centrifuging"
+                },
+                -- Ore centrifuging with sludge recipe created and added to this tech by /scripts/DynamicOreRecipes
+            },
+            unit = {
+                count = 50,
+                ingredients = {
+                    {"automation-science-pack", 1},
+                },
+                time = 30
+            }
+        }
+    }
+    table.insert(data.raw.technology["tiberium-slurry-centrifuging"].prerequisites, "tiberium-ore-centrifuging")
+end

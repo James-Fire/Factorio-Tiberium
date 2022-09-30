@@ -50,7 +50,7 @@ prototypes["item"] = {
 	"tiberium-spike",
 	"tiberium-ion-turret",
 	"tiberium-ion-core",
-	"tiberium-centrifuge",
+	"tiberium-centrifuge-1",
 	"tiberium-centrifuge-2",
 	"tiberium-centrifuge-3",
 	"tiberium-empty-cell",
@@ -66,7 +66,7 @@ prototypes["tool"] = {
 	"tiberium-science",
 }
 prototypes["assembling-machine"] = {
-	"tiberium-centrifuge",
+	"tiberium-centrifuge-1",
 	"tiberium-centrifuge-2",
 	"tiberium-centrifuge-3",
 	"tiberium-growth-accelerator",

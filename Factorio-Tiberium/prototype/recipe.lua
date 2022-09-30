@@ -797,7 +797,7 @@ data:extend{
 	},
 	{
 		type = "recipe",
-		name = "tiberium-centrifuge",
+		name = "tiberium-centrifuge-1",
 		energy_required = 10,
 		enabled = false,
 		subgroup = "a-buildings",
@@ -807,7 +807,7 @@ data:extend{
 			{"electronic-circuit", 10},
 			{"stone-brick", 10}
 		},
-		result = "tiberium-centrifuge"
+		result = "tiberium-centrifuge-1"
 	},
 	{
 		type = "recipe",
@@ -819,7 +819,7 @@ data:extend{
 			{"concrete", 50},
 			{"engine-unit", 10},
 			{"advanced-circuit", 10},
-			{"tiberium-centrifuge", 1}
+			{"tiberium-centrifuge-1", 1}
 		},
 		result = "tiberium-centrifuge-2"
 	},

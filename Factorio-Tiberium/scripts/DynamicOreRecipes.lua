@@ -846,6 +846,7 @@ function fugeTierSetup()
 	if tableLS.isEmpty(science[1]) then  -- Don't know how it would still be empty at this point, but leaving this just in case
 		science[1] = table.deepcopy(science[2])
 	end
+	science[0] = science[1]
 end
 
 function fugeRecipeTier(tier)
@@ -875,12 +876,12 @@ function fugeRecipeTier(tier)
 	end
 
 	-- Make actual recipe changes
-	local material = (tier == 1) and "slurry" or (tier == 2) and "molten" or "liquid"
-	local fluid = (tier == 1) and "tiberium-slurry" or (tier == 2) and "molten-tiberium" or "liquid-tiberium"
+	local material = (tier == 0) and "ore" or (tier == 1) and "slurry" or (tier == 2) and "molten" or "liquid"
+	local fluid = (tier == 0) and "tiberium-ore" or (tier == 1) and "tiberium-slurry" or (tier == 2) and "molten-tiberium" or "liquid-tiberium"
 	local ingredientAmount = (tier ~= 1) and math.max(160 / settings.startup["tiberium-value"].value, 1) or 16
 	local normalFugeRecipeName = "tiberium-"..material.."-centrifuging"
 	local sludgeFugeRecipeName = "tiberium-"..material.."-sludge-centrifuging"
-	LSlib.recipe.addIngredient(normalFugeRecipeName, fluid, ingredientAmount, "fluid")
+	LSlib.recipe.addIngredient(normalFugeRecipeName, fluid, ingredientAmount, tier > 0 and "fluid" or "item")
 	if debugText then log("Tier "..tier.." centrifuge: "..ingredientAmount.." "..fluid) end
 	local sludge = 0
 	local sludgeDict = {}
@@ -1012,7 +1013,7 @@ function fugeScaleResources(resourceList, tier)
 	end
 	
 	-- Scale resourceList to match tier target amounts
-	local targetAmount = (tier == 1) and 32 or (tier == 2) and 64 or 128
+	local targetAmount = (tier == 0) and 16 or (tier == 1) and 32 or (tier == 2) and 64 or 128
 	local scaledResourceList = makeScaledList(resourceList, targetAmount / math.max(totalOre, 1))
 	
 	-- Cutoff for amounts too small to be worth including
@@ -1151,6 +1152,9 @@ fugeTierSetup()
 fugeRecipeTier(1)
 fugeRecipeTier(2)
 fugeRecipeTier(3)
+if settings.startup["tiberium-tier-zero"].value then
+	fugeRecipeTier(0)
+end
 singletonRecipes()  -- So fluid recipes come after sludge recipes for molten centrifuging
 
 for k,v in pairs(resultIndex) do

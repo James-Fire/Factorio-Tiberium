@@ -110,6 +110,10 @@ data:extend{
 	-- Categories
 	{
 		type = "recipe-category",
+		name = "tiberium-centrifuge-0"
+	},
+	{
+		type = "recipe-category",
 		name = "tiberium-centrifuge-1"
 	},
 	{

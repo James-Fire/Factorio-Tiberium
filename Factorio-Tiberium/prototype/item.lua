@@ -97,7 +97,7 @@ data:extend{
 	},
 	{
 		type = "item",
-		name = "tiberium-centrifuge",
+		name = "tiberium-centrifuge-1",
 		icons = {
 			{
 				icon = tiberiumInternalName.."/graphics/icons/fuge1.png",
@@ -113,7 +113,7 @@ data:extend{
 		flags = {},
 		subgroup = "a-buildings",
 		order = "a[tiberium-centrifuge]-1",
-		place_result = "tiberium-centrifuge",
+		place_result = "tiberium-centrifuge-1",
 		stack_size = 20
 	},
 	{

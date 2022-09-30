@@ -50,3 +50,66 @@ if easyMode then
 		end
 	end
 end
+
+local tierZero = settings.startup["tiberium-tier-zero"].value
+if tierZero then
+	data:extend{
+		{
+			type = "recipe",
+			name = "tiberium-ore-centrifuging",
+			localised_name = {"recipe-name.tiberium-centrifuging", {"item-name.tiberium-ore"}},
+			category = "tiberium-centrifuge-0",
+			subgroup = "a-centrifuging",
+			energy_required = 10,
+			enabled = false,
+			ingredients = {
+			},
+			results = {
+			},
+			icon = tiberiumInternalName.."/graphics/icons/ore-centrifuging.png",
+			icon_size = 32,
+			allow_as_intermediate = false,
+			allow_decomposition = false,
+			always_show_made_in = true,
+			always_show_products = true,
+			order = "a[fluid-chemistry]-f[heavy-oil-cracking]"
+		},
+		{
+			type = "recipe",
+			name = "tiberium-ore-sludge-centrifuging",
+			--localised_name set by DynamicOreRecipes
+			category = "tiberium-centrifuge-0",
+			subgroup = "a-centrifuging",
+			energy_required = 10,
+			enabled = false,
+			ingredients = {
+			},
+			results = {
+			},
+			icon = tiberiumInternalName.."/graphics/icons/ore-sludge-centrifuging.png",
+			icon_size = 32,
+			allow_as_intermediate = false,
+			allow_decomposition = false,
+			always_show_made_in = true,
+			always_show_products = true,
+			order = "d"
+		},
+		{
+			type = "recipe",
+			name = "tiberium-centrifuge-0",
+			energy_required = 10,
+			enabled = false,
+			subgroup = "a-buildings",
+			ingredients = {
+				{"iron-gear-wheel", 20},
+				{"stone-brick", 10}
+			},
+			result = "tiberium-centrifuge-0"
+		},
+	}
+	data.raw.recipe["tiberium-centrifuge-1"].ingredients = {
+		{"steel-plate", 10},
+		{"electronic-circuit", 10},
+		{"tiberium-centrifuge-0", 1}
+	}
+end

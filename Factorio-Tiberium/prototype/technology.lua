@@ -7,7 +7,7 @@ data:extend{
 		effects = {
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-centrifuge"
+				recipe = "tiberium-centrifuge-1"
 			},
 			{
 				type = "unlock-recipe",

@@ -1846,8 +1846,12 @@ script.on_event(defines.events.on_player_created, function(event)
 				player.insert{name = name, count = count}
 			end
 		end
-		UnlockTechnologyAndPrereqs(player.force, "tiberium-mechanical-research")
-		UnlockTechnologyAndPrereqs(player.force, "tiberium-slurry-centrifuging")
+		if settings.startup["tiberium-tier-zero"].value then
+			UnlockTechnologyAndPrereqs(player.force, "tiberium-ore-centrifuging")
+		else
+			UnlockTechnologyAndPrereqs(player.force, "tiberium-mechanical-research")
+			UnlockTechnologyAndPrereqs(player.force, "tiberium-slurry-centrifuging")
+		end
 		if easyMode then
 			UnlockTechnologyAndPrereqs(player.force, "tiberium-easy-transmutation-tech")
 		end

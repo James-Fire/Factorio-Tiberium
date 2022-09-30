@@ -111,6 +111,17 @@ data:extend{
 	},
 	{
 		type = "string-setting",
+		name = "tiberium-centrifuge-override-0",
+		localised_name = {"mod-setting-name.tiberium-centrifuge-override", {"technology-name.tiberium-ore-centrifuging"}},
+		localised_description = {"mod-setting-description.tiberium-centrifuge-override", {"technology-name.tiberium-ore-centrifuging"}},
+		setting_type = "startup",
+		default_value = "",
+		allow_blank = true,
+		auto_trim = true,
+		order = "d0",
+	},
+	{
+		type = "string-setting",
 		name = "tiberium-centrifuge-override-1",
 		localised_name = {"mod-setting-name.tiberium-centrifuge-override", {"technology-name.tiberium-slurry-centrifuging"}},
 		localised_description = {"mod-setting-description.tiberium-centrifuge-override", {"technology-name.tiberium-slurry-centrifuging"}},
@@ -141,6 +152,13 @@ data:extend{
 		allow_blank = true,
 		auto_trim = true,
 		order = "d3",
+	},
+	{
+		type = "bool-setting",
+		name = "tiberium-tier-zero",
+		setting_type = "startup",
+		default_value = false,
+		order = "z",
 	},
 	{
 		type = "bool-setting",

@@ -12,6 +12,7 @@ common = require("prototype/common")
 
 require("prototype/item-groups")
 require("prototype/item")
+require("prototype/item-settings")
 require("prototype/fluid")
 require("prototype/sticker")
 require("prototype/fire")
