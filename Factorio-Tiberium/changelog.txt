@@ -5,6 +5,8 @@ Version: 1.1.25
     - Fixed Tiberium Centrifuge icon colors being in the wrong order
     - Added missing localisation for some alerts
     - Fixed Growth Accelerators being 5 times too loud
+    - Fixed Obelisks of Light attacking targets that are already dead
+    - Fixed Obelisk of Light having a misleading attack frequency tooltip
   Changes:
     - Changed Informatron to an optional dependency
     - Improved balance when used with Space Exploration

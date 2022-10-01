@@ -115,6 +115,16 @@ for name, armor in pairs(data.raw.armor) do
 	end
 end
 
+-- Add Obelisk damage upgrade to laser techs
+for _, techData in pairs(data.raw.technology) do
+	for _, effect in pairs(techData.effects or {}) do
+		if effect.type == "ammo-damage" and effect.ammo_category == "laser" then
+			table.insert(techData.effects, {type = "ammo-damage", ammo_category = "obelisk", modifier = effect.modifier})
+			break
+		end
+	end
+end
+
 -- Desaturate uranium map color to make it not look like Tiberium
 if data.raw.resource["uranium-ore"] then
 	data.raw.resource["uranium-ore"]["map_color"] = {0.0, 0.5, 0.0}

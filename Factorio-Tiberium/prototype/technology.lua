@@ -241,6 +241,10 @@ data:extend{
 				type = "unlock-recipe",
 				recipe = "tiberium-primed-reactant"
 			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-primed-reactant-pure"
+			},
 			-- Transmutation recipes created and added to this tech by /scripts/DynamicOreRecipes
 		},
 		prerequisites = {"tiberium-molten-centrifuging", "tiberium-nuclear-research", "tiberium-growth-acceleration"},

@@ -50,19 +50,20 @@ data:extend{
 		},
 		vehicle_impact_sound = {filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65},
 		starting_attack_sound = {
-			filename = tiberiumInternalName.."/sound/Obelisk.ogg",
+			--filename = tiberiumInternalName.."/sound/Obelisk.ogg",
+			filename = tiberiumInternalName.."/sound/Obelisk-firing.ogg",
 			volume = 0.4
 		},
 		attack_parameters = {
 			type = "beam",
-			cooldown = 30,
+			cooldown = 120,
 			range = 40,
 			source_direction_count = 64,
 			source_offset = {0, 0},
 			damage_modifier = 12,
-			warmup = 120,
+			--warmup = 120,
 			ammo_type = {
-				category = "laser",
+				category = "obelisk",
 				energy_consumption = "2000kJ",
 				action = {
 					type = "direct",

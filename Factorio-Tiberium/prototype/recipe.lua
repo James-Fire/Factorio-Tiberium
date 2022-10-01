@@ -36,6 +36,7 @@ local TibProductivity = {
 	"tiberium-enrich-blue-seed",
 	"tiberium-enrich-blue",
 	"tiberium-primed-reactant",
+	"tiberium-primed-reactant-pure",
 	"tiberium-primed-reactant-blue",
 	"tiberium-primed-reactant-conversion"
 }
@@ -1161,6 +1162,21 @@ data:extend{
 		enabled = false,
 		ingredients = {
 			{type = "fluid", name = "tiberium-slurry", amount = 16},
+		},
+		results = {
+			{type = "item", name = "tiberium-primed-reactant", amount = 1},
+		},
+		order = "a[tiberium-primed-reactant]"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-primed-reactant-pure",
+		category = "chemistry",
+		subgroup = "a-intermediates",
+		energy_required = 10,
+		enabled = false,
+		ingredients = {
+			{type = "fluid", name = "molten-tiberium", amount = 48},
 		},
 		results = {
 			{type = "item", name = "tiberium-primed-reactant", amount = 1},

@@ -140,4 +140,9 @@ data:extend{
 		type = "recipe-category",
 		name = "growth"
 	},
+	-- Ammo categories
+	{
+		type = "ammo-category",
+		name = "obelisk"
+	},
 }
