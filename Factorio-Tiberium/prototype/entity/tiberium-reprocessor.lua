@@ -1,3 +1,5 @@
+-- Crusher cloned from Krastorio 2, but renamed, with different animation speed and crafting category
+-- https://mods.factorio.com/mod/Krastorio2
 data:extend{
     {
         type = "furnace",

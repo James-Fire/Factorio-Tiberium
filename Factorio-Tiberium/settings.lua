@@ -154,6 +154,15 @@ data:extend{
 		order = "d3",
 	},
 	{
+		type = "string-setting",
+		name = "tiberium-resource-exclusions",
+		setting_type = "startup",
+		default_value = "",
+		allow_blank = true,
+		auto_trim = true,
+		order = "d8",
+	},
+	{
 		type = "bool-setting",
 		name = "tiberium-tier-zero",
 		setting_type = "startup",

@@ -20,12 +20,14 @@ Version: 1.1.25
     - Tiberium Growth Acceleration is now required for Tiberium Nuclear Physics
   Features:
     - Added Tiberium Detonation Charge for destroying Tiberium Blossom Trees
-    - Added Tiberium Reprocessor structure for more rapidly recycling unused ores into Tiberium Substrate
+    - Added Tiberium Reprocessor structure for more rapidly recycling unused ores into Tiberium Substrate (reused Crusher from Krastorio 2)
     - Added Tiberium-Primed Reactant, a new ingredient for the ore transmutation recipes
     - Added a new recipe for using Blue Tiberium in the transmutation process
     - Added an alert for players who are taking damage from Tiberium radiation
     - Added settings for customizing the growth rate of Blue Tiberium
     - Added setting for improving end-game UPS
+    - Added setting for excluding specific resources from centrifuging and transmutation
+    - Other mods can now flag item and fluid prototypes as resources that should not be derived from Tiberium recipes by setting the "tiberium_resource_exclusion" property on them to "true"
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.24
   Bugfixes:

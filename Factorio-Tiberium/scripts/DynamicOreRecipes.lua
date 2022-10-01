@@ -15,6 +15,7 @@ local multipleRecipes = {}
 local availableRecipes = {}
 local fakeRecipes = {}
 local rawResources = {}
+local resourceExclusions = {}
 local tibComboPacks = {}
 local techCosts = {}
 local catalyst = {}
@@ -61,6 +62,25 @@ end
 function giantSetupFunction()
 	-- Load item properties defined by other mods or from our data-updates
 	loadFromItemProperties()
+
+	-- Resources excluded by settings
+	local excludeSetting = string.gsub(settings.startup["tiberium-resource-exclusions"].value, "\"", "")
+	if excludeSetting then
+		local delim = ","
+		for item in string.gmatch(excludeSetting, "[^"..delim.."]+") do  -- Loop over comma-delimited substrings
+			resourceExclusions[item] = true
+		end
+	end
+	for fluid, prototype in pairs(data.raw.fluid) do
+		if prototype.tiberium_resource_exclusion then
+			resourceExclusions[fluid] = true
+		end
+	end
+	for item, prototype in pairs(data.raw.item) do
+		if prototype.tiberium_resource_exclusion then
+			resourceExclusions[item] = true
+		end
+	end
 
 	-- Raw resources
 	for _, resourceData in pairs(data.raw.resource) do
@@ -1003,7 +1023,9 @@ function fugeScaleResources(resourceList, tier)
 	-- Weighted sum the resources
 	local totalOre = 0
 	for resource, amount in pairs(resourceList) do
-		if tibComboPacks[resource] then  -- Prevent packs from showing up in auto-generated recipes
+		if resourceExclusions[resource] then  -- Prevent explicitly restricted resources from being included
+			resourceList[resource] = nil
+		elseif tibComboPacks[resource] then  -- Prevent packs from showing up in auto-generated recipes
 			resourceList[resource] = nil
 		elseif oreMult[resource] == math.huge then  -- Ores with infinite value are too valuable to include in recipe
 			resourceList[resource] = nil
@@ -1032,10 +1054,12 @@ function singletonRecipes()
 			for ore in pairs(common.resultsToTable(resourceData.minable)) do
 				if ore ~= "tiberium-ore" then
 					if not oreMult[ore] or (oreMult[ore] ~= math.huge and oreMult[ore] ~= 0) then  -- Don't create recipes for infinite or zero ore
-						addDirectRecipe(ore, false)
 						addCreditRecipe(ore)
-						if easyMode then
-							addDirectRecipe(ore, true)
+						if not resourceExclusions[ore] then
+							addDirectRecipe(ore, false)
+							if easyMode then
+								addDirectRecipe(ore, true)
+							end
 						end
 					end
 				end
