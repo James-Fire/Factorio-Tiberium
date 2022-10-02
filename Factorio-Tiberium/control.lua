@@ -21,6 +21,7 @@ local BlueTiberiumSaturationGrowth = settings.startup["tiberium-blue-saturation-
 local bitersImmune = settings.startup["tiberium-wont-damage-biters"].value
 local ItemDamageScale = settings.global["tiberium-item-damage-scale"].value
 local easyMode = settings.startup["tiberium-easy-recipes"].value
+local burnerTier = settings.startup["tiberium-tier-zero"].value
 local performanceMode = settings.startup["tiberium-auto-scale-performance"].value
 local debugText = settings.startup["tiberium-debug-text"].value
 -- Starting items, if the option is ticked.
@@ -45,6 +46,10 @@ local tiberium_start = {
 }
 if easyMode then
 	tiberium_start["chemical-plant"] = 10
+end
+if burnerTier then
+	tiberium_start = {}
+	tiberium_start["tiberium-centrifuge-0"] = 3
 end
 
 script.on_init(function()
@@ -1857,15 +1862,15 @@ end)
 
 script.on_event(defines.events.on_player_created, function(event)
 	local player = game.players[event.player_index]
-
 	if settings.startup["tiberium-advanced-start"].value or settings.startup["tiberium-ore-removal"].value then
 		if not remote.interfaces["freeplay"] then
 			for name, count in pairs(tiberium_start) do
 				player.insert{name = name, count = count}
 			end
 		end
-		if settings.startup["tiberium-tier-zero"].value then
+		if burnerTier then
 			UnlockTechnologyAndPrereqs(player.force, "tiberium-ore-centrifuging")
+			UnlockRecipePrereqs(player.force, "tiberium-centrifuge-0")
 		else
 			UnlockTechnologyAndPrereqs(player.force, "tiberium-mechanical-research")
 			UnlockTechnologyAndPrereqs(player.force, "tiberium-slurry-centrifuging")
@@ -1886,5 +1891,69 @@ function UnlockTechnologyAndPrereqs(force, techName)
 		for techPrereq in pairs(game.technology_prototypes[techName].prerequisites) do
 			UnlockTechnologyAndPrereqs(force, techPrereq)
 		end
+	end
+end
+
+function TechPrereqList(force, techName)
+	local techList = {}
+	if not force.technologies[techName].researched then
+		techList[techName] = true
+		for techPrereq in pairs(game.technology_prototypes[techName].prerequisites) do
+			for k,v in pairs(TechPrereqList(force, techPrereq)) do
+				techList[k] = v
+			end
+		end
+	end
+	return techList
+end
+
+function FindRecipeTech(force, recipeName)
+	for techName, tech in pairs(force.technologies) do
+		for _, effect in pairs(tech.effects) do
+			if effect.type == "unlock-recipe" and effect.recipe == recipeName then
+				return techName
+			end
+		end
+	end
+	return false
+end
+
+function UnlockRecipePrereqs(force, recipeName)
+	if not force or not force.valid then return end
+	if not force.recipes[recipeName] then return end
+	local ingredientTechs = {}
+	for _, ingredient in pairs(force.recipes[recipeName].ingredients) do
+		ingredientTechs[ingredient.name] = {}
+	end
+	for recipeName, recipe in pairs(force.recipes) do
+		for _, product in pairs(recipe.products) do
+			if ingredientTechs[product.name] then
+				-- I'm not bothering with checking all structures' crafting categories but this should work most of the time
+				if recipe.enabled and (recipe.category == "crafting" or recipe.category == "smelting") and not recipe.hidden then
+					ingredientTechs[product.name] = nil
+				else
+					local tech = FindRecipeTech(force, recipeName)
+					if tech then
+						table.insert(ingredientTechs[product.name], tech)
+					end
+				end
+			end
+		end
+	end
+	for ingredient, techs in pairs(ingredientTechs) do
+		local best = math.huge
+		local unlockTech = nil
+		for _, tech in pairs(techs) do
+			local score = LSlib.utils.table.size(TechPrereqList(force, tech))
+			game.print(tech.." requires "..tostring(score).." prereqs to provide us with "..ingredient)
+			if score < best then
+				best = score
+				unlockTech = tech
+			end
+		end
+		if unlockTech then
+			UnlockTechnologyAndPrereqs(force, unlockTech)
+		end
+		if debugText then game.print("Unlocking "..tostring(best).." technologies to allow access to "..tostring(ingredient)) end
 	end
 end
