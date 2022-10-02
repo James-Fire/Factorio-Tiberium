@@ -64,6 +64,7 @@ script.on_init(function()
 	global.minUpdateInterval = 1
 	global.intervalBetweenNodeUpdates = 18000
 	global.tibPerformanceMultiplier = 1
+	global.tibFastForward = 1
 	global.tibGrowing = true
 	global.tiberiumTerrain = nil --"dirt-4" --Performance is awful, disabling this
 	global.blueProgress = {}
@@ -161,7 +162,7 @@ function updateGrowthInterval()
 		global.tibPerformanceMultiplier = #global.tibGrowthNodeList / 50
 	end
 	local performanceInterval = math.max(global.tibPerformanceMultiplier / 10, 1)  -- For performance multis over 10, space out the growth ticks more
-	global.intervalBetweenNodeUpdates = math.max(math.floor(18000 * performanceInterval / (#global.tibGrowthNodeList or 1)), global.minUpdateInterval)
+	global.intervalBetweenNodeUpdates = math.max(math.floor(18000 * performanceInterval / (#global.tibGrowthNodeList or 1) / global.tibFastForward), global.minUpdateInterval)
 end
 
 function initializeForce(force)
@@ -535,6 +536,10 @@ script.on_configuration_changed(function(data)
 				global.tiberiumDamageTakenMulti[force.name] = 0.25
 			end
 		end
+	end
+
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.26") then
+		global.tibFastForward = 1
 	end
 
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
@@ -1183,6 +1188,16 @@ commands.add_command("tibShareStats",
 		game.write_file(fileName, str, true, game.player.index)
 		game.player.print("Saved stats to %AppData%/Roaming/Factorio/script-output/"..fileName)
 		game.player.print("You can share your stats with Tiberium mods here: https://discord.gg/ed4pNP3KrH")
+	end
+)
+commands.add_command("tibFastForward",
+	"Define a speed multiplier for Tiberium growth rate for testing/debugging purposes. Default is 100. Use command with value 1 to go back to normal.",
+	function(invocationdata)
+		local multi = tonumber(invocationdata["parameter"]) or 100
+		if multi > 0 then
+			global.tibFastForward = multi
+			updateGrowthInterval()
+		end
 	end
 )
 

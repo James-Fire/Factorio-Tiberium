@@ -12,6 +12,7 @@ Version: 1.1.26
     - Reduced Tiberium damage taken from upgrades now also applies to structures
   Features:
     - Added a setting to add a burner tier to Tiberium Centrifuges (this was in 1.1.25 but I forgot to mention it)
+    - Added /tibFastForward command to accelerate Tiberium growth for testing purposes
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.25
   Bugfixes:
