@@ -7,7 +7,7 @@ data:extend{
         icon_size = 64,
         icon = tiberiumInternalName .. "/graphics/icons/crusher.png",
         flags = {"placeable-neutral", "placeable-player", "player-creation"},
-        mineable = {mining_time = 1, result = "tiberium-reprocessor"},
+        minable = {mining_time = 1, result = "tiberium-reprocessor"},
         max_health = 500,
         corpse = "",
         dying_explosion = "big-explosion",

@@ -611,7 +611,7 @@ function AddOre(surface, position, amount, oreName, cascaded)
 	local tile = surface.get_tile(position)
 	local growthRate = math.min(amount, TiberiumMaxPerTile)
 
-	if oreEntity and (oreEntity.name == oreName or oreEntity.name == "tiberium-blue-ore") then
+	if oreEntity and (oreEntity.name == oreName or oreEntity.name == "tiberium-ore-blue") then
 		-- Grow existing tib except for the case where blue needs to replace green instead of growing it
 		if oreEntity.amount < TiberiumMaxPerTile then --Don't reduce ore amount when growing node
 			oreEntity.amount = math.min(oreEntity.amount + growthRate, TiberiumMaxPerTile)
@@ -651,7 +651,8 @@ function AddOre(surface, position, amount, oreName, cascaded)
 
 		if doCascade and not cascaded then
 			for _, entity in pairs(surface.find_entities_filtered{area = areaAroundPosition(position, 1), type = "resource"}) do
-				if (entity.name ~= oreName) and (entity.name ~= "tibGrowthNode") and (entity.name ~= "tibGrowthNode_infinite") then
+				if entity.valid and (entity.name ~= oreName) and (entity.name ~= "tiberium-ore-blue") and (entity.name ~= "tibGrowthNode")
+						and (entity.name ~= "tibGrowthNode_infinite") then
 					AddOre(surface, entity.position, amount, oreName, true)
 				end
 			end
@@ -664,7 +665,7 @@ function AddOre(surface, position, amount, oreName, cascaded)
 			if entity.type == "tree" then
 				safeDamage(entity, 9999)
 			else
-				safeDamage(entity, TiberiumDamage)
+				safeDamage(entity, TiberiumDamage * 4)
 			end
 		end
 	end
@@ -1255,7 +1256,7 @@ script.on_event(defines.events.on_tick, function(event)
 				PlaceOre(node, oreCount)
 				local position = node.position
 				local surface = node.surface
-				local treeBlockers = {"tibNode_tree", "tiberium-node-harvester", "tiberium-spike", "tiberium-growth-accelerator"}
+				local treeBlockers = {"tibNode_tree", "tiberium-node-harvester", "tiberium-spike", "tiberium-growth-accelerator", "tiberium-detonation-charge"}
 				if surface.count_entities_filtered{area = areaAroundPosition(position), name = treeBlockers} == 0 then
 					createBlossomTree(surface, position)
 				end
@@ -1328,31 +1329,33 @@ script.on_nth_tick(20, function(event) --Player damage 3 times per second
 end)
 
 function safeDamage(entityOrPlayer, damageAmount)
-	if not entityOrPlayer.valid then return end
 	if damageAmount <= 0 then return end
-	local entity = entityOrPlayer
 	local damageMulti = 1
-	if entityOrPlayer.is_player() then
+	local entity = entityOrPlayer
+	local player = nil
+	if entityOrPlayer and entityOrPlayer.is_player() then
+		player = entityOrPlayer
 		entity = entityOrPlayer.character  -- Need to damage character instead of player
-		if entity and entity.valid then  -- Reduce/prevent growth damage for players with immunity technologies
-			damageMulti = global.tiberiumDamageTakenMulti[entity.force.name] or 1
-			if (damageMulti == 0) and not entity.grid then
-				damageMulti = 0.25
-			end
-		else
-			return
-		end
-		-- Alert player about Tiberium damage
-		entityOrPlayer.add_custom_alert(
-			entity,
-        	{type = "virtual", name = "tiberium-radiation"},
-        	{"tiberium-strings.taking-tiberium-radiation-damage"},
-        	false
-        )
 	end
+	if entity and entity.valid and entity.health and entity.health > 0 then
+		-- Reduce/prevent growth damage for forces with immunity technologies
+		damageMulti = global.tiberiumDamageTakenMulti[entity.force.name] or 1
+		if (damageMulti == 0) and not entity.grid then  -- Immunity requires power armor
+			damageMulti = 0.25
+		end
 
-	if entity.valid and entity.health and entity.health > 0 and damageMulti > 0 then
-		entity.damage(damageAmount * damageMulti, game.forces.tiberium, "tiberium")
+		if damageMulti > 0 then
+			entity.damage(damageAmount * damageMulti, game.forces.tiberium, "tiberium")
+			-- Alert player about Tiberium damage
+			if player then 
+				player.add_custom_alert(
+					entity,
+					{type = "virtual", name = "tiberium-radiation"},
+					{"tiberium-strings.taking-tiberium-radiation-damage"},
+					false
+				)
+			end
+		end
 	end
 end
 

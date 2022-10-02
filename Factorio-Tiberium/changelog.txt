@@ -1,4 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.26
+  Bugfixes:
+    - Fixed the Tiberium Reprocessor structure not being minable
+    - Fixed crash that sometimes occurred when spawning a new Tiberium Blossom Tree on an existing ore patch
+    - Fixed players receiving the Tiberium damage alert while being immune to Tiberium damage
+    - Fixed damage from Tiberium growth not being reduced by upgrades
+    - Fixed Tiberium Blossom Trees sometimes reappearing through a Tiberium Detonation Charge
+    - Fixed Blue Tiberium sometimes causing the Tiberium growth to fail
+  Changes:
+    - Tiberium now deals 4 times as much damage to structures when it spreads
+    - Reduced Tiberium damage taken from upgrades now also applies to structures
+  Features:
+    - Added a setting to add a burner tier to Tiberium Centrifuges (this was in 1.1.25 but I forgot to mention it)
+---------------------------------------------------------------------------------------------------
 Version: 1.1.25
   Bugfixes:
     - Fixed Mining Drones dying to Blue Tiberium
