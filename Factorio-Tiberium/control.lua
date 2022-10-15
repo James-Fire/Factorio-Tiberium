@@ -1367,7 +1367,7 @@ function safeDamage(entityOrPlayer, damageAmount)
 		if damageMulti > 0 then
 			entity.damage(damageAmount * damageMulti, game.forces.tiberium, "tiberium")
 			-- Alert player about Tiberium damage
-			if player then 
+			if player and entity.valid then
 				player.add_custom_alert(
 					entity,
 					{type = "virtual", name = "tiberium-radiation"},
