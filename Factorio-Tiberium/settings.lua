@@ -172,6 +172,15 @@ data:extend{
 		order = "z",
 	},
 	{
+		type = "double-setting",
+		name = "tiberium-pollution-multiplier",
+		setting_type = "startup",
+		default_value = 4,
+		minimum_value = 1,
+		maximum_value = 100,
+		order = "z",
+	},
+	{
 		type = "bool-setting",
 		name = "tiberium-tier-zero",
 		setting_type = "startup",

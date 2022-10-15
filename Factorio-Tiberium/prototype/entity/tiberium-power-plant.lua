@@ -22,7 +22,7 @@ data:extend{
 		energy_source = {
 				type = "electric",
 				usage_priority = "secondary-output",
-			emissions_per_minute = 500,
+			emissions_per_minute = 125 * common.scalePollution(4),
 		},
 		horizontal_animation = {
 			filename = "__base__/graphics/entity/chemical-plant/chemical-plant.png",

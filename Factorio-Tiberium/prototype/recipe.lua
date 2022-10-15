@@ -237,7 +237,7 @@ data:extend{
 		category = "crafting-with-fluid",
 		crafting_machine_tint = common.tibCraftingBlueTint,
 		energy_required = 5,
-		emissions_multiplier = 2,
+		emissions_multiplier = common.scalePollution(2),
 		enabled = false,
 		ingredients = {
 			-- The Blue Tiberium Ore is added to recipe during recipe-autogeneration since it varies based on the settings
@@ -258,7 +258,7 @@ data:extend{
 		category = "oil-processing",
 		crafting_machine_tint = common.tibCraftingBlueTint,
 		energy_required = 30,
-		emissions_multiplier = 4,
+		emissions_multiplier = common.scalePollution(4),
 		enabled = false,
 		ingredients = {
 			{type = "fluid", name = "tiberium-slurry-blue", amount = 16},
@@ -279,7 +279,7 @@ data:extend{
 		category = "chemistry",
 		crafting_machine_tint = common.tibCraftingBlueTint,
 		energy_required = 4,
-		emissions_multiplier = 4,
+		emissions_multiplier = common.scalePollution(4),
 		enabled = false,
 		ingredients = {
 			{type = "fluid", name = "tiberium-slurry-blue", amount = 2},
@@ -344,7 +344,7 @@ data:extend{
 		localised_name = {"recipe-name.tiberium-ore-processing"},
 		category = "crafting-with-fluid",
 		energy_required = 5,
-		emissions_multiplier = 2,
+		emissions_multiplier = common.scalePollution(2),
 		enabled = false,
 		ingredients = {
 			-- The Tiberium Ore is added to recipe during recipe-autogeneration since it varies based on the settings
@@ -364,7 +364,7 @@ data:extend{
 		name = "tiberium-molten-processing",
 		category = "oil-processing",
 		energy_required = 5,
-		emissions_multiplier = 2,
+		emissions_multiplier = common.scalePollution(2),
 		enabled = false,
 		ingredients = {
 			{type = "fluid", name = "tiberium-slurry", amount = 16},
@@ -383,7 +383,7 @@ data:extend{
 		name = "tiberium-advanced-molten-processing",
 		category = "oil-processing",
 		energy_required = 5,
-		emissions_multiplier = 2,
+		emissions_multiplier = common.scalePollution(2),
 		enabled = false,
 		ingredients = {
 			{type = "fluid", name = "tiberium-slurry", amount = 16},
@@ -403,7 +403,7 @@ data:extend{
 		name = "tiberium-liquid-processing",
 		category = "oil-processing",
 		energy_required = 20,
-		emissions_multiplier = 8,
+		emissions_multiplier = common.scalePollution(8),
 		enabled = false,
 		ingredients = {
 			{type = "fluid", name = "molten-tiberium", amount = 16},

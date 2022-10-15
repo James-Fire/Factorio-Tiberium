@@ -35,6 +35,13 @@ common.tibCraftingBlueTint = {
 	quaternary = {r = 0.3, g = 0.2, b = 1, a = 0.4},
 }
 
+common.pollutionMulti = settings.startup["tiberium-pollution-multiplier"].value
+
+common.scalePollution = function(base)
+	if common.pollutionMulti == 1 then return 1 end
+	return math.max(base * common.pollutionMulti / 4, 1)
+end
+
 common.scaleUpSprite = function(sprite, scalar)
 	if sprite.layers then
 		for layerIndex, layerSprite in pairs(sprite.layers) do

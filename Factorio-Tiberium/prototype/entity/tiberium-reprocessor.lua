@@ -71,7 +71,7 @@ data:extend{
 		energy_source = {
 			type = "electric",
 			usage_priority = "secondary-input",
-			emissions_per_minute = 20
+			emissions_per_minute = 5 * common.scalePollution(4),
 		},
 		water_reflection = {
 			pictures = {

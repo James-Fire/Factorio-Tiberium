@@ -310,7 +310,7 @@ data:extend{
 		energy_source = {
 			type = "electric",
 			usage_priority = "secondary-input",
-			emissions_per_minute = 4
+			emissions_per_minute = common.scalePollution(4),
 		},
 		energy_usage = tostring(300 * (30 / 31)).."kW",  --Scale for nice max consumption
 		module_specification = {module_slots = 0},
@@ -338,7 +338,7 @@ centrifuge2Entity.next_upgrade = "tiberium-centrifuge-3"
 centrifuge2Entity.energy_usage = tostring(500 * (30 / 31)).."kW"  -- Scale for nice max consumption
 centrifuge2Entity.crafting_speed = 2
 centrifuge2Entity.crafting_categories = {"tiberium-centrifuge-1", "tiberium-centrifuge-2"}
-centrifuge2Entity.energy_source.emissions_per_minute = 8
+centrifuge2Entity.energy_source.emissions_per_minute = 2 * common.scalePollution(4)
 centrifuge2Entity.icons = data.raw.item["tiberium-centrifuge-2"].icons
 centrifuge2Entity.minable.result = "tiberium-centrifuge-2"
 centrifuge2Entity.module_specification.module_slots = 2
@@ -358,7 +358,7 @@ centrifuge3Entity.next_upgrade = nil
 centrifuge3Entity.energy_usage = tostring(700 * (30 / 31)).."kW"  -- Scale for nice max consumption
 centrifuge3Entity.crafting_speed = 3
 centrifuge3Entity.crafting_categories = {"tiberium-centrifuge-1", "tiberium-centrifuge-2", "tiberium-centrifuge-3"}
-centrifuge3Entity.energy_source.emissions_per_minute = 12
+centrifuge3Entity.energy_source.emissions_per_minute = 3 * common.scalePollution(4)
 centrifuge3Entity.icons = data.raw.item["tiberium-centrifuge-3"].icons
 centrifuge3Entity.minable.result = "tiberium-centrifuge-3"
 centrifuge3Entity.module_specification.module_slots = 4
@@ -384,7 +384,7 @@ if tierZero then
 	centrifuge0Entity.energy_source = {
 		type = "burner",
 		usage_priority = "secondary-input",
-		emissions_per_minute = 4,
+		emissions_per_minute = common.scalePollution(4),
 		fuel_inventory_size = 1,
 		smoke = {
 			{

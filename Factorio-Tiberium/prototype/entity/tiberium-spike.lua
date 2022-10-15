@@ -14,7 +14,7 @@ table.insert(tiberiumSpike.resource_categories, "advanced-solid-tiberium")
 tiberiumSpike.energy_source = {
 	type = "void",
 	usage_priority = "secondary-input",
-	emissions_per_minute = 20
+	emissions_per_minute = 5 * common.scalePollution(4),
 }
 tiberiumSpike.next_upgrade = nil
 tiberiumSpike.fast_replaceable_group = nil

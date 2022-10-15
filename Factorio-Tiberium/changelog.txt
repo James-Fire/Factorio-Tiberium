@@ -5,6 +5,7 @@ Version: 1.1.27
     - Added missing description for Obelisk of Light damage modifiers
   Features:
     - Added a setting for modifying how early Blue Tiberium can appear in the world
+    - Added a setting for scaling how much pollution is produced by Tiberium-related recipes
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.26
   Bugfixes:

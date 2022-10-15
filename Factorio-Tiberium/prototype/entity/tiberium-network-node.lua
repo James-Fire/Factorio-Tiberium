@@ -11,7 +11,7 @@ table.insert(tiberiumNetworkNode.resource_categories, "basic-solid-tiberium")
 tiberiumNetworkNode.energy_source = {
 	type = "electric",
 	usage_priority = "secondary-input",
-	emissions_per_minute = 200
+	emissions_per_minute = 50 * common.scalePollution(4)
 }
 tiberiumNetworkNode.next_upgrade = nil
 tiberiumNetworkNode.fast_replaceable_group = nil

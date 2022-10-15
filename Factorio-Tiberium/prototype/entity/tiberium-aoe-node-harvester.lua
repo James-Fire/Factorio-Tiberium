@@ -13,7 +13,7 @@ table.insert(tiberiumNodeHarvester.resource_categories, "advanced-solid-tiberium
 tiberiumNodeHarvester.energy_source = {
 	type = "electric",
 	usage_priority = "secondary-input",
-	emissions_per_minute = 200
+	emissions_per_minute = 50 * common.scalePollution(4)
 }
 tiberiumNodeHarvester.next_upgrade = nil
 tiberiumNodeHarvester.fast_replaceable_group = nil

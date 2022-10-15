@@ -401,7 +401,7 @@ data:extend{
 		stack_size = 50,
 		fuel_value = "2MJ",
 		fuel_category = "chemical",
-		fuel_emissions_multiplier = 4,
+		fuel_emissions_multiplier = common.scalePollution(4),
 	},
 	{
 		type = "item",
@@ -415,7 +415,7 @@ data:extend{
 		stack_size = 50,
 		fuel_value = "8MJ",
 		fuel_category = "chemical",
-		fuel_emissions_multiplier = 4,
+		fuel_emissions_multiplier = common.scalePollution(4),
 	},
 	--Dummy Items
 	{

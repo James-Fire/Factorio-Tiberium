@@ -33,7 +33,7 @@ growthAcceleratorNode.energy_usage = "1kW"
 growthAcceleratorNode.collision_mask = {"water-tile", "player-layer"}
 growthAcceleratorNode.energy_source = {
 	type = "void",
-	emissions_per_minute = 2,
+	emissions_per_minute = common.scalePollution(4),
 }
 
 data:extend{growthAcceleratorNode,
@@ -141,7 +141,7 @@ data:extend{growthAcceleratorNode,
 		crafting_categories = {"growth"},
 		energy_source =	{
 			type = "void",
-			emissions_per_minute = 2,
+			emissions_per_minute = common.scalePollution(4),
 		},
 	},
 	--Floating text for displaying growth amount
