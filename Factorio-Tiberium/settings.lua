@@ -163,6 +163,15 @@ data:extend{
 		order = "d8",
 	},
 	{
+		type = "double-setting",
+		name = "tiberium-blue-target-evo",
+		setting_type = "startup",
+		default_value = 0.6,
+		minimum_value = 0,
+		maximum_value = 1,
+		order = "z",
+	},
+	{
 		type = "bool-setting",
 		name = "tiberium-tier-zero",
 		setting_type = "startup",

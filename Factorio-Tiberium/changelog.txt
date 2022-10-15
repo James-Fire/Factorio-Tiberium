@@ -3,6 +3,8 @@ Version: 1.1.27
   Bugfixes:
     - Fixed crash that occurred when players died
     - Added missing description for Obelisk of Light damage modifiers
+  Features:
+    - Added a setting for modifying how early Blue Tiberium can appear in the world
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.26
   Bugfixes:

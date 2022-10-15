@@ -16,6 +16,7 @@ local TiberiumGrowth = settings.startup["tiberium-growth"].value * 10
 local TiberiumMaxPerTile = settings.startup["tiberium-growth"].value * 100 --Force 10:1 ratio with growth
 local TiberiumRadius = 20 + settings.startup["tiberium-spread"].value * 0.4 --Translates to 20-60 range
 local TiberiumSpread = settings.startup["tiberium-spread"].value
+local BlueTargetEvo = settings.startup["tiberium-blue-target-evo"].value
 local BlueTiberiumSaturation = settings.startup["tiberium-blue-saturation-point"].value / 100
 local BlueTiberiumSaturationGrowth = settings.startup["tiberium-blue-saturation-slowdown"].value / 100
 local bitersImmune = settings.startup["tiberium-wont-damage-biters"].value
@@ -596,11 +597,19 @@ interface.add_tiberium_immunity_prototype = function(prototype_name) if prototyp
 
 remote.add_interface("Tiberium", interface)
 
+function BlueSpawnProbability(evoFactor)
+	local maxRate = 0.01
+	local lower = BlueTargetEvo - 0.1
+	if evoFactor < lower then return 0 end
+	local upper = math.min(BlueTargetEvo + 0.4, 1)
+	if evoFactor > upper then return maxRate end
+	return maxRate * (evoFactor - lower) / (upper-lower)
+end
+
 function AddOre(surface, position, amount, oreName, cascaded)
 	if not oreName then
-		local evo = game.forces.enemy.evolution_factor
 		local blueSlowdown = global.blueProgress[surface.index] == 2 and BlueTiberiumSaturationGrowth or 1  -- If surface has reached saturation, use saturation rate multiplier
-		if evo > 0.4 and (math.random() < 0.03 * blueSlowdown * (evo - 0.4) ^ 2) then  -- Random <1% chance to spawn Blue Tiberium at high evolution factors
+		if math.random() < (blueSlowdown * BlueSpawnProbability(game.forces.enemy.evolution_factor)) then  -- Random <1% chance to spawn Blue Tiberium at high evolution factors
 			oreName = "tiberium-ore-blue"
 			if global.blueProgress[surface.index] == 0 then
 				global.blueProgress[surface.index] = 1
