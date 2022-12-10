@@ -983,7 +983,7 @@ commands.add_command("tibRebuildLists",
 		global.tibMineNodeList = {}
 		global.SRF_nodes = {}
 		global.tibDrills = {}
-		global.tibSonicEmitter = {}
+		global.tibSonicEmitters = {}
 		for _, surface in pairs(game.surfaces) do
 			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
 				addNodeToGrowthList(node)
@@ -994,14 +994,14 @@ commands.add_command("tibRebuildLists",
 			for _, drill in pairs(surface.find_entities_filtered{type = "mining-drill"}) do
 				table.insert(global.tibDrills, {entity = drill, name = drill.name, position = drill.position})
 			end
-			for _, sonic in pairs(surface.find_entities_filtered{name = "tiberium-sonic-emitter"}) do
-				table.insert(global.tibSonicEmitter, sonic.position)
+			for _, sonic in pairs(surface.find_entities_filtered{name = {"tiberium-sonic-emitter", "tiberium-sonic-emitter-blue"}}) do
+				table.insert(global.tibSonicEmitters, {position = sonic.position, surface = surface})
 			end
 		end
 		game.player.print("Found " .. #global.tibGrowthNodeList .. " nodes")
 		game.player.print("Found " .. #global.SRF_nodes .. " SRF hubs")
 		game.player.print("Found " .. #global.tibDrills .. " drills")
-		game.player.print("Found " .. #global.tibSonicEmitter .. " drills")
+		game.player.print("Found " .. #global.tibSonicEmitters .. " sonic emitters")
 	end
 )
 commands.add_command("tibGrowAllNodes",
@@ -1254,14 +1254,14 @@ script.on_event(defines.events.on_tick, function(event)
 	CnC_SonicWall_OnTick(event)
 	-- Sonic Emitters
 	for i, location in pairs(global.tibSonicEmitters) do
-		if i % 60 == event.tick % 60 then
+		if (i % 60) == (event.tick % 60) then
 			local emitter = location.surface.find_entities_filtered{name = {"tiberium-sonic-emitter", "tiberium-sonic-emitter-blue"}, position = location.position}[1]
-			if emitter and emitter.energy >= emitter.electric_buffer_size then
-				local targetOres = (emitter.name == "tiberium-sonic-emitter-blue") and "tiberium-ore-blue" or global.oreTypes
-				local ore = location.surface.find_entities_filtered{name = targetOres, position = location.position, radius = 12}
+			if emitter and (emitter.energy >= emitter.electric_buffer_size) then
+				local targetOreTypes = (emitter.name == "tiberium-sonic-emitter-blue") and "tiberium-ore-blue" or global.oreTypes
+				local ore = location.surface.find_entities_filtered{name = targetOreTypes, position = location.position, radius = 12}
 				if #ore > 0 then
 					local targetOre = ore[math.random(1, #ore)]
-					local dummy = location.surface.create_entity{name ="tiberium-target-dummy", position = targetOre.position}
+					local dummy = location.surface.create_entity{name = "tiberium-target-dummy", position = targetOre.position}
 					location.surface.create_entity{name = "tiberium-sonic-emitter-projectile", position = location.position, speed = 0.2, target = dummy}
 					dummy.destroy()
 					emitter.energy = 0
@@ -1359,6 +1359,7 @@ end)
 
 function safeDamage(entityOrPlayer, damageAmount)
 	if damageAmount <= 0 then return end
+	if not entityOrPlayer or not entityOrPlayer.valid then return end
 	local damageMulti = 1
 	local entity = entityOrPlayer
 	local player = nil

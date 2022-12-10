@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.28
+  Bugfixes:
+    - Fixed crash that occurred when trying to damage entity that died on the same tick (control.lua:1356: in function 'safeDamage')
+    - Fixed /tibRebuildLists command causing Sonic Emitters to stop working
+---------------------------------------------------------------------------------------------------
 Version: 1.1.27
   Bugfixes:
     - Fixed crash that occurred when players died
