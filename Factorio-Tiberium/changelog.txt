@@ -3,6 +3,8 @@ Version: 1.1.28
   Bugfixes:
     - Fixed crash that occurred when trying to damage entity that died on the same tick (control.lua:1356: in function 'safeDamage')
     - Fixed /tibRebuildLists command causing Sonic Emitters to stop working
+    - Fixed new chunks spawning with way too much Tiberium when using tibPerformanceMultiplier or Tiberium Growth Optimization setting
+    - Fixed various typos in English and Russian descriptions (Thanks to CV514 for the pull request)
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.27
   Bugfixes:
@@ -105,7 +107,7 @@ Version: 1.1.20
     - Tiberium Sludge to Stone Brick is now unlocked by Tiberium Sludge Processing
     - Recipes related to processing Blue Tiberium moved to new Blue Tiberium Refining tech
     - Advanced Guard Tower and Tiberium Core Rockets split from Tiberium Military 2 into a new tech called Tiberium Rocketry
-    - Tiberium Seed Rockets and Liquid Tiberium Bombs split from Tiberium Military 3 into a new tech called Advanced Tiberium Rocketry 
+    - Tiberium Seed Rockets and Liquid Tiberium Bombs split from Tiberium Military 3 into a new tech called Advanced Tiberium Rocketry
     - Tiberium infinite techs changed to require Tiberium Military 3 instead of Tiberium Military 2
     - Sonic Emitters and Catalyst Missiles moved to a new tech called, well, Sonic Emitters and Catalyst Missiles
     - Tiberium Military tech line made cheaper to reflect the having fewer recipes

@@ -742,12 +742,12 @@ function CheckPoint(surface, position, lastValidPosition, growthRate)
 	end
 end
 
-function PlaceOre(entity, howmany)
+function PlaceOre(entity, howMany)
 	--local timer = game.create_profiler()
 
 	if not entity.valid then return end
 
-	howmany = howmany or 1
+	howMany = howMany and math.max(math.floor(howMany / global.tibPerformanceMultiplier), 1) or 1
 	local surface = entity.surface
 	local position = entity.position
 
@@ -762,7 +762,7 @@ function PlaceOre(entity, howmany)
 		-- Divide by tibPerformanceMultiplier to keep ore per credit constant
 		local extraAcceleratorOre = math.floor(accelerator.products_finished / global.tibPerformanceMultiplier)
 		if extraAcceleratorOre > 0 then
-			howmany = howmany + extraAcceleratorOre
+			howMany = howMany + extraAcceleratorOre
 			surface.create_entity{
 				name = "tiberium-growth-accelerator-text",
 				position = {x = position.x, y = position.y - 1},
@@ -776,10 +776,10 @@ function PlaceOre(entity, howmany)
 
 	-- Spill excess growth amounts into extra ore tiles
 	if growthRate > TiberiumMaxPerTile then
-		howmany = math.floor(howmany * growthRate / TiberiumMaxPerTile)
+		howMany = math.floor(howMany * growthRate / TiberiumMaxPerTile)
 	end
 
-	for n = 1, howmany do
+	for n = 1, howMany do
 		--Use polar coordinates to find a random angle and radius
 		local angle = math.random() * 2 * math.pi
 		local radius = 2.2 + math.sqrt(math.random()) * size -- A little over 2 to avoid putting too much on the node itself
@@ -1281,8 +1281,7 @@ script.on_event(defines.events.on_tick, function(event)
 		if tibGrowthNodeCount >= 1 then
 			local node = global.tibGrowthNodeList[global.tibGrowthNodeListIndex]
 			if node.valid then
-				local oreCount = math.max(math.floor(10 / global.tibPerformanceMultiplier), 1)
-				PlaceOre(node, oreCount)
+				PlaceOre(node, 10)
 				local position = node.position
 				local surface = node.surface
 				local treeBlockers = {"tibNode_tree", "tiberium-node-harvester", "tiberium-spike", "tiberium-growth-accelerator", "tiberium-detonation-charge"}
