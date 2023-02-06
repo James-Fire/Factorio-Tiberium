@@ -118,7 +118,7 @@ data:extend{
 					type = "play-sound",
 					sound = {
 						filename = "__base__/sound/spidertron/spidertron-activate.ogg",
-						-- "__base__/sound/fight/laser-2.ogg" 
+						-- "__base__/sound/fight/laser-2.ogg",
 						-- "__base__/sound/nightvision-on.ogg",
 						-- "__base__/sound/lamp-activate.ogg",
 						-- "__base__/sound/spidertron/spidertron-activate.ogg",

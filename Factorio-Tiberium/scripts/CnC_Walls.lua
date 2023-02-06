@@ -52,7 +52,7 @@ function CnC_SonicWall_FindNodes(surf, pos, force, dir)
 			end
 		end
 	end
-	
+
 	local connected_nodes = {}
 	for _, node in pairs(near_nodes) do  -- Removes nils
 		table.insert(connected_nodes, node)
@@ -74,7 +74,7 @@ function CnC_SonicWall_DisableNode(entity)
 	local surf = entity.surface
 	local x = floor(entity.position.x)
 	local y = floor(entity.position.y)
-	
+
 	for _, dir in pairs(dir_mods) do
 		local tx = x + dir.x
 		local ty = y + dir.y
@@ -106,7 +106,7 @@ function CnC_SonicWall_DeleteNode(entity, tick)
 		table.remove(global.SRF_nodes, k)
 		if debugText then game.print("Destroyed SRF at x: "..entity.position.x.." y: "..entity.position.y.." removed from SRF_nodes, "..#global.SRF_nodes.." entries remain") end
 	end
-	
+
 	k = find_value_in_table(global.SRF_node_ticklist, entity.position, "position")
 	if k then
 		table.remove(global.SRF_node_ticklist, k)
@@ -147,18 +147,16 @@ function CnC_SonicWall_WallDamage(surf, pos, tick)
 			table.insert(global.SRF_node_ticklist, {emitter = node, position = node.position, tick = tick + ceil(node.electric_buffer_size / node.electric_input_flow_limit)})
 			return
 		end
-		
+
 		local damage_amt = wall_health - wall[2].health
 		wall[2].health = wall_health
 		local joule_cost = damage_amt * joules_per_hitpoint
-		
 		local shared_cost = joule_cost / #connected_nodes
 		for _, node in pairs(connected_nodes) do
 			if not force then force = node.force end
 			local energy = node.energy - shared_cost * joules_per_hitpoint
 			if energy < 0 then energy = 0 end
 			node.energy = energy
-			
 			if energy == 0 then
 				if not mark_death then
 					CnC_SonicWall_SendAlert(node.force, defines.alert_type.entity_destroyed, wall[2])
@@ -188,14 +186,14 @@ function CnC_SonicWall_TestWall(surf, pos, dir, node)
 	local y = floor(pos[2])
 	if not global.SRF_segments[surf.index] then global.SRF_segments[surf.index] = {} end
 	if not global.SRF_segments[surf.index][x] then global.SRF_segments[surf.index][x] = {} end
-	
+
 	if not global.SRF_segments[surf.index][x][y] then
 		if not surf.can_place_entity{name = "tiberium-srf-wall", position=pos, force = node.force} then return false end
 	else
 		local wall = global.SRF_segments[surf.index][x][y]
 		if wall[1] ~= horz_wall + vert_wall - dir then return false end --There is already a wall in the direction we want
 	end
-	
+
 	return true
 end
 
@@ -207,7 +205,7 @@ function CnC_SonicWall_MakeWall(surf, pos, dir, node)
 	local y = floor(pos[2])
 	if not global.SRF_segments[surf.index] then global.SRF_segments[surf.index] = {} end
 	if not global.SRF_segments[surf.index][x] then global.SRF_segments[surf.index][x] = {} end
-	
+
 	if not global.SRF_segments[surf.index][x][y] then
 		local wall = surf.create_entity{name="tiberium-srf-wall", position=pos, force=node.force}
 		if not wall then error("Wall creation failed!") end
@@ -260,16 +258,16 @@ end
 
 function CnC_SonicWall_OnTick(event)
 	local cur_tick = event.tick
-	
+
 	if not global.SRF_damage then  --Set up renamed globals if they don't exist yet
 		convertSrfGlobals()
 	end
-	
+
 	while #global.SRF_damage > 0 do
 		CnC_SonicWall_WallDamage(global.SRF_damage[1][1], global.SRF_damage[1][2], event.tick)
 		table.remove(global.SRF_damage, 1)
 	end
-	
+
 	for i = #global.SRF_node_ticklist, 1, -1 do
 		local charging = global.SRF_node_ticklist[i]
 		if not charging.emitter.valid then
@@ -292,7 +290,7 @@ function CnC_SonicWall_OnTick(event)
 			end
 		end
 	end
-	
+
 	if cur_tick % 60 == 0 then --Check for all emitters for low power once per second
 		for _, entry in pairs(global.SRF_nodes) do
 			local ticks_rem = entry.emitter.energy / entry.emitter.electric_drain
@@ -303,7 +301,7 @@ function CnC_SonicWall_OnTick(event)
 			end
 		end
 	end
-	
+
 	for i = #global.SRF_low_power_ticklist, 1, -1 do --Regularly check low power emitters to disable when their power runs out
 		local low = global.SRF_low_power_ticklist[i]
 		if not low.emitter.valid then
@@ -357,7 +355,7 @@ function convertSrfGlobals()
 	elseif not global.SRF_nodes then
 		global.SRF_nodes = {}
 	end
-	
+
 	if global.hexi_hardlight_node_ticklist then
 		global.SRF_node_ticklist = {}
 		for _, v in pairs(global.hexi_hardlight_node_ticklist) do
@@ -366,19 +364,19 @@ function convertSrfGlobals()
 	elseif not global.SRF_node_ticklist then
 		global.SRF_node_ticklist = {}
 	end
-	
+
 	if global.hexi_hardlight_segments then
 		global.SRF_segments = global.hexi_hardlight_segments
 	elseif not global.SRF_segments then
 		global.SRF_segments = {}
 	end
-	
+
 	if global.hexi_hardlight_damage then
 		global.SRF_damage = global.hexi_hardlight_damage
 	elseif not global.SRF_damage then
 		global.SRF_damage = {}
 	end
-	
+
 	if not global.SRF_low_power_ticklist then
 		global.SRF_low_power_ticklist = {}
 	end

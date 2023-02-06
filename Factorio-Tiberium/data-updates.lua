@@ -20,12 +20,12 @@ if mods["MoreScience"] then
 		if string.sub(techName, 1, 9) == "tiberium-" then
 			-- Most techs have the new science packs added to them
 			if (techName ~= "tiberium-mechanical-research") and (techName ~= "tiberium-slurry-centrifuging")
-					and (techName ~= "tiberium-military-1") and (techName ~= "tiberium-thermal-research") 
+					and (techName ~= "tiberium-military-1") and (techName ~= "tiberium-thermal-research")
 					and (techName ~= "tiberium-sludge-processing") and (techName ~= "tiberium-advanced-molten-processing")
 					and (techName ~= "tiberium-sludge-recycling") then
 				table.insert(techData.unit.ingredients, {"electric-power-science-pack", 1})
 			end
-			if (techName ~= "tiberium-mechanical-research") and (techName ~= "tiberium-slurry-centrifuging") 
+			if (techName ~= "tiberium-mechanical-research") and (techName ~= "tiberium-slurry-centrifuging")
 					and (techName ~= "tiberium-thermal-research") then
 				table.insert(techData.unit.ingredients, {"advanced-automation-science-pack", 1})
 			end
@@ -66,7 +66,7 @@ if mods["IndustrialRevolution"] then
 	end
 end
 
-if mods["angelspetrochem"] then	
+if mods["angelspetrochem"] then
 	-- Replace the vanilla Chemical Plant with one of Angel's, because apparently it's too hard to simply use the vanilla one.
 	LSlib.recipe.editIngredient("tiberium-power-plant", "chemical-plant", "angels-chemical-plant-2", 1)
 end

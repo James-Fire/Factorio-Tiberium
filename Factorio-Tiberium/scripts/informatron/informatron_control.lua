@@ -42,8 +42,8 @@ function Informatron.page_content(page_name, player_index, element)
 	if page_name == tiberiumInternalName then
 		element.add{type="button", name="image_1", style="tiberium"}
 		element.add{type = "label", name="text_1", caption={tiberiumInternalName..".mod_page"}}
-		
-		
+
+
 	elseif page_name == "tiberium_growth" then
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".tiberium_growth"}}
 	elseif page_name == "nodes" then
@@ -52,7 +52,7 @@ function Informatron.page_content(page_name, player_index, element)
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".growth_accelerator"}}
 	elseif page_name == "tiberium_seed" then
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".tiberium_seed"}}
-	
+
 	elseif page_name == "harvesting" then
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".harvesting"}}
 	elseif page_name == "node_harvester" then
@@ -66,7 +66,7 @@ function Informatron.page_content(page_name, player_index, element)
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".aoe_node_harvester"}}
 	elseif page_name == "tiberium_control_network" then
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".tiberium_control_network"}}
-		
+
 	elseif page_name == "refining" then
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".refining"}}
 	elseif page_name == "tiberium_ore" then
@@ -81,7 +81,7 @@ function Informatron.page_content(page_name, player_index, element)
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".liquid"}}
 	elseif page_name == "centrifuging" then
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".centrifuging"}}
-		
+
 	elseif page_name == "containment" then
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".containment"}}
 		elseif page_name == "armor" then
@@ -90,14 +90,13 @@ function Informatron.page_content(page_name, player_index, element)
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".sonic_fences"}}
 	elseif page_name == "MARV" then
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".MARV"}}
-		
+
 	elseif page_name == "weaponry" then
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".weaponry"}}
 		elseif page_name == "ion_projector" then
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".ion_projector"}}
 	elseif page_name == "tiberium_missiles" then
 		element.add{type="label", name="text_1", caption={tiberiumInternalName..".tiberium_missiles"}}
-		
 	end
 end
 

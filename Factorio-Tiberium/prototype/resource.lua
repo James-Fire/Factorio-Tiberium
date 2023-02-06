@@ -178,7 +178,7 @@ data:extend{
 		map_color = {0.15, 0.45, 1.0}
 	},
 }
-	
+
 local noise = require("noise");
 local tne = noise.to_noise_expression;
 resource_autoplace = require("resource-autoplace");

@@ -48,7 +48,7 @@ data:extend{
 				base_area = 10,
 				base_level = 1,
 				pipe_connections = {
-					{type = "output", position = {-1, -2}}				
+					{type = "output", position = {-1, -2}}
 				},
 				secondary_draw_orders = {north = -1},
 				render_layer = "lower-object-above-shadow",
@@ -60,7 +60,7 @@ data:extend{
 				base_area = 10,
 				base_level = 1,
 				pipe_connections = {
-					{type = "output", position = {-1, 2}}				
+					{type = "output", position = {-1, 2}}
 				},
 				secondary_draw_orders = {north = -1},
 				render_layer = "lower-object-above-shadow",
@@ -409,4 +409,4 @@ if tierZero then
 	for _, fuge in pairs({"tiberium-centrifuge-1", "tiberium-centrifuge-2", "tiberium-centrifuge-3"}) do
 		table.insert(data.raw["assembling-machine"][fuge].crafting_categories, "tiberium-centrifuge-0")
 	end
-end
+

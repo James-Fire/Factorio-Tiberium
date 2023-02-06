@@ -160,7 +160,7 @@ function giantSetupFunction()
 
 	-- Pruning stupid recipes
 	removeBadRecipes(1)
-	
+
 	for recipe in pairs(availableRecipes) do
 		local ingredientList = normalIngredients(recipe)
 		local resultList     = normalResults(recipe)
@@ -220,7 +220,7 @@ function giantSetupFunction()
 			end
 			newFreeItems = nextLoopFreeItems
 		end
-		
+
 		removeBadRecipes() -- Pruning stupid recipes
 		if debugText then log(badRecipeCount.." bad recipes after free item list pass #"..freeItemIterations) end
 	until (badRecipeCount == previousBadRecipeCount)
@@ -257,7 +257,7 @@ function giantSetupFunction()
 							maxIngredientLevel = ingredientDepth[ingredient]
 						end
 					end
-					
+
 					if maxIngredientLevel then
 						recipeDepth[recipe] = maxIngredientLevel + 1
 						for result in pairs(normalResults(recipe)) do
@@ -294,7 +294,7 @@ function loadFromItemProperties()
 			addOreMult(fluidName, fluidData.tiberium_multiplier)
 		end
 		addOreMult(fluidName, 1/4)  -- Default fluid amounts to being 4 times more than ores
-		
+
 		if fluidData.tiberium_sludge then
 			sludgeItems[fluidName] = true
 		end
@@ -692,7 +692,7 @@ function findRecipe(item, itemList)
 			unreachable[recipeName] = true
 		end
 	end
-	
+
 	if #recipes > 1 then
 		-- Name as tiebreaker because otherwise it's not deterministic >.<
 		table.sort(recipes, function(a,b) return (a.penalty == b.penalty) and (a.name < b.name) or (a.penalty < b.penalty) end)
@@ -735,7 +735,7 @@ function breadthFirst(itemList, recipesUsed, intermediates)
 	if maxDepth == 0 then -- Done
 		return itemList
 	end
-	
+
 	local targetItem  -- Only doing one item per loop so they don't step on each other's toes
 	for item, amount in tableLS.orderedPairs(itemList) do -- First alphabetically, also don't break out of loop so orderedPairs can do cleanup
 		if not targetItem and (amount > 0) and (ingredientDepth[item] == maxDepth) then
@@ -744,7 +744,7 @@ function breadthFirst(itemList, recipesUsed, intermediates)
 	end
 	local targetAmount = itemList[targetItem]
 	--log("depth:"..maxDepth.." "..targetAmount.." "..targetItem)
-	
+
 	local recipeName, recipeCount = findRecipe(targetItem, itemList) -- No point caching with breadthFirst
 	if not recipeName then
 		log("%%% Couldn't find a recipe for "..targetItem)
@@ -756,7 +756,7 @@ function breadthFirst(itemList, recipesUsed, intermediates)
 	if recipesUsed then
 		recipesUsed[recipeName] = (recipesUsed[recipeName] or 0) + recipeTimes
 	end
-	
+
 	itemList = sumOfDicts(itemList, makeScaledList(normalIngredients(recipeName), recipeTimes))
 	itemList = sumOfDicts(itemList, makeScaledList(normalResults(recipeName), -1 * recipeTimes))
 
@@ -857,7 +857,7 @@ function fugeTierSetup()
 			end
 		end
 	end
-	
+
 	-- Compile weights based on the relative frequency of the packs in the current tier
 	updatePackWeights(3)
 	updatePackWeights(1)
@@ -1033,11 +1033,11 @@ function fugeScaleResources(resourceList, tier)
 			totalOre = totalOre + amount * (oreMult[resource] or 1)
 		end
 	end
-	
+
 	-- Scale resourceList to match tier target amounts
 	local targetAmount = (tier == 0) and 16 or (tier == 1) and 32 or (tier == 2) and 64 or 128
 	local scaledResourceList = makeScaledList(resourceList, targetAmount / math.max(totalOre, 1))
-	
+
 	-- Cutoff for amounts too small to be worth including
 	for resource, amount in pairs(scaledResourceList) do
 		if amount < 0.05 then
@@ -1075,6 +1075,7 @@ function addDirectRecipe(ore, easy)
 	local oreAmount = 64 / (oreMult[ore] or 1)
 	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"
 	local tech = easy and "tiberium-easy-transmutation-tech" or data.raw.fluid[ore] and "tiberium-molten-centrifuging" or "tiberium-transmutation-tech"
+	local category = data.raw.fluid[ore] and "chemistry" or "tiberium-transmutation"
 	local energy = 12
 	local order = (not oreMult[ore] and "a-" or oreMult[ore] > 1 and "b-" or "c-")..ore
 	local subgroup = easy and "a-direct-easy" or "a-direct"
@@ -1099,7 +1100,7 @@ function addDirectRecipe(ore, easy)
 	LSlib.recipe.disable(recipeName)
 	LSlib.recipe.setSubgroup(recipeName, subgroup)
 	LSlib.recipe.setShowMadeIn(recipeName, true)
-	data.raw.recipe[recipeName].category = "chemistry"
+	data.raw.recipe[recipeName].category = category
 	data.raw.recipe[recipeName].crafting_machine_tint = common.tibCraftingTint
 	data.raw.recipe[recipeName].allow_as_intermediate = false
 	data.raw.recipe[recipeName].allow_decomposition = false
@@ -1141,7 +1142,7 @@ function addCreditRecipe(ore)
 			tint = oreTint,
 		}
 	end
-	
+
 	LSlib.recipe.create(recipeName)
 	LSlib.recipe.addIngredient(recipeName, ore, oreAmount, itemOrFluid)
 	LSlib.technology.addRecipeUnlock("tiberium-growth-acceleration", recipeName)

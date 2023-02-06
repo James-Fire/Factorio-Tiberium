@@ -503,7 +503,7 @@ data:extend{
 		enabled = false,
 		ingredients = {
 			{type = "fluid", name = "tiberium-sludge", amount = 10},
-			{type = "item", name = "steel-plate", amount = 2}		
+			{type = "item", name = "steel-plate", amount = 2}
 		},
 		results = {
 			{type = "item", name = "refined-concrete", amount = 10}
@@ -1093,7 +1093,7 @@ data:extend{
 		icon = tiberiumInternalName.."/graphics/icons/dirty-fuel-cell.png",
 		allow_decomposition = false,
 		order = "c[tiberium-fuel-cell]-c[cell-cleaning]"
-	},	
+	},
 	{
 		type = "recipe",
 		name = "tiberium-fuel-cell",
@@ -1252,7 +1252,7 @@ data:extend{
 
 for name, recipe in pairs(data.raw.recipe) do
 	if (string.sub(name, 1, 9) == "tiberium-") and not recipe.crafting_machine_tint then
-		if (recipe.category == "chemistry") or (recipe.category == "oil-processing") or (recipe.category == "crafting-with-fluid") 
+		if (recipe.category == "chemistry") or (recipe.category == "oil-processing") or (recipe.category == "crafting-with-fluid")
 				or (recipe.category == "tiberium-science") or (recipe.category == "basic-tiberium-science") then
 			recipe.crafting_machine_tint = common.tibCraftingTint
 		end

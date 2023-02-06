@@ -150,7 +150,7 @@ common.itemPrototypesFromTable = function(prototypeTable)
 			if amount then
 				amount = math.floor(amount)
 			else
-				local min = tonumber(item.amount_min) or 1  -- I don't think the "or 1"s will ever be reached, but playing it safe 
+				local min = tonumber(item.amount_min) or 1  -- I don't think the "or 1"s will ever be reached, but playing it safe
 				local max = tonumber(item.amount_max) or 1
 				amount = (min + math.max(min, max)) / 2
 			end
