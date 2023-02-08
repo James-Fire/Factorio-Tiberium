@@ -39,7 +39,7 @@ data:extend{
 		type = "int-setting",
 		name = "tiberium-blue-saturation-point",
 		setting_type = "startup",
-		default_value = 50,
+		default_value = 25,
 		minimum_value = 0,
 		maximum_value = 100,
 		order = "a5",

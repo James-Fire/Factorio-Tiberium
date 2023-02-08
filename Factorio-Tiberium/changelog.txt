@@ -6,6 +6,9 @@ Version: 1.1.28
     - Fixed new chunks spawning with way too much Tiberium when using tibPerformanceMultiplier or Tiberium Growth Optimization setting
     - Fixed various typos in English and Russian descriptions (Thanks to CV514 for the pull request)
     - Fixed issue where the spread of Blue Tiberium did not slow down after reaching saturation on the Nauvis surface
+    - Fixed some Tiberium growth settings taking up to 5 minutes to take effect after restarting
+  Changes:
+    - Signficantly reduced the default for the Blue Tiberium saturation point setting, so you are less likely to see fields turning nearly fully blue
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.27
   Bugfixes:
