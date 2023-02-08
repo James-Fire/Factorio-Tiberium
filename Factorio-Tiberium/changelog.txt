@@ -5,6 +5,7 @@ Version: 1.1.28
     - Fixed /tibRebuildLists command causing Sonic Emitters to stop working
     - Fixed new chunks spawning with way too much Tiberium when using tibPerformanceMultiplier or Tiberium Growth Optimization setting
     - Fixed various typos in English and Russian descriptions (Thanks to CV514 for the pull request)
+    - Fixed issue where the spread of Blue Tiberium did not slow down after reaching saturation on the Nauvis surface
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.27
   Bugfixes:

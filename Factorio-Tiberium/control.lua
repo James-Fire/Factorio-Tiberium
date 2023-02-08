@@ -74,8 +74,8 @@ script.on_init(function()
 	global.tibGrowing = true
 	global.tiberiumTerrain = nil --"dirt-4" --Performance is awful, disabling this
 	global.blueProgress = {}
-	for index, _ in pairs(game.surfaces) do
-		global.blueProgress[index] = 0
+	for _, surface in pairs(game.surfaces) do
+		global.blueProgress[surface.index] = 0
 	end
 	global.rocketTime = false
 	global.oreTypes = {"tiberium-ore", "tiberium-ore-blue"}
@@ -215,6 +215,15 @@ script.on_configuration_changed(function(data)
 		game.print({"tiberium-strings.informatron-reminder"})
 	end
 
+	if data["mod_changes"][tiberiumInternalName] and data["mod_changes"][tiberiumInternalName]["new_version"] then
+		doUpgradeConversions(data)
+	end
+
+	-- Apply new settings
+	globalIntegrityChecks()
+end)
+
+function doUpgradeConversions(data)
 	if upgradingToVersion(data, tiberiumInternalName, "1.0.0") then
 		game.print("Successfully ran conversion for "..tiberiumInternalName.." version 1.0.0")
 		for _, surface in pairs(game.surfaces) do
@@ -525,16 +534,16 @@ script.on_configuration_changed(function(data)
 
 	if upgradingToVersion(data, tiberiumInternalName, "1.1.25") then
 		global.blueProgress = {}
-		for index, surface in pairs(game.surfaces) do
+		for _, surface in pairs(game.surfaces) do
 			local resources = surface.get_resource_counts()
 			local blue = resources["tiberium-ore-blue"] or 0
 			local green = resources["tiberium-ore"] or 1
 			if blue > (blue + green) * BlueTiberiumSaturation then
-				global.blueProgress[index] = 2
+				global.blueProgress[surface.index] = 2
 			elseif blue > 0 then
-				global.blueProgress[index] = 1
+				global.blueProgress[surface.index] = 1
 			else
-				global.blueProgress[index] = 0
+				global.blueProgress[surface.index] = 0
 			end
 		end
 		for _, force in pairs(game.forces) do
@@ -555,7 +564,7 @@ script.on_configuration_changed(function(data)
 		game.print("> Found " .. #global.SRF_nodes .. " SRF hubs")
 		game.print("> Found " .. #global.tibDrills .. " drills")
 	end
-end)
+end
 
 function upgradingToVersion(data, modName, version)
 	if data["mod_changes"][modName] and data["mod_changes"][modName]["new_version"] then
@@ -1443,8 +1452,13 @@ function validpairs(table, subscript)
 	return nextvalid, table, nil
 end
 
-script.on_nth_tick(60 * 300, function(event) --Global integrity check
-	if event.tick == 0 then return end
+script.on_nth_tick(60 * 300, function(event)
+	if event.tick > 0 then  -- Have to skip inital tick
+		globalIntegrityChecks()
+	end
+end)
+
+function globalIntegrityChecks()
 	local nodeCount = 0
 	for _, surface in pairs(game.surfaces) do
 		nodeCount = nodeCount + surface.count_entities_filtered{name = "tibGrowthNode"}
@@ -1461,20 +1475,20 @@ script.on_nth_tick(60 * 300, function(event) --Global integrity check
 			end
 		end
 	end
-	-- Update blue tiberium progress every 5 minutes
-	for index, surface in pairs(game.surfaces) do
+	-- Update blue tiberium progress
+	for _, surface in pairs(game.surfaces) do
 		local resources = surface.get_resource_counts()
 		local blue = resources["tiberium-ore-blue"] or 0
 		local green = resources["tiberium-ore"] or 1
 		if blue > (blue + green) * BlueTiberiumSaturation then
-			global.blueProgress[index] = 2
+			global.blueProgress[surface.index] = 2
 		elseif blue > 0 then
-			global.blueProgress[index] = 1
+			global.blueProgress[surface.index] = 1
 		else
-			global.blueProgress[index] = 0
+			global.blueProgress[surface.index] = 0
 		end
 	end
-end)
+end
 
 script.on_event(defines.events.on_trigger_created_entity, function(event)
 	CnC_SonicWall_OnTriggerCreatedEntity(event)
