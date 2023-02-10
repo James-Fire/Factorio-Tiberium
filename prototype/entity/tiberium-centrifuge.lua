@@ -409,4 +409,4 @@ if tierZero then
 	for _, fuge in pairs({"tiberium-centrifuge-1", "tiberium-centrifuge-2", "tiberium-centrifuge-3"}) do
 		table.insert(data.raw["assembling-machine"][fuge].crafting_categories, "tiberium-centrifuge-0")
 	end
-
+end

@@ -1075,7 +1075,7 @@ function addDirectRecipe(ore, easy)
 	local oreAmount = 64 / (oreMult[ore] or 1)
 	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"
 	local tech = easy and "tiberium-easy-transmutation-tech" or data.raw.fluid[ore] and "tiberium-molten-centrifuging" or "tiberium-transmutation-tech"
-	local category = data.raw.fluid[ore] and "chemistry" or "tiberium-transmutation"
+	local category = "chemistry" --data.raw.fluid[ore] and "chemistry" or "tiberium-transmutation"
 	local energy = 12
 	local order = (not oreMult[ore] and "a-" or oreMult[ore] > 1 and "b-" or "c-")..ore
 	local subgroup = easy and "a-direct-easy" or "a-direct"
