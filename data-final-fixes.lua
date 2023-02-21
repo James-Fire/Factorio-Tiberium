@@ -55,3 +55,4 @@ if not openRefinery then
 end
 
 require("scripts/DynamicOreRecipes")
+require("scripts/compatibility/pumpmod")
