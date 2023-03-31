@@ -1549,7 +1549,7 @@ function on_new_entity(event)
 	elseif (new_entity.name == "tiberium-beacon-node") then
 		registerEntity(new_entity)
 		--Place Beacon for Drills in range of Tiberium Control Network
-		local tcnAOE = areaAroundPosition(position, TiberiumRadius * 0.5)
+		local tcnAOE = areaAroundPosition(position, TiberiumRadius * 0.5 + 1)
 		for _, entity in pairs(surface.find_entities_filtered{area = tcnAOE, name = TCN_affected_entities, force = force}) do
 			ManageTCNBeacon(surface, entity.position, force)
 		end
@@ -1644,7 +1644,7 @@ function on_remove_entity(event)
 	elseif (entity.name == "tiberium-beacon-node") then
 		--Remove Beacon for Tiberium Control Network
 		if surface and surface.valid then
-			local tcnAOE = areaAroundPosition(position, TiberiumRadius * 0.5)
+			local tcnAOE = areaAroundPosition(position, TiberiumRadius * 0.5 + 1)
 			for _, beacon in pairs(surface.find_entities_filtered{area = tcnAOE, name = TCN_Beacon_Name, force = force}) do
 				ManageTCNBeacon(surface, beacon.position, force)
 			end
@@ -1773,7 +1773,7 @@ function ManageTCNBeacon(surface, position, force)
 	for _, entity in pairs(surface.find_entities_filtered{name = TCN_affected_entities, position = position, force = force}) do
 		if entity.valid then
 			local hiddenBeacon = surface.find_entities_filtered{name = TCN_Beacon_Name, position = position}
-			local tcnCount = surface.count_entities_filtered{area = areaAroundPosition(position, TiberiumRadius * 0.5), name = "tiberium-beacon-node"}
+			local tcnCount = surface.count_entities_filtered{area = areaAroundPosition(position, TiberiumRadius * 0.5 + 1), name = "tiberium-beacon-node"}
 			if tcnCount >= 1 then
 				if next(hiddenBeacon) then
 					TCNModules(hiddenBeacon[1], tcnCount)
@@ -1795,7 +1795,7 @@ end
 function TCNModules(beacon, tcnCount)
 	if beacon.valid then
 		if not tcnCount then
-			local tcnAOE = areaAroundPosition(beacon.position, TiberiumRadius * 0.5)
+			local tcnAOE = areaAroundPosition(beacon.position, TiberiumRadius * 0.5	+ 1)
 			tcnCount = beacon.surface.count_entities_filtered{area = tcnAOE, name = "tiberium-beacon-node"}
 		end
 		local tcnMulti = math.min(tcnCount, 3)
