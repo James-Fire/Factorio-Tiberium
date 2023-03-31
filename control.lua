@@ -1732,16 +1732,21 @@ script.on_event(defines.events.on_entity_destroyed, on_remove_entity)
 function on_pre_mined(event)
 	local entity = event.entity
 	if entity and entity.fluidbox then
-		local rawTibOreEquivalent = 0
+		local greenTibOre = 0
 		local fluidContents = entity.get_fluid_contents()
 		local oreValueMulti = 10 / settings.startup["tiberium-value"].value
-		rawTibOreEquivalent = rawTibOreEquivalent + (fluidContents["tiberium-slurry"] or 0)
-		rawTibOreEquivalent = rawTibOreEquivalent + 2 * (fluidContents["molten-tiberium"] or 0)
-		rawTibOreEquivalent = rawTibOreEquivalent + 4 * (fluidContents["liquid-tiberium"] or 0)
-		rawTibOreEquivalent = rawTibOreEquivalent * oreValueMulti
-		if rawTibOreEquivalent > 0 then
-			if debugText then game.print("Created "..tostring(rawTibOreEquivalent).." ore") end
-			TiberiumSeedMissile(entity.surface, entity.position, rawTibOreEquivalent)
+		greenTibOre = greenTibOre + (fluidContents["tiberium-slurry"] or 0)
+		greenTibOre = greenTibOre + 2 * (fluidContents["molten-tiberium"] or 0)
+		greenTibOre = greenTibOre + 4 * (fluidContents["liquid-tiberium"] or 0)
+		greenTibOre = greenTibOre * oreValueMulti
+		if greenTibOre > 0 then
+			if debugText then game.print("Created "..tostring(greenTibOre).." green Tiberium ore") end
+			TiberiumSeedMissile(entity.surface, entity.position, greenTibOre)
+		end
+		local blueTibOre = (fluidContents["tiberium-slurry-blue"] or 0)
+		if blueTibOre > 0 then
+			if debugText then game.print("Created "..tostring(blueTibOre).." blue Tiberium ore") end
+			TiberiumSeedMissile(entity.surface, entity.position, blueTibOre, "tiberium-ore-blue")
 		end
 	end
 end
