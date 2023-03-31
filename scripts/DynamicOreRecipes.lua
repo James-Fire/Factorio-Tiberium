@@ -919,7 +919,7 @@ function fugeRecipeTier(tier)
 	end
 	if (sludge > 0) and (tableLS.size(fluidList) < 3) then -- Only create sludge recipe if there is sludge items to convert and we have enough fluid boxes
 		LSlib.recipe.duplicate(normalFugeRecipeName, sludgeFugeRecipeName)
-		LSlib.recipe.setLocalisedName(sludgeFugeRecipeName, {"recipe-name.tiberium-sludge-centrifuging", {"fluid-name."..fluid}})
+		LSlib.recipe.setLocalisedName(sludgeFugeRecipeName, {"recipe-name.tiberium-sludge-centrifuging", {(tier > 0 and "fluid-name." or "item-name.")..fluid}})
 		LSlib.recipe.changeIcon(sludgeFugeRecipeName, tiberiumInternalName.."/graphics/icons/"..material.."-sludge-centrifuging.png", 32)
 		LSlib.technology.addRecipeUnlock("tiberium-"..material.."-centrifuging", sludgeFugeRecipeName)  -- First argument is the technology name
 		recipeAddResult(sludgeFugeRecipeName, "tiberium-sludge", sludge, "fluid")

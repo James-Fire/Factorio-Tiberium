@@ -2,6 +2,7 @@
 Version: 1.1.29
   Bugfixes:
     - Fixed Space Exploration ignoring our setting and spawning Tiberium in the starting area
+    - Fixed broken recipe name for recipes added by Burner Tier Centrifuging setting
   Features:
     - Added compatibility for P.U.M.P. (Thanks to Ferlonas and Xcone for the pull request)
 ---------------------------------------------------------------------------------------------------
