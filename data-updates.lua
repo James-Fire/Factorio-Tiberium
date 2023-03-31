@@ -89,6 +89,8 @@ if mods["space-exploration"] then
 	common.applyTiberiumValue("se-holmium-ore", 32)
 	common.applyTiberiumValue("se-iridium-ore", 32)
 	common.applyTiberiumValue("se-naquium-ore", 32)
+	se_resources["tibGrowthNode"] = {}
+	se_resources["tibGrowthNode"].has_starting_area_placement = common.TiberiumInStartingArea
 end
 
 if mods["RampantResources"] then

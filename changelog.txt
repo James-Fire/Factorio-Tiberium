@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.29
+  Bugfixes:
+    - Fixed Space Exploration ignoring our setting and spawning Tiberium in the starting area
+  Features:
+    - Added compatibility for P.U.M.P. (Thanks to Ferlonas and Xcone for the pull request)
+---------------------------------------------------------------------------------------------------
 Version: 1.1.28
   Bugfixes:
     - Fixed crash that occurred when trying to damage entity that died on the same tick (control.lua:1356: in function 'safeDamage')

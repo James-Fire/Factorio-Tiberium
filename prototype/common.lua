@@ -17,6 +17,8 @@ common.blankPicture = {
 
 common.TiberiumRadius = 20 + settings.startup["tiberium-spread"].value * 0.4 --Translates to 20-60 range
 
+common.TiberiumInStartingArea = settings.startup["tiberium-starting-area"].value or settings.startup["tiberium-ore-removal"].value or false
+
 common.hit_effects = require("__base__.prototypes.entity.hit-effects")
 
 common.sounds = require("__base__.prototypes.entity.sounds")

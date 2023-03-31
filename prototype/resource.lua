@@ -1,5 +1,4 @@
 local TiberiumMaxPerTile = settings.startup["tiberium-growth"].value * 100
-local startingArea = settings.startup["tiberium-starting-area"].value or settings.startup["tiberium-ore-removal"].value or false
 local tibOnly = settings.startup["tiberium-ore-removal"].value or false
 
 data:extend{
@@ -182,7 +181,7 @@ data:extend{
 local noise = require("noise");
 local tne = noise.to_noise_expression;
 resource_autoplace = require("resource-autoplace");
-resource_autoplace.initialize_patch_set("tibGrowthNode", startingArea)
+resource_autoplace.initialize_patch_set("tibGrowthNode", common.TiberiumInStartingArea)
 
 data:extend{
 	{
@@ -230,7 +229,7 @@ data:extend{
 			random_spot_size_minimum = 1,
 			random_spot_size_maximum = 1, -- don't randomize spot size
 			additional_richness = 200000, -- this increases the total everywhere, so base_density needs to be decreased to compensate
-			has_starting_area_placement = startingArea,
+			has_starting_area_placement = common.TiberiumInStartingArea,
 			regular_rq_factor_multiplier = 1
 		},
 		stage_counts = {0},
