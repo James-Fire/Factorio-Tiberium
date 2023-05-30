@@ -5,6 +5,7 @@ Version: 1.1.29
     - Fixed broken recipe name for recipes added by Burner Tier Centrifuging setting
     - Fixed Blue Tiberium Slurry not spilling from pipes when destroyed
     - Fixed TCN beacon range being slightly smaller than the displayed range
+    - Fixed malformed technologies from other mods causing evaluateFormula crashes
   Features:
     - Added compatibility for P.U.M.P. (Thanks to Ferlonas and Xcone for the pull request)
 ---------------------------------------------------------------------------------------------------
