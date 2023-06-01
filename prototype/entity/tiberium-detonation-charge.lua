@@ -5,6 +5,7 @@ data:extend{
 		icon = "__base__/graphics/icons/crash-site-chest.png",
 		icon_mipmaps = 4,
 		icon_size = 64,
+		flags = {"placeable-neutral", "player-creation"},
 		minable = {mining_time = 1, result = "tiberium-detonation-charge"},
 		placeable_by = {count = 1, item = "tiberium-detonation-charge"},
 		animations = {

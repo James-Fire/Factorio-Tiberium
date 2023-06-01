@@ -91,6 +91,17 @@ if mods["space-exploration"] then
 	common.applyTiberiumValue("se-naquium-ore", 32)
 	se_resources["tibGrowthNode"] = {}
 	se_resources["tibGrowthNode"].has_starting_area_placement = common.TiberiumInStartingArea
+	
+	-- These do nothing other than tiberium-growth-accelerator and tiberium-srf-connector, but I like to pretend
+	for _, drillName in pairs({"tiberium-network-node", "tiberium-node-harvester", "tiberium-aoe-node-harvester", "tiberium-detonation-charge", "tiberium-growth-accelerator-node", "tiberium-spike"}) do
+		data.raw["mining-drill"][drillName].se_allow_in_space = true
+	end
+	data.raw.beacon["tiberium-beacon-node"].se_allow_in_space = true
+	data.raw["assembling-machine"]["tiberium-growth-accelerator"].se_allow_in_space = true
+	data.raw["electric-energy-interface"]["tiberium-sonic-emitter"].se_allow_in_space = true
+	data.raw["electric-energy-interface"]["tiberium-sonic-emitter-blue"].se_allow_in_space = true
+	data.raw["pipe-to-ground"]["tiberium-srf-connector"].se_allow_in_space = true
+	data.raw["electric-energy-interface"]["tiberium-srf-emitter"].se_allow_in_space = true
 end
 
 if mods["RampantResources"] then

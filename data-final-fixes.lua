@@ -24,11 +24,27 @@ for labName, labData in pairs(data.raw.lab) do
 	if addTib then table.insert(data.raw.lab[labName].inputs, "tiberium-science") end
 end
 
+function removeCollisionMask(type, prototype, mask)
+	if type and prototype and mask and data.raw[type] and data.raw[type][prototype] and data.raw[type][prototype].collision_mask then
+		for k,v in pairs(data.raw[type][prototype].collision_mask) do
+			if v == mask then
+				table.remove(data.raw[type][prototype].collision_mask, k)
+				break
+			end
+		end
+	end
+end
+
 if mods["alien-biomes"] then  -- Reverting this change so Tiberium can grow on landfill again
-	for k,v in pairs(data.raw.tile.landfill.collision_mask) do
-		if v == "resource-layer" then
-			table.remove(data.raw.tile.landfill.collision_mask, k)
-			break
+	removeCollisionMask("tile", "landfill", "resource-layer")
+end
+
+if mods["space-exploration"] then
+	local space_collision_layer = data.raw.arrow["collision-mask-space-tile"] and data.raw.arrow["collision-mask-space-tile"].collision_mask[1]
+	if space_collision_layer then
+		--Since se_allow_in_space isn't respected for alternate miners that don't mine default resources
+		for _, drillName in pairs({"tiberium-network-node", "tiberium-node-harvester", "tiberium-aoe-node-harvester", "tiberium-detonation-charge", "tiberium-growth-accelerator-node", "tiberium-spike"}) do
+			removeCollisionMask("mining-drill", drillName, space_collision_layer)
 		end
 	end
 end

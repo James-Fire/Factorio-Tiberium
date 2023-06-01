@@ -86,7 +86,7 @@ data:extend{
 		name = "tiberium-sonic-emitter",
 		icons = common.layeredIcons(tiberiumInternalName.."/graphics/entity/sonic-emitter/CNCTW_Sonic_Emitter_Cameo.png", 128,
 				tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "ne", 12),
-		flags = {"placeable-neutral", "player-creation", "not-blueprintable"},
+		flags = {"placeable-neutral", "player-creation"},
 		collision_box = {{-0.7, -0.7}, {0.7, 0.7}},
 		selection_box = {{-1, -1}, {1, 1}},
 		minable = {mining_time = 0.5, result = "tiberium-sonic-emitter"},

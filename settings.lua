@@ -209,3 +209,6 @@ data:extend{
 		order = "z",
 	},
 }
+if mods["space-exploration"] then
+	data.raw["double-setting"]["tiberium-blue-target-evo"].default_value = 0.3
+end
