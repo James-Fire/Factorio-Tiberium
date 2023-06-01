@@ -557,6 +557,15 @@ function doUpgradeConversions(data)
 		global.tibFastForward = 1
 	end
 
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.29") then
+		for _, surface in pairs(game.surfaces) do
+			-- Mark existing walls as indestructible
+			for _, wall in pairs(surface.find_entities_filtered{name = "tiberium-srf-wall"}) do
+				wall.destructible = false
+			end
+		end
+	end
+
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
 			(data["mod_changes"]["Factorio-Tiberium-Beta"] and data["mod_changes"]["Factorio-Tiberium-Beta"]["old_version"]) then
 		game.print("[Factorio-Tiberium] Successfully converted save from Beta Tiberium mod to Main Tiberium mod")
@@ -1489,13 +1498,6 @@ function globalIntegrityChecks()
 		end
 	end
 end
-
-script.on_event(defines.events.on_trigger_created_entity, function(event)
-	CnC_SonicWall_OnTriggerCreatedEntity(event)
-	if debugText and event.entity.valid and (event.entity.name == "tiberium-srf-wall-damage") then  --Checking when this is actually called
-		game.print("SRF Wall damaged at "..event.entity.position.x..", "..event.entity.position.y)
-	end
-end)
 
 function registerEntity(entity)  -- Cache relevant information to global and register
 	local entityInfo = {}

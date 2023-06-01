@@ -7,6 +7,7 @@ Version: 1.1.29
     - Fixed TCN beacon range being slightly smaller than the displayed range
     - Fixed malformed technologies from other mods causing evaluateFormula crashes
     - Fixed Anti-Tiberium Sonic Emitter, Anti-Blue Tiberium Sonic Emitter, and Tiberium Detonation Charge not being blueprintable
+    - Fixed Sonic Repulsor Fields being able to be attacked and destroyed
   Changes:
     - Tiberium mining, acceleration, and containment structures can now be built in space when using the Space Exploration mod
     - Changed default Blue Tiberium appearance timing when Space Exploration is active to account for slow evolution factor growth

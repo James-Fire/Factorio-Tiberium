@@ -129,56 +129,6 @@ function CnC_SonicWall_DeleteNode(entity, tick)
 	end
 end
 
---Currently unused?
-function CnC_SonicWall_WallDamage(surf, pos, tick)
-	local x = floor(pos.x)
-	local y = floor(pos.y)
-	if global.SRF_segments[surf.index] and global.SRF_segments[surf.index][x] and global.SRF_segments[surf.index][x][y] then
-		local mark_death = false
-		local force = nil
-
-		local wall = global.SRF_segments[surf.index][x][y]
-		local connected_nodes = CnC_SonicWall_FindNodes(surf, pos, nil, wall[1], true) --What did the extra arg originally do?
-
-		if not wall[2].valid then
-			local node = connected_nodes[1]
-			CnC_SonicWall_SendAlert(node.force, defines.alert_type.entity_destroyed, node)
-			CnC_SonicWall_DisableNode(node)
-			table.insert(global.SRF_node_ticklist, {emitter = node, position = node.position, tick = tick + ceil(node.electric_buffer_size / node.electric_input_flow_limit)})
-			return
-		end
-
-		local damage_amt = wall_health - wall[2].health
-		wall[2].health = wall_health
-		local joule_cost = damage_amt * joules_per_hitpoint
-		local shared_cost = joule_cost / #connected_nodes
-		for _, node in pairs(connected_nodes) do
-			if not force then force = node.force end
-			local energy = node.energy - shared_cost * joules_per_hitpoint
-			if energy < 0 then energy = 0 end
-			node.energy = energy
-			if energy == 0 then
-				if not mark_death then
-					CnC_SonicWall_SendAlert(node.force, defines.alert_type.entity_destroyed, wall[2])
-					mark_death = true
-				end
-				CnC_SonicWall_DisableNode(node)
-				table.insert(global.SRF_node_ticklist, {emitter = node, position = node.position, tick = tick + ceil(node.electric_buffer_size / node.electric_input_flow_limit)})
-			end
-		end
-		if not mark_death then
-			CnC_SonicWall_SendAlert(force, defines.alert_type.entity_under_attack, wall[2])
-		end
-	end
-end
-
---Currently unused?
-function CnC_SonicWall_SendAlert(force, alert_type, entity)
-	for k, v in pairs(force.players) do
-		v.add_alert(entity, alert_type)
-	end
-end
-
 --Returns whether a wall of a given orientation can be placed at a given position
 --Assumes global.SRF_segments, horz_wall, vert_wall
 function CnC_SonicWall_TestWall(surf, pos, dir, node)
@@ -209,6 +159,7 @@ function CnC_SonicWall_MakeWall(surf, pos, dir, node)
 	if not global.SRF_segments[surf.index][x][y] then
 		local wall = surf.create_entity{name="tiberium-srf-wall", position=pos, force=node.force}
 		if not wall then error("Wall creation failed!") end
+		wall.destructible = false
 		wall.graphics_variation = dir
 		global.SRF_segments[surf.index][x][y] = {dir, wall}
 	else
@@ -259,13 +210,8 @@ end
 function CnC_SonicWall_OnTick(event)
 	local cur_tick = event.tick
 
-	if not global.SRF_damage then  --Set up renamed globals if they don't exist yet
+	if not global.SRF_nodes then  --Set up renamed globals if they don't exist yet
 		convertSrfGlobals()
-	end
-
-	while #global.SRF_damage > 0 do
-		CnC_SonicWall_WallDamage(global.SRF_damage[1][1], global.SRF_damage[1][2], event.tick)
-		table.remove(global.SRF_damage, 1)
 	end
 
 	for i = #global.SRF_node_ticklist, 1, -1 do
@@ -318,13 +264,6 @@ function CnC_SonicWall_OnTick(event)
 	end
 end
 
-function CnC_SonicWall_OnTriggerCreatedEntity(event)
-	if event.entity.name == "tiberium-srf-wall-damage" then
-		table.insert(global.SRF_damage, {event.entity.surface, event.entity.position})
-		event.entity.destroy()
-	end
-end
-
 --Helper function
 --Returns the key for a given value in a given table or false if it doesn't exist
 --Optional subscript argument for when the list contains other lists (LSlib doesn't have this, otherwise I would use their version)
@@ -345,7 +284,6 @@ function CnC_SonicWall_OnInit(event)
 	global.SRF_nodes = {}
 	global.SRF_node_ticklist = {}
 	global.SRF_segments = {}
-	global.SRF_damage = {}
 	global.SRF_low_power_ticklist = {}
 end
 
@@ -369,12 +307,6 @@ function convertSrfGlobals()
 		global.SRF_segments = global.hexi_hardlight_segments
 	elseif not global.SRF_segments then
 		global.SRF_segments = {}
-	end
-
-	if global.hexi_hardlight_damage then
-		global.SRF_damage = global.hexi_hardlight_damage
-	elseif not global.SRF_damage then
-		global.SRF_damage = {}
 	end
 
 	if not global.SRF_low_power_ticklist then
