@@ -54,6 +54,7 @@ end
 if mods["pypetroleumhandling"] then
 	-- Move Liquid Tiberium recipe to Reformer
 	LSlib.recipe.setCraftingCategory("tiberium-liquid-processing", "reformer")
+	LSlib.recipe.setCraftingCategory("tiberium-liquid-processing-hot", "reformer")
 	-- Move both Molten Tiberium recipes to Light Oil Refinery
 	LSlib.recipe.setCraftingCategory("tiberium-molten-processing", "lor")
 	LSlib.recipe.setCraftingCategory("tiberium-advanced-molten-processing", "lor")

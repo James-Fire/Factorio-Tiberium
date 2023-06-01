@@ -11,7 +11,10 @@ Version: 1.1.29
   Changes:
     - Tiberium mining, acceleration, and containment structures can now be built in space when using the Space Exploration mod
     - Changed default Blue Tiberium appearance timing when Space Exploration is active to account for slow evolution factor growth
+    - Liquid Tiberium Power technology made cheaper and now has Nuclear Power as a prerequisite
+    - Tiberium Power Plant recipe adjusted to require Steam Turbines instead of Electric Engine Units
   Features:
+    - Added a new recipe to use high-temperature steam for quicker Liquid Tiberium production
     - Added compatibility for P.U.M.P. (Thanks to Ferlonas and Xcone for the pull request)
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.28

@@ -59,7 +59,7 @@ for assemblerName, assembler in pairs(data.raw["assembling-machine"]) do
 	end
 end
 if not openRefinery then
-	for _, recipe in pairs({"tiberium-molten-processing", "tiberium-advanced-molten-processing", "tiberium-liquid-processing"}) do
+	for _, recipe in pairs({"tiberium-molten-processing", "tiberium-advanced-molten-processing", "tiberium-liquid-processing", "tiberium-liquid-processing-hot"}) do
 		if data.raw.recipe[recipe] then
 			LSlib.recipe.setCraftingCategory(recipe, "tiberium-centrifuge-1")
 			-- Rebalance from refinery to centrifuge to preserve power/pollution amounts

@@ -11,6 +11,7 @@ local TibProductivity = {
 	"tiberium-ore-processing",
 	"tiberium-molten-processing",
 	"tiberium-liquid-processing",
+	"tiberium-liquid-processing-hot",
 	"tiberium-empty-cell",
 	"tiberium-fuel-cell",
 	"tiberium-ion-core",
@@ -271,7 +272,7 @@ data:extend{
 		icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-refining-blue.png",
 		icon_size = 64,
 		subgroup = "a-refining",
-		order = "c-2"
+		order = "c-3"
 	},
 	{
 		type = "recipe",
@@ -416,7 +417,27 @@ data:extend{
 		icon = tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png",
 		icon_size = 64,
 		subgroup = "a-refining",
-		order = "c"
+		order = "c-1"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-liquid-processing-hot",
+		category = "oil-processing",
+		energy_required = 5,
+		emissions_multiplier = common.scalePollution(8),
+		enabled = false,
+		ingredients = {
+			{type = "fluid", name = "molten-tiberium", amount = 16},
+			{type = "fluid", name = "steam", amount = 100},
+		},
+		results = {
+			{type = "fluid", name = "liquid-tiberium", amount = 10},
+			{type = "fluid", name = "water", amount = 100},
+		},
+		icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png", 64,
+			"__base__/graphics/icons/fluid/steam.png", 64, "ne"),
+		subgroup = "a-refining",
+		order = "c-2"
 	},
 	{
 		type = "recipe",
@@ -789,9 +810,9 @@ data:extend{
 		enabled = false,
 		subgroup = "a-buildings",
 		ingredients = {
-			{"steel-plate", 25},
-			{"electric-engine-unit", 10},
-			{"advanced-circuit", 15},
+			{"steel-plate", 20},
+			{"steam-turbine", 4},
+			{"advanced-circuit", 10},
 			{"chemical-plant", 1}
 		},
 		result = "tiberium-power-plant"

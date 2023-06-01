@@ -16,6 +16,7 @@ if settings.startup["tiberium-byproduct-1"].value == true then  -- Refining Slud
 	LSlib.recipe.addResult("tiberium-molten-processing", "tiberium-sludge", WastePerCycle, "fluid")
 	LSlib.recipe.addResult("tiberium-advanced-molten-processing", "tiberium-sludge", WastePerCycle, "fluid")
 	LSlib.recipe.addResult("tiberium-liquid-processing", "tiberium-sludge", WastePerCycle, "fluid")
+	LSlib.recipe.addResult("tiberium-liquid-processing-hot", "tiberium-sludge", WastePerCycle, "fluid")
 end
 
 if settings.startup["tiberium-byproduct-2"].value == true then  -- Refining Sulfur Waste setting
@@ -23,6 +24,7 @@ if settings.startup["tiberium-byproduct-2"].value == true then  -- Refining Sulf
 	LSlib.recipe.addResult("tiberium-molten-processing", "sulfur", WastePerCycle, "item")
 	LSlib.recipe.addResult("tiberium-advanced-molten-processing", "sulfur", WastePerCycle, "item")
 	LSlib.recipe.addResult("tiberium-liquid-processing", "sulfur", WastePerCycle, "item")
+	LSlib.recipe.addResult("tiberium-liquid-processing-hot", "sulfur", WastePerCycle, "item")
 end
 
 local easyMode = settings.startup["tiberium-easy-recipes"].value

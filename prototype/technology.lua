@@ -129,10 +129,14 @@ data:extend{
 				type = "unlock-recipe",
 				recipe = "tiberium-nuclear-fuel"
 			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-liquid-processing-hot"
+			},
 		},
-		prerequisites = {"tiberium-nuclear-research"},
+		prerequisites = {"tiberium-nuclear-research", "nuclear-power"},
 		unit = {
-			count = 600,
+			count = 400,
 			ingredients = {
 				{"tiberium-science", 1},
 				{"automation-science-pack", 1},
