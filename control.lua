@@ -69,6 +69,7 @@ script.on_init(function()
 	-- will stagnate instead of increasing with each new node found but updates will continue to happen for all fields.
 	global.minUpdateInterval = 1
 	global.intervalBetweenNodeUpdates = 18000
+	global.lastRescan = 0
 	global.tibPerformanceMultiplier = 1
 	global.tibFastForward = 1
 	global.tibGrowing = true
@@ -109,6 +110,7 @@ script.on_init(function()
 	for _, oreName in pairs(global.oreTypes) do
 		for i = 1,100 do
 			global.exemptDamageNames[oreName.."mining-drone"..i] = true
+			global.exemptDamageNames[oreName.."-mining-drone-"..i] = true --MD2R formatting
 		end
 	end
 	-- Immunity for AAI Miners
@@ -564,6 +566,12 @@ function doUpgradeConversions(data)
 				wall.destructible = false
 			end
 		end
+		for _, oreName in pairs(global.oreTypes) do
+			for i = 1,100 do
+				global.exemptDamageNames[oreName.."-mining-drone-"..i] = true --MD2R formatting
+			end
+		end
+		global.lastRescan = 0
 	end
 
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
@@ -1036,8 +1044,9 @@ commands.add_command("tibGrowAllNodes",
 				PlaceOre(global.tibGrowthNodeList[i], placements)
 			end
 		end
-		if game.active_mods["Mining-Drones-Tiberium"] then
+		if remote.interfaces["mining_drones"] and remote.interfaces["mining_drones"]["rescan_all_depots"] then
 			remote.call("mining_drones", "rescan_all_depots")
+			global.lastRescan = game.tick
 		end
 		game.player.print({"", timer, " end of tibGrowAllNodes"})
 	end
@@ -1306,8 +1315,10 @@ script.on_event(defines.events.on_tick, function(event)
 				if surface.count_entities_filtered{area = areaAroundPosition(position), name = treeBlockers} == 0 then
 					createBlossomTree(surface, position)
 				end
-				if game.active_mods["Mining-Drones-Tiberium"] then
+				-- 10 second cooldown on API call to avoid spam once you get to 100+ nodes
+				if (global.lastRescan + 600 < game.tick) and remote.interfaces["mining_drones"] and remote.interfaces["mining_drones"]["rescan_all_depots"] then
 					remote.call("mining_drones", "rescan_all_depots")
+					global.lastRescan = game.tick
 				end
 			else
 				removeNodeFromGrowthList(node)

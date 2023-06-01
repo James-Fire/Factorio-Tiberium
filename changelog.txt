@@ -16,6 +16,7 @@ Version: 1.1.29
   Features:
     - Added a new recipe to use high-temperature steam for quicker Liquid Tiberium production
     - Added compatibility for P.U.M.P. (Thanks to Ferlonas and Xcone for the pull request)
+    - Added compatibility for Mining Drones 2.0 Remastered
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.28
   Bugfixes:
