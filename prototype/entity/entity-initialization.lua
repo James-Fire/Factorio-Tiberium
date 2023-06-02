@@ -1,7 +1,6 @@
 require("prototype/entity/tiberium-node-harvester")
 require("prototype/entity/tiberium-centrifuge")
 require("prototype/entity/tiberium-growth-accelerator")
-require("prototype/entity/tiberium-ion-turret")
 require("prototype/entity/tiberium-obelisk-of-light")
 require("prototype/entity/tiberium-advanced-guard-tower")
 require("prototype/entity/tiberium-network-node")

@@ -254,16 +254,6 @@ data:extend{
 	},
 	{
 		type = "item",
-		name = "tiberium-ion-turret",
-		icon = "__base__/graphics/icons/laser-turret.png",
-		icon_size = 64,
-		subgroup = "a-buildings",
-		order = "f[tiberium-ion-turret]",
-		place_result = "tiberium-ion-turret",
-		stack_size = 50
-	},
-	{
-		type = "item",
 		name = "tiberium-obelisk-of-light",
 		icon = tiberiumInternalName.."/graphics/entity/obelisk-of-light/obelisk-of-light-222.png",
 		icon_size = 222,

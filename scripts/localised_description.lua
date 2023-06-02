@@ -48,7 +48,6 @@ prototypes["item"] = {
 	"tiberium-node-harvester",
 	"tiberium-srf-emitter",
 	"tiberium-spike",
-	"tiberium-ion-turret",
 	"tiberium-ion-core",
 	"tiberium-centrifuge-1",
 	"tiberium-centrifuge-2",
@@ -82,7 +81,6 @@ prototypes["ammo-turret"] = {
 	"tiberium-advanced-guard-tower",
 }
 prototypes["electric-turret"] = {
-	"tiberium-ion-turret",
 	"tiberium-obelisk-of-light",
 }
 prototypes["beacon"] = {

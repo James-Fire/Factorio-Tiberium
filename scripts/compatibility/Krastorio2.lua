@@ -3,11 +3,6 @@ if mods["Krastorio2"] then
 	common.applyTiberiumValue("raw-imersite", 8)
 	common.applyTiberiumValue("raw-rare-metals", 8)
 
-	-- Balance changes to match Krastorio
-	data.raw["electric-turret"]["tiberium-ion-turret"]["energy_source"]["drain"] = "100kW"
-	data.raw["electric-turret"]["tiberium-ion-turret"]["attack_parameters"]["cooldown"] = 30 -- Ion Turret to 2 APS
-	data.raw["electric-turret"]["tiberium-ion-turret"]["attack_parameters"]["damage_modifier"] = 12 -- Damage to 120
-
 	-- Fix our infinites to match
 	local techPairs = {{tib = "tiberium-explosives", copy = "stronger-explosives-7", max_level = 4},
 					   {tib = "tiberium-energy-weapons-damage", copy = "energy-weapons-damage-7", max_level = 4},
