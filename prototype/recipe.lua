@@ -106,6 +106,24 @@ for order, test in pairs(testingOrder) do
 			}
 		}
 	end
+	-- Science Pack reprocessing recipes
+	data:extend{
+		{
+			type = "recipe",
+			name = "tiberium-reprocessing-"..test.."-data",
+			category = "tiberium-reprocessing",
+			energy_required = 0.5,
+			hidden = true,
+			allow_decomposition = false,
+			crafting_machine_tint = common.tibCraftingTint,
+			ingredients = {
+				{"tiberium-data-"..test, 1}
+			},
+			results = {
+				{type = "item", name = "tiberium-growth-credit", amount = 1, probability = 0.1 / settings.startup["tiberium-growth"].value}
+			},
+		}
+	}
 	-- Science Pack simple recipes
 	data:extend{
 		{
