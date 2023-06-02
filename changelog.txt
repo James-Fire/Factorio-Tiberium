@@ -13,6 +13,7 @@ Version: 1.1.29
     - Changed default Blue Tiberium appearance timing when Space Exploration is active to account for slow evolution factor growth
     - Liquid Tiberium Power technology made cheaper and now has Nuclear Power as a prerequisite
     - Tiberium Power Plant recipe adjusted to require Steam Turbines instead of Electric Engine Units
+    - Rebalanced Tiberium Centifuging recipe times to make lower tiers faster and higher tiers slower (10 10 15 20 -> 4 8 16 32)
   Features:
     - Added a new recipe to use high-temperature steam for quicker Liquid Tiberium production
     - Added compatibility for P.U.M.P. (Thanks to Ferlonas and Xcone for the pull request)

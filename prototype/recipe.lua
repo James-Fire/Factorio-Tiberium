@@ -563,7 +563,7 @@ data:extend{
 		localised_name = {"recipe-name.tiberium-centrifuging", {"fluid-name.tiberium-slurry"}},
 		category = "tiberium-centrifuge-1",
 		subgroup = "a-centrifuging",
-		energy_required = 10,
+		energy_required = 8,
 		enabled = false,
 		ingredients = {
 		},
@@ -583,7 +583,7 @@ data:extend{
 		localised_name = {"recipe-name.tiberium-centrifuging", {"fluid-name.molten-tiberium"}},
 		category = "tiberium-centrifuge-2",
 		subgroup = "a-centrifuging",
-		energy_required = 15,
+		energy_required = 16,
 		enabled = false,
 		ingredients = {
 		},
@@ -603,7 +603,7 @@ data:extend{
 		localised_name = {"recipe-name.tiberium-centrifuging", {"fluid-name.liquid-tiberium"}},
 		category = "tiberium-centrifuge-3",
 		subgroup = "a-centrifuging",
-		energy_required = 20,
+		energy_required = 32,
 		enabled = false,
 		ingredients = {
 		},
@@ -623,7 +623,7 @@ data:extend{
 		--localised_name set by DynamicOreRecipes
 		category = "tiberium-centrifuge-1",
 		subgroup = "a-centrifuging",
-		energy_required = 10,
+		energy_required = 8,
 		enabled = false,
 		ingredients = {
 		},
@@ -643,7 +643,7 @@ data:extend{
 		--localised_name set by DynamicOreRecipes
 		category = "tiberium-centrifuge-2",
 		subgroup = "a-centrifuging",
-		energy_required = 15,
+		energy_required = 16,
 		enabled = false,
 		ingredients = {
 		},
@@ -663,7 +663,7 @@ data:extend{
 		--localised_name set by DynamicOreRecipes
 		category = "tiberium-centrifuge-3",
 		subgroup = "a-centrifuging",
-		energy_required = 20,
+		energy_required = 32,
 		enabled = false,
 		ingredients = {
 		},
