@@ -109,7 +109,7 @@ data:extend{
 		selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
 		selection_priority = 1,
 		collision_box = {{-0.4, -0.4}, {0.4, 0.4}},
-		collision_mask = {"layer-15"},
+		collision_mask = {"layer-47"}, -- Trying to avoid collisions with other mods using custom collision masks
 		created_effect = {
 			type = "direct",
 			action_delivery = {

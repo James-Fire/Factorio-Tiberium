@@ -1998,3 +1998,13 @@ function UnlockRecipePrereqs(force, recipeName)
 		if debugText then game.print("Unlocking "..tostring(best).." technologies to allow access to "..tostring(ingredient)) end
 	end
 end
+
+-- script.on_event(defines.events.on_marked_for_deconstruction , function(event) -- Something for autodeconstruct that doesn't fully work
+-- 	if game.active_mods["AutoDeconstruct"] and not event.player_index then
+-- 		if (event.entity.prototype.type == "mining-drill") and event.entity.prototype.resource_categories and event.entity.prototype.resource_categories["basic-solid-tiberium"] then
+-- 			if event.entity.surface.count_entities_filtered({position=event.entity.position, radius=TiberiumRadius + event.entity.prototype.mining_drill_radius, name="tibGrowthNode"}) then
+-- 				event.entity.cancel_deconstruction(event.entity.force)
+-- 			end
+-- 		end
+-- 	end
+-- end)
