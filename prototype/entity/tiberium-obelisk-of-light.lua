@@ -51,8 +51,13 @@ data:extend{
 		vehicle_impact_sound = {filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65},
 		starting_attack_sound = {
 			--filename = tiberiumInternalName.."/sound/Obelisk.ogg",
-			filename = tiberiumInternalName.."/sound/Obelisk-firing.ogg",
-			volume = 0.4
+			filename = tiberiumInternalName.."/sound/Obelisk-firing-mono.ogg",
+			volume = 0.8,
+			aggregation = {
+				max_count = 3,
+				remove = true,
+				count_already_playing = true
+			}
 		},
 		attack_parameters = {
 			type = "beam",

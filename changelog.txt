@@ -9,6 +9,7 @@ Version: 1.1.29
     - Fixed Anti-Tiberium Sonic Emitter, Anti-Blue Tiberium Sonic Emitter, and Tiberium Detonation Charge not being blueprintable
     - Fixed Sonic Repulsor Fields being able to be attacked and destroyed
     - Fully removed old Ion Beam Projector and Tiberium Power Plant entities that were deprecated 2 years ago so they stop popping up
+    - Fixed Obelisk of Light attack sound being too quiet and only playing out of the left speaker
   Changes:
     - Tiberium mining, acceleration, and containment structures can now be built in space when using the Space Exploration mod
     - Changed default Blue Tiberium appearance timing when Space Exploration is active to account for slow evolution factor growth
