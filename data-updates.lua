@@ -111,6 +111,45 @@ if mods["RampantResources"] then
 	end
 end
 
+if mods["deadlock-beltboxes-loaders"] then
+	local Items = {
+		{"tiberium-ore", "item", "stacked-tiberium-ore", 64, 4},
+		{"tiberium-ore-blue", "item", "stacked-tiberium-ore-blue", 64, 4},
+		{"tiberium-empty-cell", "item", "stacked-empty-cell", 64, 4},
+		{"tiberium-dirty-cell", "item", "stacked-dirty-cell", 64, 4},
+		{"tiberium-fuel-cell", "item", "stacked-tiberium-fuel-cell", 64, 4},
+		{"tiberium-rounds-magazine", "ammo", "stacked-tiberium-rounds-magazine", 64, 4},
+		{"tiberium-data-mechanical", "item", "stacked-tiberium-data-mechanical", 32, 1},
+		{"tiberium-data-thermal", "item", "stacked-tiberium-data-thermal", 32, 1},
+		{"tiberium-data-chemical", "item", "stacked-tiberium-data-chemical", 32, 1},
+		{"tiberium-data-nuclear", "item", "stacked-tiberium-data-nuclear", 32, 1},
+		{"tiberium-data-EM", "item", "stacked-tiberium-data-em", 32, 1},
+		{"tiberium-science", "tool", "stacked-tacitus", 64, 1},
+		{"tiberium-growth-credit", "item", "stacked-growth-credit", 64, 1},
+		{"tiberium-primed-reactant", "item", "stacked-tiberium-crate", 128, 1},
+		{"tiberium-primed-reactant-blue", "item", "stacked-tiberium-crate-blue", 128, 1},
+		{"tiberium-chemical-sprayer-ammo", "ammo", "stacked-chemical-sprayer-ammo", 128, 1},
+		{"tiberium-blue-explosives", "item", "stacked-tiberium-brick", 64, 1},
+	}
+
+	--Add stacking recipes
+	for _, item in pairs(Items) do
+		local name = item[1]
+		local tech = "deadlock-stacking-1"
+		local item_type = item[2] or "item"
+		local graphics = string.format(tiberiumInternalName.."/graphics/deadlock/%s.png", item[3])
+		local icon_size = item[4]
+		local mips_icons = item[5]
+		if data.raw[item_type][name] then
+			log(name.." adding to deadlock prototypes")
+			if not data.raw.item["deadlock-stack-" .. name] then
+				log(name.." adding to deadlock prototypes 2")
+				deadlock.add_stack(name, graphics, tech, icon_size, item_type, mips_icons)
+			end
+		end
+	end
+end
+
 -- Below code isn't specific to any single mod
 table.insert(data.raw.character.character.mining_categories, "basic-solid-tiberium")
 

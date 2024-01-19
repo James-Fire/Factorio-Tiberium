@@ -1,4 +1,8 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.30
+  Features:
+    - Added Deadlock's Stacking Beltboxes & Compact Loaders combatibility (thanks to Vascar and https://mods.factorio.com/mod/DeadlockStackingForTiberium)
+---------------------------------------------------------------------------------------------------
 Version: 1.1.29
   Bugfixes:
     - Fixed Space Exploration ignoring our setting and spawning Tiberium in the starting area
