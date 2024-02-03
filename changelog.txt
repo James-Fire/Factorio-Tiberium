@@ -1,5 +1,7 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.30
+  Bugfixes:
+    - Fixed crash when deleting surface that has SRF emitters on it (this one slipped through 1.1.17's surface fixes)
   Features:
     - Added Deadlock's Stacking Beltboxes & Compact Loaders combatibility (thanks to Vascar and https://mods.factorio.com/mod/DeadlockStackingForTiberium)
 ---------------------------------------------------------------------------------------------------

@@ -1626,6 +1626,7 @@ script.on_event(defines.events.script_raised_revive, on_new_entity)
 
 function on_remove_entity(event)
 	local entity = global.tibOnEntityDestroyed[event.registration_number]
+	global.tibOnEntityDestroyed[event.registration_number] = nil  -- Avoid this global growing forever
 	if not entity then return end
 	local surface = entity.surface
 	local position = entity.position
@@ -1638,29 +1639,34 @@ function on_remove_entity(event)
 			end
 		end
 	end
+	if (entity.name == "tiberium-sonic-emitter") or (entity.name == "tiberium-sonic-emitter-blue") then
+		for i = 1, #global.tibSonicEmitters do
+			if LSlib.utils.table.areEqual(global.tibSonicEmitters[i].position, entity.position) then
+				table.remove(global.tibSonicEmitters, i)
+				break
+			end
+		end
+	end
+	if not surface or not surface.valid then return end
 	if (entity.name == "tiberium-srf-emitter") or (entity.name == "CnC_SonicWall_Hub") then
-		if surface and surface.valid then
-			local ghost = surface.find_entities_filtered{position = entity.position, ghost_name = entity.name}[1]
-			for _, connector in pairs(surface.find_entities_filtered{name = "tiberium-srf-connector", position = position, force = force}) do
-				if ghost then
-					connector.destructible = true
-					connector.die()
-				else
-					connector.destroy()
-				end
-			end
+		local ghost = surface.find_entities_filtered{position = entity.position, ghost_name = entity.name}[1]
+		for _, connector in pairs(surface.find_entities_filtered{name = "tiberium-srf-connector", position = position, force = force}) do
 			if ghost then
-				ghost.destroy()
+				connector.destructible = true
+				connector.die()
+			else
+				connector.destroy()
 			end
+		end
+		if ghost then
+			ghost.destroy()
 		end
 		CnC_SonicWall_DeleteNode(entity, event.tick)
 	elseif (entity.name == "tiberium-beacon-node") then
 		--Remove Beacon for Tiberium Control Network
-		if surface and surface.valid then
-			local tcnAOE = areaAroundPosition(position, TiberiumRadius * 0.5 + 1)
-			for _, beacon in pairs(surface.find_entities_filtered{area = tcnAOE, name = TCN_Beacon_Name, force = force}) do
-				ManageTCNBeacon(surface, beacon.position, force)
-			end
+		local tcnAOE = areaAroundPosition(position, TiberiumRadius * 0.5 + 1)
+		for _, beacon in pairs(surface.find_entities_filtered{area = tcnAOE, name = TCN_Beacon_Name, force = force}) do
+			ManageTCNBeacon(surface, beacon.position, force)
 		end
 	elseif (entity.name == "tiberium-spike") then
 		convertUnspikedNode(surface, position)
@@ -1680,17 +1686,9 @@ function on_remove_entity(event)
 	elseif (entity.name == "tibGrowthNode") then
 		removeBlossomTree(surface, position)
 		removeNodeFromGrowthList(entity)
-	elseif (entity.name == "tiberium-sonic-emitter") or (entity.name == "tiberium-sonic-emitter-blue") then
-		for i = 1, #global.tibSonicEmitters do
-			if LSlib.utils.table.areEqual(global.tibSonicEmitters[i].position, entity.position) then
-				table.remove(global.tibSonicEmitters, i)
-				break
-			end
-		end
 	elseif (entity.name == "tiberium-detonation-charge") then
 		createBlossomTree(surface, position)
 	end
-	global.tibOnEntityDestroyed[event.registration_number] = nil  -- Avoid this global growing forever
 end
 
 function convertUnspikedNode(surface, position)
