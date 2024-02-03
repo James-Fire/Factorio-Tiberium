@@ -831,7 +831,7 @@ function PlaceOre(entity, howMany)
 		if not placedOre then
 			local oreEntity = AddOre(surface, lastValidPosition, growthRate)
 			--Spread setting makes spawning new nodes more likely
-			if oreEntity and (TiberiumSpread > 0) and (math.random() < ((oreEntity.amount / TiberiumMaxPerTile) + (TiberiumSpread / 50 - 0.9))) then
+			if oreEntity and oreEntity.valid and (TiberiumSpread > 0) and (math.random() < ((oreEntity.amount / TiberiumMaxPerTile) + (TiberiumSpread / 50 - 0.9))) then
 				CreateNode(surface, lastValidPosition)  --Use standard function to also remove overlapping ore
 			end
 		end
