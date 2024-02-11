@@ -446,7 +446,7 @@ data:extend{
 		enabled = false,
 		ingredients = {
 			{type = "fluid", name = "molten-tiberium", amount = 16},
-			{type = "fluid", name = "steam", amount = 100},
+			{type = "fluid", name = "steam", amount = 100, minimum_temperature = 500, maximum_temperature = 1000},
 		},
 		results = {
 			{type = "fluid", name = "liquid-tiberium", amount = 10},

@@ -70,5 +70,13 @@ if not openRefinery then
 	end
 end
 
+-- Temporary bugfix for issue with LSlib issue #9
+for _, ingredient in pairs(data.raw.recipe["tiberium-liquid-processing-hot"].ingredients) do
+	if ingredient.name == "steam" then
+		ingredient.minimum_temperature = 500
+		ingredient.maximum_temperature = 1000
+	end
+end
+
 require("scripts/DynamicOreRecipes")
 require("scripts/compatibility/pumpmod")

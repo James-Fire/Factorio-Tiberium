@@ -2,7 +2,9 @@
 Version: 1.1.30
   Bugfixes:
     - Fixed crash when deleting surface that has SRF emitters on it (this one slipped through 1.1.17's surface fixes)
-    - Fixed possible crash from trees growing on top of Tiberium Ore patches  
+    - Fixed possible crash from trees growing on top of Tiberium Ore patches
+  Changes:
+    - Added missing temperature requirement on steam for the Accelerated Liquid Tiberium Processing recipe
   Features:
     - Added Deadlock's Stacking Beltboxes & Compact Loaders combatibility (thanks to Vascar and https://mods.factorio.com/mod/DeadlockStackingForTiberium)
 ---------------------------------------------------------------------------------------------------
