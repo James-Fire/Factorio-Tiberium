@@ -1073,6 +1073,7 @@ end
 function addDirectRecipe(ore, easy)
 	local recipeName = (easy and "tiberium-slurry" or "tiberium").."-tranmutation-to-"..ore
 	local oreAmount = 64 / (oreMult[ore] or 1)
+	local addSeed = settings.startup["tiberium-direct-catalyst"].value
 	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"
 	local tech = easy and "tiberium-easy-transmutation-tech" or data.raw.fluid[ore] and "tiberium-molten-centrifuging" or "tiberium-transmutation-tech"
 	local category = "chemistry" --data.raw.fluid[ore] and "chemistry" or "tiberium-transmutation"
@@ -1087,6 +1088,10 @@ function addDirectRecipe(ore, easy)
 		LSlib.recipe.addIngredient(recipeName, "molten-tiberium", 16, "fluid")
 	else
 		LSlib.recipe.addIngredient(recipeName, "tiberium-primed-reactant", 1, "item")
+	end
+	if addSeed and not easy then
+		LSlib.recipe.addIngredient(recipeName, ore, 1, itemOrFluid)
+		oreAmount = oreAmount + 1
 	end
 	recipeAddResult(recipeName, ore, oreAmount, itemOrFluid)
 	LSlib.recipe.setMainResult(recipeName, ore)

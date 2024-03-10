@@ -7,6 +7,7 @@ Version: 1.1.30
     - Added missing temperature requirement on steam for the Accelerated Liquid Tiberium Processing recipe
   Features:
     - Added Deadlock's Stacking Beltboxes & Compact Loaders combatibility (thanks to Vascar and https://mods.factorio.com/mod/DeadlockStackingForTiberium)
+    - Added new Require Resource Seed for Transmutation setting to optionally modify recipes that previously broke resource progression from other mods
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.29
   Bugfixes:
