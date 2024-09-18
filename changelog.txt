@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.31
+  Changes:
+    - Removed Copper from Empty Cell recipe
+    - Reduced plastic cost of empty cells per recipe from 5 to 4
+    - Increased empty cell recipe output from 10 to 12
+    - Halved Liquid Tiberium cost of filling cells
+---------------------------------------------------------------------------------------------------
 Version: 1.1.30
   Bugfixes:
     - Fixed crash when deleting surface that has SRF emitters on it (this one slipped through 1.1.17's surface fixes)

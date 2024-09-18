@@ -1099,15 +1099,14 @@ data:extend{
 		name = "tiberium-empty-cell",
 		category = "crafting",
 		subgroup = "a-intermediates",
-		energy_required = 5,
+		energy_required = 4,
 		enabled = false,
 		ingredients = {
 			{type = "item", name = "steel-plate", amount = 2},
-			{type = "item", name = "copper-plate", amount = 2},
-			{type = "item", name = "plastic-bar", amount = 5},
+			{type = "item", name = "plastic-bar", amount = 4},
 		},
 		results = {
-			{type = "item", name = "tiberium-empty-cell", amount = 10},
+			{type = "item", name = "tiberium-empty-cell", amount = 12},
 		},
 		icon_size = 64
 	},
@@ -1142,7 +1141,7 @@ data:extend{
 		enabled = false,
 		ingredients = {
 			{type = "item", name = "tiberium-empty-cell", amount = 1},
-			{type = "fluid", name = "liquid-tiberium", amount = 320},
+			{type = "fluid", name = "liquid-tiberium", amount = 160},
 		},
 		results = {
 			{type = "item", name = "tiberium-fuel-cell", amount = 1},
