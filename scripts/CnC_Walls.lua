@@ -280,7 +280,7 @@ function find_value_in_table(list, value, subscript)
 	return false
 end
 
-function CnC_SonicWall_OnInit(event)
+function CnC_SonicWall_OnInit()
 	global.SRF_nodes = {}
 	global.SRF_node_ticklist = {}
 	global.SRF_segments = {}

@@ -1,7 +1,7 @@
 --TODO:
 -- Make matrix solver more reliable
 
-tableLS = LSlib.utils.table
+local tableLS = LSlib.utils.table
 local debugText = settings.startup["tiberium-debug-text"].value
 local easyMode = settings.startup["tiberium-easy-recipes"].value
 local free = {}
@@ -61,7 +61,29 @@ end
 -- Modifies: rawResources, availableRecipes, free, ingredientIndex, resultIndex, catalyst, ingredientDepth, recipeDepth, tibComboPacks
 function giantSetupFunction()
 	-- Load item properties defined by other mods or from our data-updates
-	loadFromItemProperties()
+	for itemName, itemData in pairs(data.raw.item) do
+		if itemData.tiberium_empty_barrel then
+			emptyBarrel[itemName] = true
+		end
+
+		if itemData.tiberium_multiplier then
+			addOreMult(itemName, itemData.tiberium_multiplier)
+		end
+
+		if itemData.tiberium_sludge then
+			sludgeItems[itemName] = true
+		end
+	end
+	for fluidName, fluidData in pairs(data.raw.fluid) do
+		if fluidData.tiberium_multiplier then
+			addOreMult(fluidName, fluidData.tiberium_multiplier)
+		end
+		addOreMult(fluidName, 1/4)  -- Default fluid amounts to being 4 times more than ores
+
+		if fluidData.tiberium_sludge then
+			sludgeItems[fluidName] = true
+		end
+	end
 
 	-- Resources excluded by settings
 	local excludeSetting = string.gsub(settings.startup["tiberium-resource-exclusions"].value, "\"", "")
@@ -251,14 +273,14 @@ function giantSetupFunction()
 					local maxIngredientLevel = 0
 					for ingredient in pairs(normalIngredients(recipe)) do
 						if not ingredientDepth[ingredient] then
-							maxIngredientLevel = false
+							maxIngredientLevel = -1
 							break
 						elseif ingredientDepth[ingredient] > maxIngredientLevel then
 							maxIngredientLevel = ingredientDepth[ingredient]
 						end
 					end
 
-					if maxIngredientLevel then
+					if maxIngredientLevel >= 0 then
 						recipeDepth[recipe] = maxIngredientLevel + 1
 						for result in pairs(normalResults(recipe)) do
 							if not ingredientDepth[result] then
@@ -271,33 +293,6 @@ function giantSetupFunction()
 			end
 		end
 		basicMaterials = nextMaterials
-	end
-end
-
--- Modifies: emptyBarrel, sludgeItems, oreMult
-function loadFromItemProperties()
-	for itemName, itemData in pairs(data.raw.item) do
-		if itemData.tiberium_empty_barrel then
-			emptyBarrel[itemName] = true
-		end
-
-		if itemData.tiberium_multiplier then
-			addOreMult(itemName, itemData.tiberium_multiplier)
-		end
-
-		if itemData.tiberium_sludge then
-			sludgeItems[itemName] = true
-		end
-	end
-	for fluidName, fluidData in pairs(data.raw.fluid) do
-		if fluidData.tiberium_multiplier then
-			addOreMult(fluidName, fluidData.tiberium_multiplier)
-		end
-		addOreMult(fluidName, 1/4)  -- Default fluid amounts to being 4 times more than ores
-
-		if fluidData.tiberium_sludge then
-			sludgeItems[fluidName] = true
-		end
 	end
 end
 
@@ -621,13 +616,13 @@ function packHierarchy()
 						local depth = packDependencyTier[techPack]
 						--log("prereq pack "..techPack.." has a depth of "..tostring(depth))
 						if not depth then  -- Skip if it's still missing a prereq pack
-							prereqDepth = nil
+							prereqDepth = -1
 							break
 						elseif depth > prereqDepth then
 							prereqDepth = depth
 						end
 					end
-					if prereqDepth then
+					if prereqDepth >= 0 then
 						packDependencyTier[pack] = prereqDepth + 1
 					end
 				end
@@ -711,7 +706,7 @@ function findRecipe(item, itemList)
 	end
 	if recipes[1] then
 		if catalyst[recipes[1]] then  -- Scale properly for catalyst/enrichment
-			local itemIn =normalIngredients(recipeName)[item] or 0
+			local itemIn = normalIngredients(recipes[1]["name"])[item] or 0
 			return recipes[1]["name"], recipes[1]["count"] - itemIn
 		else
 			return recipes[1]["name"], recipes[1]["count"]
@@ -995,8 +990,8 @@ function fugeRawResources(tier)
 			local amount = 1
 			if string.find(sub, subDelim) then
 				item = string.match(sub, "^[^"..subDelim.."]+")  -- Before the colon
-				amount = tonumber(string.match(sub, "[^"..subDelim.."]+$"))  -- After the colon
-				if not amount or amount <= 0 then  -- In case they put some non-numeric
+				amount = tonumber(string.match(sub, "[^"..subDelim.."]+$")) or -1  -- After the colon
+				if amount <= 0 then  -- In case they put some non-numeric
 					amount = 1
 					log("tiberium-centrifuge-override-"..tier.." setting has an invalid number for item "..item)
 				end

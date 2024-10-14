@@ -135,7 +135,7 @@ script.on_init(function()
 	end
 
 	-- CnC SonicWalls Init
-	CnC_SonicWall_OnInit(event)
+	CnC_SonicWall_OnInit()
 
 	-- For drills that were present before Tiberium mod was added or converting from Beta save
 	for _, surface in pairs(game.surfaces) do
@@ -769,9 +769,8 @@ function CheckPoint(surface, position, lastValidPosition, growthRate)
 end
 
 function PlaceOre(entity, howMany)
-	--local timer = game.create_profiler()
-
 	if not entity.valid then return end
+	local timer = debugText and game.create_profiler() or 0
 
 	howMany = howMany and math.max(math.floor(howMany / global.tibPerformanceMultiplier), 1) or 1
 	local surface = entity.surface

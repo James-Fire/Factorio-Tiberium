@@ -45,9 +45,11 @@ if mods["MoreScience"] then
 end
 
 if mods["omnimatter"] then
-	omni.matter.add_ignore_resource("tiberium-ore")
-    omni.matter.add_ignore_resource("tibGrowthNode")
-    omni.matter.add_ignore_resource("tibNode_tree")
+	if omni then
+		omni.matter.add_ignore_resource("tiberium-ore")
+		omni.matter.add_ignore_resource("tibGrowthNode")
+		omni.matter.add_ignore_resource("tibNode_tree")
+	end
 	LSlib.recipe.editIngredient("tiberium-spike", "pumpjack", "offshore-pump", 1)
 end
 
@@ -140,7 +142,7 @@ if mods["deadlock-beltboxes-loaders"] then
 		local graphics = string.format(tiberiumInternalName.."/graphics/deadlock/%s.png", item[3])
 		local icon_size = item[4]
 		local mips_icons = item[5]
-		if data.raw[item_type][name] then
+		if data.raw[item_type][name] and deadlock then
 			log(name.." adding to deadlock prototypes")
 			if not data.raw.item["deadlock-stack-" .. name] then
 				log(name.." adding to deadlock prototypes 2")

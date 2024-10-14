@@ -21,7 +21,6 @@ data:extend{
 					width = 256,
 					height = 256,
 					frame_count = 30,
-					frame_count = 30,
 					line_length = 6,
 					animation_speed = 0.75 / 4,  -- Crafting speed 8 makes this 8/4 = twice the speed of the K2 animation
 					hr_version = {
