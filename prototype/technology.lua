@@ -776,7 +776,7 @@ data:extend{
 				recipe = "tiberium-detonation-charge",
 			},
 		},
-		prerequisites = {"tiberium-containment-tech", "tiberium-military-2", "tiberium-refining-blue", "electric-engine"},
+		prerequisites = {"tiberium-containment-tech", "tiberium-military-2", "tiberium-refining-blue", "circuit-network"},
 		unit = {
 			count = 200,
 			ingredients = {

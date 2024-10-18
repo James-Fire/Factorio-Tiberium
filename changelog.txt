@@ -3,12 +3,14 @@ Version: 1.1.30
   Bugfixes:
     - Fixed crash when deleting surface that has SRF emitters on it (this one slipped through 1.1.17's surface fixes)
     - Fixed possible crash from trees growing on top of Tiberium Ore patches
+    - Fixed Sonic Emitter shadow to not be a laser turret (did you even notice it before?)
   Changes:
     - Added missing temperature requirement on steam for the Accelerated Liquid Tiberium Processing recipe
     - Removed Copper from Empty Cell recipe
     - Reduced plastic cost of empty cells per recipe from 5 to 4
     - Increased empty cell recipe output from 10 to 12
     - Halved Liquid Tiberium cost of filling cells
+    - Changed Sonic Emitter recipes to require Programmable Speakers and Batteries instead of Electric Engine Units and Copper Plates
   Features:
     - Added Deadlock's Stacking Beltboxes & Compact Loaders combatibility (thanks to Vascar and https://mods.factorio.com/mod/DeadlockStackingForTiberium)
     - Added new Require Resource Seed for Transmutation setting to optionally modify recipes that previously broke resource progression from other mods

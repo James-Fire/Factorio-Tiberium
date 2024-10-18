@@ -788,10 +788,10 @@ data:extend{
 		enabled = false,
 		energy_required = 5,
 		ingredients = {
-			{"copper-plate", 25},
 			{"steel-plate", 25},
+			{"battery", 20},
 			{"advanced-circuit", 10},
-			{"electric-engine-unit", 1},
+			{"programmable-speaker", 1},
 		},
 		result = "tiberium-sonic-emitter"
 	},
@@ -801,10 +801,10 @@ data:extend{
 		enabled = false,
 		energy_required = 5,
 		ingredients = {
-			{"copper-plate", 25},
 			{"steel-plate", 25},
+			{"battery", 20},
 			{"advanced-circuit", 10},
-			{"electric-engine-unit", 1},
+			{"programmable-speaker", 1},
 		},
 		result = "tiberium-sonic-emitter-blue"
 	},
