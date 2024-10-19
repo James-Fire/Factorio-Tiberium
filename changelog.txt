@@ -11,7 +11,10 @@ Version: 1.1.30
     - Increased empty cell recipe output from 10 to 12
     - Halved Liquid Tiberium cost of filling cells
     - Changed Sonic Emitter recipes to require Programmable Speakers and Batteries instead of Electric Engine Units and Copper Plates
+    - Standardized Tiberium Growth Accelerator stack size from 15 to 20
+    - Reorganized crafting menu to place all Tiberium Node-related structures on a single row
   Features:
+    - Added new Tiberium Monoculture structures that consume power to ensure that only one type of Tiberium spawns in their field
     - Added Deadlock's Stacking Beltboxes & Compact Loaders combatibility (thanks to Vascar and https://mods.factorio.com/mod/DeadlockStackingForTiberium)
     - Added new Require Resource Seed for Transmutation setting to optionally modify recipes that previously broke resource progression from other mods
 ---------------------------------------------------------------------------------------------------

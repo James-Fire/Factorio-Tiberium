@@ -1,5 +1,6 @@
 -- Change when uploading to main/beta version, no underscores for this one
 tiberiumInternalName = "Factorio-Tiberium"
+global = {}
 
 local migration = require("__flib__.migration")
 require("scripts/CnC_Walls") --Note, to make SonicWalls work / be passable
@@ -633,6 +634,7 @@ function BlueSpawnProbability(evoFactor)
 end
 
 function AddOre(surface, position, amount, oreName, cascaded)
+	local overrideOre = (oreName ~= nil)
 	if not oreName then
 		local blueSlowdown = global.blueProgress[surface.index] == 2 and BlueTiberiumSaturationGrowth or 1  -- If surface has reached saturation, use saturation rate multiplier
 		if math.random() < (blueSlowdown * BlueSpawnProbability(game.forces.enemy.evolution_factor)) then  -- Random <1% chance to spawn Blue Tiberium at high evolution factors
@@ -656,9 +658,9 @@ function AddOre(surface, position, amount, oreName, cascaded)
 	local tile = surface.get_tile(position)
 	local growthRate = math.min(amount, TiberiumMaxPerTile)
 
-	if oreEntity and (oreEntity.name == oreName or oreEntity.name == "tiberium-ore-blue") then
-		-- Grow existing tib except for the case where blue needs to replace green instead of growing it
-		if oreEntity.amount < TiberiumMaxPerTile then --Don't reduce ore amount when growing node
+	if oreEntity and (oreEntity.name == oreName or (oreEntity.name == "tiberium-ore-blue" and not overrideOre)) then
+		-- Grow existing tib except for the case where it needs to be replaced instead of growing it
+		if oreEntity.amount < TiberiumMaxPerTile then --Don't reduce overgrown ore patch amounts
 			oreEntity.amount = math.min(oreEntity.amount + growthRate, TiberiumMaxPerTile)
 		end
 	elseif surface.count_entities_filtered{area = area, name = tiberiumNodeNames} > 0 then
@@ -718,24 +720,24 @@ function AddOre(surface, position, amount, oreName, cascaded)
 	return oreEntity
 end
 
-function CheckPoint(surface, position, lastValidPosition, growthRate)
+function CheckPoint(surface, position, lastValidPosition, growthRate, oreName)
 	-- These checks are in roughly the order of guessed expense
 	local tile = surface.get_tile(position)
 	if not tile or not tile.valid then
-		AddOre(surface, lastValidPosition, growthRate)
+		AddOre(surface, lastValidPosition, growthRate, oreName, false)
 		return true
 	end
 
 	if tile.collides_with("resource-layer")
 		or tile.collides_with("water-tile") then
-		AddOre(surface, lastValidPosition, growthRate)
+		AddOre(surface, lastValidPosition, growthRate, oreName, false)
 		return true  --Hit edge of water, add to previous ore
 	end
 
 	local area = areaAroundPosition(position)
 	local entitiesBlockTiberium = {"tiberium-srf-wall", "cliff", "tibGrowthNode_infinite"}
 	if surface.count_entities_filtered{area = area, name = entitiesBlockTiberium} > 0 then
-		AddOre(surface, lastValidPosition, growthRate * 0.5)  --50% lost
+		AddOre(surface, lastValidPosition, growthRate * 0.5, oreName, false)  --50% lost
 		return true  --Hit fence or cliff or spiked node, add to previous ore
 	end
 
@@ -750,7 +752,7 @@ function CheckPoint(surface, position, lastValidPosition, growthRate)
 				end
 			end
 			if emitterPowered then  -- Only block if the SRF is powered
-				AddOre(surface, lastValidPosition, growthRate * 0.5)  --50% lost
+				AddOre(surface, lastValidPosition, growthRate * 0.5, oreName, false)  --50% lost
 				return true  --Hit powered SRF emitter hub
 			end
 		end
@@ -761,7 +763,7 @@ function CheckPoint(surface, position, lastValidPosition, growthRate)
 	end
 
 	if surface.count_entities_filtered{area = area, name = global.oreTypes} == 0 then
-		AddOre(surface, position, growthRate)
+		AddOre(surface, position, growthRate, oreName, false)
 		return true  --Reached edge of patch, place new ore
 	else
 		return false  --Not at edge of patch, keep going
@@ -775,6 +777,16 @@ function PlaceOre(entity, howMany)
 	howMany = howMany and math.max(math.floor(howMany / global.tibPerformanceMultiplier), 1) or 1
 	local surface = entity.surface
 	local position = entity.position
+
+	-- Check for powered monoculture structures
+	local oreName
+	local monoGreen = surface.find_entity("tiberium-monoculture-green", position)
+	local monoBlue = surface.find_entity("tiberium-monoculture-blue", position)
+	if monoGreen and monoGreen.valid and (monoGreen.energy > (0.5 * monoGreen.electric_buffer_size)) then
+		oreName = "tiberium-ore"
+	elseif monoBlue and monoBlue.valid and (monoBlue.energy > (0.5 * monoBlue.electric_buffer_size)) then
+		oreName = "tiberium-ore-blue"
+	end
 
 	-- Scale growth rate based on distance from spawn
 	local growthRate = TiberiumGrowth * global.tibPerformanceMultiplier * math.max(1, TiberiumSpread / 50)
@@ -821,14 +833,14 @@ function PlaceOre(entity, howMany)
 		--Check each tile along the line and stop when we've added ore one time
 		repeat
 			local newPosition = {x = lastValidPosition.x + dx, y = lastValidPosition.y + dy}
-			placedOre = CheckPoint(surface, newPosition, lastValidPosition, growthRate)
+			placedOre = CheckPoint(surface, newPosition, lastValidPosition, growthRate, oreName)
 			lastValidPosition = newPosition
 			step = step - 1
 		until placedOre or (step < 0)
 
 		--Walked all the way to the end of the line, placing ore at the last valid position
 		if not placedOre then
-			local oreEntity = AddOre(surface, lastValidPosition, growthRate)
+			local oreEntity = AddOre(surface, lastValidPosition, growthRate, oreName)
 			--Spread setting makes spawning new nodes more likely
 			if oreEntity and oreEntity.valid and (TiberiumSpread > 0) and (math.random() < ((oreEntity.amount / TiberiumMaxPerTile) + (TiberiumSpread / 50 - 0.9))) then
 				CreateNode(surface, lastValidPosition)  --Use standard function to also remove overlapping ore
@@ -853,6 +865,7 @@ function PlaceOre(entity, howMany)
 			end
 		end
 	end
+
 	if debugText then
 		game.print({"", timer, " end of place ore at ", position.x, ", ", position.y, "|", math.random()})
 	end
@@ -922,7 +935,7 @@ function TiberiumSeedMissile(surface, position, amount, oreName)
 					elseif node then
 						node.amount = node.amount + intensity
 					else
-						AddOre(surface, placePos, intensity, oreName)
+						AddOre(surface, placePos, intensity, oreName, true) -- It doesn't make much of a difference, but lets not cascade seed missiles
 					end
 				end
 			end
@@ -1310,7 +1323,7 @@ script.on_event(defines.events.on_tick, function(event)
 				PlaceOre(node, 10)
 				local position = node.position
 				local surface = node.surface
-				local treeBlockers = {"tibNode_tree", "tiberium-node-harvester", "tiberium-spike", "tiberium-growth-accelerator", "tiberium-detonation-charge"}
+				local treeBlockers = {"tibNode_tree", "tiberium-node-harvester", "tiberium-spike", "tiberium-growth-accelerator", "tiberium-detonation-charge", "tiberium-monoculture-green", "tiberium-monoculture-blue"}
 				if surface.count_entities_filtered{area = areaAroundPosition(position), name = treeBlockers} == 0 then
 					createBlossomTree(surface, position)
 				end
@@ -1604,6 +1617,30 @@ function on_new_entity(event)
 			local module_count = upgradeLevel(force, "tiberium-growth-acceleration-acceleration")
 			UpdateBeaconSpeed(beacon, module_count)
 		end
+	elseif (new_entity.name == "tiberium-monoculture-green-node") then
+		new_entity.destroy()
+		surface.create_entity{
+			name = "tiberium-monoculture-green",
+			position = position,
+			force = force,
+			raise_built = true
+		}
+	elseif (new_entity.name == "tiberium-monoculture-green") then
+		registerEntity(new_entity)
+		--Remove tree entity when node is covered
+		removeBlossomTree(surface, position)
+	elseif (new_entity.name == "tiberium-monoculture-blue-node") then
+		new_entity.destroy()
+		surface.create_entity{
+			name = "tiberium-monoculture-blue",
+			position = position,
+			force = force,
+			raise_built = true
+		}
+	elseif (new_entity.name == "tiberium-monoculture-blue") then
+		registerEntity(new_entity)
+		--Remove tree entity when node is covered
+		removeBlossomTree(surface, position)
 	elseif (new_entity.name == "tibGrowthNode") then
 		registerEntity(new_entity)
 		addNodeToGrowthList(new_entity)
@@ -1682,6 +1719,10 @@ function on_remove_entity(event)
 		--Spawn tree entity when node is uncovered
 		createBlossomTree(surface, position)
 		removeHiddenBeacon(surface, position, GA_Beacon_Name)
+	elseif (entity.name == "tiberium-monoculture-green") then
+		createBlossomTree(surface, position)
+	elseif (entity.name == "tiberium-monoculture-blue") then
+		createBlossomTree(surface, position)
 	elseif (entity.name == "tibGrowthNode") then
 		removeBlossomTree(surface, position)
 		removeNodeFromGrowthList(entity)

@@ -76,16 +76,6 @@ data:extend{
 	--Structures
 	{
 		type = "item",
-		name = "tiberium-growth-accelerator",
-		icon = tiberiumInternalName.."/graphics/technology/growth-accelerator.png",
-		icon_size = 128,
-		subgroup = "a-buildings",
-		order = "d[tiberium-growth-accelerator]",
-		place_result = "tiberium-growth-accelerator-node",
-		stack_size = 15,
-	},
-	{
-		type = "item",
 		name = "tiberium-power-plant",
 		icon = tiberiumInternalName.."/graphics/icons/td-power-plant.png",
 		icon_size = 64,
@@ -168,6 +158,16 @@ data:extend{
 		place_result = "tiberium-reprocessor",
 		stack_size = 50
 	},
+	-- {
+	-- 	type = "item",
+	-- 	name = "tiberium-extruder",
+	-- 	icon = tiberiumInternalName.."/graphics/entity/forge/TibCentri_1.png",
+	-- 	icon_size = 265,
+	-- 	subgroup = "a-buildings",
+	-- 	order = "b[srf]",
+	-- 	place_result = "tiberium-extruder",
+	-- 	stack_size = 50
+	-- },
 	{
 		type = "item",
 		name = "tiberium-srf-emitter",
@@ -212,27 +212,6 @@ data:extend{
 	},
 	{
 		type = "item",
-		name = "tiberium-node-harvester",
-		icon = "__base__/graphics/icons/pumpjack.png",
-		icon_mipmaps = 4,
-		icon_size = 64,
-		order = "c[node-harvester]",
-		place_result = "tiberium-node-harvester",
-		stack_size = 20,
-		subgroup = "a-buildings",
-	},
-	{
-		type = "item",
-		name = "tiberium-spike",
-		icon = tiberiumInternalName.."/graphics/icons/tiberium-spike.png",
-		icon_size = 128,
-		order = "g[tiberium-spike]",
-		place_result = "tiberium-spike",
-		stack_size = 20,
-		subgroup = "a-buildings",
-	},
-	{
-		type = "item",
 		name = "tiberium-beacon-node",
 		icon = tiberiumInternalName.."/graphics/icons/beacon.png",
 		icon_size = 32,
@@ -272,16 +251,66 @@ data:extend{
 		place_result = "tiberium-advanced-guard-tower",
 		stack_size = 50
 	},
+	-- Node structures
+	{
+		type = "item",
+		name = "tiberium-node-harvester",
+		icon = "__base__/graphics/icons/pumpjack.png",
+		icon_mipmaps = 4,
+		icon_size = 64,
+		subgroup = "a-node-buildings",
+		order = "a[node-harvester]",
+		place_result = "tiberium-node-harvester",
+		stack_size = 20,
+	},
+	{
+		type = "item",
+		name = "tiberium-growth-accelerator",
+		icon = tiberiumInternalName.."/graphics/technology/growth-accelerator.png",
+		icon_size = 128,
+		subgroup = "a-node-buildings",
+		order = "b[tiberium-growth-accelerator]",
+		place_result = "tiberium-growth-accelerator-node",
+		stack_size = 20,
+	},
 	{
 		type = "item",
 		name = "tiberium-detonation-charge",
 		icon = "__base__/graphics/icons/crash-site-chest.png",
 		icon_mipmaps = 4,
 		icon_size = 64,
-		order = "g[tiberium-detonation-charge]",
+		subgroup = "a-node-buildings",
+		order = "c[tiberium-detonation-charge]",
 		place_result = "tiberium-detonation-charge",
 		stack_size = 20,
-		subgroup = "a-buildings",
+	},
+	{
+		type = "item",
+		name = "tiberium-spike",
+		icon = tiberiumInternalName.."/graphics/icons/tiberium-spike.png",
+		icon_size = 128,
+		subgroup = "a-node-buildings",
+		order = "d[tiberium-spike]",
+		place_result = "tiberium-spike",
+		stack_size = 20,
+	},
+	{
+		type = "item",
+		name = "tiberium-monoculture-green",
+		icons = common.layeredIcons(tiberiumInternalName.."/graphics/entity/monoculture/monoculture-green.png", 256, tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "sw"),
+		subgroup = "a-node-buildings",
+		order = "e[tiberium-monoculture-green]",
+		place_result = "tiberium-monoculture-green-node",
+		stack_size = 20
+	},
+	{
+		type = "item",
+		name = "tiberium-monoculture-blue",
+		icons = common.layeredIcons(tiberiumInternalName.."/graphics/entity/monoculture/monoculture-blue.png", 256, tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "sw"),
+		subgroup = "a-node-buildings",
+		order = "f[tiberium-monoculture-blue]",
+		place_result = "tiberium-monoculture-blue-node",
+		stack_size = 50
 	},
 	--Military
 	{

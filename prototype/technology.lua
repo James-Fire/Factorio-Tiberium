@@ -361,6 +361,34 @@ data:extend{
 	},
 	{
 		type = "technology",
+		name = "tiberium-monoculture",
+		icon = tiberiumInternalName.."/graphics/entity/monoculture/monoculture-green.png",
+		icon_size = 256,
+		effects = {
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-monoculture-green"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-monoculture-blue"
+			}
+		},
+		prerequisites = {"tiberium-mutation", "tiberium-ore-destruction"},
+		unit = {
+			count = 400,
+			ingredients = {
+				{"tiberium-science", 1},
+				{"automation-science-pack", 1},
+				{"logistic-science-pack", 1},
+				{"chemical-science-pack", 1},
+				{"production-science-pack", 1}
+			},
+			time = 30
+		}
+	},
+	{
+		type = "technology",
 		name = "tiberium-advanced-containment-tech",
 		icon = tiberiumInternalName.."/graphics/technology/tiberium-minus.png",
 		icon_size = 128,

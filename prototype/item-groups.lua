@@ -16,39 +16,45 @@ data:extend{
 	},
 	{
 		type = "item-subgroup",
-		name = "a-refining",
+		name = "a-node-buildings",
 		group = "tiberium",
 		order = "f-1",
 	},
 	{
 		type = "item-subgroup",
-		name = "a-centrifuging",
+		name = "a-refining",
 		group = "tiberium",
 		order = "f-2",
 	},
 	{
 		type = "item-subgroup",
-		name = "a-direct-easy",
+		name = "a-centrifuging",
 		group = "tiberium",
 		order = "f-3",
 	},
 	{
 		type = "item-subgroup",
-		name = "a-direct",
+		name = "a-direct-easy",
 		group = "tiberium",
 		order = "f-4",
 	},
 	{
 		type = "item-subgroup",
-		name = "a-growth-credits",
+		name = "a-direct",
 		group = "tiberium",
 		order = "f-5",
 	},
 	{
 		type = "item-subgroup",
-		name = "a-intermediates",
+		name = "a-growth-credits",
 		group = "tiberium",
 		order = "f-6",
+	},
+	{
+		type = "item-subgroup",
+		name = "a-intermediates",
+		group = "tiberium",
+		order = "f-7",
 	},
 	{
 		type = "item-subgroup",
@@ -127,6 +133,14 @@ data:extend{
 	{
 		type = "recipe-category",
 		name = "tiberium-reprocessing"
+	},
+	{
+		type = "recipe-category",
+		name = "tiberium-transmutation"
+	},
+	{
+		type = "recipe-category",
+		name = "tiberium-monoculture"
 	},
 	{
 		type = "recipe-category",

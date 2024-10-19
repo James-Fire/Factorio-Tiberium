@@ -701,20 +701,6 @@ data:extend{
 data:extend{
 	{
 		type = "recipe",
-		name = "tiberium-node-harvester",
-		energy_required = 20,
-		enabled = false,
-		subgroup = "a-buildings",
-		ingredients = {
-			{"advanced-circuit", 25},
-			{"electric-mining-drill", 5},
-			{"iron-gear-wheel", 50},
-			{"iron-plate", 100}
-		},
-		result = "tiberium-node-harvester",
-	},
-	{
-		type = "recipe",
 		name = "tiberium-aoe-node-harvester",
 		energy_required = 20,
 		enabled = false,
@@ -740,20 +726,6 @@ data:extend{
 			{"steel-plate", 50}
 		},
 		result = "tiberium-beacon-node",
-	},
-	{
-		type = "recipe",
-		name = "tiberium-spike",
-		energy_required = 20,
-		enabled = false,
-		subgroup = "a-buildings",
-		ingredients = {
-			{"processing-unit", 20},
-			{"pumpjack", 5},
-			{"solar-panel", 10},
-			{"tiberium-srf-emitter", 4}
-		},
-		result = "tiberium-spike",
 	},
 	{
 		type = "recipe",
@@ -807,19 +779,6 @@ data:extend{
 			{"programmable-speaker", 1},
 		},
 		result = "tiberium-sonic-emitter-blue"
-	},
-	{
-		type = "recipe",
-		name = "tiberium-growth-accelerator",
-		enabled = false,
-		subgroup = "a-buildings",
-		ingredients = {
-			{"steel-plate", 25},
-			{"advanced-circuit", 15},
-			{"pipe", 10}
-		},
-		energy_required = 30,
-		result = "tiberium-growth-accelerator",
 	},
 	{
 		type = "recipe",
@@ -892,6 +851,45 @@ data:extend{
 	},
 	{
 		type = "recipe",
+		name = "tiberium-monoculture-green-fixed-recipe",
+		energy_required = 1,
+		enabled = false,
+		hidden = true,
+		category = "tiberium-monoculture",
+		crafting_machine_tint = common.tibCraftingBlueTint,
+		ingredients = {
+			{"tiberium-ore-blue", 4},
+		},
+		result = "tiberium-ore"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-monoculture-blue-fixed-recipe",
+		energy_required = 1,
+		enabled = false,
+		hidden = true,
+		category = "tiberium-monoculture",
+		crafting_machine_tint = common.tibCraftingTint,
+		ingredients = {
+			{"tiberium-ore", 4},
+		},
+		result = "tiberium-ore-blue"
+	},
+	-- {
+	-- 	type = "recipe",
+	-- 	name = "tiberium-extruder",
+	-- 	energy_required = 10,
+	-- 	enabled = true,
+	-- 	subgroup = "a-buildings",
+	-- 	ingredients = {
+	-- 		{"stone-brick", 50},
+	-- 		{"steel-plate", 20},
+	-- 		{"engine-unit", 10},
+	-- 	},
+	-- 	result = "tiberium-extruder"
+	-- },
+	{
+		type = "recipe",
 		name = "tiberium-obelisk-of-light",
 		energy_required = 20,
 		enabled = false,
@@ -917,18 +915,88 @@ data:extend{
 		},
 		result = "tiberium-advanced-guard-tower"
 	},
+}
+-- Node buildings
+data:extend{
+	{
+		type = "recipe",
+		name = "tiberium-node-harvester",
+		energy_required = 20,
+		enabled = false,
+		subgroup = "a-node-buildings",
+		ingredients = {
+			{"advanced-circuit", 25},
+			{"electric-mining-drill", 5},
+			{"iron-gear-wheel", 50},
+			{"iron-plate", 100}
+		},
+		result = "tiberium-node-harvester",
+	},
+	{
+		type = "recipe",
+		name = "tiberium-growth-accelerator",
+		enabled = false,
+		subgroup = "a-node-buildings",
+		ingredients = {
+			{"steel-plate", 25},
+			{"advanced-circuit", 15},
+			{"pipe", 10}
+		},
+		energy_required = 30,
+		result = "tiberium-growth-accelerator",
+	},
 	{
 		type = "recipe",
 		name = "tiberium-detonation-charge",
 		energy_required = 8,
 		enabled = false,
-		subgroup = "a-buildings",
+		subgroup = "a-node-buildings",
 		ingredients = {
 			{"empty-barrel", 1},
 			{"tiberium-blue-explosives", 10},
 			{"grenade", 1},
 		},
 		result = "tiberium-detonation-charge"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-spike",
+		energy_required = 20,
+		enabled = false,
+		subgroup = "a-node-buildings",
+		ingredients = {
+			{"processing-unit", 20},
+			{"pumpjack", 5},
+			{"solar-panel", 10},
+			{"tiberium-srf-emitter", 4}
+		},
+		result = "tiberium-spike",
+	},
+	{
+		type = "recipe",
+		name = "tiberium-monoculture-green",
+		energy_required = 10,
+		enabled = false,
+		subgroup = "a-node-buildings",
+		ingredients = {
+			{"steel-plate", 50},
+			{"tiberium-growth-accelerator", 1},
+			{"tiberium-sonic-emitter-blue", 4},
+		},
+		result = "tiberium-monoculture-green"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-monoculture-blue",
+		energy_required = 10,
+		enabled = false,
+		subgroup = "a-node-buildings",
+		ingredients = {
+			{"steel-plate", 50},
+			{"tiberium-growth-accelerator", 1},
+			{"tiberium-sonic-emitter", 4},
+		},
+		result = "tiberium-monoculture-blue"
 	},
 }
 
