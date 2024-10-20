@@ -12,20 +12,20 @@ local TCN_Beacon_Name = "TCN-beacon"
 local TCN_affected_entities = {"tiberium-aoe-node-harvester", "tiberium-spike", "tiberium-node-harvester", "tiberium-network-node"}
 local tiberiumNodeNames = {"tibGrowthNode", "tibGrowthNode_infinite"}
 
-local TiberiumDamage = settings.startup["tiberium-damage"].value
+local TiberiumDamage = settings.global["tiberium-damage"].value
 local TiberiumGrowth = settings.startup["tiberium-growth"].value * 10
 local TiberiumMaxPerTile = settings.startup["tiberium-growth"].value * 100 --Force 10:1 ratio with growth
-local TiberiumRadius = 20 + settings.startup["tiberium-spread"].value * 0.4 --Translates to 20-60 range
-local TiberiumSpread = settings.startup["tiberium-spread"].value
-local BlueTargetEvo = settings.startup["tiberium-blue-target-evo"].value
-local BlueTiberiumSaturation = settings.startup["tiberium-blue-saturation-point"].value / 100
-local BlueTiberiumSaturationGrowth = settings.startup["tiberium-blue-saturation-slowdown"].value / 100
-local bitersImmune = settings.startup["tiberium-wont-damage-biters"].value
+local TiberiumRadius = settings.startup["tiberium-radius"].value
+local TiberiumSpreadNodes = settings.global["tiberium-spread-nodes"].value
+local BlueTargetEvo = settings.global["tiberium-blue-target-evo"].value
+local BlueTiberiumSaturation = settings.global["tiberium-blue-saturation-point"].value / 100
+local BlueTiberiumSaturationGrowth = settings.global["tiberium-blue-saturation-slowdown"].value / 100
+local bitersImmune = settings.global["tiberium-wont-damage-biters"].value
 local ItemDamageScale = settings.global["tiberium-item-damage-scale"].value
 local easyMode = settings.startup["tiberium-easy-recipes"].value
 local burnerTier = settings.startup["tiberium-tier-zero"].value
-local performanceMode = settings.startup["tiberium-auto-scale-performance"].value
-local debugText = settings.startup["tiberium-debug-text"].value
+local performanceMode = settings.global["tiberium-auto-scale-performance"].value
+local debugText = settings.global["tiberium-debug-text"].value
 -- Starting items, if the option is ticked.
 local tiberium_start = {
 	["assembling-machine-2"] = 5,
@@ -224,6 +224,28 @@ script.on_configuration_changed(function(data)
 
 	-- Apply new settings
 	globalIntegrityChecks()
+end)
+
+script.on_event(defines.events.on_runtime_mod_setting_changed, function(data)
+	if data.setting == "tiberium-item-damage-scale" then
+		ItemDamageScale = settings.global["tiberium-item-damage-scale"].value
+	elseif data.setting == "tiberium-spread-nodes" then
+		TiberiumSpreadNodes = settings.global["tiberium-spread-nodes"].value
+	elseif data.setting == "tiberium-damage" then
+		TiberiumDamage = settings.global["tiberium-damage"].value
+	elseif data.setting == "tiberium-blue-saturation-point" then
+		BlueTiberiumSaturation = settings.global["tiberium-blue-saturation-point"].value / 100
+	elseif data.setting == "tiberium-blue-saturation-slowdown" then
+		BlueTiberiumSaturationGrowth = settings.global["tiberium-blue-saturation-slowdown"].value / 100
+	elseif data.setting == "tiberium-wont-damage-biters" then
+		bitersImmune = settings.global["tiberium-wont-damage-biters"].value
+	elseif data.setting == "tiberium-auto-scale-performance" then
+		performanceMode = settings.global["tiberium-auto-scale-performance"].value
+	elseif data.setting == "tiberium-blue-target-evo" then
+		BlueTargetEvo = settings.global["tiberium-blue-target-evo"].value
+	elseif data.setting == "tiberium-debug-text" then
+		debugText = settings.global["tiberium-debug-text"].value
+	end
 end)
 
 function doUpgradeConversions(data)
@@ -685,9 +707,8 @@ function AddOre(surface, position, amount, oreName, cascaded)
 				entity.destroy()
 			end
 		end
-		if (surface.count_entities_filtered{area = area, type = "tree"} > 0)
-				and (math.random() < (TiberiumSpread / 100) ^ 4) then  -- Around 1% chance to turn a tree into a Blossom Tree
-			CreateNode(surface, position)
+		if TiberiumSpreadNodes and (surface.count_entities_filtered{area = area, type = "tree"} > 0) and (math.random() < 0.05) then
+			CreateNode(surface, position)  -- Rarely turn trees into blossom trees
 		else
 			oreEntity = surface.create_entity{name = oreName, amount = growthRate, position = position, enable_cliff_removal = false}
 			if global.tiberiumTerrain then
@@ -789,8 +810,7 @@ function PlaceOre(entity, howMany)
 	end
 
 	-- Scale growth rate based on distance from spawn
-	local growthRate = TiberiumGrowth * global.tibPerformanceMultiplier * math.max(1, TiberiumSpread / 50)
-			* math.max(1, math.sqrt(math.abs(position.x) + math.abs(position.y)) / 20)
+	local growthRate = TiberiumGrowth * global.tibPerformanceMultiplier * math.max(1, math.sqrt(math.abs(position.x) + math.abs(position.y)) / 20)
 	-- Scale size based on distance from spawn, separate from density in case we end up wanting them to scale differently
 	local size = TiberiumRadius * math.max(1, math.sqrt(math.abs(position.x) + math.abs(position.y)) / 30)
 
@@ -842,7 +862,7 @@ function PlaceOre(entity, howMany)
 		if not placedOre then
 			local oreEntity = AddOre(surface, lastValidPosition, growthRate, oreName)
 			--Spread setting makes spawning new nodes more likely
-			if oreEntity and oreEntity.valid and (TiberiumSpread > 0) and (math.random() < ((oreEntity.amount / TiberiumMaxPerTile) + (TiberiumSpread / 50 - 0.9))) then
+			if oreEntity and oreEntity.valid and TiberiumSpreadNodes and (math.random() < ((oreEntity.amount / TiberiumMaxPerTile) - 0.6)) then
 				CreateNode(surface, lastValidPosition)  --Use standard function to also remove overlapping ore
 			end
 		end
@@ -1512,7 +1532,7 @@ function globalIntegrityChecks()
 		local resources = surface.get_resource_counts()
 		local blue = resources["tiberium-ore-blue"] or 0
 		local green = resources["tiberium-ore"] or 1
-		if blue > (blue + green) * BlueTiberiumSaturation then
+		if blue > ((blue + green) * BlueTiberiumSaturation) then
 			global.blueProgress[surface.index] = 2
 		elseif blue > 0 then
 			global.blueProgress[surface.index] = 1

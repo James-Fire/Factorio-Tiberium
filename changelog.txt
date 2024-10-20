@@ -4,7 +4,10 @@ Version: 1.1.30
     - Fixed crash when deleting surface that has SRF emitters on it (this one slipped through 1.1.17's surface fixes)
     - Fixed possible crash from trees growing on top of Tiberium Ore patches
     - Fixed Sonic Emitter shadow to not be a laser turret (did you even notice it before?)
+    - Fixed Inventory Tiberium Damage Scale setting not applying until you restarted your game
   Changes:
+    - Split the ambiguous 0-100 Tiberium Patch Size setting into two self-explanatory settings: Tiberium Patch Radius and Grow New Tiberium Nodes
+    - Added support for changing 8 more settings without needing to restart Factorio
     - Added missing temperature requirement on steam for the Accelerated Liquid Tiberium Processing recipe
     - Removed Copper from Empty Cell recipe
     - Reduced plastic cost of empty cells per recipe from 5 to 4

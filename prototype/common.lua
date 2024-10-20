@@ -15,7 +15,7 @@ common.blankPicture = {
     height = 1
 }
 
-common.TiberiumRadius = 20 + settings.startup["tiberium-spread"].value * 0.4 --Translates to 20-60 range
+common.TiberiumRadius = settings.startup["tiberium-radius"].value
 
 common.TiberiumInStartingArea = settings.startup["tiberium-starting-area"].value or settings.startup["tiberium-ore-removal"].value or false
 

@@ -1,6 +1,6 @@
 -- Basic setup, variables to use. (Might expose to settings sometime? Or perhaps make research allow for longer wall segments?)
 require("__LSlib__/LSlib")
-local debugText = settings.startup["tiberium-debug-text"].value
+local debugText = settings.global["tiberium-debug-text"].value
 
 local horz_wall, vert_wall = 1, 2
 local dir_mods = {

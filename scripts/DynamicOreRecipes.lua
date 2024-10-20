@@ -2,7 +2,7 @@
 -- Make matrix solver more reliable
 
 local tableLS = LSlib.utils.table
-local debugText = settings.startup["tiberium-debug-text"].value
+local debugText = settings.startup["tiberium-debug-text-startup"].value
 local easyMode = settings.startup["tiberium-easy-recipes"].value
 local free = {}
 local excludedCrafting = {["transport-drone-request"] = true, ["auto-fabricator"] = true} --Rigorous way to do this?
