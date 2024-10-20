@@ -601,6 +601,12 @@ function doUpgradeConversions(data)
 		for _, force in pairs(game.forces) do
 			UpdateRecipeUnlocks(force)
 		end
+		for _, surface in pairs(game.surfaces) do
+			-- Make existing Blossom Trees destructible so cliff explosives work on them
+			for _, blossomTree in pairs(surface.find_entities_filtered{name = "tibNode_tree"}) do
+				blossomTree.destructible = true
+			end
+		end
 	end
 
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
@@ -1018,6 +1024,11 @@ script.on_event(defines.events.on_script_trigger_effect, function(event)
 		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 3, {"tiberium-ore", "tiberium-ore-blue"})
 	elseif event.effect_id == "ore-destruction-nuke" then
 		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 37, {"tiberium-ore", "tiberium-ore-blue"})
+	elseif event.effect_id == "node-destruction" then
+		for _, node in pairs(game.surfaces[event.surface_index].find_entities_filtered{area = areaAroundPosition(event.target_position), name = "tibGrowthNode"}) do
+			removeNodeFromGrowthList(node)
+			node.destroy{raise_destroy = true}
+		end
 	end
 end)
 
@@ -1779,13 +1790,12 @@ end
 
 function createBlossomTree(surface, position)
 	if surface and surface.valid and surface.count_entities_filtered{area = areaAroundPosition(position), name = "tibGrowthNode"} > 0 then
-		local blossomTree = surface.create_entity{
+		surface.create_entity{
 			name = "tibNode_tree",
 			position = position,
 			force = game.forces.neutral,
 			raise_built = false
 		}
-		blossomTree.destructible = false
 	end
 end
 
@@ -1838,6 +1848,7 @@ function on_entity_died(event)
 	-- Need to handle detonation charges down here because on_entity_destroyed can't distinguish between dying and mining
 	if entity and (entity.name == "tiberium-detonation-charge") then
 		for _, node in pairs(entity.surface.find_entities_filtered{area = areaAroundPosition(entity.position), name = "tibGrowthNode"}) do
+			removeNodeFromGrowthList(node)
 			node.destroy{raise_destroy = true}
 		end
 	end

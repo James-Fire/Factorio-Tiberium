@@ -952,11 +952,25 @@ data:extend{
 		enabled = false,
 		subgroup = "a-node-buildings",
 		ingredients = {
-			{"empty-barrel", 1},
 			{"tiberium-blue-explosives", 10},
+			{"empty-barrel", 1},
 			{"grenade", 1},
 		},
 		result = "tiberium-detonation-charge"
+	},
+	{
+		type = "recipe",
+		name = "tiberium-cliff-explosives",
+		enabled = false,
+		subgroup = "a-node-buildings",
+		category = "crafting",
+		energy_required = 1,
+		ingredients = {
+			{"tiberium-blue-explosives", 10},
+			{"empty-barrel", 1},
+			{"grenade", 1},
+		},
+		result= "tiberium-cliff-explosives",
 	},
 	{
 		type = "recipe",

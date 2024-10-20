@@ -183,24 +183,50 @@ local tne = noise.to_noise_expression;
 resource_autoplace = require("resource-autoplace");
 resource_autoplace.initialize_patch_set("tibGrowthNode", common.TiberiumInStartingArea)
 
+local oriented_cliff_dummy = {
+	collision_bounding_box = {{-0.4, -0.4}, {0.4, 0.4}},
+	pictures = {
+		filename = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
+		width = 320,
+		height = 251,
+	},
+	fill_volume = 0
+}
+
 data:extend{
 	{
-		type = "simple-entity",
+		type = "cliff",
 		name = "tibNode_tree",
 		icon = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
 		icon_size = 32,
 		flags = {"placeable-neutral", "not-repairable", "not-flammable"},
-		subgroup = "remnants",
-		order = "a[remnants]",
-		--selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
+		cliff_explosive = "tiberium-cliff-explosives",
+		grid_size = {1, 1},
+		grid_offset = {0.5, 0.5},
 		selection_priority = 2,
-		collision_box = {{-0.4, -0.4}, {0.4, 0.4}},
 		collision_mask = {"item-layer", "object-layer"},
-		picture = {
-			filename = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
-			width = 320,
-			height = 251,
-		},
+		orientations = {
+			west_to_east = oriented_cliff_dummy,
+			north_to_south = oriented_cliff_dummy,
+			east_to_west = oriented_cliff_dummy,
+			south_to_north = oriented_cliff_dummy,
+			west_to_north = oriented_cliff_dummy,
+			north_to_east = oriented_cliff_dummy,
+			east_to_south = oriented_cliff_dummy,
+			south_to_west = oriented_cliff_dummy,
+			west_to_south = oriented_cliff_dummy,
+			north_to_west = oriented_cliff_dummy,
+			east_to_north = oriented_cliff_dummy,
+			south_to_east = oriented_cliff_dummy,
+			west_to_none = oriented_cliff_dummy,
+			none_to_east = oriented_cliff_dummy,
+			north_to_none = oriented_cliff_dummy,
+			none_to_south = oriented_cliff_dummy,
+			east_to_none = oriented_cliff_dummy,
+			none_to_west = oriented_cliff_dummy,
+			south_to_none = oriented_cliff_dummy,
+			none_to_north = oriented_cliff_dummy,
+		}
 	},
 	{
 		type = "resource",

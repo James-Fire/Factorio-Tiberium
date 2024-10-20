@@ -22,6 +22,7 @@ Version: 1.1.30
     - Added new Require Resource Seed for Transmutation setting to optionally modify recipes that previously broke resource progression from other mods
     - Liquid Tiberium Bombs now destroy all Tiberium Ore within their blast radius
     - Added Tiberium Artillery Shells that create Tiberium Ore at their impact site
+    - Added Cliff-Explosives-inspired way to destroy Tiberium Blossom Trees (and it works with deconstruction planners)
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.29
   Bugfixes:

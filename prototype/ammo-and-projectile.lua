@@ -464,7 +464,7 @@ tibArtilleryProj.action.action_delivery.target_effects = {
 					{
 						damage = {
 						amount = 500,
-						type = "explosive"
+						type = "explosion"
 						},
 						type = "damage"
 					},
@@ -874,3 +874,70 @@ data:extend{catalystAll, catalystBlue, invisibleChainReactionAll, invisibleChain
 		stack_size = 200
 	},
 }
+
+-- Tiberium Cliff Explosives
+local tibCliffCapsule = flib.copy_prototype(data.raw.capsule["cliff-explosives"], "tiberium-cliff-explosives")
+tibCliffCapsule.capsule_action.attack_parameters.ammo_type.action.action_delivery.projectile = "tiberium-cliff-explosives"
+tibCliffCapsule.icon = tiberiumInternalName.."/graphics/icons/tiberium-cliff-explosives.png"
+tibCliffCapsule.subgroup = "a-items"
+
+local tibCliffProj = flib.copy_prototype(data.raw.projectile["cliff-explosives"], "tiberium-cliff-explosives")
+tibCliffProj.action[1].action_delivery.target_effects = {
+	{
+		entity_name = "ground-explosion",
+		type = "create-entity"
+	},
+	{
+		check_buildability = true,
+		entity_name = "small-scorchmark-tintable",
+		type = "create-entity"
+	},
+	{
+		explosion = "explosion",
+		radius = 1.5,
+		type = "destroy-cliffs"
+	},
+	{
+		type = "script",
+		effect_id = "node-destruction"
+	},
+	{
+		repeat_count = 1,
+		type = "invoke-tile-trigger"
+	},
+	{
+		decoratives_with_trigger_only = false,
+		from_render_layer = "decorative",
+		include_decals = false,
+		include_soft_decoratives = true,
+		invoke_decorative_trigger = true,
+		radius = 2,
+		to_render_layer = "object",
+		type = "destroy-decoratives"
+	}
+}
+tibCliffProj.animation = {
+	animation_speed = 0.25,
+	draw_as_glow = true,
+	filename = tiberiumInternalName.."/graphics/entity/cliff-explosives/tiberium-cliff-explosives.png",
+	frame_count = 16,
+	height = 30,
+	width = 26,
+	hr_version = {
+		animation_speed = 0.25,
+		draw_as_glow = true,
+		filename = tiberiumInternalName.."/graphics/entity/cliff-explosives/hr-tiberium-cliff-explosives.png",
+		frame_count = 16,
+		height = 58,
+		width = 52,
+		line_length = 8,
+		priority = "high",
+		scale = 0.5,
+		shift = {0.015625, -0.140625},
+	},
+	line_length = 8,
+	priority = "high",
+	shift = {0, -0.125},
+}
+
+data:extend{tibCliffCapsule, tibCliffProj}

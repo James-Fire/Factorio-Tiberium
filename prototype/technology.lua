@@ -807,6 +807,10 @@ data:extend{
 				type = "unlock-recipe",
 				recipe = "tiberium-detonation-charge",
 			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-cliff-explosives",
+			},
 		},
 		prerequisites = {"tiberium-containment-tech", "tiberium-military-2", "tiberium-refining-blue", "circuit-network"},
 		unit = {
