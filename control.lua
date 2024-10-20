@@ -597,6 +597,12 @@ function doUpgradeConversions(data)
 		global.lastRescan = 0
 	end
 
+	if upgradingToVersion(data, tiberiumInternalName, "1.1.30") then
+		for _, force in pairs(game.forces) do
+			UpdateRecipeUnlocks(force)
+		end
+	end
+
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
 			(data["mod_changes"]["Factorio-Tiberium-Beta"] and data["mod_changes"]["Factorio-Tiberium-Beta"]["old_version"]) then
 		game.print("[Factorio-Tiberium] Successfully converted save from Beta Tiberium mod to Main Tiberium mod")

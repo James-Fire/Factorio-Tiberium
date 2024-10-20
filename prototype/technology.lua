@@ -723,11 +723,15 @@ data:extend{
 				recipe = "tiberium-marv"
 			},
 			{
+				type = "unlock-recipe",
+				recipe = "tiberium-artillery-shell"
+			},
+			{
 				type = "nothing",
 				effect_description = {"technology-description.tiberium-military-total-immunity"}
 			},
 		},
-		prerequisites = {"tiberium-military-2", "tiberium-containment-tech", "power-armor-mk2"},
+		prerequisites = {"tiberium-military-2", "tiberium-containment-tech", "power-armor-mk2", "artillery"},
 		unit = {
 			count = 200,
 			ingredients = {

@@ -1079,6 +1079,19 @@ data:extend{
 	},
 	{
 		type = "recipe",
+		name = "tiberium-artillery-shell",
+		enabled = false,
+		category = "crafting",
+		energy_required = 1,
+		ingredients = {
+			{"tiberium-blue-explosives", 8},
+			{"explosive-cannon-shell", 4},
+			{"radar", 1},
+		},
+		result= "tiberium-artillery-shell",
+	},
+	{
+		type = "recipe",
 		name = "tiberium-grenade-all",
 		enabled = false,
 		category = "crafting",

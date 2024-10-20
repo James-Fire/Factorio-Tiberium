@@ -440,6 +440,78 @@ data:extend{tibNukeGroundZero, tibNukeWave, tibNukeProjectile,
 	},
 }
 
+--Tiberium Artillery Shell
+local tibArtilleryAmmo = flib.copy_prototype(data.raw.ammo["artillery-shell"], "tiberium-artillery-shell")
+tibArtilleryAmmo.icon = tiberiumInternalName.."/graphics/icons/tiberium-artillery-shell.png"
+tibArtilleryAmmo.icon_mipmaps = 1
+tibArtilleryAmmo.subgroup = "a-items"
+tibArtilleryAmmo.order = "d[explosive-cannon-shell]-d[tiberium-artillery]"
+tibArtilleryAmmo.ammo_type.action.action_delivery.projectile = "tiberium-artillery-projectile"
+
+local tibArtilleryProj = flib.copy_prototype(data.raw["artillery-projectile"]["artillery-projectile"], "tiberium-artillery-projectile")
+tibArtilleryProj.action.action_delivery.target_effects = {
+	{
+		action = {
+			action_delivery = {
+				target_effects = {
+					{
+						damage = {
+						amount = 500,
+						type = "physical"
+						},
+						type = "damage"
+					},
+					{
+						damage = {
+						amount = 500,
+						type = "explosive"
+						},
+						type = "damage"
+					},
+					{
+						damage = {
+						amount = 500,
+						type = "tiberium"
+						},
+						type = "damage"
+					}
+				},
+				type = "instant"
+			},
+			radius = 4,
+			type = "area"
+		},
+		type = "nested-result"
+	},
+	{
+		initial_height = 0,
+		max_radius = 3.5,
+		offset_deviation = {
+			{-4, -4},
+			{4, 4}
+		},
+		repeat_count = 240,
+		smoke_name = "artillery-smoke",
+		speed_from_center = 0.05,
+		speed_from_center_deviation = 0.005,
+		type = "create-trivial-smoke"
+	},
+	{
+		entity_name = "big-artillery-explosion",
+		type = "create-entity"
+	},
+	{
+		scale = 0.25,
+		type = "show-explosion-on-chart"
+	},
+	{
+		type = "script",
+		effect_id = "seed-launch"
+	}
+}
+
+data:extend{tibArtilleryAmmo, tibArtilleryProj}
+
 --Liquid Tiberium Seed
 local tibSeedProjectile = flib.copy_prototype(genericRocketProjectile, "tiberium-seed")
 tibSeedProjectile.action = {
