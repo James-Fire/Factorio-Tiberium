@@ -180,6 +180,10 @@ tibNukeProjectile.action = {
 		type = "instant",
 		target_effects = {
 			{
+				type = "script",
+				effect_id = "ore-destruction-nuke"
+			},
+			{
 				type = "set-tile",
 				tile_name = "nuclear-ground",
 				apply_projection = true,

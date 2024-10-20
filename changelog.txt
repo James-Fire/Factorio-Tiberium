@@ -20,6 +20,7 @@ Version: 1.1.30
     - Added new Tiberium Monoculture structures that consume power to ensure that only one type of Tiberium spawns in their field
     - Added Deadlock's Stacking Beltboxes & Compact Loaders combatibility (thanks to Vascar and https://mods.factorio.com/mod/DeadlockStackingForTiberium)
     - Added new Require Resource Seed for Transmutation setting to optionally modify recipes that previously broke resource progression from other mods
+    - Liquid Tiberium Bombs now destroy all Tiberium Ore within their blast radius
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.29
   Bugfixes:

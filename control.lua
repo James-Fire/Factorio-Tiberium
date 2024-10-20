@@ -1010,6 +1010,8 @@ script.on_event(defines.events.on_script_trigger_effect, function(event)
 		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 3, "tiberium-ore-blue")
 	elseif event.effect_id == "ore-destruction-all" then
 		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 3, {"tiberium-ore", "tiberium-ore-blue"})
+	elseif event.effect_id == "ore-destruction-nuke" then
+		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 37, {"tiberium-ore", "tiberium-ore-blue"})
 	end
 end)
 
