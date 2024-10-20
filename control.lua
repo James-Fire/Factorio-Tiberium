@@ -1168,28 +1168,33 @@ commands.add_command("tibDeleteOre2",
 	end
 )
 commands.add_command("tibChangeTerrain",
-	"Changes terrain under Tiberium growths, can use internal name of any tile. Awful performance",
+	"Changes terrain under Tiberium patches. Parameter is the internal name of the tile you want. Can impact UPS on larger saves. To turn off type '/tibChangeTerrain nil'",
 	function(invocationdata)
 		local terrain = invocationdata["parameter"] or "dirt-4"
-		--if not terrain then game.print("Not a valid tile name: "..terrain) break end
-		global.tiberiumTerrain = terrain
-		--Ore
-		for _, surface in pairs(game.surfaces) do
-			for _, ore in pairs(surface.find_entities_filtered{name = global.oreTypes}) do
-				ore.surface.set_tiles({{name = terrain, position = ore.position}}, true, false)
-			end
-		end
-		--Nodes
-		for _, node in pairs(global.tibGrowthNodeList) do
-			if node.valid then
-				local position = node.position
-				local area = areaAroundPosition(position, 1)
-				local newTiles = {}
-				local oldTiles = node.surface.find_tiles_filtered{area = area, collision_mask = "ground-tile"}
-				for i, tile in pairs(oldTiles) do
-					newTiles[i] = {name = terrain, position = tile.position}
+		if terrain == "nil" then
+			global.tiberiumTerrain = nil
+			game.print("Disabled Tiberium terrain texture.")
+		else
+			global.tiberiumTerrain = terrain
+			game.print("Changed Tiberium terrain texture to "..terrain..". If UPS drops, you can use '/tibChangeTerrain nil' to disable this feature.")
+			--Ore
+			for _, surface in pairs(game.surfaces) do
+				for _, ore in pairs(surface.find_entities_filtered{name = global.oreTypes}) do
+					ore.surface.set_tiles({{name = terrain, position = ore.position}}, true, false)
 				end
-				node.surface.set_tiles(newTiles, true, false)
+			end
+			--Nodes
+			for _, node in pairs(global.tibGrowthNodeList) do
+				if node.valid then
+					local position = node.position
+					local area = areaAroundPosition(position, 1)
+					local newTiles = {}
+					local oldTiles = node.surface.find_tiles_filtered{area = area, collision_mask = "ground-tile"}
+					for i, tile in pairs(oldTiles) do
+						newTiles[i] = {name = terrain, position = tile.position}
+					end
+					node.surface.set_tiles(newTiles, true, false)
+				end
 			end
 		end
 	end

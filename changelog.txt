@@ -23,6 +23,7 @@ Version: 1.1.30
     - Liquid Tiberium Bombs now destroy all Tiberium Ore within their blast radius
     - Added Tiberium Artillery Shells that create Tiberium Ore at their impact site
     - Added Cliff-Explosives-inspired way to destroy Tiberium Blossom Trees (and it works with deconstruction planners)
+    - Added parameter to turn off /tibChangeTerrain command
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.29
   Bugfixes:
