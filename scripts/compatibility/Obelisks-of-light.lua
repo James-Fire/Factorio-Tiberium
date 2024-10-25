@@ -10,12 +10,14 @@ if mods["Obelisks-of-light"] then
 	end
 	data.raw.recipe["tiberium-obelisk-of-light"].hidden = true
 	--Tech: delete his tech, update recipe unlocks on my tech
-	LSlib.technology.addRecipeUnlock("tiberium-military-2", "obelisk-of-light")
-	LSlib.technology.removeRecipeUnlock("tiberium-military-2", "tiberium-obelisk-of-light")
-	LSlib.technology.setHidden("Obelisks-of-light")
-	for tech, _ in pairs(data.raw.technology) do
-		if string.sub(tech, 1, 22) == "Obelisk-weapons-damage" or string.sub(tech, 1, 22) == "Obelisk-Shooting-Speed" then
-			LSlib.technology.setHidden(tech)  --Don't need custom weapon category upgrades since we are using default laser group
+	common.technology.addRecipeUnlock("tiberium-military-2", "obelisk-of-light")
+	common.technology.removeRecipeUnlock("tiberium-military-2", "tiberium-obelisk-of-light")
+	if data.raw.technology["Obelisks-of-light"] then
+		data.raw.technology["Obelisks-of-light"].hidden = true
+	end
+	for technologyName, _ in pairs(data.raw.technology) do
+		if string.sub(technologyName, 1, 22) == "Obelisk-weapons-damage" or string.sub(technologyName, 1, 22) == "Obelisk-Shooting-Speed" then
+			data.raw.technology[technologyName].hidden = true --Don't need custom weapon category upgrades since we are using default laser group
 		end
 	end
 	--Entity: Translate his sprites/animations but use my sounds

@@ -13,43 +13,28 @@ data:extend{
 				layers = {
 					{
 						filename = "__base__/graphics/entity/crash-site-chests/crash-site-chest-1.png",
-						height = 39,
-						width = 61,
+						height = 76,
+						width = 120,
 						priority = "extra-high",
 						shift = {0.0625, 0.25},
-						hr_version = {
-							filename = "__base__/graphics/entity/crash-site-chests/hr-crash-site-chest-1.png",
-							height = 76,
-							width = 120,
-							priority = "extra-high",
-							scale = 0.5,
-							shift = {0.0625, 0.25},
-						},
+						scale = 0.5,
 					},
 					{
 						draw_as_shadow = true,
 						filename = "__base__/graphics/entity/crash-site-chests/crash-site-chest-1-shadow.png",
-						height = 67,
-						width = 99,
+						height = 128,
+						width = 210,
 						priority = "extra-high",
-						shift = {-0.25, 0.0625},
-						hr_version = {
-							draw_as_shadow = true,
-							filename = "__base__/graphics/entity/crash-site-chests/hr-crash-site-chest-1-shadow.png",
-							height = 128,
-							width = 210,
-							priority = "extra-high",
-							scale = 0.5,
-							shift = {-0.0625, 0.09375},
-						},
+						scale = 0.5,
+						shift = {-0.0625, 0.09375},
 					}
 				}
-		  }
+			}
 		},
 		vector_to_place_result = {0, 0},
 		collision_box = {{-1.2, -1.2}, {1.2, 1.2}},
 		selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
-		collision_mask = {"water-tile", "player-layer"},
+		collision_mask = common.makeCollisionMask({"water_tile", "player"}),
 		corpse = "medium-scorchmark",
 		dying_explosion = "medium-explosion",
 		create_ghost_on_death = false,

@@ -22,19 +22,20 @@ data:extend{
 		},
 		attacking_speed = 0.5,
 		automated_ammo_count = 10,
-		base_picture = {
-			layers = {
-				{
-					axially_symmetrical = false,
-					direction_count = 1,
-					filename = tiberiumInternalName.."/graphics/entity/advanced-guard-tower/advanced-guard-tower.png",
-					frame_count = 1,
-					height = 255,
-					width = 126,
-					scale = 0.7,
-					priority = "high",
-					shift = {0, -1.3},
-				},
+		graphics_set = {
+			animation = {
+				layers = {
+					{
+						direction_count = 1,
+						filename = tiberiumInternalName.."/graphics/entity/advanced-guard-tower/advanced-guard-tower.png",
+						frame_count = 1,
+						height = 255,
+						width = 126,
+						scale = 0.7,
+						priority = "high",
+						shift = {0, -1.3},
+					},
+				}
 			}
 		},
 		call_for_help_radius = 40,
@@ -55,7 +56,6 @@ data:extend{
 		folded_animation = {
 			layers = {
 				{
-					axially_symmetrical = false,
 					direction_count = 1,
 					filename = tiberiumInternalName.."/graphics/entity/advanced-guard-tower/advanced-guard-tower.png",
 					frame_count = 1,
@@ -87,10 +87,7 @@ data:extend{
 				height = 32,
 				priority = "extra-high",
 				scale = 5,
-				shift = {
-					0,
-					1.25
-				},
+				shift = {0, 1.25},
 				variation_count = 1,
 				width = 20
 			},

@@ -87,7 +87,7 @@ data:extend{
 			type = "tiberium"
 		},
 		delay_between_initial_flames = 10,
-		emissions_per_second = 0.005,
+		emissions_per_second = {["pollution"] = 0.005},
 		fade_in_duration = 30,
 		fade_out_duration = 30,
 		flags = {
@@ -109,7 +109,6 @@ data:extend{
 		pictures = {
 			{
 				animation_speed = 1,
-				axially_symmetrical = false,
 				blend_mode = "normal",
 				direction_count = 1,
 				filename = tiberiumInternalName.."/graphics/entity/chemsprayer-stream/fire-flame-13.png",
@@ -131,7 +130,6 @@ data:extend{
 			},
 			-- {
 			-- 	animation_speed = 1,
-			-- 	axially_symmetrical = false,
 			-- 	blend_mode = "normal",
 			-- 	direction_count = 1,
 			-- 	filename = "__base__/graphics/entity/fire-flame/fire-flame-12.png",
@@ -148,7 +146,6 @@ data:extend{
 			-- },
 			-- {
 			-- 	animation_speed = 1,
-			-- 	axially_symmetrical = false,
 			-- 	blend_mode = "normal",
 			-- 	direction_count = 1,
 			-- 	filename = "__base__/graphics/entity/fire-flame/fire-flame-11.png",
@@ -165,7 +162,6 @@ data:extend{
 			-- },
 			-- {
 			-- 	animation_speed = 1,
-			-- 	axially_symmetrical = false,
 			-- 	blend_mode = "normal",
 			-- 	direction_count = 1,
 			-- 	filename = "__base__/graphics/entity/fire-flame/fire-flame-10.png",
@@ -182,7 +178,6 @@ data:extend{
 			-- },
 			-- {
 			-- 	animation_speed = 1,
-			-- 	axially_symmetrical = false,
 			-- 	blend_mode = "normal",
 			-- 	direction_count = 1,
 			-- 	filename = "__base__/graphics/entity/fire-flame/fire-flame-09.png",
@@ -199,7 +194,6 @@ data:extend{
 			-- },
 			-- {
 			-- 	animation_speed = 1,
-			-- 	axially_symmetrical = false,
 			-- 	blend_mode = "normal",
 			-- 	direction_count = 1,
 			-- 	filename = "__base__/graphics/entity/fire-flame/fire-flame-08.png",
@@ -216,7 +210,6 @@ data:extend{
 			-- },
 			-- {
 			-- 	animation_speed = 1,
-			-- 	axially_symmetrical = false,
 			-- 	blend_mode = "normal",
 			-- 	direction_count = 1,
 			-- 	filename = "__base__/graphics/entity/fire-flame/fire-flame-07.png",
@@ -233,7 +226,6 @@ data:extend{
 			-- },
 			-- {
 			-- 	animation_speed = 1,
-			-- 	axially_symmetrical = false,
 			-- 	blend_mode = "normal",
 			-- 	direction_count = 1,
 			-- 	filename = "__base__/graphics/entity/fire-flame/fire-flame-06.png",
@@ -250,7 +242,6 @@ data:extend{
 			-- },
 			-- {
 			-- 	animation_speed = 1,
-			-- 	axially_symmetrical = false,
 			-- 	blend_mode = "normal",
 			-- 	direction_count = 1,
 			-- 	filename = "__base__/graphics/entity/fire-flame/fire-flame-05.png",
@@ -267,7 +258,6 @@ data:extend{
 			-- },
 			-- {
 			-- 	animation_speed = 1,
-			-- 	axially_symmetrical = false,
 			-- 	blend_mode = "normal",
 			-- 	direction_count = 1,
 			-- 	filename = "__base__/graphics/entity/fire-flame/fire-flame-04.png",
@@ -284,7 +274,6 @@ data:extend{
 			-- },
 			-- {
 			-- 	animation_speed = 1,
-			-- 	axially_symmetrical = false,
 			-- 	blend_mode = "normal",
 			-- 	direction_count = 1,
 			-- 	filename = "__base__/graphics/entity/fire-flame/fire-flame-03.png",
@@ -301,7 +290,6 @@ data:extend{
 			-- },
 			-- {
 			-- 	animation_speed = 1,
-			-- 	axially_symmetrical = false,
 			-- 	blend_mode = "normal",
 			-- 	direction_count = 1,
 			-- 	filename = "__base__/graphics/entity/fire-flame/fire-flame-02.png",
@@ -318,7 +306,6 @@ data:extend{
 			-- },
 			-- {
 			-- 	animation_speed = 1,
-			-- 	axially_symmetrical = false,
 			-- 	blend_mode = "normal",
 			-- 	direction_count = 1,
 			-- 	filename = "__base__/graphics/entity/fire-flame/fire-flame-01.png",

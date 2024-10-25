@@ -91,7 +91,6 @@ data:extend{
 		-- },
 		spine_animation = {
 			animation_speed = 2,
-			axially_symmetrical = false,
 			blend_mode = "additive",
 			direction_count = 1,
 			filename = tiberiumInternalName.."/graphics/entity/chemsprayer-stream/flamethrower-fire-stream-spine.png",

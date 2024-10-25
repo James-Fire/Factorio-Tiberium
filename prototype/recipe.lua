@@ -1,55 +1,3 @@
-local TibProductivity = {
-	"tiberium-science-mechanical",
-	"tiberium-science-thermal",
-	"tiberium-science-chemical",
-	"tiberium-science-nuclear",
-	"tiberium-science-EM",
-	"tiberium-science-thru-thermal",
-	"tiberium-science-thru-chemical",
-	"tiberium-science-thru-nuclear",
-	"tiberium-science-thru-EM",
-	"tiberium-ore-processing",
-	"tiberium-molten-processing",
-	"tiberium-liquid-processing",
-	"tiberium-liquid-processing-hot",
-	"tiberium-empty-cell",
-	"tiberium-fuel-cell",
-	"tiberium-ion-core",
-	"tiberium-farming",
-	"tiberium-slurry-mechanical-data",
-	"tiberium-slurry-thermal-data",
-	"tiberium-slurry-chemical-data",
-	"tiberium-slurry-nuclear-data",
-	"tiberium-slurry-EM-data",
-	"tiberium-molten-mechanical-data",
-	"tiberium-molten-thermal-data",
-	"tiberium-molten-chemical-data",
-	"tiberium-molten-nuclear-data",
-	"tiberium-molten-EM-data",
-	"tiberium-liquid-mechanical-data",
-	"tiberium-liquid-thermal-data",
-	"tiberium-liquid-chemical-data",
-	"tiberium-liquid-nuclear-data",
-	"tiberium-liquid-EM-data",
-	"tiberium-ore-processing-blue",
-	"tiberium-liquid-processing-blue",
-	"tiberium-blue-explosives",
-	"tiberium-enrich-blue-seed",
-	"tiberium-enrich-blue",
-	"tiberium-primed-reactant",
-	"tiberium-primed-reactant-pure",
-	"tiberium-primed-reactant-blue",
-	"tiberium-primed-reactant-conversion"
-}
-
-for km, vm in pairs(data.raw.module) do
-	if vm.effect.productivity and vm.limitation then
-		for _, recipe in pairs(TibProductivity) do
-			table.insert(vm.limitation, recipe)
-		end
-	end
-end
-
 -- Science stuff
 local testingOrder = {["a"] = "mechanical", ["b"] = "thermal", ["c"] = "chemical", ["d"] = "nuclear", ["e"] = "EM"}
 local testingIngredients = {
@@ -117,7 +65,7 @@ for order, test in pairs(testingOrder) do
 			allow_decomposition = false,
 			crafting_machine_tint = common.tibCraftingTint,
 			ingredients = {
-				{"tiberium-data-"..test, 1}
+				{type = "item", name = "tiberium-data-"..test, amount = 1}
 			},
 			results = {
 				{type = "item", name = "tiberium-growth-credit", amount = 1, probability = 0.1 / settings.startup["tiberium-growth"].value}
@@ -129,6 +77,7 @@ for order, test in pairs(testingOrder) do
 		{
 			type = "recipe",
 			name = "tiberium-science-"..test,
+			localised_name = {"item-name.tiberium-science"}, -- idk why this broke with 2.0
 			category = "crafting",  -- Now hand-craftable
 			--always_show_made_in = true,
 			crafting_machine_tint = common.tibCraftingTint,
@@ -168,6 +117,7 @@ for order, test in pairs(testingOrder) do
 			{
 				type = "recipe",
 				name = "tiberium-science-thru-"..test,
+				localised_name = {"item-name.tiberium-science"},  -- idk why this broke with 2.0
 				category = "crafting",  -- Now hand-craftable
 				--always_show_made_in = true,
 				crafting_machine_tint = common.tibCraftingTint,
@@ -256,7 +206,7 @@ data:extend{
 		category = "crafting-with-fluid",
 		crafting_machine_tint = common.tibCraftingBlueTint,
 		energy_required = 5,
-		emissions_multiplier = common.scalePollution(2),
+		emissions_multiplier = common.emissionMultiplier(2),
 		enabled = false,
 		ingredients = {
 			-- The Blue Tiberium Ore is added to recipe during recipe-autogeneration since it varies based on the settings
@@ -277,7 +227,7 @@ data:extend{
 		category = "oil-processing",
 		crafting_machine_tint = common.tibCraftingBlueTint,
 		energy_required = 30,
-		emissions_multiplier = common.scalePollution(4),
+		emissions_multiplier = common.emissionMultiplier(4),
 		enabled = false,
 		ingredients = {
 			{type = "fluid", name = "tiberium-slurry-blue", amount = 16},
@@ -298,7 +248,7 @@ data:extend{
 		category = "chemistry",
 		crafting_machine_tint = common.tibCraftingBlueTint,
 		energy_required = 4,
-		emissions_multiplier = common.scalePollution(4),
+		emissions_multiplier = common.emissionMultiplier(4),
 		enabled = false,
 		ingredients = {
 			{type = "fluid", name = "tiberium-slurry-blue", amount = 2},
@@ -322,7 +272,9 @@ data:extend{
 			{type = "item", name = "tiberium-ore", amount = 100},
 			{type = "item", name = "tiberium-growth-credit", amount = 1},
 		},
-		result = "tiberium-ore-blue",
+		results = {
+			{type = "item", name = "tiberium-ore-blue", amount = 1},
+		},
 		main_product = "",
 		icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-75%.png", 64,
 			tiberiumInternalName.."/graphics/icons/growth-credit.png", 64, "ne"),
@@ -363,7 +315,7 @@ data:extend{
 		localised_name = {"recipe-name.tiberium-ore-processing"},
 		category = "crafting-with-fluid",
 		energy_required = 5,
-		emissions_multiplier = common.scalePollution(2),
+		emissions_multiplier = common.emissionMultiplier(2),
 		enabled = false,
 		ingredients = {
 			-- The Tiberium Ore is added to recipe during recipe-autogeneration since it varies based on the settings
@@ -383,7 +335,7 @@ data:extend{
 		name = "tiberium-molten-processing",
 		category = "oil-processing",
 		energy_required = 5,
-		emissions_multiplier = common.scalePollution(2),
+		emissions_multiplier = common.emissionMultiplier(2),
 		enabled = false,
 		ingredients = {
 			{type = "fluid", name = "tiberium-slurry", amount = 16},
@@ -402,7 +354,7 @@ data:extend{
 		name = "tiberium-advanced-molten-processing",
 		category = "oil-processing",
 		energy_required = 5,
-		emissions_multiplier = common.scalePollution(2),
+		emissions_multiplier = common.emissionMultiplier(2),
 		enabled = false,
 		ingredients = {
 			{type = "fluid", name = "tiberium-slurry", amount = 16},
@@ -422,7 +374,7 @@ data:extend{
 		name = "tiberium-liquid-processing",
 		category = "oil-processing",
 		energy_required = 20,
-		emissions_multiplier = common.scalePollution(8),
+		emissions_multiplier = common.emissionMultiplier(8),
 		enabled = false,
 		ingredients = {
 			{type = "fluid", name = "molten-tiberium", amount = 16},
@@ -442,7 +394,7 @@ data:extend{
 		name = "tiberium-liquid-processing-hot",
 		category = "oil-processing",
 		energy_required = 5,
-		emissions_multiplier = common.scalePollution(8),
+		emissions_multiplier = common.emissionMultiplier(8),
 		enabled = false,
 		ingredients = {
 			{type = "fluid", name = "molten-tiberium", amount = 16},
@@ -706,12 +658,14 @@ data:extend{
 		enabled = false,
 		subgroup = "a-buildings",
 		ingredients = {
-			{"processing-unit", 25},
-			{"tiberium-node-harvester", 5},
-			{"iron-gear-wheel", 50},
-			{"steel-plate", 100}
+			{type = "item", name = "processing-unit", amount = 25},
+			{type = "item", name = "tiberium-node-harvester", amount = 5},
+			{type = "item", name = "iron-gear-wheel", amount = 50},
+			{type = "item", name = "steel-plate", amount = 100}
 		},
-		result = "tiberium-aoe-node-harvester",
+		results = {
+			{type = "item", name = "tiberium-aoe-node-harvester", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -720,12 +674,14 @@ data:extend{
 		enabled = false,
 		subgroup = "a-buildings",
 		ingredients = {
-			{"processing-unit", 100},
-			{"beacon", 5},
-			{"copper-plate", 50},
-			{"steel-plate", 50}
+			{type = "item", name = "processing-unit", amount = 100},
+			{type = "item", name = "beacon", amount = 5},
+			{type = "item", name = "copper-plate", amount = 50},
+			{type = "item", name = "steel-plate", amount = 50}
 		},
-		result = "tiberium-beacon-node",
+		results = {
+			{type = "item", name = "tiberium-beacon-node", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -734,12 +690,14 @@ data:extend{
 		enabled = false,
 		subgroup = "a-buildings",
 		ingredients = {
-			{"processing-unit", 20},
-			{"electric-engine-unit", 20},
-			{"electric-mining-drill", 20},
-			{"pipe", 100},
+			{type = "item", name = "processing-unit", amount = 20},
+			{type = "item", name = "electric-engine-unit", amount = 20},
+			{type = "item", name = "electric-mining-drill", amount = 20},
+			{type = "item", name = "pipe", amount = 100},
 		},
-		result = "tiberium-network-node"
+		results = {
+			{type = "item", name = "tiberium-network-node", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -747,12 +705,14 @@ data:extend{
 		enabled = false,
 		energy_required = 5,
 		ingredients = {
-			{"copper-plate", 25},
-			{"steel-plate", 25},
-			{"advanced-circuit", 10},
-			{"battery", 10}
+			{type = "item", name = "copper-plate", amount = 25},
+			{type = "item", name = "steel-plate", amount = 25},
+			{type = "item", name = "advanced-circuit", amount = 10},
+			{type = "item", name = "battery", amount = 10}
 		},
-		result = "tiberium-srf-emitter"
+		results = {
+			{type = "item", name = "tiberium-srf-emitter", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -760,12 +720,14 @@ data:extend{
 		enabled = false,
 		energy_required = 5,
 		ingredients = {
-			{"steel-plate", 25},
-			{"battery", 20},
-			{"advanced-circuit", 10},
-			{"programmable-speaker", 1},
+			{type = "item", name = "steel-plate", amount = 25},
+			{type = "item", name = "battery", amount = 20},
+			{type = "item", name = "advanced-circuit", amount = 10},
+			{type = "item", name = "programmable-speaker", amount = 1},
 		},
-		result = "tiberium-sonic-emitter"
+		results = {
+			{type = "item", name = "tiberium-sonic-emitter", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -773,12 +735,14 @@ data:extend{
 		enabled = false,
 		energy_required = 5,
 		ingredients = {
-			{"steel-plate", 25},
-			{"battery", 20},
-			{"advanced-circuit", 10},
-			{"programmable-speaker", 1},
+			{type = "item", name = "steel-plate", amount = 25},
+			{type = "item", name = "battery", amount = 20},
+			{type = "item", name = "advanced-circuit", amount = 10},
+			{type = "item", name = "programmable-speaker", amount = 1},
 		},
-		result = "tiberium-sonic-emitter-blue"
+		results = {
+			{type = "item", name = "tiberium-sonic-emitter-blue", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -787,12 +751,14 @@ data:extend{
 		enabled = false,
 		subgroup = "a-buildings",
 		ingredients = {
-			{"steel-plate", 20},
-			{"steam-turbine", 4},
-			{"advanced-circuit", 10},
-			{"chemical-plant", 1}
+			{type = "item", name = "steel-plate", amount = 20},
+			{type = "item", name = "steam-turbine", amount = 4},
+			{type = "item", name = "advanced-circuit", amount = 10},
+			{type = "item", name = "chemical-plant", amount = 1}
 		},
-		result = "tiberium-power-plant"
+		results = {
+			{type = "item", name = "tiberium-power-plant", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -801,12 +767,14 @@ data:extend{
 		enabled = false,
 		subgroup = "a-buildings",
 		ingredients = {
-			{"steel-plate", 10},
-			{"iron-gear-wheel", 20},
-			{"electronic-circuit", 10},
-			{"stone-brick", 10}
+			{type = "item", name = "steel-plate", amount = 10},
+			{type = "item", name = "iron-gear-wheel", amount = 20},
+			{type = "item", name = "electronic-circuit", amount = 10},
+			{type = "item", name = "stone-brick", amount = 10}
 		},
-		result = "tiberium-centrifuge-1"
+		results = {
+			{type = "item", name = "tiberium-centrifuge-1", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -815,12 +783,14 @@ data:extend{
 		enabled = false,
 		subgroup = "a-buildings",
 		ingredients = {
-			{"concrete", 50},
-			{"engine-unit", 10},
-			{"advanced-circuit", 10},
-			{"tiberium-centrifuge-1", 1}
+			{type = "item", name = "concrete", amount = 50},
+			{type = "item", name = "engine-unit", amount = 10},
+			{type = "item", name = "advanced-circuit", amount = 10},
+			{type = "item", name = "tiberium-centrifuge-1", amount = 1}
 		},
-		result = "tiberium-centrifuge-2"
+		results = {
+			{type = "item", name = "tiberium-centrifuge-2", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -829,12 +799,14 @@ data:extend{
 		enabled = false,
 		subgroup = "a-buildings",
 		ingredients = {
-			{"refined-concrete", 50},
-			{"electric-engine-unit", 10},
-			{"processing-unit", 5},
-			{"tiberium-centrifuge-2", 1}
+			{type = "item", name = "refined-concrete", amount = 50},
+			{type = "item", name = "electric-engine-unit", amount = 10},
+			{type = "item", name = "processing-unit", amount = 5},
+			{type = "item", name = "tiberium-centrifuge-2", amount = 1}
 		},
-		result = "tiberium-centrifuge-3"
+		results = {
+			{type = "item", name = "tiberium-centrifuge-3", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -843,11 +815,13 @@ data:extend{
 		enabled = false,
 		subgroup = "a-buildings",
 		ingredients = {
-			{"stone-brick", 50},
-			{"steel-plate", 20},
-			{"engine-unit", 10},
+			{type = "item", name = "stone-brick", amount = 50},
+			{type = "item", name = "steel-plate", amount = 20},
+			{type = "item", name = "engine-unit", amount = 10},
 		},
-		result = "tiberium-reprocessor"
+		results = {
+			{type = "item", name = "tiberium-reprocessor", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -858,9 +832,11 @@ data:extend{
 		category = "tiberium-monoculture",
 		crafting_machine_tint = common.tibCraftingBlueTint,
 		ingredients = {
-			{"tiberium-ore-blue", 4},
+			{type = "item", name = "tiberium-ore-blue", amount = 4},
 		},
-		result = "tiberium-ore"
+		results = {
+			{type = "item", name = "tiberium-ore", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -871,23 +847,12 @@ data:extend{
 		category = "tiberium-monoculture",
 		crafting_machine_tint = common.tibCraftingTint,
 		ingredients = {
-			{"tiberium-ore", 4},
+			{type = "item", name = "tiberium-ore", amount = 4},
 		},
-		result = "tiberium-ore-blue"
+		results = {
+			{type = "item", name = "tiberium-ore-blue", amount = 1},
+		},
 	},
-	-- {
-	-- 	type = "recipe",
-	-- 	name = "tiberium-extruder",
-	-- 	energy_required = 10,
-	-- 	enabled = true,
-	-- 	subgroup = "a-buildings",
-	-- 	ingredients = {
-	-- 		{"stone-brick", 50},
-	-- 		{"steel-plate", 20},
-	-- 		{"engine-unit", 10},
-	-- 	},
-	-- 	result = "tiberium-extruder"
-	-- },
 	{
 		type = "recipe",
 		name = "tiberium-obelisk-of-light",
@@ -895,11 +860,13 @@ data:extend{
 		enabled = false,
 		subgroup = "a-buildings",
 		ingredients = {
-			{"advanced-circuit", 40},
-			{"steel-plate", 40},
-			{"tiberium-ion-core", 1}
+			{type = "item", name = "advanced-circuit", amount = 40},
+			{type = "item", name = "steel-plate", amount = 40},
+			{type = "item", name = "tiberium-ion-core", amount = 1}
 		},
-		result = "tiberium-obelisk-of-light"
+		results = {
+			{type = "item", name = "tiberium-obelisk-of-light", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -908,12 +875,14 @@ data:extend{
 		enabled = false,
 		subgroup = "a-buildings",
 		ingredients = {
-			{"iron-plate", 40},
-			{"steel-plate", 10},
-			{"electronic-circuit", 10},
-			{"stone-brick", 40}
+			{type = "item", name = "iron-plate", amount = 40},
+			{type = "item", name = "steel-plate", amount = 10},
+			{type = "item", name = "electronic-circuit", amount = 10},
+			{type = "item", name = "stone-brick", amount = 40}
 		},
-		result = "tiberium-advanced-guard-tower"
+		results = {
+			{type = "item", name = "tiberium-advanced-guard-tower", amount = 1},
+		},
 	},
 }
 -- Node buildings
@@ -925,12 +894,14 @@ data:extend{
 		enabled = false,
 		subgroup = "a-node-buildings",
 		ingredients = {
-			{"advanced-circuit", 25},
-			{"electric-mining-drill", 5},
-			{"iron-gear-wheel", 50},
-			{"iron-plate", 100}
+			{type = "item", name = "advanced-circuit", amount = 25},
+			{type = "item", name = "electric-mining-drill", amount = 5},
+			{type = "item", name = "iron-gear-wheel", amount = 50},
+			{type = "item", name = "iron-plate", amount = 100}
 		},
-		result = "tiberium-node-harvester",
+		results = {
+			{type = "item", name = "tiberium-node-harvester", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -938,12 +909,14 @@ data:extend{
 		enabled = false,
 		subgroup = "a-node-buildings",
 		ingredients = {
-			{"steel-plate", 25},
-			{"advanced-circuit", 15},
-			{"pipe", 10}
+			{type = "item", name = "steel-plate", amount = 25},
+			{type = "item", name = "advanced-circuit", amount = 15},
+			{type = "item", name = "pipe", amount = 10}
 		},
 		energy_required = 30,
-		result = "tiberium-growth-accelerator",
+		results = {
+			{type = "item", name = "tiberium-growth-accelerator", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -952,11 +925,13 @@ data:extend{
 		enabled = false,
 		subgroup = "a-node-buildings",
 		ingredients = {
-			{"tiberium-blue-explosives", 10},
-			{"empty-barrel", 1},
-			{"grenade", 1},
+			{type = "item", name = "tiberium-blue-explosives", amount = 10},
+			{type = "item", name = "barrel", amount = 1},
+			{type = "item", name = "grenade", amount = 1},
 		},
-		result = "tiberium-detonation-charge"
+		results = {
+			{type = "item", name = "tiberium-detonation-charge", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -966,11 +941,13 @@ data:extend{
 		category = "crafting",
 		energy_required = 1,
 		ingredients = {
-			{"tiberium-blue-explosives", 10},
-			{"empty-barrel", 1},
-			{"grenade", 1},
+			{type = "item", name = "tiberium-blue-explosives", amount = 10},
+			{type = "item", name = "barrel", amount = 1},
+			{type = "item", name = "grenade", amount = 1},
 		},
-		result= "tiberium-cliff-explosives",
+		results = {
+			{type = "item", name = "tiberium-cliff-explosives", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -979,12 +956,14 @@ data:extend{
 		enabled = false,
 		subgroup = "a-node-buildings",
 		ingredients = {
-			{"processing-unit", 20},
-			{"pumpjack", 5},
-			{"solar-panel", 10},
-			{"tiberium-srf-emitter", 4}
+			{type = "item", name = "processing-unit", amount = 20},
+			{type = "item", name = "pumpjack", amount = 5},
+			{type = "item", name = "solar-panel", amount = 10},
+			{type = "item", name = "tiberium-srf-emitter", amount = 4}
 		},
-		result = "tiberium-spike",
+		results = {
+			{type = "item", name = "tiberium-spike", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -993,11 +972,13 @@ data:extend{
 		enabled = false,
 		subgroup = "a-node-buildings",
 		ingredients = {
-			{"steel-plate", 50},
-			{"tiberium-growth-accelerator", 1},
-			{"tiberium-sonic-emitter-blue", 4},
+			{type = "item", name = "steel-plate", amount = 50},
+			{type = "item", name = "tiberium-growth-accelerator", amount = 1},
+			{type = "item", name = "tiberium-sonic-emitter-blue", amount = 4},
 		},
-		result = "tiberium-monoculture-green"
+		results = {
+			{type = "item", name = "tiberium-monoculture-green", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -1006,11 +987,13 @@ data:extend{
 		enabled = false,
 		subgroup = "a-node-buildings",
 		ingredients = {
-			{"steel-plate", 50},
-			{"tiberium-growth-accelerator", 1},
-			{"tiberium-sonic-emitter", 4},
+			{type = "item", name = "steel-plate", amount = 50},
+			{type = "item", name = "tiberium-growth-accelerator", amount = 1},
+			{type = "item", name = "tiberium-sonic-emitter", amount = 4},
 		},
-		result = "tiberium-monoculture-blue"
+		results = {
+			{type = "item", name = "tiberium-monoculture-blue", amount = 1},
+		},
 	},
 }
 
@@ -1024,9 +1007,11 @@ data:extend{
 		energy_required = 5,
 		-- The Tiberium Ore is added to recipe during recipe-autogeneration since it varies based on the settings
 		ingredients = {
-			{"piercing-rounds-magazine", 1},
+			{type = "item", name = "piercing-rounds-magazine", amount = 1},
 		},
-		result = "tiberium-rounds-magazine"
+		results = {
+			{type = "item", name = "tiberium-rounds-magazine", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -1035,10 +1020,12 @@ data:extend{
 		category = "crafting-with-fluid",
 		energy_required = 6,
 		ingredients = {
-			{"steel-plate", 5},
+			{type = "item", name = "steel-plate", amount = 5},
 			{type = "fluid", name = "liquid-tiberium", amount = 100}
 		},
-		result = "tiberium-chemical-sprayer-ammo",
+		results = {
+			{type = "item", name = "tiberium-chemical-sprayer-ammo", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -1047,10 +1034,12 @@ data:extend{
 		category = "crafting",
 		energy_required = 1,
 		ingredients = {
-			{"tiberium-blue-explosives", 1},
-			{"rocket", 1},
+			{type = "item", name = "tiberium-blue-explosives", amount = 1},
+			{type = "item", name = "rocket", amount = 1},
 		},
-		result= "tiberium-rocket",
+		results = {
+			{type = "item", name = "tiberium-rocket", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -1059,11 +1048,13 @@ data:extend{
 		category = "crafting-with-fluid",
 		energy_required = 50,
 		ingredients = {
-			{"rocket", 1},
-			{"rocket-control-unit", 10},
-			{"tiberium-blue-explosives", 100},
+			{type = "item", name = "rocket", amount = 1},
+			{type = "item", name = "processing-unit", amount = 10},
+			{type = "item", name = "tiberium-blue-explosives", amount = 100},
 		},
-		result = "tiberium-nuke"
+		results = {
+			{type = "item", name = "tiberium-nuke", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -1072,11 +1063,13 @@ data:extend{
 		category = "crafting-with-fluid",
 		energy_required = 50,
 		ingredients = {
-			{"rocket-control-unit", 10},
-			{"tiberium-ore", 100},
+			{type = "item", name = "processing-unit", amount = 10},
+			{type = "item", name = "tiberium-ore", amount = 100},
 			{type = "fluid", name = "liquid-tiberium", amount = 300}
 		},
-		result = "tiberium-seed"
+		results = {
+			{type = "item", name = "tiberium-seed", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -1085,11 +1078,13 @@ data:extend{
 		category = "crafting-with-fluid",
 		energy_required = 50,
 		ingredients = {
-			{"rocket-control-unit", 10},
-			{"tiberium-ore-blue", 100},
+			{type = "item", name = "processing-unit", amount = 10},
+			{type = "item", name = "tiberium-ore-blue", amount = 100},
 			{type = "fluid", name = "liquid-tiberium", amount = 300}
 		},
-		result = "tiberium-seed-blue"
+		results = {
+			{type = "item", name = "tiberium-seed-blue", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -1098,11 +1093,13 @@ data:extend{
 		category = "crafting",
 		energy_required = 1,
 		ingredients = {
-			{"tiberium-blue-explosives", 8},
-			{"explosive-cannon-shell", 4},
-			{"radar", 1},
+			{type = "item", name = "tiberium-blue-explosives", amount = 8},
+			{type = "item", name = "explosive-cannon-shell", amount = 4},
+			{type = "item", name = "radar", amount = 1},
 		},
-		result= "tiberium-artillery-shell",
+		results = {
+			{type = "item", name = "tiberium-artillery-shell", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -1111,10 +1108,12 @@ data:extend{
 		category = "crafting",
 		energy_required = 1,
 		ingredients = {
-			{"tiberium-blue-explosives", 1},
-			{"grenade", 1},
+			{type = "item", name = "tiberium-blue-explosives", amount = 1},
+			{type = "item", name = "grenade", amount = 1},
 		},
-		result= "tiberium-grenade-all",
+		results = {
+			{type = "item", name = "tiberium-grenade-all", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -1123,10 +1122,12 @@ data:extend{
 		category = "crafting",
 		energy_required = 1,
 		ingredients = {
-			{"tiberium-blue-explosives", 1},
-			{"grenade", 1},
+			{type = "item", name = "tiberium-blue-explosives", amount = 1},
+			{type = "item", name = "grenade", amount = 1},
 		},
-		result= "tiberium-grenade-blue",
+		results = {
+			{type = "item", name = "tiberium-grenade-blue", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -1135,10 +1136,12 @@ data:extend{
 		category = "crafting",
 		energy_required = 5,
 		ingredients = {
-			{"tiberium-blue-explosives", 7},
-			{"rocket", 1},
+			{type = "item", name = "tiberium-blue-explosives", amount = 7},
+			{type = "item", name = "rocket", amount = 1},
 		},
-		result= "tiberium-catalyst-missile-all",
+		results = {
+			{type = "item", name = "tiberium-catalyst-missile-all", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -1147,10 +1150,12 @@ data:extend{
 		category = "crafting",
 		energy_required = 5,
 		ingredients = {
-			{"tiberium-blue-explosives", 7},
-			{"rocket", 1},
+			{type = "item", name = "tiberium-blue-explosives", amount = 7},
+			{type = "item", name = "rocket", amount = 1},
 		},
-		result= "tiberium-catalyst-missile-blue",
+		results = {
+			{type = "item", name = "tiberium-catalyst-missile-blue", amount = 1},
+		},
 	},
 	{
 		type = "recipe",
@@ -1158,12 +1163,14 @@ data:extend{
 		enabled = false,
 		energy_required = 40,
 		ingredients = {
-			{"engine-unit", 20},
-			{"steel-plate", 100},
-			{"processing-unit", 10},
-			{"tiberium-node-harvester", 4},
+			{type = "item", name = "engine-unit", amount = 20},
+			{type = "item", name = "steel-plate", amount = 100},
+			{type = "item", name = "processing-unit", amount = 10},
+			{type = "item", name = "tiberium-node-harvester", amount = 4},
 		},
-		result = "tiberium-marv",
+		results = {
+			{type = "item", name = "tiberium-marv", amount = 1},
+		},
 		subgroup = "a-items",
 	},
 }
@@ -1371,10 +1378,13 @@ data:extend{
 		enabled = false,
 		hidden = true,
 		category = "growth",
-		ingredients = {{"tiberium-growth-credit", 1}},
+		ingredients = {
+			{type = "item", name = "tiberium-growth-credit", amount = 1}
+		},
 		energy_required = 15,	-- 20 credits every 5 minutes
 		results = {
 			{
+				type = "item",
 				name = "tiberium-growth-credit-void",
 				amount = 1,
 				probability = 0
@@ -1382,6 +1392,56 @@ data:extend{
 		},
 	},
 }
+
+local TibProductivity = {
+	"tiberium-science-mechanical",
+	"tiberium-science-thermal",
+	"tiberium-science-chemical",
+	"tiberium-science-nuclear",
+	"tiberium-science-EM",
+	"tiberium-science-thru-thermal",
+	"tiberium-science-thru-chemical",
+	"tiberium-science-thru-nuclear",
+	"tiberium-science-thru-EM",
+	"tiberium-ore-processing",
+	"tiberium-molten-processing",
+	"tiberium-liquid-processing",
+	"tiberium-liquid-processing-hot",
+	"tiberium-empty-cell",
+	"tiberium-fuel-cell",
+	"tiberium-ion-core",
+	"tiberium-farming",
+	"tiberium-slurry-mechanical-data",
+	"tiberium-slurry-thermal-data",
+	"tiberium-slurry-chemical-data",
+	"tiberium-slurry-nuclear-data",
+	"tiberium-slurry-EM-data",
+	"tiberium-molten-mechanical-data",
+	"tiberium-molten-thermal-data",
+	"tiberium-molten-chemical-data",
+	"tiberium-molten-nuclear-data",
+	"tiberium-molten-EM-data",
+	"tiberium-liquid-mechanical-data",
+	"tiberium-liquid-thermal-data",
+	"tiberium-liquid-chemical-data",
+	"tiberium-liquid-nuclear-data",
+	"tiberium-liquid-EM-data",
+	"tiberium-ore-processing-blue",
+	"tiberium-liquid-processing-blue",
+	"tiberium-blue-explosives",
+	"tiberium-enrich-blue-seed",
+	"tiberium-enrich-blue",
+	"tiberium-primed-reactant",
+	"tiberium-primed-reactant-pure",
+	"tiberium-primed-reactant-blue",
+	"tiberium-primed-reactant-conversion"
+}
+
+for _, recipeName in pairs(TibProductivity) do
+	if data.raw.recipe[recipeName] then
+		data.raw.recipe[recipeName].allow_productivity = true
+	end
+end
 
 for name, recipe in pairs(data.raw.recipe) do
 	if (string.sub(name, 1, 9) == "tiberium-") and not recipe.crafting_machine_tint then

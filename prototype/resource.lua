@@ -10,10 +10,6 @@ data:extend{
 		category = "resource",
 	},
 	{
-		type = "noise-layer",
-		name = "tiberium-ore"
-	},
-	{
 		type = "resource-category",
 		name = "basic-solid-tiberium"
 	},
@@ -60,21 +56,13 @@ data:extend{
 		},
 		stages = {
 			sheet = {
-				filename = tiberiumInternalName.."/graphics/entity/ores/tiberium-ore.png",
+				filename = tiberiumInternalName.."/graphics/entity/ores/hr-tiberium-ore.png",
 				priority = "extra-high",
-				width = 64,
-				height = 64,
+				width = 128,
+				height = 128,
 				frame_count = 12,
 				variation_count = 12,
-				hr_version = {
-					filename = tiberiumInternalName.."/graphics/entity/ores/hr-tiberium-ore.png",
-					priority = "extra-high",
-					width = 128,
-					height = 128,
-					frame_count = 12,
-					variation_count = 12,
-					scale = 0.5
-				}
+				scale = 0.5
 			}
 		},
 		stages_effect = {
@@ -87,17 +75,6 @@ data:extend{
 				variation_count = 12,
 				blend_mode = "additive",
 				flags = {"light"},
-				--hr_version = {
-				--  filename = tiberiumInternalName.."/graphics/entity/ores/hr-tiberium-ore-glow.png",
-				--  priority = "extra-high",
-				--  width = 128,
-				--  height = 128,
-				--  frame_count = 8,
-				--  variation_count = 8,
-				--  scale = 0.5,
-				--  blend_mode = "additive",
-				--  flags = {"light"},
-				--}
 			}
 		},
 		effect_animation_period = 4,
@@ -146,15 +123,6 @@ data:extend{
 				height = 64,
 				frame_count = 12,
 				variation_count = 12,
-				-- hr_version = {
-				-- 	filename = tiberiumInternalName.."/graphics/entity/ores/hr-tiberium-ore.png",
-				-- 	priority = "extra-high",
-				-- 	width = 128,
-				-- 	height = 128,
-				-- 	frame_count = 12,
-				-- 	variation_count = 12,
-				-- 	scale = 0.5
-				-- }
 			}
 		},
 		stages_effect = {
@@ -178,9 +146,7 @@ data:extend{
 	},
 }
 
-local noise = require("noise");
-local tne = noise.to_noise_expression;
-resource_autoplace = require("resource-autoplace");
+local resource_autoplace = require("resource-autoplace");
 resource_autoplace.initialize_patch_set("tibGrowthNode", common.TiberiumInStartingArea)
 
 local oriented_cliff_dummy = {
@@ -204,7 +170,7 @@ data:extend{
 		grid_size = {1, 1},
 		grid_offset = {0.5, 0.5},
 		selection_priority = 2,
-		collision_mask = {"item-layer", "object-layer"},
+		collision_mask = common.makeCollisionMask({"item", "object"}),
 		orientations = {
 			west_to_east = oriented_cliff_dummy,
 			north_to_south = oriented_cliff_dummy,
@@ -231,8 +197,7 @@ data:extend{
 	{
 		type = "resource",
 		name = "tibGrowthNode",
-		icon = tiberiumInternalName.."/graphics/sonic wall/empty.png",
-		icon_size = 32,
+		icons = common.blankIcons,
 		flags = {"placeable-neutral"},
 		category = "advanced-solid-tiberium",
 		order="a-b-a",
@@ -256,7 +221,8 @@ data:extend{
 			random_spot_size_maximum = 1, -- don't randomize spot size
 			additional_richness = 200000, -- this increases the total everywhere, so base_density needs to be decreased to compensate
 			has_starting_area_placement = common.TiberiumInStartingArea,
-			regular_rq_factor_multiplier = 1
+			regular_rq_factor_multiplier = 1,
+			starting_rq_factor_multiplier = 1.1
 		},
 		stage_counts = {0},
 		stages = {
@@ -268,8 +234,7 @@ data:extend{
 	{
 		type = "resource",
 		name = "tibGrowthNode_infinite",
-		icon = tiberiumInternalName.."/graphics/sonic wall/empty.png",
-		icon_size = 32,
+		icons = common.blankIcons,
 		flags = {"placeable-neutral"},
 		category = "advanced-liquid-tiberium",
 		order="a-b-a",
@@ -303,3 +268,6 @@ data:extend{
 		map_grid = false
 	},
 }
+-- Add to Nauvis planet definition
+data.raw.planet.nauvis.map_gen_settings.autoplace_controls["tibGrowthNode"] = {}
+data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings["tibGrowthNode"] = {}

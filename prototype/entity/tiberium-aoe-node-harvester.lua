@@ -1,5 +1,5 @@
 local tiberiumNodeHarvester = flib.copy_prototype(data.raw["mining-drill"]["electric-mining-drill"], "tiberium-aoe-node-harvester")
-tiberiumNodeHarvester.icons = LSlib.item.getIcons("mining-drill", "pumpjack")
+tiberiumNodeHarvester.icons = table.deepcopy(data.raw["mining-drill"]["pumpjack"].icons)
 tiberiumNodeHarvester.icon_size = 64
 tiberiumNodeHarvester.base_picture = data.raw["mining-drill"]["pumpjack"].base_picture
 tiberiumNodeHarvester.animations = data.raw["mining-drill"]["pumpjack"].animations
@@ -13,7 +13,7 @@ table.insert(tiberiumNodeHarvester.resource_categories, "advanced-solid-tiberium
 tiberiumNodeHarvester.energy_source = {
 	type = "electric",
 	usage_priority = "secondary-input",
-	emissions_per_minute = 50 * common.scalePollution(4)
+	emissions_per_minute = common.scaledEmissions(4, 50)
 }
 tiberiumNodeHarvester.next_upgrade = nil
 tiberiumNodeHarvester.fast_replaceable_group = nil

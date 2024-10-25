@@ -1,4 +1,6 @@
 local common = {}
+common.technology = {}
+common.recipe = {}
 
 common.blankAnimation = {
     filename =  "__core__/graphics/empty.png",
@@ -13,6 +15,13 @@ common.blankPicture = {
     filename = "__core__/graphics/empty.png",
     width = 1,
     height = 1
+}
+
+common.blankIcons = {
+	{
+		icon = "__core__/graphics/empty.png",
+		icon_size = 1
+	}
 }
 
 common.TiberiumRadius = settings.startup["tiberium-radius"].value
@@ -31,17 +40,22 @@ common.tibCraftingTint = {
 }
 
 common.tibCraftingBlueTint = {
-	primary    = {r = 0.2, g = 0.2, b = 1, a = 1},
+	primary    = {r = 0.2,  g = 0.2, b = 1, a = 1},
 	secondary  = {r = 0.04, g = 0.4, b = 1, a = 1},
-	tertiary   = {r = 0.3, g = 0.4, b = 1, a = 0.3},
-	quaternary = {r = 0.3, g = 0.2, b = 1, a = 0.4},
+	tertiary   = {r = 0.3,  g = 0.4, b = 1, a = 0.3},
+	quaternary = {r = 0.3,  g = 0.2, b = 1, a = 0.4},
 }
 
 common.pollutionMulti = settings.startup["tiberium-pollution-multiplier"].value
 
-common.scalePollution = function(base)
-	if common.pollutionMulti == 1 then return 1 end
-	return math.max(base * common.pollutionMulti / 4, 1)
+common.emissionMultiplier = function(scaling, base)
+	base = base or 1
+	if common.pollutionMulti == 1 then return base end
+	return math.max(base * scaling * common.pollutionMulti / 4, 1)
+end
+
+common.scaledEmissions = function(scaling, base)
+	return {["pollution"] = common.emissionMultiplier(scaling, base)}
 end
 
 common.scaleUpSprite = function(sprite, scalar)
@@ -51,9 +65,6 @@ common.scaleUpSprite = function(sprite, scalar)
 		end
 	else
 		sprite.scale = scalar * (sprite.scale or 1)
-		if sprite.hr_version then
-			sprite.hr_version.scale = scalar * (sprite.hr_version.scale or 1)
-		end
 	end
 	return sprite
 end
@@ -103,11 +114,11 @@ common.layeredIcons = function(baseImg, baseSize, layerImg, layerSize, corner, t
 	return {base, layer}
 end
 
-common.normalIngredients = function(recipeName)
+common.recipeIngredientsTable = function(recipeName)
 	local recipe = data.raw["recipe"][recipeName]
 	if recipe then
-		local ingredientTable = common.itemPrototypesFromTable(recipe.normal and recipe.normal.ingredients or recipe.ingredients)
-		if debugText and LSlib.utils.table.isEmpty(ingredientTable) then log("### Could not find ingredients for "..recipeName) end
+		local ingredientTable = common.itemPrototypesFromTable(recipe.ingredients)
+		if debugText and (flib_table.size(ingredientTable) == 0) then log("### Could not find ingredients for "..recipeName) end
 		return ingredientTable
 	else
 		log("### Could not find recipe with name "..recipeName)
@@ -115,25 +126,16 @@ common.normalIngredients = function(recipeName)
 	end
 end
 
-common.normalResults = function(recipeName)
+common.recipeResultsTable = function(recipeName)
 	local recipe = data.raw["recipe"][recipeName]
 	if recipe then
-		local resultTable = common.resultsToTable(recipe.normal or recipe)
-		if debugText and LSlib.utils.table.isEmpty(resultTable) then log("### Could not find results for "..recipeName) end
+		local resultTable = common.itemPrototypesFromTable(recipe.results)
+		if debugText and (flib_table.size(resultTable) == 0) then log("### Could not find results for "..recipeName) end
 		return resultTable
 	else
 		log("### Could not find recipe with name "..recipeName)
 		return {}
 	end
-end
-
-common.resultsToTable = function(prototypeTable)
-	if type(prototypeTable) ~= "table" then	return {} end
-	local out = common.itemPrototypesFromTable(prototypeTable.results)
-	if LSlib.utils.table.isEmpty(out) and prototypeTable.result then
-		out[prototypeTable.result] = tonumber(prototypeTable.result_count) or tonumber(prototypeTable.count) or 1
-	end
-	return out
 end
 
 common.itemPrototypesFromTable = function(prototypeTable)
@@ -167,6 +169,190 @@ common.itemPrototypesFromTable = function(prototypeTable)
 		end
 	end
 	return out
+end
+
+common.makeCollisionMask = function(arrayOfLayers)
+	local mask = {layers = {}}
+	for _, layer in pairs(arrayOfLayers) do
+		mask.layers[layer] = true
+	end
+	return mask
+end
+
+common.technology.addRecipeUnlock = function(technologyName, recipeName)
+	if not data.raw.technology[technologyName] or not data.raw.recipe[recipeName] then return end
+	if not data.raw["technology"][technologyName].effects then
+        data.raw["technology"][technologyName].effects = {}
+	end
+	for _, effect in pairs(data.raw["technology"][technologyName].effects) do
+		if effect.type == "unlock-recipe" and effect.recipe == recipeName then return end
+	end
+	table.insert(data.raw["technology"][technologyName].effects, {type = "unlock-recipe", recipe = recipeName})
+end
+
+common.technology.removeRecipeUnlock = function(technologyName, recipeName)
+	if not data.raw.technology[technologyName] or not data.raw.recipe[recipeName] then return end
+	if data.raw["technology"][technologyName].effects then
+		for index, effect in pairs(data.raw["technology"][technologyName].effects) do
+			if effect.type == "unlock-recipe" and effect.recipe == recipeName then
+				table.remove(data.raw["technology"][technologyName].effects, index)
+				if table_size(data.raw["technology"][technologyName].effects) == 0 then
+				  data.raw["technology"][technologyName].effects = nil
+				end
+				break
+			end
+		end
+	end
+end
+
+common.technology.addPrerequisite = function(technologyName, prerequisiteToAdd)
+	if data.raw["technology"][technologyName] then
+		if not data.raw["technology"][technologyName].prerequisites then
+			data.raw["technology"][technologyName].prerequisites = {}
+		end
+		for _, prerequisite in pairs(data.raw["technology"][technologyName].prerequisites) do
+			if prerequisite == prerequisiteToAdd then return end
+		end
+		table.insert(data.raw["technology"][technologyName].prerequisites, prerequisiteToAdd)
+	end
+end
+
+common.technology.removePrerequisite = function(technologyName, prerequisiteToRemove)
+	if data.raw["technology"][technologyName] and data.raw["technology"][technologyName].prerequisites then
+		for index, prerequisite in pairs(data.raw["technology"][technologyName].prerequisites) do
+			if prerequisite == prerequisiteToRemove then
+				table.remove(data.raw["technology"][technologyName].prerequisites, index)
+				if table_size(data.raw["technology"][technologyName].prerequisites) == 0 then
+					data.raw["technology"][technologyName].prerequisites = nil
+				end
+				break
+			end
+		end
+	end
+end
+
+common.recipe.addIngredient = function(recipeName, ingredientName, ingredientAmount, ingredientType)
+    if not data.raw["recipe"][recipeName] then return end
+
+	if data.raw["recipe"][recipeName].ingredients then
+		local alreadyPresent = false
+		for _,ingredient in pairs(data.raw["recipe"][recipeName].ingredients) do
+			if ingredient.name == ingredientName and
+				(ingredient.type or "item") == (ingredientType or "item") then
+				alreadyPresent = true
+				ingredient.amount = ingredientAmount or 1
+			end
+		end
+		if not alreadyPresent then
+			table.insert(data.raw["recipe"][recipeName].ingredients, {
+				["type"] = ingredientType,
+				["name"] = ingredientName,
+				["amount"] = ingredientAmount or 1,
+			})
+		end
+	end
+end
+
+common.recipe.removeIngredient = function(recipeName, ingredientName)
+    if not data.raw["recipe"][recipeName] then return end
+
+	if data.raw["recipe"][recipeName].ingredients then
+		for index, ingredient in pairs(data.raw["recipe"][recipeName].ingredients) do
+			if (ingredient.name and ingredient.name == ingredientName) or (ingredient[1] and ingredient[1] == ingredientName) then
+				table.remove(data.raw["recipe"][recipeName].ingredients, index)
+				break
+			end
+		end
+	end
+end
+
+common.recipe.editIngredient = function(recipeName, oldIngredientName, newIngredientName, amountMultiplier)
+	amountMultiplier = amountMultiplier or 1
+    if not data.raw["recipe"][recipeName] then return end
+
+    if data.raw["recipe"][recipeName].ingredients then
+		for index, ingredient in pairs(data.raw["recipe"][recipeName].ingredients) do
+			if ingredient.name and ingredient.name == oldIngredientName then
+				data.raw["recipe"][recipeName].ingredients[index].name = newIngredientName
+				data.raw["recipe"][recipeName].ingredients[index].amount = math.floor(0.5 + data.raw["recipe"][recipeName].ingredients[index].amount * amountMultiplier)
+				break
+			elseif ingredient[1] and ingredient[1] == oldIngredientName then
+				data.raw["recipe"][recipeName].ingredients[index][1] = newIngredientName
+				data.raw["recipe"][recipeName].ingredients[index][2] = math.floor(0.5 + data.raw["recipe"][recipeName].ingredients[index][2] * amountMultiplier)
+				break
+			end
+		end
+	end
+end
+
+common.recipe.addResult = function(recipeName, resultName, resultAmount, resultType)
+	if not data.raw["recipe"][recipeName] then return end
+
+	if data.raw["recipe"][recipeName].results then
+		local alreadyPresent = false
+		for _, result in pairs(data.raw["recipe"][recipeName].results) do
+			if result.name == resultName then
+				result.amount = resultAmount
+				alreadyPresent = true
+				break
+			end
+		end
+		if not alreadyPresent then
+			table.insert(data.raw["recipe"][recipeName].results, {
+				["type"] = resultType,
+				["name"] = resultName,
+				["amount"] = resultAmount,
+			})
+		end
+	end
+end
+
+common.recipe.editResult = function(recipeName, oldResultName, newResultName, amountMultiplier)
+    amountMultiplier = amountMultiplier or 1
+    if not data.raw["recipe"][recipeName] then return end
+
+	if data.raw["recipe"][recipeName].results then
+		for _, result in pairs(data.raw["recipe"][recipeName].results) do
+			if result.name == oldResultName then
+				result.name = newResultName
+
+				if result.amount then
+					result.amount = result.amount * amountMultiplier
+				end
+				if result.amount_min then
+					result.amount_min = result.amount_min * amountMultiplier
+				end
+				if result.amount_max then
+					result.amount_max = result.amount_max * amountMultiplier
+				end
+
+				break
+			end
+		end
+	end
+end
+
+common.recipe.setResultProbability = function(recipeName, resultName, resultProbability)
+    if not data.raw["recipe"][recipeName] then return end
+    resultProbability = ((resultProbability~=1) and resultProbability) --wtf does this do
+
+    if data.raw["recipe"][recipeName].result then
+		data.raw["recipe"][recipeName].results = {{
+		name = data.raw["recipe"][recipeName].result,
+		amount = data.raw["recipe"][recipeName].result_count or 1,
+		}}
+		data.raw["recipe"][recipeName].result = nil
+		data.raw["recipe"][recipeName].result_count = nil
+	end
+
+	if data.raw["recipe"][recipeName].results then
+		for index, result in pairs(data.raw["recipe"][recipeName].results) do
+			if result.name == resultName then
+				result.probability = resultProbability
+				break
+			end
+		end
+    end
 end
 
 return common

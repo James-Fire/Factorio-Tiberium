@@ -41,7 +41,7 @@ data:extend{
 			},
 			-- Molten to fluid and molten centrifuging with sludge recipes created and added to this tech by /scripts/DynamicOreRecipes
 		},
-		prerequisites = {"tiberium-slurry-centrifuging", "tiberium-thermal-research", "advanced-electronics", "concrete"},
+		prerequisites = {"tiberium-slurry-centrifuging", "tiberium-thermal-research", "advanced-circuit", "concrete"},
 		unit = {
 			count = 200,
 			ingredients = {
@@ -844,7 +844,7 @@ data:extend{
 				recipe = "tiberium-seed-blue"
 			},
 		},
-		prerequisites = {"tiberium-military-3", "rocket-control-unit", "tiberium-rocketry"},
+		prerequisites = {"tiberium-military-3", "processing-unit", "tiberium-rocketry"},
 		unit = {
 			count = 200,
 			ingredients = {
@@ -986,7 +986,7 @@ data:extend{
 		name = "tiberium-energy-weapons-damage",
 		icon_size = 256,
 		icon_mipmaps = 4,
-		icons = util.technology_icon_constant_damage("__base__/graphics/technology/energy-weapons-damage.png"),
+		icons = util.technology_icon_constant_damage("__base__/graphics/technology/laser-weapons-damage.png"),
 		effects = {
 			{
 				type = "ammo-damage",
@@ -999,7 +999,7 @@ data:extend{
 				modifier = 0.3
 			}
 		},
-		prerequisites = {"tiberium-military-3", "energy-weapons-damage-6", "space-science-pack"},
+		prerequisites = {"tiberium-military-3", "laser-weapons-damage-6", "space-science-pack"},
 		unit = {
 			count_formula = "2^(L-2)*1000",
 			ingredients = {

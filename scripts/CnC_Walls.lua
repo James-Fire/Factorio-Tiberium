@@ -1,5 +1,5 @@
 -- Basic setup, variables to use. (Might expose to settings sometime? Or perhaps make research allow for longer wall segments?)
-require("__LSlib__/LSlib")
+local flib_table = require("__flib__/table")
 local debugText = settings.global["tiberium-debug-text"].value
 
 local horz_wall, vert_wall = 1, 2
@@ -21,11 +21,11 @@ local min   = math.min
 -- Functions translplanted + renamed to clarify
 
 --Returns array containing up to 4 entities that could connect to an SRF emitter at the given position
---Assumes node_range, horz_wall, vert_wall, global.SRF_nodes
+--Assumes node_range, horz_wall, vert_wall, storage.SRF_nodes
 function CnC_SonicWall_FindNodes(surf, pos, force, dir)
 	local near_nodes = {nil, nil, nil, nil}
 	local near_dists = {node_range, node_range * -1, node_range, node_range * -1}
-	for _, entry in pairs(global.SRF_nodes) do
+	for _, entry in pairs(storage.SRF_nodes) do
 		if entry.emitter.valid then
 			if not force or force.name == entry.emitter.force.name then
 				if surf.index == entry.emitter.surface.index then
@@ -61,15 +61,15 @@ function CnC_SonicWall_FindNodes(surf, pos, force, dir)
 end
 
 --Called by on_built_entity in control.lua
---Modifies global.SRF_nodes, global.SRF_node_ticklist, global.SRF_segments
+--Modifies storage.SRF_nodes, storage.SRF_node_ticklist, storage.SRF_segments
 function CnC_SonicWall_AddNode(entity, tick)
-	table.insert(global.SRF_nodes, {emitter = entity, position = entity.position})
-	table.insert(global.SRF_node_ticklist, {emitter = entity, position = entity.position, tick = tick + ceil(entity.electric_buffer_size / entity.electric_input_flow_limit)})
+	table.insert(storage.SRF_nodes, {emitter = entity, position = entity.position})
+	table.insert(storage.SRF_node_ticklist, {emitter = entity, position = entity.position, tick = tick + ceil(entity.electric_buffer_size / entity.get_electric_input_flow_limit())})
 	CnC_SonicWall_DisableNode(entity)  --Destroy any walls that went through where the wall was placed so it can calculate new walls
 end
 
 --Destroys walls connected to given SRF emitter
---Modifies global.SRF_segments
+--Modifies storage.SRF_segments
 function CnC_SonicWall_DisableNode(entity)
 	local surf = entity.surface
 	local x = floor(entity.position.x)
@@ -78,69 +78,69 @@ function CnC_SonicWall_DisableNode(entity)
 	for _, dir in pairs(dir_mods) do
 		local tx = x + dir.x
 		local ty = y + dir.y
-		while global.SRF_segments[surf.index] and global.SRF_segments[surf.index][tx] and global.SRF_segments[surf.index][tx][ty] do
-			local wall = global.SRF_segments[surf.index][tx][ty]
+		while storage.SRF_segments[surf.index] and storage.SRF_segments[surf.index][tx] and storage.SRF_segments[surf.index][tx][ty] do
+			local wall = storage.SRF_segments[surf.index][tx][ty]
 			if wall[1] == dir.variation then
-				global.SRF_segments[surf.index][tx][ty][2].destroy()
-				global.SRF_segments[surf.index][tx][ty] = nil
+				storage.SRF_segments[surf.index][tx][ty][2].destroy()
+				storage.SRF_segments[surf.index][tx][ty] = nil
 			elseif wall[1] == horz_wall + vert_wall then
-				global.SRF_segments[surf.index][tx][ty][1] = horz_wall + vert_wall - dir.variation
-				global.SRF_segments[surf.index][tx][ty][2].graphics_variation = horz_wall + vert_wall - dir.variation
+				storage.SRF_segments[surf.index][tx][ty][1] = horz_wall + vert_wall - dir.variation
+				storage.SRF_segments[surf.index][tx][ty][2].graphics_variation = horz_wall + vert_wall - dir.variation
 			end
 			tx = tx + dir.x
 			ty = ty + dir.y
 		end
 	end
 	--Also destroy any wall that is on top of the node
-	if global.SRF_segments[surf.index] and global.SRF_segments[surf.index][x] and global.SRF_segments[surf.index][x][y] then
-		global.SRF_segments[surf.index][x][y][2].destroy()
-		global.SRF_segments[surf.index][x][y] = nil
+	if storage.SRF_segments[surf.index] and storage.SRF_segments[surf.index][x] and storage.SRF_segments[surf.index][x][y] then
+		storage.SRF_segments[surf.index][x][y][2].destroy()
+		storage.SRF_segments[surf.index][x][y] = nil
 	end
 end
 
 --Called by on_entity_died in control.lua
---Modifies global.SRF_nodes, global.SRF_node_ticklist, global.SRF_low_power_ticklist
+--Modifies storage.SRF_nodes, storage.SRF_node_ticklist, storage.SRF_low_power_ticklist
 function CnC_SonicWall_DeleteNode(entity, tick)
-	local k = find_value_in_table(global.SRF_nodes, entity.position, "position")
+	local k = find_value_in_table(storage.SRF_nodes, entity.position, "position")
 	if k then
-		table.remove(global.SRF_nodes, k)
-		if debugText then game.print("Destroyed SRF at x: "..entity.position.x.." y: "..entity.position.y.." removed from SRF_nodes, "..#global.SRF_nodes.." entries remain") end
+		table.remove(storage.SRF_nodes, k)
+		if debugText then game.print("Destroyed SRF at x: "..entity.position.x.." y: "..entity.position.y.." removed from SRF_nodes, "..#storage.SRF_nodes.." entries remain") end
 	end
 
-	k = find_value_in_table(global.SRF_node_ticklist, entity.position, "position")
+	k = find_value_in_table(storage.SRF_node_ticklist, entity.position, "position")
 	if k then
-		table.remove(global.SRF_node_ticklist, k)
-		if debugText then game.print("Destroyed SRF at x: "..entity.position.x.." y: "..entity.position.y.." removed from SRF_node_ticklist, "..#global.SRF_node_ticklist.." entries remain") end
+		table.remove(storage.SRF_node_ticklist, k)
+		if debugText then game.print("Destroyed SRF at x: "..entity.position.x.." y: "..entity.position.y.." removed from SRF_node_ticklist, "..#storage.SRF_node_ticklist.." entries remain") end
 	end
 
-	k = find_value_in_table(global.SRF_low_power_ticklist, entity.position, "position")
+	k = find_value_in_table(storage.SRF_low_power_ticklist, entity.position, "position")
 	if k then
-		table.remove(global.SRF_low_power_ticklist, k)
-		if debugText then game.print("Destroyed SRF at x: "..entity.position.x.." y: "..entity.position.y.." removed from SRF_low_power_ticklist, "..#global.SRF_low_power_ticklist.." entries remain") end
+		table.remove(storage.SRF_low_power_ticklist, k)
+		if debugText then game.print("Destroyed SRF at x: "..entity.position.x.." y: "..entity.position.y.." removed from SRF_low_power_ticklist, "..#storage.SRF_low_power_ticklist.." entries remain") end
 	end
 
 	CnC_SonicWall_DisableNode(entity)
 	--Tell connected walls to reevaluate their connections
 	local connected_nodes = CnC_SonicWall_FindNodes(entity.surface, entity.position, entity.force, horz_wall + vert_wall)
 	for i = 1, #connected_nodes do
-		if not find_value_in_table(global.SRF_node_ticklist, connected_nodes[i].position, "position") then
-			table.insert(global.SRF_node_ticklist, {emitter = connected_nodes[i], position = connected_nodes[i].position, tick = tick + 10})
+		if not find_value_in_table(storage.SRF_node_ticklist, connected_nodes[i].position, "position") then
+			table.insert(storage.SRF_node_ticklist, {emitter = connected_nodes[i], position = connected_nodes[i].position, tick = tick + 10})
 		end
 	end
 end
 
 --Returns whether a wall of a given orientation can be placed at a given position
---Assumes global.SRF_segments, horz_wall, vert_wall
+--Assumes storage.SRF_segments, horz_wall, vert_wall
 function CnC_SonicWall_TestWall(surf, pos, dir, node)
 	local x = floor(pos[1])
 	local y = floor(pos[2])
-	if not global.SRF_segments[surf.index] then global.SRF_segments[surf.index] = {} end
-	if not global.SRF_segments[surf.index][x] then global.SRF_segments[surf.index][x] = {} end
+	if not storage.SRF_segments[surf.index] then storage.SRF_segments[surf.index] = {} end
+	if not storage.SRF_segments[surf.index][x] then storage.SRF_segments[surf.index][x] = {} end
 
-	if not global.SRF_segments[surf.index][x][y] then
+	if not storage.SRF_segments[surf.index][x][y] then
 		if not surf.can_place_entity{name = "tiberium-srf-wall", position=pos, force = node.force} then return false end
 	else
-		local wall = global.SRF_segments[surf.index][x][y]
+		local wall = storage.SRF_segments[surf.index][x][y]
 		if wall[1] ~= horz_wall + vert_wall - dir then return false end --There is already a wall in the direction we want
 	end
 
@@ -149,21 +149,21 @@ end
 
 --Makes a wall of a given orientation can be placed at a given position
 --Assumes horz_wall, vert_wall
---Modifies global.SRF_segments
+--Modifies storage.SRF_segments
 function CnC_SonicWall_MakeWall(surf, pos, dir, node)
 	local x = floor(pos[1])
 	local y = floor(pos[2])
-	if not global.SRF_segments[surf.index] then global.SRF_segments[surf.index] = {} end
-	if not global.SRF_segments[surf.index][x] then global.SRF_segments[surf.index][x] = {} end
+	if not storage.SRF_segments[surf.index] then storage.SRF_segments[surf.index] = {} end
+	if not storage.SRF_segments[surf.index][x] then storage.SRF_segments[surf.index][x] = {} end
 
-	if not global.SRF_segments[surf.index][x][y] then
+	if not storage.SRF_segments[surf.index][x][y] then
 		local wall = surf.create_entity{name="tiberium-srf-wall", position=pos, force=node.force}
 		if not wall then error("Wall creation failed!") end
 		wall.destructible = false
 		wall.graphics_variation = dir
-		global.SRF_segments[surf.index][x][y] = {dir, wall}
+		storage.SRF_segments[surf.index][x][y] = {dir, wall}
 	else
-		local wall = global.SRF_segments[surf.index][x][y]
+		local wall = storage.SRF_segments[surf.index][x][y]
 		if wall[1] == horz_wall + vert_wall - dir then wall[1] = horz_wall + vert_wall end
 		wall[2].graphics_variation = horz_wall + vert_wall
 	end
@@ -171,7 +171,7 @@ end
 
 --Makes a wall connecting two given emitters if an uninterupted wall is possible
 --Assumes node_range, horz_wall, vert_wall
---Modifies global.SRF_segments
+--Modifies storage.SRF_segments
 function tryCnC_SonicWall_MakeWall(node1, node2)
 	local that_pos = node2.position
 	if node1.position.x == that_pos.x and node1.position.y ~= that_pos.y then
@@ -210,14 +210,14 @@ end
 function CnC_SonicWall_OnTick(event)
 	local cur_tick = event.tick
 
-	if not global.SRF_nodes then  --Set up renamed globals if they don't exist yet
-		convertSrfGlobals()
+	if not storage.SRF_nodes then  --Set up renamed storage if they don't exist yet
+		convertSrfStorage()
 	end
 
-	for i = #global.SRF_node_ticklist, 1, -1 do
-		local charging = global.SRF_node_ticklist[i]
+	for i = #storage.SRF_node_ticklist, 1, -1 do
+		local charging = storage.SRF_node_ticklist[i]
 		if not charging.emitter.valid then
-			table.remove(global.SRF_node_ticklist, i)
+			table.remove(storage.SRF_node_ticklist, i)
 		elseif charging.tick <= cur_tick then
 			local charge_rem = charging.emitter.electric_buffer_size - charging.emitter.energy
 			if charge_rem <= 0 then
@@ -225,33 +225,33 @@ function CnC_SonicWall_OnTick(event)
 																charging.emitter.force, horz_wall + vert_wall)
 				for _, node in pairs(connected_nodes) do
 					if node.energy > 0 then  --Doesn't need to be fully powered as long as it was once fully powered
-						if not find_value_in_table(global.SRF_node_ticklist, node.position, "position") then
+						if not find_value_in_table(storage.SRF_node_ticklist, node.position, "position") then
 							tryCnC_SonicWall_MakeWall(charging.emitter, node)
 						end
 					end
 				end
-				table.remove(global.SRF_node_ticklist, i)
+				table.remove(storage.SRF_node_ticklist, i)
 			else
-				charging.tick = cur_tick + ceil(charge_rem / charging.emitter.electric_input_flow_limit)
+				charging.tick = cur_tick + ceil(charge_rem / charging.emitter.get_electric_input_flow_limit())
 			end
 		end
 	end
 
 	if cur_tick % 60 == 0 then --Check for all emitters for low power once per second
-		for _, entry in pairs(global.SRF_nodes) do
+		for _, entry in pairs(storage.SRF_nodes) do
 			local ticks_rem = entry.emitter.energy / entry.emitter.electric_drain
 			if ticks_rem > 5 and ticks_rem <= 65 then
-				if not find_value_in_table(global.SRF_low_power_ticklist, entry.emitter.position, "position") then
-					table.insert(global.SRF_low_power_ticklist, {emitter = entry.emitter, position = entry.position, tick = cur_tick + ceil(ticks_rem)})
+				if not find_value_in_table(storage.SRF_low_power_ticklist, entry.emitter.position, "position") then
+					table.insert(storage.SRF_low_power_ticklist, {emitter = entry.emitter, position = entry.position, tick = cur_tick + ceil(ticks_rem)})
 				end
 			end
 		end
 	end
 
-	for i = #global.SRF_low_power_ticklist, 1, -1 do --Regularly check low power emitters to disable when their power runs out
-		local low = global.SRF_low_power_ticklist[i]
+	for i = #storage.SRF_low_power_ticklist, 1, -1 do --Regularly check low power emitters to disable when their power runs out
+		local low = storage.SRF_low_power_ticklist[i]
 		if not low.emitter.valid then
-			table.remove(global.SRF_low_power_ticklist, i)
+			table.remove(storage.SRF_low_power_ticklist, i)
 		elseif low.tick <= cur_tick and low.emitter then
 			local ticks_rem = low.emitter.energy / low.emitter.electric_drain
 			if ticks_rem <= 5 then
@@ -272,7 +272,7 @@ function find_value_in_table(list, value, subscript)
 	if not value then return false end
 	for k, v in pairs(list) do
 		if subscript then
-			if LSlib.utils.table.areEqual(v[subscript], value) then return k end
+			if flib_table.deep_compare(v[subscript], value) then return k end
 		else
 			if v == value then return k end
 		end
@@ -281,35 +281,35 @@ function find_value_in_table(list, value, subscript)
 end
 
 function CnC_SonicWall_OnInit()
-	global.SRF_nodes = {}
-	global.SRF_node_ticklist = {}
-	global.SRF_segments = {}
-	global.SRF_low_power_ticklist = {}
+	storage.SRF_nodes = {}
+	storage.SRF_node_ticklist = {}
+	storage.SRF_segments = {}
+	storage.SRF_low_power_ticklist = {}
 end
 
-function convertSrfGlobals()
-	if global.hexi_hardlight_nodes then
-		global.SRF_nodes = global.hexi_hardlight_nodes
-	elseif not global.SRF_nodes then
-		global.SRF_nodes = {}
+function convertSrfStorage()
+	if storage.hexi_hardlight_nodes then
+		storage.SRF_nodes = storage.hexi_hardlight_nodes
+	elseif not storage.SRF_nodes then
+		storage.SRF_nodes = {}
 	end
 
-	if global.hexi_hardlight_node_ticklist then
-		global.SRF_node_ticklist = {}
-		for _, v in pairs(global.hexi_hardlight_node_ticklist) do
-			table.insert(global.SRF_node_ticklist, {emitter = v[1], position = v[1].position, tick = v[2]})
+	if storage.hexi_hardlight_node_ticklist then
+		storage.SRF_node_ticklist = {}
+		for _, v in pairs(storage.hexi_hardlight_node_ticklist) do
+			table.insert(storage.SRF_node_ticklist, {emitter = v[1], position = v[1].position, tick = v[2]})
 		end
-	elseif not global.SRF_node_ticklist then
-		global.SRF_node_ticklist = {}
+	elseif not storage.SRF_node_ticklist then
+		storage.SRF_node_ticklist = {}
 	end
 
-	if global.hexi_hardlight_segments then
-		global.SRF_segments = global.hexi_hardlight_segments
-	elseif not global.SRF_segments then
-		global.SRF_segments = {}
+	if storage.hexi_hardlight_segments then
+		storage.SRF_segments = storage.hexi_hardlight_segments
+	elseif not storage.SRF_segments then
+		storage.SRF_segments = {}
 	end
 
-	if not global.SRF_low_power_ticklist then
-		global.SRF_low_power_ticklist = {}
+	if not storage.SRF_low_power_ticklist then
+		storage.SRF_low_power_ticklist = {}
 	end
 end

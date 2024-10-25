@@ -35,16 +35,18 @@ data:extend{
 		},
 		energy_glow_animation = laser_turret_shooting_glow(),
 		glow_light_intensity = 0.5, -- defaults to 0
-		base_picture = {
-			layers = {
-				{
-					filename = tiberiumInternalName.."/graphics/entity/obelisk-of-light/obelisk-of-light.png",
-					priority = "high",
-					width = 114,
-					height = 222,
-					direction_count = 1,
-					frame_count = 1,
-					scale = 0.8
+		graphics_set = {
+			animation = {
+				layers = {
+					{
+						filename = tiberiumInternalName.."/graphics/entity/obelisk-of-light/obelisk-of-light.png",
+						priority = "high",
+						width = 114,
+						height = 222,
+						direction_count = 1,
+						frame_count = 1,
+						scale = 0.8
+					}
 				}
 			}
 		},
@@ -67,8 +69,8 @@ data:extend{
 			source_offset = {0, 0},
 			damage_modifier = 12,
 			--warmup = 120,
+			ammo_category = "obelisk",
 			ammo_type = {
-				category = "obelisk",
 				energy_consumption = "2000kJ",
 				action = {
 					type = "direct",

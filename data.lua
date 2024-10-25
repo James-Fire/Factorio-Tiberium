@@ -6,8 +6,8 @@ if mods["Factorio-Tiberium"] and mods["Factorio-Tiberium-Beta"] then
 	error(message)
 end
 
-require("__LSlib__/LSlib")
 flib = require("__flib__/data-util")
+flib_table = require("__flib__/table")
 common = require("prototype/common")
 
 require("prototype/item-groups")

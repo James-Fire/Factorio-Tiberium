@@ -13,9 +13,9 @@ end
 
 for labName, labData in pairs(data.raw.lab) do
 	local addTib = false
-	if not LSlib.utils.table.hasValue(labData.inputs or {}, "tiberium-science") then -- Must not already allow Tib Science
+	if not flib_table.find(labData.inputs or {}, "tiberium-science") then -- Must not already allow Tib Science
 		for pack in pairs(tibComboPacks) do  -- Must use packs from combo list so we don't hit things like module labs
-			if LSlib.utils.table.hasValue(labData.inputs or {}, pack) then
+			if flib_table.find(labData.inputs or {}, pack) then
 				addTib = true
 				break
 			end
@@ -25,10 +25,11 @@ for labName, labData in pairs(data.raw.lab) do
 end
 
 function removeCollisionMask(type, prototype, mask)
-	if type and prototype and mask and data.raw[type] and data.raw[type][prototype] and data.raw[type][prototype].collision_mask then
-		for k,v in pairs(data.raw[type][prototype].collision_mask) do
+	if type and prototype and mask and data.raw[type] and data.raw[type][prototype]
+			and data.raw[type][prototype].collision_mask and data.raw[type][prototype].collision_mask.layers then
+		for k,v in pairs(data.raw[type][prototype].collision_mask.layers) do
 			if v == mask then
-				table.remove(data.raw[type][prototype].collision_mask, k)
+				table.remove(data.raw[type][prototype].collision_mask.layers, k)
 				break
 			end
 		end
@@ -36,11 +37,11 @@ function removeCollisionMask(type, prototype, mask)
 end
 
 if mods["alien-biomes"] then  -- Reverting this change so Tiberium can grow on landfill again
-	removeCollisionMask("tile", "landfill", "resource-layer")
+	removeCollisionMask("tile", "landfill", "resource")
 end
 
 if mods["space-exploration"] then
-	local space_collision_layer = data.raw.arrow["collision-mask-space-tile"] and data.raw.arrow["collision-mask-space-tile"].collision_mask[1]
+	local space_collision_layer = data.raw.arrow["collision-mask-space-tile"] and data.raw.arrow["collision-mask-space-tile"].collision_mask.layers[1]
 	if space_collision_layer then
 		--Since se_allow_in_space isn't respected for alternate miners that don't mine default resources
 		for _, drillName in pairs({"tiberium-network-node", "tiberium-node-harvester", "tiberium-aoe-node-harvester", "tiberium-detonation-charge", "tiberium-growth-accelerator-node", "tiberium-spike"}) do
@@ -52,7 +53,7 @@ end
 -- If there is no refinery that can be set to Tiberium processing recipes, allow them to be made at our centrifuges
 local openRefinery = false
 for assemblerName, assembler in pairs(data.raw["assembling-machine"]) do
-	if (LSlib.utils.table.hasValue(assembler.crafting_categories or {}, "oil-processing") and
+	if (flib_table.find(assembler.crafting_categories or {}, "oil-processing") and
 			assembler.minable and not assembler.fixed_recipe) then  -- Minable as the simplest proxy for it being a real entity that players can create
 		openRefinery = true
 		break
@@ -61,7 +62,7 @@ end
 if not openRefinery then
 	for _, recipe in pairs({"tiberium-molten-processing", "tiberium-advanced-molten-processing", "tiberium-liquid-processing", "tiberium-liquid-processing-hot"}) do
 		if data.raw.recipe[recipe] then
-			LSlib.recipe.setCraftingCategory(recipe, "tiberium-centrifuge-1")
+			data.raw.recipe[recipe].category = "tiberium-centrifuge-1"
 			-- Rebalance from refinery to centrifuge to preserve power/pollution amounts
 			data.raw.recipe[recipe].emissions_multiplier = (data.raw.recipe[recipe].emissions_multiplier or 1) * 0.75
 			data.raw.recipe[recipe].energy_required = (data.raw.recipe[recipe].energy_required or 1) * 2

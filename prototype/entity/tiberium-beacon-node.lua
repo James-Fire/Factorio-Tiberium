@@ -61,12 +61,7 @@ data:extend{
 		},
 		energy_usage = "10MW",
 		distribution_effectivity = 0,
-		module_specification = {
-			module_slots = 0,
-			module_info_icon_shift = {0, 0},
-			module_info_multi_row_initial_height_modifier = -0.3,
-			module_info_max_icons_per_row = 2,
-		},
+		module_slots = 0,
 		water_reflection = {
 			pictures = {
 				filename = "__base__/graphics/entity/beacon/beacon-reflection.png",
@@ -97,7 +92,7 @@ data:extend{
 			"no-automated-item-removal",
 			"no-automated-item-insertion"
 		},
-		collision_mask = {"resource-layer"}, -- disable collision
+		collision_mask = common.makeCollisionMask({"resource"}), -- disable collision
 		resistances = {
 			{
 				type = "fire",
@@ -118,9 +113,7 @@ data:extend{
 		supply_area_distance = 0,
 		radius_visualisation_picture = common.blankPicture,
 		distribution_effectivity = 1,
-		module_specification = {
-			module_slots = 65535,
-		},
+		module_slots = 32767,
 		allowed_effects = {"speed", "consumption"},
 		selection_box = {{0, 0}, {0, 0}},
 		collision_box = {{-1.4, -1.4}, {1.4, 1.4}},

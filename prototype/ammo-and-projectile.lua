@@ -6,8 +6,8 @@ data:extend{
 		icon = "__base__/graphics/icons/uranium-rounds-magazine.png",
 		icon_size = 64,
 		icon_mipmaps = 4,
+		ammo_category = "bullet",
 		ammo_type = {
-			category = "bullet",
 			action = {
 				type = "direct",
 				action_delivery = {
@@ -47,22 +47,38 @@ local genericRocketProjectile = {
 	action = {},
 	light = {intensity = 0.5, size = 4},
 	animation = {
-		filename = "__base__/graphics/entity/rocket/rocket.png",
-		frame_count = 8,
-		line_length = 8,
-		width = 9,
-		height = 35,
-		shift = {0, 0},
-		priority = "high"
+		layers = {
+			util.sprite_load("__base__/graphics/entity/rocket/rocket", {
+				scale = 0.5,
+				repeat_count = 8,
+				frame_count = 1,
+				rotate_shift = true,
+				priority = "high"
+			}),
+			util.sprite_load("__base__/graphics/entity/rocket/rocket-tinted-tip", {
+				scale = 0.5,
+				repeat_count = 8,
+				frame_count = 1,
+				rotate_shift = true,
+				priority = "high",
+			}),
+				util.sprite_load("__base__/graphics/entity/rocket/rocket-lights", {
+				blend_mode = "additive",
+				draw_as_glow = true,
+				scale = 0.5,
+				frame_count = 8,
+				rotate_shift = true,
+				priority = "high",
+			}),
+		}
 	},
-	shadow = {
-		filename = "__base__/graphics/entity/rocket/rocket-shadow.png",
+	shadow = util.sprite_load("__base__/graphics/entity/rocket/rocket", {
+		draw_as_shadow = true,
+		scale = 0.5,
 		frame_count = 1,
-		width = 7,
-		height = 24,
-		priority = "high",
-		shift = {0, 0}
-	},
+		rotate_shift = true,
+		priority = "high"
+	}),
 	smoke = {
 		{
 			name = "smoke-fast",
@@ -135,8 +151,8 @@ data:extend{tiberiumRocketProjectile,
 		name = "tiberium-rocket",
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-rocket.png",
 		icon_size = 64,
+		ammo_category = "rocket",
 		ammo_type = {
-			category = "rocket",
 			action = {
 				type = "direct",
 				action_delivery = {
@@ -188,7 +204,7 @@ tibNukeProjectile.action = {
 				tile_name = "nuclear-ground",
 				apply_projection = true,
 				radius = 12,
-				tile_collision_mask = {"water-tile"}
+				tile_collision_mask = common.makeCollisionMask({"water_tile"})
 			},
 			{
 				type = "destroy-cliffs",
@@ -395,7 +411,7 @@ tibNukeProjectile.action = {
 							{
 								type = "create-entity",
 								entity_name = "nuclear-smouldering-smoke-source",
-								tile_collision_mask = {"water-tile"},
+								tile_collision_mask = common.makeCollisionMask({"water_tile"}),
 							}
 						},
 					},
@@ -416,11 +432,11 @@ data:extend{tibNukeGroundZero, tibNukeWave, tibNukeProjectile,
 		name = "tiberium-nuke",
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-nuke.png",
 		icon_size = 64,
+		ammo_category = "rocket",
 		ammo_type = {
 			range_modifier = 5,
 			cooldown_modifier = 3,
 			target_type = "position",
-			category = "rocket",
 			action = {
 				type = "direct",
 				action_delivery = {
@@ -533,11 +549,11 @@ data:extend{tibSeedProjectile,
 		name = "tiberium-seed",
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-seed-rocket.png",
 		icon_size = 64,
+		ammo_category = "rocket",
 		ammo_type = {
 			range_modifier = 5,
 			cooldown_modifier = 3,
 			target_type = "position",
-			category = "rocket",
 			action = {
 				type = "direct",
 				action_delivery = {
@@ -577,11 +593,11 @@ data:extend{tibSeedBlueProjectile,
 		name = "tiberium-seed-blue",
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-seed-rocket-blue.png",
 		icon_size = 64,
+		ammo_category = "rocket",
 		ammo_type = {
 			range_modifier = 5,
 			cooldown_modifier = 3,
 			target_type = "position",
-			category = "rocket",
 			action = {
 				type = "direct",
 				action_delivery = {
@@ -606,6 +622,7 @@ data:extend{
 	{
 		type = "ammo",
 		name = "tiberium-chemical-sprayer-ammo",
+		ammo_category = "flamethrower",
 		ammo_type = {
 			{
 				action = {
@@ -615,7 +632,6 @@ data:extend{
 					},
 					type = "direct"
 				},
-				category = "flamethrower",
 				clamp_position = true,
 				source_type = "default",
 				target_type = "position"
@@ -628,7 +644,6 @@ data:extend{
 					},
 					type = "direct"
 				},
-				category = "flamethrower",
 				clamp_position = true,
 				consumption_modifier = 1.125,
 				source_type = "vehicle",
@@ -683,7 +698,7 @@ local sonicProjectile = flib.copy_prototype(genericGrenadeProjectile, "tiberium-
 sonicProjectile.animation = {
 	animation_speed = 0.5,
 	--draw_as_glow = true,
-	filename = "__base__/graphics/entity/beam/hr-tileable-beam-END-light.png",
+	filename = "__base__/graphics/entity/beam/tileable-beam-END.png",
 	frame_count = 16,
 	height = 93,
 	width = 91,
@@ -825,8 +840,8 @@ data:extend{catalystAll, catalystBlue, invisibleChainReactionAll, invisibleChain
 		type = "ammo",
 		name = "tiberium-catalyst-missile-all",
 		icons = common.layeredIcons("__base__/graphics/icons/explosive-rocket.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "ne", 10),
+		ammo_category = "rocket",
 		ammo_type = {
-			category = "rocket",
 			range_modifier = 5,
 			cooldown_modifier = 3,
 			target_type = "position",
@@ -851,8 +866,8 @@ data:extend{catalystAll, catalystBlue, invisibleChainReactionAll, invisibleChain
 		type = "ammo",
 		name = "tiberium-catalyst-missile-blue",
 		icons = common.layeredIcons("__base__/graphics/icons/explosive-rocket.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "ne", 10),
+		ammo_category = "rocket",
 		ammo_type = {
-			category = "rocket",
 			range_modifier = 5,
 			cooldown_modifier = 3,
 			target_type = "position",
@@ -919,25 +934,14 @@ tibCliffProj.action[1].action_delivery.target_effects = {
 tibCliffProj.animation = {
 	animation_speed = 0.25,
 	draw_as_glow = true,
-	filename = tiberiumInternalName.."/graphics/entity/cliff-explosives/tiberium-cliff-explosives.png",
+	filename = tiberiumInternalName.."/graphics/entity/cliff-explosives/hr-tiberium-cliff-explosives.png",
 	frame_count = 16,
-	height = 30,
-	width = 26,
-	hr_version = {
-		animation_speed = 0.25,
-		draw_as_glow = true,
-		filename = tiberiumInternalName.."/graphics/entity/cliff-explosives/hr-tiberium-cliff-explosives.png",
-		frame_count = 16,
-		height = 58,
-		width = 52,
-		line_length = 8,
-		priority = "high",
-		scale = 0.5,
-		shift = {0.015625, -0.140625},
-	},
+	height = 58,
+	width = 52,
+	scale = 0.5,
+	shift = {0.015625, -0.140625},
 	line_length = 8,
 	priority = "high",
-	shift = {0, -0.125},
 }
 
 data:extend{tibCliffCapsule, tibCliffProj}

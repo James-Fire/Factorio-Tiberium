@@ -5,11 +5,11 @@ if mods["Krastorio2"] then
 
 	-- Fix our infinites to match
 	local techPairs = {{tib = "tiberium-explosives", copy = "stronger-explosives-7", max_level = 4},
-					   {tib = "tiberium-energy-weapons-damage", copy = "energy-weapons-damage-7", max_level = 4},
+					   {tib = "tiberium-energy-weapons-damage", copy = "laser-weapons-damage-7", max_level = 4},
 					   {tib = "tiberium-explosives-5", copy = "stronger-explosives-11", max_level = 9},
-					   {tib = "tiberium-energy-weapons-damage-5", copy = "energy-weapons-damage-11", max_level = 9},
+					   {tib = "tiberium-energy-weapons-damage-5", copy = "laser-weapons-damage-11", max_level = 9},
 					   {tib = "tiberium-explosives-10", copy = "stronger-explosives-16", max_level = "infinite"},
-					   {tib = "tiberium-energy-weapons-damage-10", copy = "energy-weapons-damage-16", max_level = "infinite"}}
+					   {tib = "tiberium-energy-weapons-damage-10", copy = "laser-weapons-damage-16", max_level = "infinite"}}
 
 	data.raw["technology"]["tiberium-explosives-5"] = table.deepcopy(data.raw["technology"]["tiberium-explosives"])
 	data.raw["technology"]["tiberium-explosives-5"].prerequisites = {"tiberium-explosives"}
@@ -70,7 +70,7 @@ if mods["Krastorio2"] then
 
 	-- Make Tiberium Magazines usable with rifles again
 	if krastorio.general.getSafeSettingValue("kr-more-realistic-weapon") then
-		LSlib.recipe.editIngredient("tiberium-rounds-magazine", "piercing-rounds-magazine", "rifle-magazine", 1)
+		common.recipe.editIngredient("tiberium-rounds-magazine", "piercing-rounds-magazine", "rifle-magazine", 1)
 	end
 	local oldTibRounds = data.raw.ammo["tiberium-rounds-magazine"]
 	local newTibRounds = table.deepcopy(data.raw.ammo["uranium-rifle-magazine"])

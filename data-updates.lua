@@ -6,12 +6,12 @@ require("scripts/compatibility/Obelisks-of-light")
 
 -- Orbital Ion Cannon
 if mods["Orbital Ion Cannon"] or mods["Kux-OrbitalIonCannon"] then
-	LSlib.technology.addPrerequisite("orbital-ion-cannon", "tiberium-military-2")
+	common.technology.addPrerequisite("orbital-ion-cannon", "tiberium-military-2")
 	if mods["bobwarfare"] then
-		LSlib.recipe.editIngredient("orbital-ion-cannon", "bob-laser-turret-5", "tiberium-ion-core", 1)
-		LSlib.technology.removePrerequisite("orbital-ion-cannon", "bob-laser-turrets-5")
+		common.recipe.editIngredient("orbital-ion-cannon", "bob-laser-turret-5", "tiberium-ion-core", 1)
+		common.technology.removePrerequisite("orbital-ion-cannon", "bob-laser-turrets-5")
 	else
-		LSlib.recipe.editIngredient("orbital-ion-cannon", "laser-turret", "tiberium-ion-core", 1)
+		common.recipe.editIngredient("orbital-ion-cannon", "laser-turret", "tiberium-ion-core", 1)
 	end
 end
 
@@ -50,16 +50,16 @@ if mods["omnimatter"] then
 		omni.matter.add_ignore_resource("tibGrowthNode")
 		omni.matter.add_ignore_resource("tibNode_tree")
 	end
-	LSlib.recipe.editIngredient("tiberium-spike", "pumpjack", "offshore-pump", 1)
+	common.recipe.editIngredient("tiberium-spike", "pumpjack", "offshore-pump", 1)
 end
 
 if mods["pypetroleumhandling"] then
 	-- Move Liquid Tiberium recipe to Reformer
-	LSlib.recipe.setCraftingCategory("tiberium-liquid-processing", "reformer")
-	LSlib.recipe.setCraftingCategory("tiberium-liquid-processing-hot", "reformer")
+	data.raw.recipe["tiberium-liquid-processing"].category = "reformer"
+	data.raw.recipe["tiberium-liquid-processing-hot"].category = "reformer"
 	-- Move both Molten Tiberium recipes to Light Oil Refinery
-	LSlib.recipe.setCraftingCategory("tiberium-molten-processing", "lor")
-	LSlib.recipe.setCraftingCategory("tiberium-advanced-molten-processing", "lor")
+	data.raw.recipe["tiberium-molten-processing"].category = "lor"
+	data.raw.recipe["tiberium-advanced-molten-processing"].category = "lor"
 end
 
 if mods["IndustrialRevolution"] then
@@ -71,7 +71,7 @@ end
 
 if mods["angelspetrochem"] then
 	-- Replace the vanilla Chemical Plant with one of Angel's, because apparently it's too hard to simply use the vanilla one.
-	LSlib.recipe.editIngredient("tiberium-power-plant", "chemical-plant", "angels-chemical-plant-2", 1)
+	common.recipe.editIngredient("tiberium-power-plant", "chemical-plant", "angels-chemical-plant-2", 1)
 end
 
 if mods["dark-matter-replicators-18"] then
@@ -156,7 +156,7 @@ end
 table.insert(data.raw.character.character.mining_categories, "basic-solid-tiberium")
 
 for _, drill in pairs(data.raw["mining-drill"]) do
-	if LSlib.utils.table.hasValue(drill.resource_categories, "basic-solid") then
+	if flib_table.find(drill.resource_categories, "basic-solid") then
 		table.insert(drill.resource_categories, "basic-solid-tiberium")
 	end
 end
@@ -192,17 +192,17 @@ if data.raw.item.stone then
 end
 
 -- Flag items as empty barrels for detecting un-barreling recipes in data-final-fixes
-if data.raw.item["empty-barrel"] then
-	data.raw.item["empty-barrel"].tiberium_empty_barrel = true
+if data.raw.item["barrel"] then
+	data.raw.item["barrel"].tiberium_empty_barrel = true
 end
 
 -- Enable Tiberium Science recipes at all assemblers that meet certain category requirements
 for name, assembler in pairs(data.raw["assembling-machine"]) do
 	local categories = assembler.crafting_categories or {}
-	if LSlib.utils.table.hasValue(categories, "chemistry") and not LSlib.utils.table.hasValue(categories, "tiberium-science") then
-		LSlib.entity.addCraftingCategory("assembling-machine", name, "basic-tiberium-science")
-		LSlib.entity.addCraftingCategory("assembling-machine", name, "tiberium-science")
-	elseif LSlib.utils.table.hasValue(categories, "crafting") and not LSlib.utils.table.hasValue(categories, "basic-tiberium-science") then
-		LSlib.entity.addCraftingCategory("assembling-machine", name, "basic-tiberium-science")
+	if flib_table.find(categories, "chemistry") and not flib_table.find(categories, "tiberium-science") then
+		table.insert(data.raw["assembling-machine"][name].crafting_categories, "basic-tiberium-science")
+		table.insert(data.raw["assembling-machine"][name].crafting_categories, "tiberium-science")
+	elseif flib_table.find(categories, "crafting") and not flib_table.find(categories, "basic-tiberium-science") then
+		table.insert(data.raw["assembling-machine"][name].crafting_categories, "basic-tiberium-science")
 	end
 end

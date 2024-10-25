@@ -5,7 +5,6 @@ local srf_sprite = {
 			filename = tiberiumInternalName.."/graphics/sonic wall/node.png",
 			priority = "extra-high",
 			frame_count = 1,
-			axially_symmetrical = false,
 			direction_count = 1,
 			width = 256,
 			height = 384,
@@ -15,7 +14,6 @@ local srf_sprite = {
 			filename = tiberiumInternalName.."/graphics/sonic wall/node shadow.png",
 			priority = "extra-high",
 			frame_count = 1,
-			axially_symmetrical = false,
 			direction_count = 1,
 			width = 512,
 			height = 512,
@@ -109,7 +107,7 @@ data:extend{
 		selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
 		selection_priority = 1,
 		collision_box = {{-0.4, -0.4}, {0.4, 0.4}},
-		collision_mask = {"layer-47"}, -- Trying to avoid collisions with other mods using custom collision masks
+		collision_mask = common.makeCollisionMask({}), -- Trying to avoid collisions with other mods using custom collision masks
 		created_effect = {
 			type = "direct",
 			action_delivery = {
@@ -137,7 +135,6 @@ data:extend{
 				filename = tiberiumInternalName.."/graphics/sonic wall/wall horz.png",
 				priority = "extra-high",
 				frame_count = 1,
-				axially_symmetrical = false,
 				direction_count = 1,
 				width = 256,
 				height = 256,
@@ -147,7 +144,6 @@ data:extend{
 				filename = tiberiumInternalName.."/graphics/sonic wall/wall vert.png",
 				priority = "extra-high",
 				frame_count = 1,
-				axially_symmetrical = false,
 				direction_count = 1,
 				width = 192,
 				height = 640,
@@ -157,7 +153,6 @@ data:extend{
 				filename = tiberiumInternalName.."/graphics/sonic wall/wall cross.png",
 				priority = "extra-high",
 				frame_count = 1,
-				axially_symmetrical = false,
 				direction_count = 1,
 				width = 256,
 				height = 640,
@@ -174,34 +169,43 @@ data:extend{
 		icon_size = 32,
 		flags = {"placeable-neutral", "player-creation", "not-deconstructable"},
 		collision_box = {{-0.3, -0.3}, {0.3, 0.3}},
-		collision_mask = {"item-layer", "object-layer", "water-tile"}, -- disable collision
+		collision_mask = common.makeCollisionMask({"item", "object", "water_tile"}), -- disable collision
 		placeable_by = {item = "tiberium-srf-emitter", count = 1},
 		fluid_box = {
 			filter = "fluid-unknown",
+			volume = 1,
 			pipe_connections = {
 				{
-					position = {0, 1},
+					direction = defines.direction.south,
+					position = {0, 0.2},
+					connection_type = "underground",
 					max_underground_distance = 16,
 				},
 				{
-					position = {0, -1},
+					direction = defines.direction.north,
+					position = {0, -0.2},
+					connection_type = "underground",
 					max_underground_distance = 16,
 				},
 				{
-					position = {1, 0},
+					direction = defines.direction.east,
+					position = {0.2, 0},
+					connection_type = "underground",
 					max_underground_distance = 16,
 				},
 				{
-					position = {-1, 0},
+					direction = defines.direction.west,
+					position = {-0.2, 0},
+					connection_type = "underground",
 					max_underground_distance = 16,
 				},
 			},
 		},
 		pictures = {
-			up	= srf_sprite,
-			down  = srf_sprite,
-			left  = srf_sprite,
-			right = srf_sprite,
+			north = srf_sprite,
+			east = srf_sprite,
+			south = srf_sprite,
+			west = srf_sprite,
 		},
 	}
 }

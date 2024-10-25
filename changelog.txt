@@ -1,4 +1,8 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.0
+  Features:
+    - Moved to Factorio version 2.0
+---------------------------------------------------------------------------------------------------
 Version: 1.1.30
   Bugfixes:
     - Fixed crash when deleting surface that has SRF emitters on it (this one slipped through 1.1.17's surface fixes)
