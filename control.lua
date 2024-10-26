@@ -542,8 +542,8 @@ function PlaceOre(entity, howMany)
 	-- Tell all mining drills to wake up
 	for i, drill in pairs(storage.tibDrills) do
 		if drill.entity and drill.entity.valid then
-			drill.entity.active = false
-			drill.entity.active = true
+			drill.entity.rotate{}
+			drill.entity.rotate{reverse = true}
 			local control = drill.entity.get_control_behavior()
 			if control then  --Toggle control behavior to force update to circuit network
 				if control.resource_read_mode == defines.control_behavior.mining_drill.resource_read_mode.this_miner then
@@ -1303,8 +1303,8 @@ function on_new_entity(event)
 			}
 		end
 		--Make spike look for newly created infinite node
-		new_entity.active = false
-		new_entity.active = true
+		new_entity.rotate{}
+		new_entity.rotate{reverse = true}
 		local control = new_entity.get_control_behavior()
 		if control then  --Toggle control behavior to force update to circuit network
 			if control.resource_read_mode == defines.control_behavior.mining_drill.resource_read_mode.this_miner then
