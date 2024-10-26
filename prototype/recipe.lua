@@ -451,6 +451,7 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-sludge-to-stone-brick",
+		localised_name = {"item-name.stone-brick"},
 		category = "crafting-with-fluid",
 		energy_required = 2,
 		enabled = false,
@@ -471,6 +472,7 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-sludge-to-concrete",
+		localised_name = {"item-name.concrete"},
 		category = "crafting-with-fluid",
 		energy_required = 10,
 		enabled = false,
@@ -489,6 +491,7 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-sludge-to-refined-concrete",
+		localised_name = {"item-name.refined-concrete"},
 		category = "crafting-with-fluid",
 		energy_required = 10,
 		enabled = false,
@@ -508,6 +511,7 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-sludge-to-landfill",
+		localised_name = {"item-name.landfill"},
 		category = "crafting-with-fluid",
 		energy_required = 2,
 		enabled = false,
@@ -1258,6 +1262,7 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-growth-credit-from-energy",
+		localised_name = {"item-name.tiberium-growth-credit"},
 		category = "chemistry",
 		subgroup = "a-growth-credits",
 		energy_required = 300,
@@ -1296,6 +1301,7 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-primed-reactant-easy",
+		localised_name = {"item-name.tiberium-primed-reactant"},
 		category = "chemistry",
 		subgroup = "a-intermediates",
 		energy_required = 10,
@@ -1311,6 +1317,7 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-primed-reactant-pure",
+		localised_name = {"item-name.tiberium-primed-reactant"},
 		category = "chemistry",
 		subgroup = "a-intermediates",
 		energy_required = 10,
@@ -1358,6 +1365,7 @@ data:extend{
 	{
 		type = "recipe",
 		name = "tiberium-primed-reactant-conversion",
+		localised_name = {"item-name.tiberium-primed-reactant"},
 		category = "chemistry",
 		subgroup = "a-intermediates",
 		energy_required = 10,

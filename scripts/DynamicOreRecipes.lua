@@ -1142,7 +1142,7 @@ function addCreditRecipe(ore)
 			icon = oreIcon,
 			icon_size = oreIconSize,
 			icon_mipmaps = ore.icon_mipmaps,
-			scale = 12.0 / (oreIconSize or 1), -- scale = 0.5 * 32 / icon_size simplified
+			scale = 12.0 / (oreIconSize or 64), -- scale = 0.5 * 32 / icon_size simplified
 			shift = {10, -10},
 			tint = oreTint,
 		}

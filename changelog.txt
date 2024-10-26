@@ -1,7 +1,9 @@
 ---------------------------------------------------------------------------------------------------
-Version: 2.0.0
+Version: 2.0.1
   Features:
-    - Moved to Factorio version 2.0
+    - Moved to Factorio version 2.0 (playable with Space Age but not balanced/reworked for Space Age)
+    - Added triggers to some technologies to automatically unlock them as you mine and refine Tiberium
+    - Added setting to go back to old technologies without triggers
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.30
   Bugfixes:
