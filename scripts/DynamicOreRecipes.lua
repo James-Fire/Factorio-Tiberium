@@ -169,9 +169,9 @@ function giantSetupFunction()
 	if debugText then packHierarchy() end
 
 	-- Build a more comprehensive list of free items and ingredient index for later
-	for _, pump in pairs(data.raw["offshore-pump"]) do
-		if pump.fluid then
-			free[pump.fluid] = true
+	for _, tile in pairs(data.raw.tile) do
+		if tile.fluid then
+			free[tile.fluid] = true
 		end
 	end
 	for _, tree in pairs(data.raw["tree"]) do
@@ -402,9 +402,10 @@ function allAvailableRecipes()
 			for _, effect in pairs(techData.effects or {}) do
 				if effect.recipe then
 					if data.raw.recipe[effect.recipe] then
+						--log("~~~ Recipe "..effect.recipe.." unlocked by "..tech)
 						availableRecipes[effect.recipe] = true
 						recipeUnlockTracker["technology"][effect.recipe] = tech
-						if data.raw.recipe[effect.recipe].result and tibComboPacks[data.raw.recipe[effect.recipe].result] then
+						if data.raw.recipe[effect.recipe].result and tibComboPacks[data.raw.recipe[effect.recipe].result] and techData.unit then
 							tibComboPacks[data.raw.recipe[effect.recipe].result] = techData.unit.ingredients  --save for later
 						end
 					else
@@ -416,19 +417,11 @@ function allAvailableRecipes()
 	end
 	for item, itemData in pairs(data.raw.item) do
 		-- Dummy recipes for rocket launch products
-		if itemData.rocket_launch_product or itemData.rocket_launch_products then
+		if itemData.rocket_launch_products then
 			local launchResults = common.itemPrototypesFromTable(itemData.rocket_launch_products)
-			if flib_table.size(launchResults) == 0 then
-				local launchProduct = itemData.rocket_launch_product[1] or itemData.rocket_launch_product.name
-				local launchAmount  = tonumber(itemData.rocket_launch_product[2]) or tonumber(itemData.rocket_launch_product.amount) or 1
-				launchAmount = math.max(launchAmount, 1)
-				if launchProduct then
-					launchResults[launchProduct] = launchAmount
-				end
-			end
 			if flib_table.size(launchResults) > 0 then  -- Fake recipe for rockets
 				for silo, siloData in pairs(data.raw["rocket-silo"]) do
-					if siloData.fixed_recipe and siloData.rocket_result_inventory_size and (siloData.rocket_result_inventory_size > 0) then
+					if siloData.fixed_recipe then
 						local fakeRecipeName = "dummy-recipe-launching-"..item.."-from-"..silo
 						local partName = next(normalResults(siloData.fixed_recipe))
 						local numParts = tonumber(siloData.rocket_parts_required) or 1
@@ -594,6 +587,7 @@ function packHierarchy()
 		if flib_table.size(resultIndex[pack]) == 1 then
 			recipe = next(resultIndex[pack])
 			log(recipe.." is the only recipe for "..pack)
+			if fakeRecipes[recipe] then log(serpent.block(fakeRecipes[recipe])) end
 			recipeForPack[pack] = recipe
 		else
 			log("Multiple recipes for "..pack.." "..serpent.block(resultIndex[pack]))
@@ -643,7 +637,7 @@ end
 -- Returns a list of packs required for a given tech (not counting prerequisites)
 function packForTech(techName)
 	local packList = {}
-	if data.raw.technology[techName] then
+	if data.raw.technology[techName] and data.raw.technology[techName].unit then
 		for _, ingredient in pairs(data.raw.technology[techName].unit.ingredients) do
 			local pack = ingredient.name or ingredient[1]
 			packList[pack] = ""
@@ -1084,8 +1078,18 @@ function addDirectRecipe(ore, easy)
 	data:extend{{
 		type = "recipe",
 		name = recipeName,
+		localised_name = {itemOrFluid.."-name."..ore},
 		ingredients = {},
-		results = {}
+		results = {},
+		energy_required = energy,
+		order = order,
+		enabled = false,
+		subgroup = subgroup,
+		always_show_made_in = true,
+		category = category,
+		crafting_machine_tint = common.tibCraftingTint,
+		allow_as_intermediate = false,
+		allow_decomposition = false,
 	}}
 	if easy then
 		common.recipe.addIngredient(recipeName, "tiberium-slurry", 32, "fluid")
@@ -1105,15 +1109,6 @@ function addDirectRecipe(ore, easy)
 		common.recipe.addResult(recipeName, "tiberium-sludge", WastePerCycle, "fluid")
 	end
 	common.technology.addRecipeUnlock(tech, recipeName)
-	data.raw.recipe[recipeName].energy_required = energy
-	data.raw.recipe[recipeName].order = order
-	data.raw.recipe[recipeName].enabled = false
-	data.raw.recipe[recipeName].subgroup = subgroup
-	data.raw.recipe[recipeName].always_show_made_in = true
-	data.raw.recipe[recipeName].category = category
-	data.raw.recipe[recipeName].crafting_machine_tint = common.tibCraftingTint
-	data.raw.recipe[recipeName].allow_as_intermediate = false
-	data.raw.recipe[recipeName].allow_decomposition = false
 end
 
 --Creates recipes to turn raw materials into Tiberium Substrate
@@ -1155,23 +1150,20 @@ function addCreditRecipe(ore)
 	data:extend{{
 		type = "recipe",
 		name = recipeName,
-		ingredients = {},
-		results = {}
+		localised_name = {"item-name.tiberium-growth-credit"},
+		ingredients = {{type = itemOrFluid, name = ore, amount = oreAmount}},
+		results = {{type = "item", name = "tiberium-growth-credit", amount = 1}},
+		energy_required = energy,
+		order = order,
+		icons = table.deepcopy(icons),
+		enabled = false,
+		subgroup = "a-growth-credits",
+		always_show_made_in = true,
+		category = "chemistry",
+		crafting_machine_tint = common.tibCraftingTint,
+		allow_decomposition = false,
 	}}
-	common.recipe.addIngredient(recipeName, ore, oreAmount, itemOrFluid)
 	common.technology.addRecipeUnlock("tiberium-growth-acceleration", recipeName)
-	data.raw.recipe[recipeName].energy_required = energy
-	data.raw.recipe[recipeName].order = order
-	data.raw.recipe[recipeName].icon = nil
-	data.raw.recipe[recipeName].icon_size = 64
-	data.raw.recipe[recipeName].icons = table.deepcopy(icons)
-	common.recipe.addResult(recipeName, "tiberium-growth-credit", 1, "item")
-	data.raw.recipe[recipeName].enabled = false
-	data.raw.recipe[recipeName].subgroup = "a-growth-credits"
-	data.raw.recipe[recipeName].always_show_made_in = true
-	data.raw.recipe[recipeName].category = "chemistry"
-	data.raw.recipe[recipeName].crafting_machine_tint = common.tibCraftingTint
-	data.raw.recipe[recipeName].allow_decomposition = false
 
 	if itemOrFluid == "item" then
 		-- Make reprocessor recipe
@@ -1179,16 +1171,16 @@ function addCreditRecipe(ore)
 		data:extend{{
 			type = "recipe",
 			name = reprocessingName,
-			ingredients = {},
-			results = {}
+			ingredients = {{type = "item", name = ore, amount = 1}},
+			results = {},
+			energy_required = energy / oreAmount,  -- Preserve the energy-per-input-ore from the other recipe
+			category = "tiberium-reprocessing",
+			crafting_machine_tint = common.tibCraftingTint,
+			allow_decomposition = false,
+			hidden = true,
 		}}
-		common.recipe.addIngredient(reprocessingName, ore, 1, "item")
-		data.raw.recipe[reprocessingName].energy_required = energy / oreAmount  -- Preserve the energy-per-input-ore from the other recipe
 		recipeAddResult(reprocessingName, "tiberium-growth-credit", 1 / oreAmount, "item", true)
-		data.raw.recipe[reprocessingName].category = "tiberium-reprocessing"
-		data.raw.recipe[reprocessingName].crafting_machine_tint = common.tibCraftingTint
-		data.raw.recipe[reprocessingName].allow_decomposition = false
-		data.raw.recipe[reprocessingName].hidden = true
+
 	end
 end
 

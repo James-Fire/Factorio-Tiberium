@@ -17,7 +17,7 @@ end
 
 if mods["MoreScience"] then
 	for techName, techData in pairs(data.raw.technology) do
-		if string.sub(techName, 1, 9) == "tiberium-" then
+		if string.sub(techName, 1, 9) == "tiberium-" and techData.unit then
 			-- Most techs have the new science packs added to them
 			if (techName ~= "tiberium-mechanical-research") and (techName ~= "tiberium-slurry-centrifuging")
 					and (techName ~= "tiberium-military-1") and (techName ~= "tiberium-thermal-research")
@@ -94,7 +94,7 @@ if mods["space-exploration"] then
 	common.applyTiberiumValue("se-naquium-ore", 32)
 	se_resources["tibGrowthNode"] = {}
 	se_resources["tibGrowthNode"].has_starting_area_placement = common.TiberiumInStartingArea
-	
+
 	-- These do nothing other than tiberium-growth-accelerator and tiberium-srf-connector, but I like to pretend
 	for _, drillName in pairs({"tiberium-network-node", "tiberium-node-harvester", "tiberium-aoe-node-harvester", "tiberium-detonation-charge", "tiberium-growth-accelerator-node", "tiberium-spike"}) do
 		data.raw["mining-drill"][drillName].se_allow_in_space = true

@@ -1686,7 +1686,7 @@ end)
 function UnlockTechnologyAndPrereqs(force, techName)
 	if not force.technologies[techName].researched then
 		force.technologies[techName].researched = true
-		for techPrereq in pairs(game.technology_prototypes[techName].prerequisites) do
+		for techPrereq in pairs(prototypes.technology[techName].prerequisites) do
 			UnlockTechnologyAndPrereqs(force, techPrereq)
 		end
 	end
@@ -1696,7 +1696,7 @@ function TechPrereqList(force, techName)
 	local techList = {}
 	if not force.technologies[techName].researched then
 		techList[techName] = true
-		for techPrereq in pairs(game.technology_prototypes[techName].prerequisites) do
+		for techPrereq in pairs(prototypes.technology[techName].prerequisites) do
 			for k,v in pairs(TechPrereqList(force, techPrereq)) do
 				techList[k] = v
 			end

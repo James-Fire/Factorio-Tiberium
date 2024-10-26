@@ -1,7 +1,7 @@
 -- Adding Tib Science to all labs
 local tibComboPacks = {}  -- List of packs that need to be processed in the same lab as Tib Science
 for name, technology in pairs(data.raw.technology) do
-	if string.sub(name, 1, 9) == "tiberium-" then
+	if string.sub(name, 1, 9) == "tiberium-" and technology.unit then
 		for _, ingredient in pairs(technology.unit.ingredients) do
 			local pack = ingredient[1] and ingredient[1] or ingredient.name
 			if (pack ~= "tiberium-science") and data.raw.tool[pack] then -- Don't add Tib Science
