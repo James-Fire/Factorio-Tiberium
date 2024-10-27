@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.2
+  Bugfixes:
+    - Fixed crash with P.U.M.P. mod
+    - Fixed Growth Accelerator message crash
+---------------------------------------------------------------------------------------------------
 Version: 2.0.1
   Features:
     - Moved to Factorio version 2.0 (playable with Space Age but not balanced/reworked for Space Age)

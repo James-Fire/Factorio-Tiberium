@@ -568,7 +568,7 @@ function CreateNode(surface, position, displayError)
 		if displayError then
 			for _, player in pairs(game.connected_players) do
 				if player.surface == surface then
-					game.player.create_local_flying_text({
+					player.create_local_flying_text({
 						position = {x = position.x, y = position.y - 1},
 						text = {"tiberium-strings.node-placement-error"},
 						color = {r = 255, g = 20, b = 20},
