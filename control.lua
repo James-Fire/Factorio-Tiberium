@@ -332,7 +332,7 @@ function AddOre(surface, position, amount, oreName, cascaded)
 				storage.blueProgress[surface.index] = 1
 				if not storage.wildBlue then storage.wildBlue = math.floor(game.tick / 3600) end
 				TiberiumSeedMissile(surface, position, 4 * TiberiumMaxPerTile, oreName)
-				game.print({"tiberium-strings.wild-blue-notification", "[img=item.tiberium-ore-blue]", "[gps="..math.floor(position.x)..","..math.floor(position.y).."]"})
+				game.print({"tiberium-strings.wild-blue-notification", "[img=item.tiberium-ore-blue]", "[gps="..math.floor(position.x)..","..math.floor(position.y)..","..surface.name.."]"})
 				return false  -- We'll just say that this event can't spawn
 			end
 		elseif surface.count_entities_filtered{area = areaAroundPosition(position, 1), name = "tiberium-ore-blue"} > 0 and
@@ -488,7 +488,7 @@ function PlaceOre(entity, howMany)
 			howMany = howMany + extraAcceleratorOre
 			for _, player in pairs(game.connected_players) do
 				if player.surface == surface then
-					game.player.create_local_flying_text({
+					player.create_local_flying_text({
 						text = {"tiberium-strings.growth-accelerator-gains", math.floor(extraAcceleratorOre * growthRate)},
 						position = {x = position.x, y = position.y - 1},
 						color = {r = 0, g = 204, b = 255},
@@ -1065,21 +1065,15 @@ script.on_nth_tick(20, function(event) --Player damage 3 times per second
 	for _, player in pairs(game.connected_players) do
 		if player.valid and player.character and player.character.valid then
 			--MARV ore deletion
-			if player.vehicle and (player.vehicle.name == "tiberium-marv") and (player.vehicle.get_driver() == player.character) then
-				for _, oreName in pairs(storage.oreTypes) do
-					local deleted_ore = player.surface.find_entities_filtered{name = oreName, position = player.position, radius = 4}
-					local harvested_amount = 0
-					for _, ore in pairs(deleted_ore) do
-						harvested_amount = harvested_amount + ore.amount * 0.01
-						ore.destroy()
-					end
-					if harvested_amount >= 1 then
-						player.vehicle.insert{name = oreName, count = math.floor(harvested_amount)}
-					end
-				end
+			if player.physical_vehicle and (player.physical_vehicle.name == "tiberium-marv") and (player.physical_vehicle.get_driver() == player.character) then
+				marvHarvestOre(player.physical_vehicle)
+			end
+			--MARV remote driving
+			if player.vehicle and (player.vehicle.name == "tiberium-marv") and (player.vehicle.get_driver() == player) then
+				marvHarvestOre(player.vehicle)
 			end
 			--Damage players that are standing on Tiberium Ore and not in vehicles
-			local nearby_ore_count = player.surface.count_entities_filtered{name = storage.oreTypes, position = player.position, radius = 1.5}
+			local nearby_ore_count = player.physical_surface.count_entities_filtered{name = storage.oreTypes, position = player.physical_position, radius = 1.5}
 			if nearby_ore_count > 0 and not player.character.vehicle and player.character.name ~= "jetpack-flying" then
 				safeDamage(player, nearby_ore_count * TiberiumDamage * 0.2)
 			end
@@ -1102,6 +1096,20 @@ script.on_nth_tick(20, function(event) --Player damage 3 times per second
 		end
 	end
 end)
+
+function marvHarvestOre(vehicleEntity)
+	for _, oreName in pairs(storage.oreTypes) do
+		local deleted_ore = vehicleEntity.surface.find_entities_filtered{name = oreName, position = vehicleEntity.position, radius = 4}
+		local harvested_amount = 0
+		for _, ore in pairs(deleted_ore) do
+			harvested_amount = harvested_amount + ore.amount * 0.01
+			ore.destroy()
+		end
+		if harvested_amount >= 1 then
+			vehicleEntity.insert{name = oreName, count = math.floor(harvested_amount)}
+		end
+	end
+end
 
 function safeDamage(entityOrPlayer, damageAmount)
 	if damageAmount <= 0 then return end

@@ -3,6 +3,9 @@ Version: 2.0.2
   Bugfixes:
     - Fixed crash with P.U.M.P. mod
     - Fixed Growth Accelerator message crash
+    - Fixed player taking damage while looking at Tiberium Ore in map view
+    - Fixed MARV not harvesting ore when driving remotely
+    - Fixed Blue Tiberium spawn notification to link to the correct planet
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.1
   Features:
