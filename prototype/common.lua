@@ -1,3 +1,5 @@
+flib_table = require("__flib__/table")
+
 local common = {}
 common.technology = {}
 common.recipe = {}
@@ -167,6 +169,15 @@ common.itemPrototypesFromTable = function(prototypeTable)
 				out[item.name] = amount
 			end
 		end
+	end
+	return out
+end
+
+common.minableResultsTable = function(prototypeTable)  -- Still needed for minable result/results
+	if type(prototypeTable) ~= "table" or not prototypeTable.minable then return {} end
+	local out = common.itemPrototypesFromTable(prototypeTable.minable.results)
+	if (flib_table.size(out) == 0) and prototypeTable.minable.result then
+		out[prototypeTable.minable.result] = tonumber(prototypeTable.minable.result_count) or tonumber(prototypeTable.minable.count) or 1
 	end
 	return out
 end

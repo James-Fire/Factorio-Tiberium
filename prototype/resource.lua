@@ -269,5 +269,5 @@ data:extend{
 	},
 }
 -- Add to Nauvis planet definition
-data.raw.planet.nauvis.map_gen_settings.autoplace_controls["tibGrowthNode"] = {}
+data.raw.planet.nauvis.map_gen_settings.autoplace_controls["tibGrowthNode"] = {}  -- If Nauvis doesn't exist then we will crash which is fine by me
 data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings["tibGrowthNode"] = {}

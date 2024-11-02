@@ -1,11 +1,17 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.3
+  Bugfixes:
+    - Fixed progression in Tiberium Only mode being blocked by not being Crude Oil and Uranium Ore not being minable
+  Changes:
+    - Changed Tiberium Slurry Centrifuging to unlock when you craft Tiberium Slurry instead of Water (oops)
+---------------------------------------------------------------------------------------------------
 Version: 2.0.2
   Bugfixes:
     - Fixed crash with P.U.M.P. mod
     - Fixed Growth Accelerator message crash
     - Fixed player taking damage while looking at Tiberium Ore in map view
     - Fixed MARV not harvesting ore when driving remotely
-    - Fixed Blue Tiberium spawn notification to link to the correct planet
+    - Fixed Blue Tiberium spawn notification GPS coordinates to link to the correct planet
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.1
   Features:

@@ -59,7 +59,7 @@ if settings.startup["tiberium-technology-triggers"].value then
     data.raw.technology["tiberium-mechanical-research"].research_trigger = {type = "mine-entity", entity = "tiberium-ore"}
 
     data.raw.technology["tiberium-slurry-centrifuging"].unit = nil
-    data.raw.technology["tiberium-slurry-centrifuging"].research_trigger = {type = "craft-fluid", fluid = "water"}
+    data.raw.technology["tiberium-slurry-centrifuging"].research_trigger = {type = "craft-fluid", fluid = "tiberium-slurry"}
 
     data.raw.technology["tiberium-molten-centrifuging"].unit = nil
     data.raw.technology["tiberium-molten-centrifuging"].research_trigger = {type = "craft-fluid", fluid = "molten-tiberium"}

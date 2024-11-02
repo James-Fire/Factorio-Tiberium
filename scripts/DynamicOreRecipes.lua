@@ -47,14 +47,9 @@ local function normalResults(recipeName)
 	return common.recipeResultsTable(recipeName)
 end
 
-local minableResultsTable = function(prototypeTable)  -- Still needed for minable result/results
-	if type(prototypeTable) ~= "table" then	return {} end
-	if not prototypeTable.minable or not prototypeTable.autoplace then return {} end
-	local out = common.itemPrototypesFromTable(prototypeTable.minable.results)
-	if (flib_table.size(out) == 0) and prototypeTable.minable.result then
-		out[prototypeTable.minable.result] = tonumber(prototypeTable.minable.result_count) or tonumber(prototypeTable.minable.count) or 1
-	end
-	return out
+local minableResultsTable = function(prototypeTable)  -- Local version that also checks that the resource has an autoplace
+	if type(prototypeTable) ~= "table" or not prototypeTable.autoplace then return {} end
+	return common.minableResultsTable(prototypeTable)
 end
 
 if mods["space-exploration"] then
