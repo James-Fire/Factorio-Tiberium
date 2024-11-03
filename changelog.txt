@@ -4,6 +4,7 @@ Version: 2.0.3
     - Fixed progression in Tiberium Only mode being blocked by not being Crude Oil and Uranium Ore not being minable
   Changes:
     - Changed Tiberium Slurry Centrifuging to unlock when you craft Tiberium Slurry instead of Water (oops)
+    - Corrected Tiberium refining recipes to reflect the new water-to-steam ratio in Factorio 2.0
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.2
   Bugfixes:

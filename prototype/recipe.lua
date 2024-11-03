@@ -382,7 +382,7 @@ data:extend{
 		},
 		results = {
 			{type = "fluid", name = "liquid-tiberium", amount = 10},
-			{type = "fluid", name = "water", amount = 100},
+			{type = "fluid", name = "water", amount = 10},
 		},
 		icon = tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png",
 		icon_size = 64,
@@ -402,7 +402,7 @@ data:extend{
 		},
 		results = {
 			{type = "fluid", name = "liquid-tiberium", amount = 10},
-			{type = "fluid", name = "water", amount = 100},
+			{type = "fluid", name = "water", amount = 10},
 		},
 		icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png", 64,
 			"__base__/graphics/icons/fluid/steam.png", 64, "ne"),
