@@ -542,18 +542,7 @@ function PlaceOre(entity, howMany)
 	-- Tell all mining drills to wake up
 	for i, drill in pairs(storage.tibDrills) do
 		if drill.entity and drill.entity.valid then
-			drill.entity.rotate{}
-			drill.entity.rotate{reverse = true}
-			local control = drill.entity.get_control_behavior()
-			if control then  --Toggle control behavior to force update to circuit network
-				if control.resource_read_mode == defines.control_behavior.mining_drill.resource_read_mode.this_miner then
-					control.resource_read_mode = defines.control_behavior.mining_drill.resource_read_mode.entire_patch
-					control.resource_read_mode = defines.control_behavior.mining_drill.resource_read_mode.this_miner
-				else
-					control.resource_read_mode = defines.control_behavior.mining_drill.resource_read_mode.this_miner
-					control.resource_read_mode = defines.control_behavior.mining_drill.resource_read_mode.entire_patch
-				end
-			end
+			drill.entity.update_connections()
 		end
 	end
 
@@ -1311,18 +1300,7 @@ function on_new_entity(event)
 			}
 		end
 		--Make spike look for newly created infinite node
-		new_entity.rotate{}
-		new_entity.rotate{reverse = true}
-		local control = new_entity.get_control_behavior()
-		if control then  --Toggle control behavior to force update to circuit network
-			if control.resource_read_mode == defines.control_behavior.mining_drill.resource_read_mode.this_miner then
-				control.resource_read_mode = defines.control_behavior.mining_drill.resource_read_mode.entire_patch
-				control.resource_read_mode = defines.control_behavior.mining_drill.resource_read_mode.this_miner
-			else
-				control.resource_read_mode = defines.control_behavior.mining_drill.resource_read_mode.this_miner
-				control.resource_read_mode = defines.control_behavior.mining_drill.resource_read_mode.entire_patch
-			end
-		end
+		new_entity.update_connections()
 		--Place Beacon for Tiberium Control Network
 		ManageTCNBeacon(surface, position, force)
 	elseif (new_entity.name == "tiberium-growth-accelerator-node") then
