@@ -4,7 +4,7 @@ mgp["Tib-only"] = {
 	basic_settings = {
 		--default_enable_all_autoplace_controls = false,
 		autoplace_controls = {
-			["tibGrowthNode"] = {
+			["nauvis_tibGrowthNode"] = {
 				frequency = "high",
 				size = "high"
 			},
@@ -22,16 +22,16 @@ mgp["Tib-only"] = {
 }
 
 local autoplaceExceptions = {
-	["tibGrowthNode"] = true,
+	["nauvis_tibGrowthNode"] = true,
 	["trees"] = true,
 	["enemy-base"] = true,
 	["lithia-water"] = true,
 	["termal2"] = true,
 }
 
-for name, resource in pairs(data.raw.resource) do
-	if resource.autoplace and data.raw["autoplace-control"][name] then
-		if not autoplaceExceptions[resource.name] then
+for name in pairs(data.raw.planet.nauvis.map_gen_settings.autoplace_controls) do
+	if data.raw["autoplace-control"][name] and data.raw["autoplace-control"][name].category == "resource" then
+		if not autoplaceExceptions[name] then
 			mgp["Tib-only"].basic_settings.autoplace_controls[name] = {size = 0}
 		end
 	end

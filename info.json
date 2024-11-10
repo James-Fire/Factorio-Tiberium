@@ -9,6 +9,7 @@
     "dependencies": [
 		"base >= 2.0.0",
 		"flib >= 0.15.0",
+		"? space-age",
 		"? informatron",
 		"? 5dim_battlefield >= 1.0.4",
 		"? alien-biomes",

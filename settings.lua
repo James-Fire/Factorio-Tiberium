@@ -217,24 +217,31 @@ data:extend{
 	},
 	{
 		type = "bool-setting",
-		name = "tiberium-ore-removal",
+		name = "tiberium-all-planets",
 		setting_type = "startup",
 		default_value = false,
 		order = "z6",
 	},
 	{
 		type = "bool-setting",
-		name = "tiberium-starting-area",
+		name = "tiberium-ore-removal",
 		setting_type = "startup",
 		default_value = false,
 		order = "z7",
 	},
 	{
 		type = "bool-setting",
+		name = "tiberium-starting-area",
+		setting_type = "startup",
+		default_value = false,
+		order = "z8",
+	},
+	{
+		type = "bool-setting",
 		name = "tiberium-item-damage-scale",
 		setting_type = "runtime-global",
 		default_value = false,
-		order = "z8",
+		order = "z9",
 	},
 }
 if mods["space-exploration"] then

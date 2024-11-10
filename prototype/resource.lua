@@ -3,13 +3,6 @@ local tibOnly = settings.startup["tiberium-ore-removal"].value or false
 
 data:extend{
 	{
-		type = "autoplace-control",
-		name = "tibGrowthNode",
-		richness = true,
-		order = "b-f",
-		category = "resource",
-	},
-	{
 		type = "resource-category",
 		name = "basic-solid-tiberium"
 	},
@@ -146,6 +139,13 @@ data:extend{
 	},
 }
 
+if data.raw.resource["uranium-ore"] then
+	data.raw.resource["tiberium-ore"].walking_sounds = data.raw.resource["uranium-ore"].walking_sounds
+	data.raw.resource["tiberium-ore-blue"].walking_sounds = data.raw.resource["uranium-ore"].walking_sounds
+	data.raw.resource["tiberium-ore"].driving_sounds = data.raw.resource["uranium-ore"].driving_sounds
+	data.raw.resource["tiberium-ore-blue"].driving_sounds = data.raw.resource["uranium-ore"].driving_sounds
+end
+
 local resource_autoplace = require("resource-autoplace");
 resource_autoplace.initialize_patch_set("tibGrowthNode", common.TiberiumInStartingArea)
 
@@ -212,7 +212,7 @@ data:extend{
 		collision_box = {{-1.4, -1.4}, {1.4, 1.4}},
 		selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
 		autoplace = resource_autoplace.resource_autoplace_settings{
-			name = "tibGrowthNode",
+			name = "nauvis_tibGrowthNode",
 			order = "c", -- Other resources are "b"; oil won't get placed if something else is already there.
 			base_density = 3.0,
 			base_spots_per_km2 = tibOnly and 12 or 1.8,
@@ -268,6 +268,24 @@ data:extend{
 		map_grid = false
 	},
 }
--- Add to Nauvis planet definition
-data.raw.planet.nauvis.map_gen_settings.autoplace_controls["tibGrowthNode"] = {}  -- If Nauvis doesn't exist then we will crash which is fine by me
-data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings["tibGrowthNode"] = {}
+
+-- Make islands for Tiberium on Aquilo
+data.raw.resource["tibGrowthNode"].created_effect = table.deepcopy(data.raw.resource["crude-oil"].created_effect)
+
+-- Add to planet definitions
+for name,planet in pairs(data.raw.planet) do
+	if (name == "nauvis" or settings.startup["tiberium-all-planets"].value) and planet.map_gen_settings and planet.map_gen_settings.autoplace_controls then
+		data:extend{
+			{
+				type = "autoplace-control",
+				name = name.."_tibGrowthNode",
+				richness = true,
+				order = string.sub(planet.order or "z",1,1).."-g",  --After Nauvis uranium
+				category = "resource",
+				localised_name = {"autoplace-control-names.tibGrowthNode"},
+			}
+		}
+		planet.map_gen_settings.autoplace_controls[name.."_tibGrowthNode"] = {}
+		planet.map_gen_settings.autoplace_settings.entity.settings["tibGrowthNode"] = {}
+	end
+end
