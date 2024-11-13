@@ -29,7 +29,7 @@ data:extend{
 		type = "electric-energy-interface",
 		name = "tiberium-sonic-emitter",
 		icons = common.layeredIcons(tiberiumInternalName.."/graphics/entity/sonic-emitter/CNCTW_Sonic_Emitter_Cameo.png", 128,
-				tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "ne", 12),
+				tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "ne"),
 		flags = {"placeable-neutral", "player-creation"},
 		collision_box = {{-0.7, -0.7}, {0.7, 0.7}},
 		selection_box = {{-1, -1}, {1, 1}},
@@ -94,6 +94,6 @@ data:extend{
 
 local emitterBlue = flib.copy_prototype(data.raw["electric-energy-interface"]["tiberium-sonic-emitter"], "tiberium-sonic-emitter-blue")
 emitterBlue.icons = common.layeredIcons(tiberiumInternalName.."/graphics/entity/sonic-emitter/CNCTW_Sonic_Emitter_Cameo.png", 128,
-		tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "ne", 12)
+		tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "ne")
 
 data:extend{emitterBlue}

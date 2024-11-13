@@ -5,18 +5,18 @@ common.technology = {}
 common.recipe = {}
 
 common.blankAnimation = {
-    filename =  "__core__/graphics/empty.png",
-    width = 1,
-    height = 1,
-    line_length = 1,
-    frame_count = 1,
-    variation_count = 1,
+	filename =  "__core__/graphics/empty.png",
+	width = 1,
+	height = 1,
+	line_length = 1,
+	frame_count = 1,
+	variation_count = 1,
 }
 
 common.blankPicture = {
-    filename = "__core__/graphics/empty.png",
-    width = 1,
-    height = 1
+	filename = "__core__/graphics/empty.png",
+	width = 1,
+	height = 1
 }
 
 common.blankIcons = {
@@ -95,15 +95,18 @@ common.applyTiberiumValue = function(item, value)
 end
 
 common.layeredIcons = function(baseImg, baseSize, layerImg, layerSize, corner, targetSize)
-	targetSize = targetSize or 16
+	baseSize = baseSize or 64
+	layerSize = layerSize or 64
+	targetSize = targetSize or 24
 	local base = {
 		icon = baseImg,
 		icon_size = baseSize,
+		scale = 64 / baseSize,
 	}
 	local corners = {ne = {x = 1, y = -1}, se = {x = 1, y = 1}, sw = {x = -1, y = 1}, nw = {x = -1, y = -1}}
 	local offset = {}
 	if corner and corners[corner] then
-		offset = {0.5 * (32 - targetSize) * corners[corner].x, 0.5 * (32 - targetSize) * corners[corner].y}
+		offset = {0.5 * (64 - targetSize) * corners[corner].x, 0.5 * (64 - targetSize) * corners[corner].y}
 	else
 		offset = {0, 0}
 	end
@@ -193,7 +196,7 @@ end
 common.technology.addRecipeUnlock = function(technologyName, recipeName)
 	if not data.raw.technology[technologyName] or not data.raw.recipe[recipeName] then return end
 	if not data.raw["technology"][technologyName].effects then
-        data.raw["technology"][technologyName].effects = {}
+		data.raw["technology"][technologyName].effects = {}
 	end
 	for _, effect in pairs(data.raw["technology"][technologyName].effects) do
 		if effect.type == "unlock-recipe" and effect.recipe == recipeName then return end
@@ -207,8 +210,8 @@ common.technology.removeRecipeUnlock = function(technologyName, recipeName)
 		for index, effect in pairs(data.raw["technology"][technologyName].effects) do
 			if effect.type == "unlock-recipe" and effect.recipe == recipeName then
 				table.remove(data.raw["technology"][technologyName].effects, index)
-				if table_size(data.raw["technology"][technologyName].effects) == 0 then
-				  data.raw["technology"][technologyName].effects = nil
+				if next(data.raw["technology"][technologyName].effects) == nil then
+					data.raw["technology"][technologyName].effects = nil
 				end
 				break
 			end
@@ -233,7 +236,7 @@ common.technology.removePrerequisite = function(technologyName, prerequisiteToRe
 		for index, prerequisite in pairs(data.raw["technology"][technologyName].prerequisites) do
 			if prerequisite == prerequisiteToRemove then
 				table.remove(data.raw["technology"][technologyName].prerequisites, index)
-				if table_size(data.raw["technology"][technologyName].prerequisites) == 0 then
+				if next(data.raw["technology"][technologyName].prerequisites) == nil then
 					data.raw["technology"][technologyName].prerequisites = nil
 				end
 				break
@@ -243,7 +246,7 @@ common.technology.removePrerequisite = function(technologyName, prerequisiteToRe
 end
 
 common.recipe.addIngredient = function(recipeName, ingredientName, ingredientAmount, ingredientType)
-    if not data.raw["recipe"][recipeName] then return end
+	if not data.raw["recipe"][recipeName] then return end
 
 	if data.raw["recipe"][recipeName].ingredients then
 		local alreadyPresent = false
@@ -265,7 +268,7 @@ common.recipe.addIngredient = function(recipeName, ingredientName, ingredientAmo
 end
 
 common.recipe.removeIngredient = function(recipeName, ingredientName)
-    if not data.raw["recipe"][recipeName] then return end
+	if not data.raw["recipe"][recipeName] then return end
 
 	if data.raw["recipe"][recipeName].ingredients then
 		for index, ingredient in pairs(data.raw["recipe"][recipeName].ingredients) do
@@ -279,9 +282,9 @@ end
 
 common.recipe.editIngredient = function(recipeName, oldIngredientName, newIngredientName, amountMultiplier)
 	amountMultiplier = amountMultiplier or 1
-    if not data.raw["recipe"][recipeName] then return end
+	if not data.raw["recipe"][recipeName] then return end
 
-    if data.raw["recipe"][recipeName].ingredients then
+	if data.raw["recipe"][recipeName].ingredients then
 		for index, ingredient in pairs(data.raw["recipe"][recipeName].ingredients) do
 			if ingredient.name and ingredient.name == oldIngredientName then
 				data.raw["recipe"][recipeName].ingredients[index].name = newIngredientName
@@ -319,8 +322,8 @@ common.recipe.addResult = function(recipeName, resultName, resultAmount, resultT
 end
 
 common.recipe.editResult = function(recipeName, oldResultName, newResultName, amountMultiplier)
-    amountMultiplier = amountMultiplier or 1
-    if not data.raw["recipe"][recipeName] then return end
+	amountMultiplier = amountMultiplier or 1
+	if not data.raw["recipe"][recipeName] then return end
 
 	if data.raw["recipe"][recipeName].results then
 		for _, result in pairs(data.raw["recipe"][recipeName].results) do
@@ -344,10 +347,10 @@ common.recipe.editResult = function(recipeName, oldResultName, newResultName, am
 end
 
 common.recipe.setResultProbability = function(recipeName, resultName, resultProbability)
-    if not data.raw["recipe"][recipeName] then return end
-    resultProbability = ((resultProbability~=1) and resultProbability) --wtf does this do
+	if not data.raw["recipe"][recipeName] then return end
+	resultProbability = ((resultProbability~=1) and resultProbability) --wtf does this do
 
-    if data.raw["recipe"][recipeName].result then
+	if data.raw["recipe"][recipeName].result then
 		data.raw["recipe"][recipeName].results = {{
 		name = data.raw["recipe"][recipeName].result,
 		amount = data.raw["recipe"][recipeName].result_count or 1,
@@ -363,7 +366,7 @@ common.recipe.setResultProbability = function(recipeName, resultName, resultProb
 				break
 			end
 		end
-    end
+	end
 end
 
 return common

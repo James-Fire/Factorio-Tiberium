@@ -173,19 +173,19 @@ data:extend{tiberiumRocketProjectile,
 }
 
 --Liquid Tiberium Bomb
-local tibNukeGroundZero = table.deepcopy(data.raw.projectile["atomic-bomb-ground-zero-projectile"])
+local tibNukeGroundZero = util.copy(data.raw.projectile["atomic-bomb-ground-zero-projectile"])
 tibNukeGroundZero.name = "tiberium-atomic-bomb-ground-zero-projectile"
 tibNukeGroundZero.action[1].action_delivery.target_effects.upper_distance_threshold = 50
-local groundZeroDamageEffect = table.deepcopy(tibNukeGroundZero.action[1].action_delivery.target_effects)
-tibNukeGroundZero.action[1].action_delivery.target_effects = {groundZeroDamageEffect, table.deepcopy(groundZeroDamageEffect)}
+local groundZeroDamageEffect = util.copy(tibNukeGroundZero.action[1].action_delivery.target_effects)
+tibNukeGroundZero.action[1].action_delivery.target_effects = {groundZeroDamageEffect, util.copy(groundZeroDamageEffect)}
 tibNukeGroundZero.action[1].action_delivery.target_effects[2].damage = {amount = 250, type = "tiberium"}
 tibNukeGroundZero.action[1].radius = 4
 
-local tibNukeWave = table.deepcopy(data.raw.projectile["atomic-bomb-wave"])
+local tibNukeWave = util.copy(data.raw.projectile["atomic-bomb-wave"])
 tibNukeWave.name = "tiberium-atomic-bomb-wave"
 tibNukeWave.action[1].action_delivery.target_effects.upper_distance_threshold = 50
-local waveDamageEffect = table.deepcopy(tibNukeWave.action[1].action_delivery.target_effects)
-tibNukeWave.action[1].action_delivery.target_effects = {waveDamageEffect, table.deepcopy(waveDamageEffect)}
+local waveDamageEffect = util.copy(tibNukeWave.action[1].action_delivery.target_effects)
+tibNukeWave.action[1].action_delivery.target_effects = {waveDamageEffect, util.copy(waveDamageEffect)}
 tibNukeWave.action[1].action_delivery.target_effects[2].damage = {amount = 1000, type = "tiberium"}
 tibNukeWave.action[1].radius = 4
 
@@ -659,7 +659,7 @@ data:extend{
 	},
 }
 
-local genericGrenadeCapsule = table.deepcopy(data.raw.capsule.grenade) --TODO icons for this
+local genericGrenadeCapsule = util.copy(data.raw.capsule.grenade) --TODO icons for this
 genericGrenadeCapsule.cooldown = 10
 genericGrenadeCapsule.subgroup = "a-items"
 genericGrenadeCapsule.icon = nil
@@ -673,7 +673,7 @@ local destroyGreenCapsule = flib.copy_prototype(genericGrenadeCapsule, "tiberium
 destroyGreenCapsule.capsule_action.attack_parameters.ammo_type.action[1].action_delivery.projectile = "tiberium-grenade-all"
 destroyGreenCapsule.icons = common.layeredIcons("__base__/graphics/icons/grenade.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "sw")
 
-local genericGrenadeProjectile = table.deepcopy(data.raw.projectile.grenade)
+local genericGrenadeProjectile = util.copy(data.raw.projectile.grenade)
 genericGrenadeProjectile.action = {
 	{
 		type = "direct",
@@ -839,7 +839,7 @@ data:extend{catalystAll, catalystBlue, invisibleChainReactionAll, invisibleChain
 	{
 		type = "ammo",
 		name = "tiberium-catalyst-missile-all",
-		icons = common.layeredIcons("__base__/graphics/icons/explosive-rocket.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "ne", 10),
+		icons = common.layeredIcons("__base__/graphics/icons/explosive-rocket.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "ne"),
 		ammo_category = "rocket",
 		ammo_type = {
 			range_modifier = 5,
@@ -865,7 +865,7 @@ data:extend{catalystAll, catalystBlue, invisibleChainReactionAll, invisibleChain
 	{
 		type = "ammo",
 		name = "tiberium-catalyst-missile-blue",
-		icons = common.layeredIcons("__base__/graphics/icons/explosive-rocket.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "ne", 10),
+		icons = common.layeredIcons("__base__/graphics/icons/explosive-rocket.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "ne"),
 		ammo_category = "rocket",
 		ammo_type = {
 			range_modifier = 5,

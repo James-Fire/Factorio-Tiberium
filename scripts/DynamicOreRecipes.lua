@@ -215,14 +215,14 @@ function giantSetupFunction()
 		end
 	end
 
-	local cachedFree = table.deepcopy(free)  -- Cache free item list so we can rebuild until we reach a list without issues
+	local cachedFree = util.copy(free)  -- Cache free item list so we can rebuild until we reach a list without issues
 	local freeItemIterations = 0
 	if debugText then log(badRecipeCount.." bad recipes before building free item list") end
 
 	repeat
 		local previousBadRecipeCount = badRecipeCount  -- So we can check if new recipes were marked as bad during this loop
-		local newFreeItems = table.deepcopy(cachedFree)
-		free = table.deepcopy(cachedFree)
+		local newFreeItems = util.copy(cachedFree)
+		free = util.copy(cachedFree)
 		local countFreeLoops = 0
 		freeItemIterations = freeItemIterations + 1
 		if debugText then log("$$ Building free item list. Attempt #"..freeItemIterations) end
@@ -274,7 +274,7 @@ function giantSetupFunction()
 	end
 
 	-- Setup for depth calculations
-	local basicMaterials = table.deepcopy(rawResources)
+	local basicMaterials = util.copy(rawResources)
 	for material in pairs(rawResources) do
 		ingredientDepth[material] = 0
 	end
@@ -388,6 +388,7 @@ function evaluateFormula(formula, value)
 
 	local funcString = "function count_formula(L) return "..formula.." end"
 	assert(load(funcString))()  -- Define this function and wrap in assert for debugging, I guess
+---@diagnostic disable-next-line: undefined-global
 	return count_formula(value)
 end
 
@@ -872,7 +873,7 @@ function fugeTierSetup()
 	updatePackWeights(2)
 
 	if flib_table.size(science[1]) == 0 then  -- Don't know how it would still be empty at this point, but leaving this just in case
-		science[1] = table.deepcopy(science[2])
+		science[1] = util.copy(science[2])
 	end
 	science[0] = science[1]
 end
@@ -1169,7 +1170,7 @@ function addCreditRecipe(ore)
 		results = {{type = "item", name = "tiberium-growth-credit", amount = 1}},
 		energy_required = energy,
 		order = order,
-		icons = table.deepcopy(icons),
+		icons = util.copy(icons),
 		enabled = false,
 		subgroup = "a-growth-credits",
 		always_show_made_in = true,
