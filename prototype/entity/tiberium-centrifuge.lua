@@ -250,7 +250,7 @@ data:extend{
 }
 
 --Tiberium Centrifuge 2
-local centrifuge2Entity = util.table.deepcopy(data.raw["assembling-machine"]["tiberium-centrifuge-1"])
+local centrifuge2Entity = util.copy(data.raw["assembling-machine"]["tiberium-centrifuge-1"])
 centrifuge2Entity.name = "tiberium-centrifuge-2"
 centrifuge2Entity.next_upgrade = "tiberium-centrifuge-3"
 centrifuge2Entity.energy_usage = tostring(500 * (30 / 31)).."kW"  -- Scale for nice max consumption
@@ -267,7 +267,7 @@ for k, v in pairs(centrifuge2Entity.graphics_set.idle_animation.layers) do
 end
 
 --Tiberium Centrifuge 3
-local centrifuge3Entity = util.table.deepcopy(data.raw["assembling-machine"]["tiberium-centrifuge-1"])
+local centrifuge3Entity = util.copy(data.raw["assembling-machine"]["tiberium-centrifuge-1"])
 centrifuge3Entity.name = "tiberium-centrifuge-3"
 centrifuge3Entity.next_upgrade = nil
 centrifuge3Entity.energy_usage = tostring(700 * (30 / 31)).."kW"  -- Scale for nice max consumption
@@ -287,7 +287,7 @@ data:extend{centrifuge2Entity, centrifuge3Entity}
 
 local tierZero = settings.startup["tiberium-tier-zero"].value
 if tierZero then
-	local centrifuge0Entity = util.table.deepcopy(data.raw["assembling-machine"]["tiberium-centrifuge-1"])
+	local centrifuge0Entity = util.copy(data.raw["assembling-machine"]["tiberium-centrifuge-1"])
 	centrifuge0Entity.name = "tiberium-centrifuge-0"
 	centrifuge0Entity.next_upgrade = "tiberium-centrifuge-1"
 	centrifuge0Entity.energy_usage = "150kW"

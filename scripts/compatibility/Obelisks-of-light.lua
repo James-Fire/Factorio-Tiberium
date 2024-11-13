@@ -1,12 +1,12 @@
 if mods["Obelisks-of-light"] then
 	--Item
 	for _, property in pairs({"stack_size", "subgroup", "order"}) do
-		data.raw.item["obelisk-of-light"][property] = table.deepcopy(data.raw.item["tiberium-obelisk-of-light"][property])
+		data.raw.item["obelisk-of-light"][property] = util.copy(data.raw.item["tiberium-obelisk-of-light"][property])
 	end
 	data.raw.item["tiberium-obelisk-of-light"].place_result = "obelisk-of-light"
 	--Recipes: delete/hide his recipes, duplicate my recipe and update outputs
 	for _, property in pairs({"energy_required", "subgroup", "ingredients"}) do
-		data.raw.recipe["obelisk-of-light"][property] = table.deepcopy(data.raw.recipe["tiberium-obelisk-of-light"][property])
+		data.raw.recipe["obelisk-of-light"][property] = util.copy(data.raw.recipe["tiberium-obelisk-of-light"][property])
 	end
 	data.raw.recipe["tiberium-obelisk-of-light"].hidden = true
 	--Tech: delete his tech, update recipe unlocks on my tech
@@ -26,7 +26,7 @@ if mods["Obelisks-of-light"] then
 		local turret = data.raw["electric-turret"][name]
 		if turret then
 			for _, property in pairs({"attack_parameters", "max_health", "collision_box", "selection_box", "energy_source", "map_color", "starting_attack_sound"}) do
-				turret[property] = table.deepcopy(data.raw["electric-turret"]["tiberium-obelisk-of-light"][property])
+				turret[property] = util.copy(data.raw["electric-turret"]["tiberium-obelisk-of-light"][property])
 			end
 		end
 	end

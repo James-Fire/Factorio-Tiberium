@@ -132,7 +132,7 @@ data:extend{
 	}
 }
 
-local monocultureBlue = table.deepcopy(data.raw["assembling-machine"]["tiberium-monoculture-green"])
+local monocultureBlue = util.copy(data.raw["assembling-machine"]["tiberium-monoculture-green"])
 monocultureBlue.name = "tiberium-monoculture-blue"
 monocultureBlue.icons = common.layeredIcons(tiberiumInternalName.."/graphics/entity/monoculture/monoculture-blue.png", 256, tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "sw")
 monocultureBlue.minable = {mining_time = 2, result = "tiberium-monoculture-blue"}
@@ -143,13 +143,13 @@ monocultureBlue.graphics_set.idle_animation = monocultureBlueAnimation
 
 data:extend{monocultureBlue}
 
-local moncultureNode = table.deepcopy(data.raw["mining-drill"]["tiberium-node-harvester"])
+local moncultureNode = util.copy(data.raw["mining-drill"]["tiberium-node-harvester"])
 moncultureNode.name = "tiberium-monoculture-green-node"
 moncultureNode.localised_name = {"entity-name.tiberium-monoculture-green"}
 moncultureNode.localised_description = {"entity-description.tiberium-monoculture-green"}
 moncultureNode.animations = monocultureGreenAnimation
 moncultureNode.base_picture = monocultureGreenAnimation
-moncultureNode.icons = table.deepcopy(data.raw["assembling-machine"]["tiberium-monoculture-green"].icons)
+moncultureNode.icons = util.copy(data.raw["assembling-machine"]["tiberium-monoculture-green"].icons)
 moncultureNode.graphics_set = nil
 moncultureNode.integration_patch = nil
 moncultureNode.wet_mining_graphics_set = nil
@@ -161,12 +161,12 @@ moncultureNode.energy_source = {
 	emissions_per_minute = common.scaledEmissions(4),
 }
 
-local monocultureNodeBlue = table.deepcopy(moncultureNode)
+local monocultureNodeBlue = util.copy(moncultureNode)
 monocultureNodeBlue.name = "tiberium-monoculture-blue-node"
 monocultureNodeBlue.localised_name = {"entity-name.tiberium-monoculture-blue"}
 monocultureNodeBlue.localised_description = {"entity-description.tiberium-monoculture-blue"}
 monocultureNodeBlue.animations = monocultureBlueAnimation
 monocultureNodeBlue.base_picture = monocultureBlueAnimation
-monocultureNodeBlue.icons = table.deepcopy(data.raw["assembling-machine"]["tiberium-monoculture-blue"].icons)
+monocultureNodeBlue.icons = util.copy(data.raw["assembling-machine"]["tiberium-monoculture-blue"].icons)
 
 data:extend{moncultureNode, monocultureNodeBlue}

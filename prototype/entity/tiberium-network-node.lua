@@ -1,4 +1,4 @@
-local tiberiumNetworkNode = table.deepcopy(data.raw["mining-drill"]["electric-mining-drill"])
+local tiberiumNetworkNode = util.copy(data.raw["mining-drill"]["electric-mining-drill"])
 tiberiumNetworkNode.name = "tiberium-network-node"
 tiberiumNetworkNode.energy_usage = "10000kW"
 tiberiumNetworkNode.mining_speed = 10

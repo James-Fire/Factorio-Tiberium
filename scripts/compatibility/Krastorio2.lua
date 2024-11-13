@@ -11,13 +11,13 @@ if mods["Krastorio2"] then
 					   {tib = "tiberium-explosives-10", copy = "stronger-explosives-16", max_level = "infinite"},
 					   {tib = "tiberium-energy-weapons-damage-10", copy = "laser-weapons-damage-16", max_level = "infinite"}}
 
-	data.raw["technology"]["tiberium-explosives-5"] = table.deepcopy(data.raw["technology"]["tiberium-explosives"])
+	data.raw["technology"]["tiberium-explosives-5"] = util.copy(data.raw["technology"]["tiberium-explosives"])
 	data.raw["technology"]["tiberium-explosives-5"].prerequisites = {"tiberium-explosives"}
-	data.raw["technology"]["tiberium-explosives-10"] = table.deepcopy(data.raw["technology"]["tiberium-explosives"])
+	data.raw["technology"]["tiberium-explosives-10"] = util.copy(data.raw["technology"]["tiberium-explosives"])
 	data.raw["technology"]["tiberium-explosives-10"].prerequisites = {"tiberium-explosives-5"}
-	data.raw["technology"]["tiberium-energy-weapons-damage-5"] = table.deepcopy(data.raw["technology"]["tiberium-energy-weapons-damage"])
+	data.raw["technology"]["tiberium-energy-weapons-damage-5"] = util.copy(data.raw["technology"]["tiberium-energy-weapons-damage"])
 	data.raw["technology"]["tiberium-energy-weapons-damage-5"].prerequisites = {"tiberium-energy-weapons-damage"}
-	data.raw["technology"]["tiberium-energy-weapons-damage-10"] = table.deepcopy(data.raw["technology"]["tiberium-energy-weapons-damage"])
+	data.raw["technology"]["tiberium-energy-weapons-damage-10"] = util.copy(data.raw["technology"]["tiberium-energy-weapons-damage"])
 	data.raw["technology"]["tiberium-energy-weapons-damage-10"].prerequisites = {"tiberium-energy-weapons-damage-5"}
 
 	for _, techs in pairs(techPairs) do
@@ -30,9 +30,9 @@ if mods["Krastorio2"] then
 		if not data.raw["technology"][techs.copy] then
 			log("missing tech "..techs.copy)
 		else
-			data.raw["technology"][techs.tib].unit.ingredients = table.deepcopy(data.raw["technology"][techs.copy].unit.ingredients)
+			data.raw["technology"][techs.tib].unit.ingredients = util.copy(data.raw["technology"][techs.copy].unit.ingredients)
 			table.insert(data.raw["technology"][techs.tib].unit.ingredients, {"tiberium-science", 1})
-			data.raw["technology"][techs.tib].effects = table.deepcopy(data.raw["technology"][techs.copy].effects)
+			data.raw["technology"][techs.tib].effects = util.copy(data.raw["technology"][techs.copy].effects)
 		end
 	end
 
@@ -73,7 +73,7 @@ if mods["Krastorio2"] then
 		common.recipe.editIngredient("tiberium-rounds-magazine", "piercing-rounds-magazine", "rifle-magazine", 1)
 	end
 	local oldTibRounds = data.raw.ammo["tiberium-rounds-magazine"]
-	local newTibRounds = table.deepcopy(data.raw.ammo["uranium-rifle-magazine"])
+	local newTibRounds = util.copy(data.raw.ammo["uranium-rifle-magazine"])
 	if newTibRounds then
 		--newTibRounds.icon = oldTibRounds.icon  -- I guess we'll keep the Krastorio icon to blend in
 		newTibRounds.name = oldTibRounds.name
@@ -90,7 +90,7 @@ if mods["Krastorio2"] then
 		data.raw.ammo["tiberium-rounds-magazine"] = newTibRounds
 		-- Update projectile to do Tiberium damage
 		if oldProjectile then
-			local tibProjectile = table.deepcopy(data.raw.projectile[oldProjectile])
+			local tibProjectile = util.copy(data.raw.projectile[oldProjectile])
 			tibProjectile.name = "tiberium-ammo"
 			local tibRoundsDamage = 0
 			for _, effect in pairs(tibProjectile.action.action_delivery.target_effects) do

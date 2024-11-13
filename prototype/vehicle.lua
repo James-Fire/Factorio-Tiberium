@@ -1,4 +1,4 @@
-local marvEntity = table.deepcopy(data.raw.car["tank"])
+local marvEntity = util.copy(data.raw.car["tank"])
 marvEntity.name = "tiberium-marv"
 marvEntity.guns = nil
 marvEntity.max_health = 5000

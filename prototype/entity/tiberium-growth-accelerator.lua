@@ -11,7 +11,7 @@ local acceleratorSprite = {
 	frame_count = 64
 }
 
-local growthAcceleratorNode = table.deepcopy(data.raw["mining-drill"]["tiberium-node-harvester"])
+local growthAcceleratorNode = util.copy(data.raw["mining-drill"]["tiberium-node-harvester"])
 growthAcceleratorNode.name = "tiberium-growth-accelerator-node"
 growthAcceleratorNode.animations = acceleratorSprite
 growthAcceleratorNode.base_picture = {}

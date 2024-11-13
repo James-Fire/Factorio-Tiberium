@@ -168,6 +168,13 @@ data:extend{
 		order = "d3",
 	},
 	{
+		type = "bool-setting",
+		name = "tiberium-centrifuge-alien-ores",
+		setting_type = "startup",
+		default_value = false,
+		order = "d4",
+	},
+	{
 		type = "string-setting",
 		name = "tiberium-resource-exclusions",
 		setting_type = "startup",

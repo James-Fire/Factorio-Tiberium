@@ -3,11 +3,13 @@ Version: 2.0.3
   Bugfixes:
     - Fixed progression in Tiberium Only mode being blocked by not being Crude Oil and Uranium Ore not being minable
     - Fixed Tiberium Only map generation preset not working with new planets
+    - Fixed Tiberium Centrifuging breaking progression by giving almost pure scrap instead of ores
   Changes:
     - Changed Tiberium Slurry Centrifuging to unlock when you craft Tiberium Slurry instead of Water (oops)
     - Corrected Tiberium refining recipes to reflect the new water-to-steam ratio in Factorio 2.0
   Features:
     - Added new Tiberium on All Planets setting to enable Tiberium naturally spawning on all planets
+    - Added new setting to allow Tiberium Centrifuging to give ores from any surface. Can be useful for modded playthroughs, but will bring back the scrap in vanilla. Use the Override Centrifuging Outputs or Exlcude Specific Resources settings to tweak as needed.
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.2
   Bugfixes:

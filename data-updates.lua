@@ -241,7 +241,7 @@ if settings.startup["tiberium-advanced-start"].value or settings.startup["tiberi
 				end
 				if copyFrom then
 					tech.research_trigger = nil
-					tech.unit = table.deepcopy(data.raw.technology[copyFrom].unit)
+					tech.unit = util.copy(data.raw.technology[copyFrom].unit)
 				else
 					tech.research_trigger.entity = "tiberium-ore"  -- No prereqs with unit costs, default to mining tiberium
 				end

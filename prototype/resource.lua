@@ -270,7 +270,7 @@ data:extend{
 }
 
 -- Make islands for Tiberium on Aquilo
-data.raw.resource["tibGrowthNode"].created_effect = table.deepcopy(data.raw.resource["crude-oil"].created_effect)
+data.raw.resource["tibGrowthNode"].created_effect = util.copy(data.raw.resource["crude-oil"].created_effect)
 
 -- Add to planet definitions
 for name,planet in pairs(data.raw.planet) do

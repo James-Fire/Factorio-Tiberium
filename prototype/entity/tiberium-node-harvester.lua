@@ -1,5 +1,5 @@
 local tiberiumNodeHarvester = flib.copy_prototype(data.raw["mining-drill"]["electric-mining-drill"], "tiberium-node-harvester")
-tiberiumNodeHarvester.icons = table.deepcopy(data.raw["mining-drill"]["pumpjack"].icons)
+tiberiumNodeHarvester.icons = util.copy(data.raw["mining-drill"]["pumpjack"].icons)
 tiberiumNodeHarvester.icon_size = 64
 tiberiumNodeHarvester.icon_mipmaps = nil
 tiberiumNodeHarvester.base_picture = data.raw["mining-drill"]["pumpjack"].base_picture

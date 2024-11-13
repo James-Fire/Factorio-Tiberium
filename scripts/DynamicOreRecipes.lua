@@ -5,6 +5,7 @@ local flib_table = require("__flib__/table")
 local flib_data_util = require("__flib__/data-util")
 local debugText = settings.startup["tiberium-debug-text-startup"].value
 local easyMode = settings.startup["tiberium-easy-recipes"].value
+local allowAlienOres = settings.startup["tiberium-centrifuge-alien-ores"].value
 local free = {}
 local excludedCrafting = {["transport-drone-request"] = true, ["auto-fabricator"] = true} --Rigorous way to do this?
 
@@ -111,9 +112,18 @@ function giantSetupFunction()
 	end
 
 	-- Raw resources
-	for _, resourceData in pairs(data.raw.resource) do
-		for item in pairs(minableResultsTable(resourceData)) do
-			rawResources[item] = true
+	for planetName, planetData in pairs(data.raw.planet) do
+		resourcePlanets[planetName] = {}
+		if planetData.map_gen_settings and planetData.map_gen_settings.autoplace_settings and planetData.map_gen_settings.autoplace_settings.entity
+				and planetData.map_gen_settings.autoplace_settings.entity.settings then
+			for resourceName in pairs(planetData.map_gen_settings.autoplace_settings.entity.settings) do
+				for item in pairs(minableResultsTable(data.raw.resource[resourceName])) do
+					resourcePlanets[planetName][item] = true
+					if allowAlienOres or planetName == "nauvis" then
+						rawResources[item] = true
+					end
+				end
+			end
 		end
 	end
 
@@ -164,14 +174,23 @@ function giantSetupFunction()
 	if debugText then packHierarchy() end
 
 	-- Build a more comprehensive list of free items and ingredient index for later
-	for _, tile in pairs(data.raw.tile) do
-		if tile.fluid then
-			free[tile.fluid] = true
+	for planetName, planetData in pairs(data.raw.planet) do
+		for tileName in pairs(planetData.map_gen_settings.autoplace_settings.tile.settings) do
+			if data.raw.tile[tileName] and data.raw.tile[tileName].fluid then
+				resourcePlanets[planetName][data.raw.tile[tileName].fluid] = true
+				if allowAlienOres or planetName == "nauvis" then
+					free[data.raw.tile[tileName].fluid] = true
+				end
+			end
 		end
 	end
 	for _, tree in pairs(data.raw["tree"]) do
-		for item in pairs(minableResultsTable(tree)) do
-			free[item] = true
+		if tree.autoplace and tree.autoplace.control then
+			if data.raw.planet.nauvis.map_gen_settings.autoplace_controls[tree.autoplace.control] then
+				for item in pairs(minableResultsTable(tree)) do
+					free[item] = true
+				end
+			end
 		end
 	end
 	for _, fish in pairs(data.raw["fish"]) do
