@@ -5,6 +5,8 @@ local flib_table = require("__flib__/table")
 local flib_data_util = require("__flib__/data-util")
 local debugText = settings.startup["tiberium-debug-text-startup"].value
 local easyMode = settings.startup["tiberium-easy-recipes"].value
+local surfaceRestrictTransmute = settings.startup["tiberium-direct-surface-condition"].value
+local planetTechs = settings.startup["tiberium-direct-planet-techs"].value
 local allowAlienOres = settings.startup["tiberium-centrifuge-alien-ores"].value
 local free = {}
 local excludedCrafting = {["transport-drone-request"] = true, ["auto-fabricator"] = true} --Rigorous way to do this?
@@ -33,6 +35,15 @@ local emptyBarrel = {}
 local science = {{}, {}, {}}
 local allPacks = {}
 local oreMult = {}
+local resourcePlanets = {}
+local surfaces = {
+	aquilo = {restrictions = {property = "pressure", min = 300, max = 300}, technology = "cryogenic-science-pack", pack = "cryogenic-science-pack"},
+	fulgora = {restrictions = {property = "magnetic-field", min = 99, max = 99}, technology = "electromagnetic-science-pack", pack = "electromagnetic-science-pack"},
+	gleba = {restrictions = {property = "pressure", min = 2000, max = 2000}, technology = "agricultural-science-pack", pack = "agricultural-science-pack"},
+	vulcanus = {restrictions = {property = "pressure", min = 4000, max = 4000}, technology = "metallurgic-science-pack", pack = "metallurgic-science-pack"},
+	aquilo2 = {restrictions = {property = "pressure", min = 100, max = 600}, technology = "cryogenic-science-pack", pack = "cryogenic-science-pack"},  --idk what surface this is?
+	space = {restrictions = {property = "gravity", min = 0, max = 0}, technology = "space-science-pack", pack = "space-science-pack"},
+}
 
 local function normalIngredients(recipeName)
 	if fakeRecipes[recipeName] then
@@ -657,6 +668,12 @@ function packForTech(techName)
 			local pack = ingredient.name or ingredient[1]
 			packList[pack] = ""
 		end
+	elseif data.raw.technology[techName] and data.raw.technology[techName].research_trigger then
+		for _,prereq in pairs(data.raw.technology[techName].prerequisites or {}) do
+			for pack in pairs(packForTech(prereq)) do
+				packList[pack] = ""
+			end
+		end
 	end
 	return packList
 end
@@ -1122,6 +1139,35 @@ function addDirectRecipe(ore, easy)
 	if settings.startup["tiberium-byproduct-direct"].value then  -- Direct Sludge Waste setting
 		local WastePerCycle = math.max(10 / settings.startup["tiberium-value"].value, 1)
 		common.recipe.addResult(recipeName, "tiberium-sludge", WastePerCycle, "fluid")
+	end
+	-- Add new techs for recipe unlock if needed
+	if (surfaceRestrictTransmute or planetTechs) and not easy and not resourcePlanets["nauvis"][ore] then
+		for planet, resources in pairs(resourcePlanets) do
+			if resources[ore] then
+				if surfaceRestrictTransmute then
+					data.raw.recipe[recipeName].surface_conditions = {surfaces[planet].restrictions}
+				end
+				if planetTechs then
+					tech = "tiberium-transmutation-tech-"..planet
+					if not data.raw.technology[tech] then
+						data:extend{{
+							type = "technology",
+							name = tech,
+							localised_name = {"technology-name.tiberium-transmutation-tech-planet", {"space-location-name."..planet}},
+							localised_description = {"technology-description.tiberium-transmutation-tech-planet", {"space-location-name."..planet}},
+							icons = common.layeredIcons(tiberiumInternalName.."/graphics/technology/tiberium-transmutation.png", 128, 
+									data.raw.planet[planet].icon, data.raw.planet[planet].icon_size, "se"),
+							effects = {},
+							unit = util.copy(data.raw.technology["tiberium-transmutation-tech"].unit),
+							prerequisites = {"tiberium-transmutation-tech", surfaces[planet].technology}
+						}}
+						data.raw.technology[tech].unit.count = 1000
+						table.insert(data.raw.technology[tech].unit.ingredients, {surfaces[planet].pack, 1})
+					end
+				end
+				break
+			end
+		end
 	end
 	common.technology.addRecipeUnlock(tech, recipeName)
 end
