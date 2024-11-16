@@ -21,7 +21,7 @@ local TiberiumSpreadNodes = settings.global["tiberium-spread-nodes"].value
 local BlueTargetEvo = settings.global["tiberium-blue-target-evo"].value
 local BlueTiberiumSaturation = settings.global["tiberium-blue-saturation-point"].value / 100
 local BlueTiberiumSaturationGrowth = settings.global["tiberium-blue-saturation-slowdown"].value / 100
-local bitersImmune = settings.global["tiberium-wont-damage-biters"].value
+local environmentalDamage = settings.global["tiberium-enemies-take-environmental-damage"].value
 local ItemDamageScale = settings.global["tiberium-item-damage-scale"].value
 local easyMode = settings.startup["tiberium-easy-recipes"].value
 local burnerTier = settings.startup["tiberium-tier-zero"].value
@@ -248,8 +248,8 @@ script.on_event(defines.events.on_runtime_mod_setting_changed, function(data)
 		BlueTiberiumSaturation = settings.global["tiberium-blue-saturation-point"].value / 100
 	elseif data.setting == "tiberium-blue-saturation-slowdown" then
 		BlueTiberiumSaturationGrowth = settings.global["tiberium-blue-saturation-slowdown"].value / 100
-	elseif data.setting == "tiberium-wont-damage-biters" then
-		bitersImmune = settings.global["tiberium-wont-damage-biters"].value
+	elseif data.setting == "tiberium-enemies-take-environmental-damage" then
+		environmentalDamage = settings.global["tiberium-enemies-take-environmental-damage"].value
 	elseif data.setting == "tiberium-auto-scale-performance" then
 		performanceMode = settings.global["tiberium-auto-scale-performance"].value
 	elseif data.setting == "tiberium-blue-target-evo" then
@@ -1032,7 +1032,7 @@ script.on_event(defines.events.on_tick, function(event)
 			end
 		end
 	end
-	if not bitersImmune then
+	if environmentalDamage then
 		local i = (event.tick % 60) + 1  --Loop through 1/60th of the nodes every tick
 		while i <= #storage.tibGrowthNodeList do
 			local node = storage.tibGrowthNodeList[i]

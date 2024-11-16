@@ -5,6 +5,7 @@ Version: 2.0.3
     - Fixed Tiberium Only map generation preset not working with new planets
     - Fixed Tiberium Centrifuging breaking progression by giving almost pure scrap instead of ores
   Changes:
+    - Reorganized settings menu, check your mod settings to sure they still have the values that you want
     - Changed Tiberium Slurry Centrifuging to unlock when you craft Tiberium Slurry instead of Water (oops)
     - Corrected Tiberium refining recipes to reflect the new water-to-steam ratio in Factorio 2.0
     - Transmutation recipes for ores from other planets now require science packs from those planets to unlock and can only be produced on their planets of origin (both of these can be turned off with settings)

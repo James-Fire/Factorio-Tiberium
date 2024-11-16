@@ -231,10 +231,10 @@ data:extend{
 	},
 	{
 		type = "bool-setting",
-		name = "tiberium-advanced-start",
-		setting_type = "startup",
+		name = "tiberium-enemies-take-environmental-damage",
+		setting_type = "runtime-global",
 		default_value = false,
-		order = "z5",
+		order = "b[damage]3",
 	},
 	{
 		type = "bool-setting",
