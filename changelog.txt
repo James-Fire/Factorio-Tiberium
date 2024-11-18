@@ -1,4 +1,8 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.5
+  Bugfixes:
+    - Fixed FindRecipeTech crash when used with mods that changed gear or brick recipe
+---------------------------------------------------------------------------------------------------
 Version: 2.0.4
   Bugfixes:
     - Added missing Growth Acclerator recipe name

@@ -1871,7 +1871,7 @@ end
 
 function FindRecipeTech(force, recipeName)
 	for techName, tech in pairs(force.technologies) do
-		for _, effect in pairs(tech.effects) do
+		for _, effect in pairs(tech.prototype.effects or {}) do
 			if effect.type == "unlock-recipe" and effect.recipe == recipeName then
 				return techName
 			end
@@ -1880,11 +1880,11 @@ function FindRecipeTech(force, recipeName)
 	return false
 end
 
-function UnlockRecipePrereqs(force, recipeName)
+function UnlockRecipePrereqs(force, targetRecipeName)
 	if not force or not force.valid then return end
-	if not force.recipes[recipeName] then return end
+	if not force.recipes[targetRecipeName] then return end
 	local ingredientTechs = {}
-	for _, ingredient in pairs(force.recipes[recipeName].ingredients) do
+	for _, ingredient in pairs(force.recipes[targetRecipeName].ingredients) do
 		ingredientTechs[ingredient.name] = {}
 	end
 	for recipeName, recipe in pairs(force.recipes) do
