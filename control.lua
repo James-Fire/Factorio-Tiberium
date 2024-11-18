@@ -2,6 +2,8 @@
 tiberiumInternalName = "Factorio-Tiberium"
 storage = {}
 
+local crash_site = require("crash-site")
+local util = require("util")
 local migration = require("__flib__.migration")
 local flib_table = require("__flib__.table")
 require("scripts.CnC_Walls") --Note, to make SonicWalls work / be passable
@@ -18,6 +20,7 @@ local TiberiumGrowth = settings.startup["tiberium-growth"].value * 10
 local TiberiumMaxPerTile = settings.startup["tiberium-growth"].value * 100 --Force 10:1 ratio with growth
 local TiberiumRadius = settings.startup["tiberium-radius"].value
 local TiberiumSpreadNodes = settings.global["tiberium-spread-nodes"].value
+local whichPlanet = settings.startup["tiberium-on"].value
 local BlueTargetEvo = settings.global["tiberium-blue-target-evo"].value
 local BlueTiberiumSaturation = settings.global["tiberium-blue-saturation-point"].value / 100
 local BlueTiberiumSaturationGrowth = settings.global["tiberium-blue-saturation-slowdown"].value / 100
@@ -141,8 +144,7 @@ script.on_init(function()
 	end
 
 	-- Use interface to give starting items if possible
-	if (settings.startup["tiberium-advanced-start"].value or settings.startup["tiberium-ore-removal"].value)
-			and remote.interfaces["freeplay"] then
+	if settings.startup["tiberium-advanced-start"].value and remote.interfaces["freeplay"] then --or whichPlanet == "tiber-start" or whichPlanet == "pure-nauvis")
 		local freeplayStartItems = remote.call("freeplay", "get_created_items") or {}
 		for name, count in pairs(tiberium_start) do
 			freeplayStartItems[name] = (freeplayStartItems[name] or 0) + count
@@ -179,7 +181,44 @@ script.on_init(function()
 	if remote.interfaces["DiscoScience"] and remote.interfaces["DiscoScience"]["setIngredientColor"] then
 		remote.call("DiscoScience", "setIngredientColor", "tiberium-science", {r = 0.0, g = 1.0, b = 0.0})
 	end
+
+	if whichPlanet == "tiber-start" then
+		if game.tick > 0 then
+			storage.init = true
+			game.print{"", {"tiberium-strings.tiber-restart-notice"}}
+			return
+		end
+	
+		if remote.interfaces.freeplay then
+			storage.disable_crashsite = remote.call("freeplay", "get_disable_crashsite")
+	
+			remote.call("freeplay", "set_disable_crashsite", true)
+			remote.call("freeplay", "set_skip_intro", true)
+		end
+	
+		correct_space_locations()
+	
+		storage.surface = game.planets["tiber"].create_surface()
+		storage.surface.request_to_generate_chunks({0, 0}, 3)
+		storage.surface.force_generate_chunk_requests()
+	end
 end)
+
+function correct_space_locations()
+	local force = game.forces.player
+	force.unlock_space_location("tiber")
+	if not force.technologies["planet-discovery-nauvis"].researched then
+		force.lock_space_location("nauvis")
+	end
+end
+
+function chart_starting_area()
+	local r = 200
+	local force = game.forces.player
+	local surface = storage.surface
+	local origin = force.get_spawn_position(surface)
+	force.chart(surface, {{origin.x - r, origin.y - r}, {origin.x + r, origin.y + r}})
+end
 
 function updateGrowthInterval()
 	if performanceMode and #storage.tibGrowthNodeList and #storage.tibGrowthNodeList > 50 then
@@ -237,6 +276,9 @@ script.on_configuration_changed(function(data)
 		doUpgradeConversions(data)
 	end
 
+	if whichPlanet == "tiber-start" then
+		correct_space_locations()
+	end
 	-- Apply new settings
 	storageIntegrityChecks()
 end)
@@ -266,6 +308,12 @@ end)
 function doUpgradeConversions(data)
 	if upgradingToVersion(data, tiberiumInternalName, "2.0.0") then
 		game.print("Unable to convert 1.1 saves into 2.0 saves. If you want to continue playing your save with Tiberium, try version 1.1.30")
+	end
+
+	if upgradingToVersion(data, tiberiumInternalName, "2.0.3") then
+		if settings.startup["tiberium-ore-removal"].value == true and whichPlanet ~= "pure-nauvis" then
+			game.print("Version 2.0.3 introduces new settings, if you want to continue on your current save, change the 'Tiberium Initially Spawns On' setting to 'Nauvis has Only Tiberium' and then reload your save.")
+		end
 	end
 
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
@@ -609,19 +657,19 @@ function CreateNode(surface, position, displayError)
 end
 
 --Code for making the Liquid Seed spread tib
-function TiberiumSeedMissile(surface, position, amount, oreName)
+function TiberiumSeedMissile(surface, position, amount, oreName, ignoreNode)
 	oreName = oreName or "tiberium-ore"
-	local radius = math.floor(amount^0.3)
-	for x = position.x - radius, position.x + radius do
-		for y = position.y - radius, position.y + radius do
-			if ((x - position.x)^2 + (y - position.y)^2) < radius then
-				local intensity = math.floor(amount^0.57 - (position.x - x)^2 - (position.y - y)^2)
+	local radius = math.floor(amount^0.24)
+	for xOffset = -radius, radius do
+		for yOffset = -radius, radius do
+			if xOffset^2 + yOffset^2 < radius^2 then
+				local intensity = math.floor(amount^0.48 - xOffset^2 - yOffset^2)
 				if intensity > 0 then
-					local placePos = {x = math.floor(x) + 0.5, y = math.floor(y) + 0.5}
+					local placePos = {x = math.floor(position.x + xOffset) + 0.5, y = math.floor(position.y + yOffset) + 0.5}
 					local spike = surface.find_entity("tibGrowthNode_infinite", placePos)
 					local node = surface.find_entity("tibGrowthNode", placePos)
 					if spike then
-					elseif node then
+					elseif node and not ignoreNode then
 						node.amount = node.amount + intensity
 					else
 						AddOre(surface, placePos, intensity, oreName, true) -- It doesn't make much of a difference, but lets not cascade seed missiles
@@ -970,6 +1018,9 @@ script.on_event(defines.events.on_chunk_generated, function(event)
 			if tree.valid then
 				tree.destroy()
 			end
+		end
+		if whichPlanet ~= "nauvis" then
+			TiberiumSeedMissile(surface, position, 10 * TiberiumMaxPerTile, "tiberium-ore", true)
 		end
 		local howManyOre = math.min(math.max(10, (math.abs(position.x) + math.abs(position.y)) / 25), 200) --Start further nodes with more ore
 		PlaceOre(newNode, howManyOre)
@@ -1581,6 +1632,9 @@ end
 script.on_event({defines.events.on_technology_effects_reset, defines.events.on_forces_merged, defines.events.on_force_reset}, function(event)
 	updateBeacons(event.force or event.destination)
 	updateResistanceLevel(event.force or event.destination)
+	if whichPlanet == "tiber-start" then
+		correct_space_locations()
+	end
 end)
 
 script.on_event({defines.events.on_research_finished, defines.events.on_research_reversed}, function(event)
@@ -1648,9 +1702,77 @@ script.on_event(defines.events.on_force_created, function(event)
 	initializeForce(event.force)
 end)
 
+script.on_event(defines.events.on_player_changed_surface, function(event)
+	if whichPlanet == "tiber-start" then
+		local player = game.get_player(event.player_index) --[[@as LuaPlayer]]
+		if player.surface.name == "nauvis" then
+			storage.nauvis_visited = true
+		end
+	end
+end)
+
+function get_starting_message()
+	if storage.custom_intro_message then
+		return storage.custom_intro_message
+	end
+	if script.active_mods["space-age"] then
+	 	return {"msg-intro-space-age"}
+	end
+	return {"msg-intro"}
+end
+
+function show_intro_message(player)
+	if storage.skip_intro then return end
+
+	if game.is_multiplayer() then
+	 	player.print(get_starting_message())
+	else
+		game.show_message_dialog{text = get_starting_message()}
+	end
+end
+
+script.on_event(defines.events.on_cutscene_waypoint_reached, function(event)
+	if whichPlanet == "tiber-start" then
+		if not storage.crash_site_cutscene_active then return end
+		if not crash_site.is_crash_site_cutscene(event) then return end
+
+		local player = game.get_player(event.player_index) --[[@as LuaPlayer]]
+
+		player.exit_cutscene()
+		show_intro_message(player)
+	end
+end)
+
+script.on_event("crash-site-skip-cutscene", function(event)
+	if whichPlanet == "tiber-start" then
+		if not storage.crash_site_cutscene_active then return end
+		if event.player_index ~= 1 then return end
+		local player = game.get_player(event.player_index) --[[@as LuaPlayer]]
+		if player.controller_type == defines.controllers.cutscene then
+			player.exit_cutscene()
+		end
+	end
+end)
+
+script.on_event(defines.events.on_cutscene_cancelled, function(event)
+	if whichPlanet == "tiber-start" then
+		if not storage.crash_site_cutscene_active then return end
+		if event.player_index ~= 1 then return end
+		storage.crash_site_cutscene_active = nil
+		local player = game.get_player(event.player_index) --[[@as LuaPlayer]]
+		if player.gui.screen.skip_cutscene_label then
+			player.gui.screen.skip_cutscene_label.destroy()
+		end
+		if player.character then
+		player.character.destructible = true
+			end
+		player.zoom = 1.5
+		end
+end)
+
 script.on_event(defines.events.on_player_created, function(event)
-	local player = game.players[event.player_index]
-	if settings.startup["tiberium-advanced-start"].value or settings.startup["tiberium-ore-removal"].value then
+	local player = game.get_player(event.player_index) --[[@as LuaPlayer]]
+	if settings.startup["tiberium-advanced-start"].value then --or whichPlanet == "tiber-start" or whichPlanet == "pure-nauvis" then
 		if not remote.interfaces["freeplay"] then
 			for name, count in pairs(tiberium_start) do
 				player.insert{name = name, count = count}
@@ -1666,6 +1788,52 @@ script.on_event(defines.events.on_player_created, function(event)
 		if easyMode then
 			UnlockTechnologyAndPrereqs(player.force, "tiberium-easy-transmutation-tech")
 		end
+	end
+	if whichPlanet == "tiber-start" then
+		local surface = storage.surface
+		player.teleport(surface.find_non_colliding_position("character", {0, 0}, 0, 1) --[[@as MapPosition]], "tiber")
+
+		if not storage.nauvis_visited then
+			local nauvis = game.get_surface("nauvis") --[[@as LuaSurface]]
+			nauvis.clear()
+		end
+
+		if not storage.init then
+			storage.init = true
+			storage.starting_message = remote.call("freeplay", "get_custom_intro_message")
+			storage.crashed_debris_items = remote.call("freeplay", "get_debris_items")
+			storage.crashed_ship_items = remote.call("freeplay", "get_ship_items")
+			storage.crashed_ship_parts = remote.call("freeplay", "get_ship_parts")
+			table.insert(storage.crashed_ship_parts, {
+				name = "tiberium-tiber-rock",
+				max_distance = 40,
+				angle_deviation = 0.2,
+				min_separation = 2,
+				repeat_count = 3,
+			})
+
+			surface.daytime = 0.7
+			crash_site.create_crash_site(surface, {-5,-6}, util.copy(storage.crashed_ship_items), util.copy(storage.crashed_debris_items), util.copy(storage.crashed_ship_parts))
+			util.remove_safe(player, storage.crashed_ship_items)
+			util.remove_safe(player, storage.crashed_debris_items)
+			player.get_main_inventory().sort_and_merge()
+			if player.character then
+				player.character.destructible = false
+			end
+			storage.crash_site_cutscene_active = true
+			crash_site.create_cutscene(player, {-5, -4})
+
+			chart_starting_area()
+		end
+	elseif whichPlanet == "pure-nauvis" then
+		storage.crashed_ship_parts = remote.call("freeplay", "get_ship_parts")
+		table.insert(storage.crashed_ship_parts, {
+			name = "tiberium-tiber-rock",
+			max_distance = 40,
+			angle_deviation = 0.2,
+			min_separation = 2,
+			repeat_count = 3,
+		})
 	end
 	-- Optional Informatron reminder
 	if player and player.connected and not script.active_mods["informatron"] then

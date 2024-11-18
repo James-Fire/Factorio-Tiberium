@@ -28,7 +28,9 @@ common.blankIcons = {
 
 common.TiberiumRadius = settings.startup["tiberium-radius"].value
 
-common.TiberiumInStartingArea = settings.startup["tiberium-starting-area"].value or settings.startup["tiberium-ore-removal"].value or false
+common.TiberiumInStartingArea = settings.startup["tiberium-starting-area"].value or (settings.startup["tiberium-on"].value ~= "nauvis") or false
+
+common.whichPlanet = settings.startup["tiberium-on"].value
 
 --Need to force burner tier for tiberium only starts to avoid softlocks
 common.tierZero = settings.startup["tiberium-tier-zero"].value or (settings.startup["tiberium-on"].value == "pure-nauvis") or (settings.startup["tiberium-on"].value == "tiber-start")

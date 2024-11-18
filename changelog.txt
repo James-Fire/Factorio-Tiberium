@@ -19,6 +19,7 @@ Version: 2.0.3
     - Tiberium Burner Centrifuge recipes now takes half as many gears and are always enabled for Tiberium-only starts
     - Transmutation recipes for ores from other planets now require science packs from those planets to unlock and can only be produced on their planets of origin (both of these can be turned off with settings)
   Features:
+    - Added new planet Tiber where you can discover Tiberium as well as setting to start on Tiber instead of Nauvis (Thanks to CodeGreen for making this possible)
     - Added new Tiberium on All Planets setting to enable Tiberium naturally spawning on all planets
     - Added new setting to allow Tiberium Centrifuging to give ores from any surface. Can be useful for modded playthroughs, but will bring back the scrap in vanilla. Use the Override Centrifuging Outputs or Exlcude Specific Resources settings to tweak as needed.
 ---------------------------------------------------------------------------------------------------

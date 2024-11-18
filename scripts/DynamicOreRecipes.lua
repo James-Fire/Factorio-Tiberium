@@ -43,6 +43,7 @@ local surfaces = {
 	vulcanus = {restrictions = {property = "pressure", min = 4000, max = 4000}, technology = "metallurgic-science-pack", pack = "metallurgic-science-pack"},
 	nauvis = {restrictions = {property = "pressure", min = 1000, max = 1000}, technology = "utility-science-pack", pack = "utility-science-pack"},
 	space = {restrictions = {property = "gravity", min = 0, max = 0}, technology = "space-science-pack", pack = "space-science-pack"},
+	tiber = {restrictions = {property = "pressure", min = 900, max = 900}, technology = "tiberium-mechanical-research", pack = "tiberium-science-pack"},
 }
 for planetName,planetData in pairs(data.raw.planet) do
 	if planetData.tiberium_requirements then
@@ -436,7 +437,7 @@ function allAvailableRecipes()
 						--log("~~~ Recipe "..effect.recipe.." unlocked by "..tech)
 						availableRecipes[effect.recipe] = true
 						recipeUnlockTracker["technology"][effect.recipe] = tech
-						if data.raw.recipe[effect.recipe].result and tibComboPacks[data.raw.recipe[effect.recipe].result] and techData.unit then
+						if data.raw.recipe[effect.recipe].result and tibComboPacks[data.raw.recipe[effect.recipe].result] and techData.unit then --TODO handle trigger techs
 							tibComboPacks[data.raw.recipe[effect.recipe].result] = techData.unit.ingredients  --save for later
 						end
 					else

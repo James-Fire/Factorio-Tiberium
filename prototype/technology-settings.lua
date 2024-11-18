@@ -71,6 +71,92 @@ if settings.startup["tiberium-technology-triggers"].value then
 		data.raw.technology["tiberium-ore-centrifuging"].research_trigger = {type = "mine-entity", entity = "tiberium-tiber-rock"}
 	end
 end
+
+if common.whichPlanet == "tiber" then
+	-- Lock planet behind tech
+	data:extend{{
+		type = "technology",
+		name = "planet-discovery-tiber",
+		icons = {
+			{
+				icon = tiberiumInternalName.."/graphics/icons/tiber-planet.png",
+				icon_size = 512,
+				scale = 0.5,
+			},
+			{
+				icon = "__core__/graphics/icons/technology/constants/constant-planet.png",
+				icon_size = 128,
+				scale = 1,
+				shift = {100, 100}
+			}
+		},
+		essential = true,
+		effects = {{
+			type = "unlock-space-location",
+			space_location = "tiber",
+			use_icon_overlay_constant = true
+		}},
+		prerequisites = {"space-platform-thruster"},
+		unit = {
+			count = 1000,
+			ingredients = {
+				{"automation-science-pack", 1},
+				{"logistic-science-pack", 1},
+				{"chemical-science-pack", 1},
+				{"space-science-pack", 1}
+			},
+			time = 60
+		}
+	}}
+	-- Lock tech behind planet
+	common.technology.addPrerequisite("planet-discovery-aquilo", "planet-discovery-tiber")  -- There should be some final tech to unlock Aquilo instead of just the initial
+	for technolgyName in pairs(data.raw.technology) do
+		if string.find(technolgyName, "tiberium") == 1 then
+			common.technology.addPrerequisite(technolgyName, "planet-discovery-tiber")
+		end
+	end
+elseif common.whichPlanet == "tiber-start" then
+	-- Lock Nauvis behind tech
+	data:extend{{
+		type = "technology",
+		name = "planet-discovery-nauvis",
+		icons = {
+			{
+				icon = "__base__/graphics/icons/starmap-planet-nauvis.png",
+				icon_size = 512,
+				scale = 0.5
+			},
+			{
+				icon = "__core__/graphics/icons/technology/constants/constant-planet.png",
+				icon_size = 128,
+				scale = 1,
+				shift = {100, 100}
+			}
+		},
+		essential = true,
+		effects = {{
+			type = "unlock-space-location",
+			space_location = "nauvis",
+			use_icon_overlay_constant = true
+		}},
+		prerequisites = {"space-platform-thruster"},
+		unit = {
+			count = 1000,
+			ingredients = {
+				{"automation-science-pack", 1},
+				{"logistic-science-pack", 1},
+				{"chemical-science-pack", 1},
+				{"space-science-pack", 1}
+			},
+			time = 60
+		}
+	}}
+	-- Nauvis techs locked behind planet
+	common.technology.addPrerequisite("uranium-mining", "planet-discovery-nauvis")
+	common.technology.addPrerequisite("captivity", "planet-discovery-nauvis")
+	common.technology.addPrerequisite("fish-breeding", "planet-discovery-nauvis")
+	common.technology.addPrerequisite("tree-seeding", "planet-discovery-nauvis")
+	common.technology.addPrerequisite("planet-discovery-aquilo", "planet-discovery-nauvis")
 end
 if common.tierZero and (common.whichPlanet == "pure-nauvis" or common.whichPlanet == "tiber-start") then
 	-- Do this for tiberium-only starts to make progression clearer

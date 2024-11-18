@@ -209,8 +209,46 @@ for name, assembler in pairs(data.raw["assembling-machine"]) do
 	end
 end
 
+if common.whichPlanet == "pure-nauvis" then
+	data.raw.planet["nauvis"].map_gen_settings.autoplace_settings.entity.settings["tiberium-tiber-rock"] = {}
+	local autoplaceExceptions = {
+		["nauvis_tibGrowthNode"] = true,
+		["trees"] = true,
+		["enemy-base"] = true,
+		["lithia-water"] = true,
+		["termal2"] = true,
+	}
+	for autoplace in pairs(data.raw.planet["nauvis"].map_gen_settings.autoplace_controls) do
+		if not autoplaceExceptions[autoplace] and data.raw["autoplace-control"][autoplace]
+				and data.raw["autoplace-control"][autoplace].category == "resource" then
+			data.raw.planet["nauvis"].map_gen_settings.autoplace_controls[autoplace] = nil
+			data.raw.planet["nauvis"].map_gen_settings.autoplace_settings.entity.settings[autoplace] = nil
+			local autoplaceInUse = false
+			for planetName,planetData in pairs(data.raw.planet) do
+				if planetName ~= "nauvis" then
+					if planetData.map_gen_settings and planetData.map_gen_settings.autoplace_controls
+							and planetData.map_gen_settings.autoplace_controls[autoplace] then
+						autoplaceInUse = true
+						break
+					end
+				end
+			end
+			if not autoplaceInUse then
+				data.raw["autoplace-control"][autoplace] = nil
+				for _,mgpCatData in pairs(data.raw["map-gen-presets"]) do
+					for _,mgpData in pairs(mgpCatData) do
+						if mgpData.basic_settings and mgpData.basic_settings.autoplace_controls then
+							mgpData.basic_settings.autoplace_controls[autoplace] = nil
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
 -- Fix some research triggers making Tiberium Only worlds unplayable
-if settings.startup["tiberium-advanced-start"].value or settings.startup["tiberium-ore-removal"].value then
+if settings.startup["tiberium-advanced-start"].value or common.whichPlanet == "tiber-start" or common.whichPlanet == "pure-nauvis" then
 	local minableResorces = {}
 	for resourceName, resourceData in pairs(data.raw.resource) do
 		if resourceData.autoplace then  -- Is an autoplace resource
