@@ -4,12 +4,14 @@ if mods["Krastorio2"] then
 	common.applyTiberiumValue("raw-rare-metals", 8)
 
 	-- Fix our infinites to match
-	local techPairs = {{tib = "tiberium-explosives", copy = "stronger-explosives-7", max_level = 4},
-					   {tib = "tiberium-energy-weapons-damage", copy = "laser-weapons-damage-7", max_level = 4},
-					   {tib = "tiberium-explosives-5", copy = "stronger-explosives-11", max_level = 9},
-					   {tib = "tiberium-energy-weapons-damage-5", copy = "laser-weapons-damage-11", max_level = 9},
-					   {tib = "tiberium-explosives-10", copy = "stronger-explosives-16", max_level = "infinite"},
-					   {tib = "tiberium-energy-weapons-damage-10", copy = "laser-weapons-damage-16", max_level = "infinite"}}
+	local techPairs = {
+		{tib = "tiberium-explosives", copy = "stronger-explosives-7", max_level = 4},
+		{tib = "tiberium-energy-weapons-damage", copy = "laser-weapons-damage-7", max_level = 4},
+		{tib = "tiberium-explosives-5", copy = "stronger-explosives-11", max_level = 9},
+		{tib = "tiberium-energy-weapons-damage-5", copy = "laser-weapons-damage-11", max_level = 9},
+		{tib = "tiberium-explosives-10", copy = "stronger-explosives-16", max_level = "infinite"},
+		{tib = "tiberium-energy-weapons-damage-10", copy = "laser-weapons-damage-16", max_level = "infinite"}
+	}
 
 	data.raw["technology"]["tiberium-explosives-5"] = util.copy(data.raw["technology"]["tiberium-explosives"])
 	data.raw["technology"]["tiberium-explosives-5"].prerequisites = {"tiberium-explosives"}

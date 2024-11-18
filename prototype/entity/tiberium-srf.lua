@@ -42,19 +42,19 @@ data:extend{
 		mined_sound = {filename = "__base__/sound/deconstruct-bricks.ogg"},
 		vehicle_impact_sound = {filename = "__base__/sound/car-stone-impact.ogg", volume = 1.0},
 		working_sound =	{
-		  sound = {
-			filename = "__base__/sound/substation.ogg",
-			volume = 0.4
-		  },
-		  idle_sound = {
-			filename = "__base__/sound/accumulator-idle.ogg",
-			volume = 0.4
-		  },
-		  max_sounds_per_type = 3,
-		  audible_distance_modifier = 0.5,
-		  fade_in_ticks = 30,
-		  fade_out_ticks = 40,
-		  use_doppler_shift = false
+			sound = {
+				filename = "__base__/sound/substation.ogg",
+				volume = 0.4
+			},
+			idle_sound = {
+				filename = "__base__/sound/accumulator-idle.ogg",
+				volume = 0.4
+			},
+			max_sounds_per_type = 3,
+			audible_distance_modifier = 0.5,
+			fade_in_ticks = 30,
+			fade_out_ticks = 40,
+			use_doppler_shift = false
 		},
 		energy_source = {
 			type = "electric",

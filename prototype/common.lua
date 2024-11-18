@@ -38,17 +38,17 @@ common.hit_effects = require("__base__.prototypes.entity.hit-effects")
 common.sounds = require("__base__.prototypes.entity.sounds")
 
 common.tibCraftingTint = {
-	primary    = {r = 0.109804, g = 0.721567, b = 0.231373,  a = 1},
-	secondary  = {r = 0.098039, g = 1,        b = 0.278431,  a = 1},
-	tertiary   = {r = 0.156863, g = 0.156863, b = 0.156863,  a = 0.235294},
-	quaternary = {r = 0.160784, g = 0.745098, b = 0.3058824, a = 0.345217},
+	primary		= {r = 0.109804,	g = 0.721567,	b = 0.231373,	a = 1},
+	secondary	= {r = 0.098039,	g = 1,			b = 0.278431,	a = 1},
+	tertiary	= {r = 0.156863,	g = 0.156863,	b = 0.156863,	a = 0.235294},
+	quaternary	= {r = 0.160784,	g = 0.745098,	b = 0.3058824,	a = 0.345217},
 }
 
 common.tibCraftingBlueTint = {
-	primary    = {r = 0.2,  g = 0.2, b = 1, a = 1},
-	secondary  = {r = 0.04, g = 0.4, b = 1, a = 1},
-	tertiary   = {r = 0.3,  g = 0.4, b = 1, a = 0.3},
-	quaternary = {r = 0.3,  g = 0.2, b = 1, a = 0.4},
+	primary		= {r = 0.2,  g = 0.2, b = 1, a = 1},
+	secondary	= {r = 0.04, g = 0.4, b = 1, a = 1},
+	tertiary	= {r = 0.3,  g = 0.4, b = 1, a = 0.3},
+	quaternary	= {r = 0.3,  g = 0.2, b = 1, a = 0.4},
 }
 
 common.pollutionMulti = settings.startup["tiberium-pollution-multiplier"].value

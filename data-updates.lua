@@ -65,8 +65,8 @@ end
 
 if mods["IndustrialRevolution"] then
 	if data.raw["assembling-machine"]["oil-refinery"] then
-	    data.raw["assembling-machine"]["oil-refinery"].fixed_recipe = nil
-	    data.raw["assembling-machine"]["oil-refinery"].show_recipe_icon = true
+		data.raw["assembling-machine"]["oil-refinery"].fixed_recipe = nil
+		data.raw["assembling-machine"]["oil-refinery"].show_recipe_icon = true
 	end
 end
 

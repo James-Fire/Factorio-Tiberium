@@ -864,15 +864,15 @@ data:extend{
 		name = 	"tiberium-growth-acceleration-acceleration",
 		icons = {
 			{
-			  icon = tiberiumInternalName.."/graphics/technology/growth-accelerator.png",
-			  icon_size = 128,
+				icon = tiberiumInternalName.."/graphics/technology/growth-accelerator.png",
+				icon_size = 128,
 			},
 			{
-			  icon = "__core__/graphics/icons/technology/constants/constant-speed.png",
-			  icon_size = 128,
-			  icon_mipmaps = 3,
-			  scale = 64 / 128,
-			  shift = {50, 50}
+				icon = "__core__/graphics/icons/technology/constants/constant-speed.png",
+				icon_size = 128,
+				icon_mipmaps = 3,
+				scale = 64 / 128,
+				shift = {50, 50}
 			},
 		},
 		effects = {
@@ -904,15 +904,15 @@ data:extend{
 		name = 	"tiberium-control-network-speed",
 		icons = {
 			{
-			  icon = tiberiumInternalName.."/graphics/technology/effect-transmission.png",
-			  icon_size = 128,
+				icon = tiberiumInternalName.."/graphics/technology/effect-transmission.png",
+				icon_size = 128,
 			},
 			{
-			  icon = "__core__/graphics/icons/technology/constants/constant-speed.png",
-			  icon_size = 128,
-			  icon_mipmaps = 3,
-			  scale = 64 / 128,
-			  shift = {50, 50}
+				icon = "__core__/graphics/icons/technology/constants/constant-speed.png",
+				icon_size = 128,
+				icon_mipmaps = 3,
+				scale = 64 / 128,
+				shift = {50, 50}
 			},
 		},
 		effects = {

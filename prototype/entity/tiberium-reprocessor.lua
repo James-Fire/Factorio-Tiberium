@@ -1,17 +1,17 @@
 -- Crusher cloned from Krastorio 2, but renamed, with different animation speed and crafting category
 -- https://mods.factorio.com/mod/Krastorio2
 data:extend{
-    {
-        type = "furnace",
-        name = "tiberium-reprocessor",
-        icon_size = 64,
-        icon = tiberiumInternalName .. "/graphics/icons/crusher.png",
-        flags = {"placeable-neutral", "placeable-player", "player-creation"},
-        minable = {mining_time = 1, result = "tiberium-reprocessor"},
-        max_health = 500,
-        corpse = "",
-        dying_explosion = "big-explosion",
-        collision_box = {{-3.25, -3.25}, {3.25, 3.25}},
+	{
+		type = "furnace",
+		name = "tiberium-reprocessor",
+		icon_size = 64,
+		icon = tiberiumInternalName .. "/graphics/icons/crusher.png",
+		flags = {"placeable-neutral", "placeable-player", "player-creation"},
+		minable = {mining_time = 1, result = "tiberium-reprocessor"},
+		max_health = 500,
+		corpse = "",
+		dying_explosion = "big-explosion",
+		collision_box = {{-3.25, -3.25}, {3.25, 3.25}},
 		selection_box = {{-3.5, -3.5}, {3.5, 3.5}},
 		graphics_set = {
 			animation = {
@@ -39,13 +39,13 @@ data:extend{
 				}
 			}
 		},
-        crafting_categories = {"tiberium-reprocessing"},
+		crafting_categories = {"tiberium-reprocessing"},
 		vehicle_impact_sound = {filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65},
-        working_sound = {
+		working_sound = {
 			sound =	{filename = tiberiumInternalName .. "/sound/crusher.ogg", volume = 1.5, speed = 2.0},
 			idle_sound = {filename = "__base__/sound/idle1.ogg"},
 			apparent_volume = 1.5
-        },
+		},
 		crafting_speed = 8,
 		source_inventory_size = 1,
 		result_inventory_size = 1,
@@ -71,5 +71,5 @@ data:extend{
 		energy_usage = "1MW",
 		module_slots = 4,
 		allowed_effects = {"consumption", "speed", "productivity", "pollution"},
-    }
+	}
 }

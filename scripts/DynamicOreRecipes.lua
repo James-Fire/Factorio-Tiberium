@@ -163,7 +163,7 @@ function giantSetupFunction()
 	-- Build indices used later for pruning and traversing tree
 	for recipe in pairs(availableRecipes) do
 		local ingredientList = normalIngredients(recipe)
-		local resultList     = normalResults(recipe)
+		local resultList = normalResults(recipe)
 		if flib_table.size(resultList) == 0 then
 			availableRecipes[recipe] = nil  -- Remove recipes with no outputs
 		else
@@ -220,7 +220,7 @@ function giantSetupFunction()
 
 	for recipe in pairs(availableRecipes) do
 		local ingredientList = normalIngredients(recipe)
-		local resultList     = normalResults(recipe)
+		local resultList = normalResults(recipe)
 		if flib_table.size(ingredientList) == 0 then
 			for result in pairs(resultList) do
 				if not free[result] then
