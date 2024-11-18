@@ -592,7 +592,7 @@ function CreateNode(surface, position, displayError)
 		-- Aesthetic changes
 		if storage.tiberiumTerrain then
 			local newTiles = {}
-			local oldTiles = surface.find_tiles_filtered{area = area, collision_mask = "ground-tile"}
+			local oldTiles = surface.find_tiles_filtered{area = area, collision_mask = {"ground_tile"}}
 			for i, tile in pairs(oldTiles) do
 				newTiles[i] = {name = storage.tiberiumTerrain, position = tile.position}
 			end
@@ -840,7 +840,7 @@ commands.add_command("tibChangeTerrain",
 					local position = node.position
 					local area = areaAroundPosition(position, 1)
 					local newTiles = {}
-					local oldTiles = node.surface.find_tiles_filtered{area = area, collision_mask = "ground-tile"}
+					local oldTiles = node.surface.find_tiles_filtered{area = area, collision_mask = {"ground_tile"}}
 					for i, tile in pairs(oldTiles) do
 						newTiles[i] = {name = terrain, position = tile.position}
 					end
@@ -974,7 +974,7 @@ script.on_event(defines.events.on_chunk_generated, function(event)
 		surface.destroy_decoratives{area = tileArea}
 		if storage.tiberiumTerrain then
 			local newTiles = {}
-			local oldTiles = surface.find_tiles_filtered{area = tileArea, collision_mask = "ground-tile"}
+			local oldTiles = surface.find_tiles_filtered{area = tileArea, collision_mask = {"ground_tile"}}
 			for i, tile in pairs(oldTiles) do
 				newTiles[i] = {name = storage.tiberiumTerrain, position = tile.position}
 			end

@@ -67,7 +67,7 @@ data:extend{
 		icon_size = 32,
 		flags = {},
 		subgroup = "a-items",
-		order = "a[science]-f[science-pack]",
+		order = "g[tiberium-science]",  -- After space science
 		durability = 1,
 		durability_description_key = "description.science-pack-remaining-amount-key",
 		durability_description_value = "description.science-pack-remaining-amount-value",

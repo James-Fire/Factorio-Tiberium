@@ -4,6 +4,9 @@ Version: 2.0.3
     - Fixed progression in Tiberium Only mode being blocked by not being Crude Oil and Uranium Ore not being minable
     - Fixed Tiberium Only map generation preset not working with new planets
     - Fixed Tiberium Centrifuging breaking progression by giving almost pure scrap instead of ores
+    - Fixed Blue Tiberium Ore icon mipmaps spilling into adjacent images
+    - Fixed Tiberium technology order so they don't all appear in a block on the "List of technologies"
+    - Fixed collison mask crash from tibChangeTerrain command or blocking spawning a Blossom Tree under another entity
   Changes:
     - Reorganized settings menu, check your mod settings to sure they still have the values that you want
     - Changed Tiberium Slurry Centrifuging to unlock when you craft Tiberium Slurry instead of Water (oops)
