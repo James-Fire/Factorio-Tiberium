@@ -1,9 +1,9 @@
-flib_table = require("__flib__/table")
-require("scripts/tib-map-gen-presets")  -- After other mods have added their resources as part of the data step
+flib_table = require("__flib__.table")
+--require("scripts.tib-map-gen-presets")  -- After other mods have added their resources as part of the data step
 
-require("scripts/compatibility/bobsmods")
-require("scripts/compatibility/Krastorio2")
-require("scripts/compatibility/Obelisks-of-light")
+require("scripts.compatibility.bobsmods")
+require("scripts.compatibility.Krastorio2")
+require("scripts.compatibility.Obelisks-of-light")
 
 -- Orbital Ion Cannon
 if mods["Orbital Ion Cannon"] or mods["Kux-OrbitalIonCannon"] then

@@ -1,8 +1,8 @@
 --TODO:
 -- Make matrix solver more reliable
 
-local flib_table = require("__flib__/table")
-local flib_data_util = require("__flib__/data-util")
+local flib_table = require("__flib__.table")
+local flib_data_util = require("__flib__.data-util")
 local debugText = settings.startup["tiberium-debug-text-startup"].value
 local easyMode = settings.startup["tiberium-easy-recipes"].value
 local surfaceRestrictTransmute = settings.startup["tiberium-direct-surface-condition"].value

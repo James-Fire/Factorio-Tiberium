@@ -1,5 +1,5 @@
 -- Basic setup, variables to use. (Might expose to settings sometime? Or perhaps make research allow for longer wall segments?)
-local flib_table = require("__flib__/table")
+local flib_table = require("__flib__.table")
 local debugText = settings.global["tiberium-debug-text"].value
 
 local horz_wall, vert_wall = 1, 2

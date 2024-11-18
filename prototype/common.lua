@@ -1,4 +1,4 @@
-flib_table = require("__flib__/table")
+flib_table = require("__flib__.table")
 
 local common = {}
 common.technology = {}

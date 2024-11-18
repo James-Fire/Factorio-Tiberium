@@ -79,5 +79,5 @@ for _, ingredient in pairs(data.raw.recipe["tiberium-liquid-processing-hot"].ing
 	end
 end
 
-require("scripts/DynamicOreRecipes")
-require("scripts/compatibility/pumpmod")
+require("scripts.DynamicOreRecipes")
+require("scripts.compatibility.pumpmod")

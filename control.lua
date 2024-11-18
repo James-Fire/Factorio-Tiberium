@@ -3,9 +3,9 @@ tiberiumInternalName = "Factorio-Tiberium"
 storage = {}
 
 local migration = require("__flib__.migration")
-local flib_table = require("__flib__/table")
-require("scripts/CnC_Walls") --Note, to make SonicWalls work / be passable
-require("scripts/informatron/informatron_remote_interface")
+local flib_table = require("__flib__.table")
+require("scripts.CnC_Walls") --Note, to make SonicWalls work / be passable
+require("scripts.informatron.informatron_remote_interface")
 
 local GA_Beacon_Name = "tiberium-growth-accelerator-beacon"
 local Speed_Module_Name = "tiberium-growth-accelerator-speed-module"

@@ -1,4 +1,4 @@
-require("prototype/entity/tiberium-node-harvester")
+require("prototype.entity.tiberium-node-harvester")
 
 local monocultureGreenAnimation = {
 	layers = {

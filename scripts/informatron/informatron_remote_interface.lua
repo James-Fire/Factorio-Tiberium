@@ -1,4 +1,4 @@
-local Informatron = require("scripts/informatron/informatron_control")
+local Informatron = require("scripts.informatron.informatron_control")
 
 remote.add_interface(tiberiumInternalName, {
   informatron_menu = function(data)
