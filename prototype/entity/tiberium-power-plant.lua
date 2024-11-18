@@ -17,7 +17,6 @@ data:extend{
 		scale_fluid_usage = true,
 		collision_box = {{-2.2, -2.2}, {2.2, 2.2}},
 		selection_box = {{-2.5, -2.5}, {2.5, 2.5}},
-		drawing_box = {{-2.5, -2.5}, {2.5, 2.5}},
 		energy_source = {
 			type = "electric",
 			usage_priority = "secondary-output",

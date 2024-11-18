@@ -36,6 +36,7 @@ data:extend{
 		minable = {mining_time = 0.5, result = "tiberium-sonic-emitter"},
 		max_health = 250,
 		corpse = "laser-turret-remnants",
+		drawing_box_vertical_extension = 0.7,
 		dying_explosion = "laser-turret-explosion",
 		working_sound =	{
 			sound = {

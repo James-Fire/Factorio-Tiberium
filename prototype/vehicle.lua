@@ -13,7 +13,6 @@ marvEntity.turret_return_timeout = nil
 marvEntity.turret_rotation_speed = nil
 marvEntity.weight = 50000
 marvEntity.collision_box = {{-1.4, -1.8}, {1.4, 1.8}}
-marvEntity.drawing_box = {{-2.3, -2.3}, {2.3, 2}}
 marvEntity.selection_box = {{-1.4, -1.8}, {1.4, 1.8}}
 marvEntity.energy_source.emissions_per_minute = common.scaledEmissions(4, 15)
 marvEntity.energy_source.smoke[1].position = {0, 2.2}

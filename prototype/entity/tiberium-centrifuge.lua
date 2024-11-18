@@ -12,6 +12,7 @@ data:extend{
 		max_health = 350,
 		corpse = "centrifuge-remnants",
 		dying_explosion = "centrifuge-explosion",
+		drawing_box_vertical_extension = 0.7,
 		fast_replaceable_group = "tib-centrifuge",
 		next_upgrade = "tiberium-centrifuge-2",
 		resistances = {
@@ -27,7 +28,6 @@ data:extend{
 		collision_box = {{-1.2, -1.2}, {1.2, 1.2}},
 		selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
 		damaged_trigger_effect = common.hit_effects.entity(),
-		drawing_box = {{-1.5, -2.2}, {1.5, 1.5}},
 		fluid_boxes_off_when_no_fluid_recipe = true,
 		fluid_boxes = {
 			{

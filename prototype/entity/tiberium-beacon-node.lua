@@ -9,10 +9,10 @@ data:extend{
 		max_health = 200,
 		corpse = "beacon-remnants",
 		dying_explosion = "beacon-explosion",
+		drawing_box_vertical_extension = 0.7,
 		collision_box = {{-1.2, -1.2}, {1.2, 1.2}},
 		selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
 		damaged_trigger_effect = common.hit_effects.entity(),
-		drawing_box = {{-1.5, -2.2}, {1.5, 1.3}},
 		allowed_effects = {"consumption"},
 		animation = {
 			animation_speed = 0.5,

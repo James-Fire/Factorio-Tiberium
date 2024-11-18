@@ -77,6 +77,7 @@ data:extend{
 				percent = 100
 			}
 		},
+		drawing_box_vertical_extension = 1.2,
 		collision_box = {{-1.2, -1.2}, {1.2, 1.2}},
 		selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
 		crafting_categories = {"tiberium-monoculture"},

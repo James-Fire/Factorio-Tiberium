@@ -7,6 +7,7 @@ data:extend{
 		flags = {"placeable-player", "placeable-enemy", "player-creation"},
 		minable = {mining_time = 0.5, result = "tiberium-obelisk-of-light"},
 		max_health = 1000,
+		drawing_box_vertical_extension = 0.5,
 		collision_box = {{-1.2, -1.7}, {1.2, 1.7}},
 		selection_box = {{-1.5, -2}, {1.5, 2}},
 		rotation_speed = 0.01,

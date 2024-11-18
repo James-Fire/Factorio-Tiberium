@@ -40,6 +40,7 @@ data:extend{
 		},
 		call_for_help_radius = 40,
 		collision_box = {{-1.2, -1.2}, {1.2, 1.2}},
+		drawing_box_vertical_extension = 2,
 		corpse = "gun-turret-remnants",
 		damaged_trigger_effect = {
 			damage_type_filters = "fire",
