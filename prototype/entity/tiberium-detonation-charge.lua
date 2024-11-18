@@ -8,25 +8,27 @@ data:extend{
 		flags = {"placeable-neutral", "player-creation"},
 		minable = {mining_time = 1, result = "tiberium-detonation-charge"},
 		placeable_by = {count = 1, item = "tiberium-detonation-charge"},
-		animations = {
-			north = {
-				layers = {
-					{
-						filename = "__base__/graphics/entity/crash-site-chests/crash-site-chest-1.png",
-						height = 76,
-						width = 120,
-						priority = "extra-high",
-						shift = {0.0625, 0.25},
-						scale = 0.5,
-					},
-					{
-						draw_as_shadow = true,
-						filename = "__base__/graphics/entity/crash-site-chests/crash-site-chest-1-shadow.png",
-						height = 128,
-						width = 210,
-						priority = "extra-high",
-						scale = 0.5,
-						shift = {-0.0625, 0.09375},
+		graphics_set = {
+			animation = {
+				north = {
+					layers = {
+						{
+							filename = "__base__/graphics/entity/crash-site-chests/crash-site-chest-1.png",
+							height = 76,
+							width = 120,
+							priority = "extra-high",
+							shift = {0.0625, 0.25},
+							scale = 0.5,
+						},
+						{
+							draw_as_shadow = true,
+							filename = "__base__/graphics/entity/crash-site-chests/crash-site-chest-1-shadow.png",
+							height = 128,
+							width = 210,
+							priority = "extra-high",
+							scale = 0.5,
+							shift = {-0.0625, 0.09375},
+						}
 					}
 				}
 			}

@@ -10,6 +10,7 @@ Version: 2.0.3
     - Fixed missing recipe names for Tiberium Monoculture structures
     - Fixed projectile animation for Sonic Emitters
     - Fixed structures images being cut off in entity tooltips
+    - Fixed missing image for Tiberium Detonation Charge
   Changes:
     - Reorganized settings menu, check your mod settings to sure they still have the values that you want
     - Changed Tiberium Slurry Centrifuging to unlock when you craft Tiberium Slurry instead of Water (oops)
