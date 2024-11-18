@@ -698,13 +698,13 @@ local sonicProjectile = flib.copy_prototype(genericGrenadeProjectile, "tiberium-
 sonicProjectile.animation = {
 	animation_speed = 0.5,
 	--draw_as_glow = true,
-	filename = "__base__/graphics/entity/beam/tileable-beam-END.png",
+	filename = tiberiumInternalName.."/graphics/entity/sonic-emitter/hr-tileable-beam-END-light.png",
 	frame_count = 16,
 	height = 93,
 	width = 91,
 	line_length = 4,
 	priority = "high",
-	--shift = {0.03125, 0.03125},
+	shift = {0.03125, 0.03125},
 }
 sonicProjectile.created_effect = {
 	type = "direct",
