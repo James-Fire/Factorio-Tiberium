@@ -1,5 +1,4 @@
-local tierZero = settings.startup["tiberium-tier-zero"].value
-if tierZero then
+if common.tierZero then
     data:extend{
         {
             type = "item",

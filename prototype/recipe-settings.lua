@@ -53,8 +53,7 @@ if easyMode then
 	end
 end
 
-local tierZero = settings.startup["tiberium-tier-zero"].value
-if tierZero then
+if common.tierZero then
 	data:extend{
 		{
 			type = "recipe",
@@ -103,7 +102,7 @@ if tierZero then
 			enabled = false,
 			subgroup = "a-buildings",
 			ingredients = {
-				{type = "item", name = "iron-gear-wheel", amount = 20},
+				{type = "item", name = "iron-gear-wheel", amount = 10},
 				{type = "item", name = "stone-brick", amount = 10}
 			},
 			results = {

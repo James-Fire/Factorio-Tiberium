@@ -129,6 +129,10 @@ script.on_init(function()
 	for _, name in pairs({"vehicle-miner", "vehicle-miner-mk2", "vehicle-miner-mk3", "vehicle-miner-mk4", "vehicle-miner-mk5"}) do
 		storage.exemptDamageNames[name] = true
 	end
+	-- Immunity for Tiberium Centrifuges
+	for _, name in pairs({"tiberium-centrifuge-0", "tiberium-centrifuge-1", "tiberium-centrifuge-2", "tiberium-centrifuge-3"}) do
+		storage.exemptDamageNames[name] = true
+	end
 
 	storage.tiberiumDamageTakenMulti = {}
 	storage.technologyTimes = {}

@@ -285,8 +285,7 @@ end
 
 data:extend{centrifuge2Entity, centrifuge3Entity}
 
-local tierZero = settings.startup["tiberium-tier-zero"].value
-if tierZero then
+if common.tierZero then
 	local centrifuge0Entity = util.copy(data.raw["assembling-machine"]["tiberium-centrifuge-1"])
 	centrifuge0Entity.name = "tiberium-centrifuge-0"
 	centrifuge0Entity.next_upgrade = "tiberium-centrifuge-1"

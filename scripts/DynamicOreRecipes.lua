@@ -1266,7 +1266,7 @@ fugeTierSetup()
 fugeRecipeTier(1)
 fugeRecipeTier(2)
 fugeRecipeTier(3)
-if settings.startup["tiberium-tier-zero"].value then
+if common.tierZero then
 	fugeRecipeTier(0)
 end
 singletonRecipes()  -- So fluid recipes come after sludge recipes for molten centrifuging

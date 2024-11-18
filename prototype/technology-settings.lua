@@ -23,8 +23,7 @@ if easyMode then
     }
 end
 
-local tierZero = settings.startup["tiberium-tier-zero"].value
-if tierZero then
+if common.tierZero then
 	data:extend{
         {
             type = "technology",
@@ -43,15 +42,15 @@ if tierZero then
                 -- Ore centrifuging with sludge recipe created and added to this tech by /scripts/DynamicOreRecipes
             },
             unit = {
-                count = 50,
+                count = 25,
                 ingredients = {
                     {"automation-science-pack", 1},
                 },
-                time = 30
+                time = 10
             }
         }
     }
-    table.insert(data.raw.technology["tiberium-slurry-centrifuging"].prerequisites, "tiberium-ore-centrifuging")
+    common.technology.addPrerequisite("tiberium-slurry-centrifuging", "tiberium-ore-centrifuging")
 end
 
 if settings.startup["tiberium-technology-triggers"].value then
@@ -66,4 +65,17 @@ if settings.startup["tiberium-technology-triggers"].value then
 
     data.raw.technology["tiberium-liquid-centrifuging"].unit = nil
     data.raw.technology["tiberium-liquid-centrifuging"].research_trigger = {type = "craft-fluid", fluid = "liquid-tiberium"}
+
+    if common.tierZero then
+        data.raw.technology["tiberium-ore-centrifuging"].unit = nil
+        data.raw.technology["tiberium-ore-centrifuging"].research_trigger = {type = "mine-entity", entity = "tiberium-tiber-rock"}
+    end
+end
+end
+if common.tierZero and (common.whichPlanet == "pure-nauvis" or common.whichPlanet == "tiber-start") then
+    -- Do this for tiberium-only starts to make progression clearer
+    data.raw.technology["tiberium-ore-centrifuging"].unit = nil
+    data.raw.technology["tiberium-ore-centrifuging"].research_trigger = {type = "mine-entity", entity = "tiberium-tiber-rock"}
+    common.technology.addPrerequisite("electronics", "tiberium-ore-centrifuging")
+    common.technology.addPrerequisite("steam-power", "tiberium-ore-centrifuging")
 end
