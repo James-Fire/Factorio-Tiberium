@@ -192,11 +192,13 @@ function giantSetupFunction()
 
 	-- Build a more comprehensive list of free items and ingredient index for later
 	for planetName, planetData in pairs(data.raw.planet) do
-		for tileName in pairs(planetData.map_gen_settings.autoplace_settings.tile.settings) do
-			if data.raw.tile[tileName] and data.raw.tile[tileName].fluid then
-				resourcePlanets[planetName][data.raw.tile[tileName].fluid] = true
-				if allowAlienOres or planetName == "nauvis" then
-					free[data.raw.tile[tileName].fluid] = true
+		if planetData.map_gen_settings and planetData.map_gen_settings.autoplace_settings and planetData.map_gen_settings.autoplace_settings.tile then
+			for tileName in pairs(planetData.map_gen_settings.autoplace_settings.tile.settings or {}) do
+				if data.raw.tile[tileName] and data.raw.tile[tileName].fluid then
+					resourcePlanets[planetName][data.raw.tile[tileName].fluid] = true
+					if allowAlienOres or planetName == "nauvis" then
+						free[data.raw.tile[tileName].fluid] = true
+					end
 				end
 			end
 		end
@@ -1151,10 +1153,10 @@ function addDirectRecipe(ore, easy)
 	if (surfaceRestrictTransmute or planetTechs) and not easy and (surfaceRestriction or not resourcePlanets["nauvis"][ore]) then
 		for planet, resources in pairs(resourcePlanets) do
 			if resources[ore] or (surfaceRestriction == planet and surfaces[surfaceRestriction]) then
-				if surfaceRestrictTransmute and surfaces[planet].restrictions then
+				if surfaceRestrictTransmute and surfaces[planet] and surfaces[planet].restrictions then
 					data.raw.recipe[recipeName].surface_conditions = {surfaces[planet].restrictions}
 				end
-				if planetTechs and surfaces[planet].technology and surfaces[planet].pack then
+				if planetTechs and surfaces[planet] and surfaces[planet].technology and surfaces[planet].pack then
 					tech = "tiberium-transmutation-tech-"..planet
 					if not data.raw.technology[tech] then
 						data:extend{{

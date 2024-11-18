@@ -151,6 +151,12 @@ script.on_init(function()
 		end
 		remote.call("freeplay", "set_created_items", freeplayStartItems)
 	end
+	--Temporary fix for Alien Biomes breaking tree autoplace
+	if script.active_mods["alien-biomes"] and remote.interfaces["freeplay"] and (whichPlanet == "tiber-start" or whichPlanet == "pure-nauvis") then
+		local freeplayStartItems = remote.call("freeplay", "get_created_items") or {}
+		freeplayStartItems["wood"] = (freeplayStartItems["wood"] or 0) + 20
+		remote.call("freeplay", "set_created_items", freeplayStartItems)
+	end
 
 	-- CnC SonicWalls Init
 	CnC_SonicWall_OnInit()

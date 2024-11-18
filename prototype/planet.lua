@@ -1098,6 +1098,22 @@ data:extend{
 	},
 }
 
+--Do our autoplace_settings defensively because some mods delete them
+for decorative in pairs(data.raw.planet["tiber"].map_gen_settings.autoplace_settings.decorative.settings) do
+	if not data.raw["optimized-decorative"][decorative] or not data.raw["optimized-decorative"][decorative].autoplace then
+		data.raw.planet["tiber"].map_gen_settings.autoplace_settings.decorative.settings[decorative] = nil
+	end
+end
+for entity in pairs(data.raw.planet["tiber"].map_gen_settings.autoplace_settings.entity.settings) do
+	if not data.raw["simple-entity"][entity] and not data.raw["fish"][entity] and entity ~= "tiberium-tiber-rock" then
+		data.raw.planet["tiber"].map_gen_settings.autoplace_settings.entity.settings[entity] = nil
+	elseif data.raw["simple-entity"][entity] and not data.raw["simple-entity"][entity].autoplace then
+		data.raw.planet["tiber"].map_gen_settings.autoplace_settings.entity.settings[entity] = nil
+	elseif data.raw["fish"][entity] and not data.raw["fish"][entity].autoplace then
+		data.raw.planet["tiber"].map_gen_settings.autoplace_settings.entity.settings[entity] = nil
+	end
+end
+
 if common.whichPlanet == "tiber-start" then
 	data.raw.planet["tiber"].order = "![tiber]"  -- Before Nauvis
 end

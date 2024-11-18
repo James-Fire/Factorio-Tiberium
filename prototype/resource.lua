@@ -150,7 +150,6 @@ end
 local resource_autoplace = require("resource-autoplace");
 resource_autoplace.initialize_patch_set("tibGrowthNode", common.TiberiumInStartingArea)  -- TODO
 local autoplaceName = common.whichPlanet == "nauvis" and "nauvis_tibGrowthNode" or common.whichPlanet == "pure-nauvis" and "nauvis_tibGrowthNode" or "tiber_tibGrowthNode"
-log("starting area: "..tostring(common.TiberiumInStartingArea))
 
 local oriented_cliff_dummy = {
 	collision_bounding_box = {{-0.4, -0.4}, {0.4, 0.4}},
