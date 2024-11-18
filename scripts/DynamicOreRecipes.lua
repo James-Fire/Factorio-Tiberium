@@ -41,9 +41,14 @@ local surfaces = {
 	fulgora = {restrictions = {property = "magnetic-field", min = 99, max = 99}, technology = "electromagnetic-science-pack", pack = "electromagnetic-science-pack"},
 	gleba = {restrictions = {property = "pressure", min = 2000, max = 2000}, technology = "agricultural-science-pack", pack = "agricultural-science-pack"},
 	vulcanus = {restrictions = {property = "pressure", min = 4000, max = 4000}, technology = "metallurgic-science-pack", pack = "metallurgic-science-pack"},
-	aquilo2 = {restrictions = {property = "pressure", min = 100, max = 600}, technology = "cryogenic-science-pack", pack = "cryogenic-science-pack"},  --idk what surface this is?
+	nauvis = {restrictions = {property = "pressure", min = 1000, max = 1000}, technology = "utility-science-pack", pack = "utility-science-pack"},
 	space = {restrictions = {property = "gravity", min = 0, max = 0}, technology = "space-science-pack", pack = "space-science-pack"},
 }
+for planetName,planetData in pairs(data.raw.planet) do
+	if planetData.tiberium_requirements then
+		surfaces[planetName] = planetData.tiberium_requirements
+	end
+end
 
 local function normalIngredients(recipeName)
 	if fakeRecipes[recipeName] then
@@ -1101,6 +1106,7 @@ function addDirectRecipe(ore, easy)
 	local oreAmount = 64 / (oreMult[ore] or 1)
 	local addSeed = settings.startup["tiberium-direct-catalyst"].value
 	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"
+	local surfaceRestriction = data.raw[itemOrFluid][ore].tiberium_surface
 	local tech = easy and "tiberium-easy-transmutation-tech" or data.raw.fluid[ore] and "tiberium-molten-centrifuging" or "tiberium-transmutation-tech"
 	local category = "chemistry" --data.raw.fluid[ore] and "chemistry" or "tiberium-transmutation"
 	local energy = 12
@@ -1141,13 +1147,13 @@ function addDirectRecipe(ore, easy)
 		common.recipe.addResult(recipeName, "tiberium-sludge", WastePerCycle, "fluid")
 	end
 	-- Add new techs for recipe unlock if needed
-	if (surfaceRestrictTransmute or planetTechs) and not easy and not resourcePlanets["nauvis"][ore] then
+	if (surfaceRestrictTransmute or planetTechs) and not easy and (surfaceRestriction or not resourcePlanets["nauvis"][ore]) then
 		for planet, resources in pairs(resourcePlanets) do
-			if resources[ore] then
-				if surfaceRestrictTransmute then
+			if resources[ore] or (surfaceRestriction == planet and surfaces[surfaceRestriction]) then
+				if surfaceRestrictTransmute and surfaces[planet].restrictions then
 					data.raw.recipe[recipeName].surface_conditions = {surfaces[planet].restrictions}
 				end
-				if planetTechs then
+				if planetTechs and surfaces[planet].technology and surfaces[planet].pack then
 					tech = "tiberium-transmutation-tech-"..planet
 					if not data.raw.technology[tech] then
 						data:extend{{
@@ -1162,7 +1168,16 @@ function addDirectRecipe(ore, easy)
 							prerequisites = {"tiberium-transmutation-tech", surfaces[planet].technology}
 						}}
 						data.raw.technology[tech].unit.count = 1000
-						table.insert(data.raw.technology[tech].unit.ingredients, {surfaces[planet].pack, 1})
+						local packPresent = false
+						for _,packs in pairs(data.raw.technology[tech].unit.ingredients) do
+							if packs[1] == surfaces[planet].pack then
+								packPresent = true
+								break
+							end
+						end
+						if not packPresent then
+							table.insert(data.raw.technology[tech].unit.ingredients, {surfaces[planet].pack, 1})
+						end
 					end
 				end
 				break

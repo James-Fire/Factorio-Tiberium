@@ -185,6 +185,7 @@ end
 if data.raw.resource["uranium-ore"] then
 	data.raw.resource["uranium-ore"]["map_color"] = {0.0, 0.5, 0.0}
 	common.applyTiberiumValue("uranium-ore", 8)
+	data.raw.item["uranium-ore"].tiberium_surface = "nauvis"
 end
 
 -- Flag any item as being convertible to sludge for centrifuging recipes by setting the tiberium_sludge property to true
