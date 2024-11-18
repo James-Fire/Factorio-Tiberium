@@ -289,3 +289,17 @@ end
 if mods["any-planet-start"] then
 	table.insert(data.raw["string-setting"]["aps-planet"].allowed_values, "tiber")
 end
+if not mods["space-age"] then
+	data.raw["string-setting"]["tiberium-on"].allowed_values = {"nauvis", "pure-nauvis"}
+	data.raw["string-setting"]["tiberium-on"].default_value = "nauvis"
+	
+	data.raw["bool-setting"]["tiberium-all-planets"].hidden = true
+
+	data.raw["bool-setting"]["tiberium-direct-surface-condition"].hidden = true
+	data.raw["bool-setting"]["tiberium-direct-surface-condition"].default_value = false
+
+	data.raw["bool-setting"]["tiberium-direct-planet-techs"].hidden = true
+	data.raw["bool-setting"]["tiberium-direct-planet-techs"].default_value = false
+
+	data.raw["bool-setting"]["tiberium-centrifuge-alien-ores"].hidden = true
+end
