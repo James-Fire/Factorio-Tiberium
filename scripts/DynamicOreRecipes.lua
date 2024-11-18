@@ -127,6 +127,12 @@ function giantSetupFunction()
 			resourceExclusions[item] = true
 		end
 	end
+	-- Resources included by settings
+	for item, prototype in pairs(data.raw.item) do
+		if prototype.tiberium_raw_resource and not resourceExclusions[item] then
+			rawResources[item] = true
+		end
+	end
 
 	-- Raw resources
 	for planetName, planetData in pairs(data.raw.planet) do

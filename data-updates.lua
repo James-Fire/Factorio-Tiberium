@@ -234,7 +234,15 @@ if common.whichPlanet == "pure-nauvis" then
 				end
 			end
 			if not autoplaceInUse then
+				-- Flag resources for centrifuging
+				for itemName in pairs(common.minableResultsTable(data.raw.resource[autoplace])) do
+					if data.raw.item[itemName] then
+						data.raw.item[itemName].tiberium_raw_resource = true
+					end
+				end
+				-- Delete autoplace
 				data.raw["autoplace-control"][autoplace] = nil
+				-- Remove autoplace from map gen presets so we don't crash
 				for _,mgpCatData in pairs(data.raw["map-gen-presets"]) do
 					for _,mgpData in pairs(mgpCatData) do
 						if mgpData.basic_settings and mgpData.basic_settings.autoplace_controls then
