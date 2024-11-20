@@ -5,6 +5,7 @@ Version: 2.0.6
     - Fixed Tiber Rocks incorrectly appearing on Nauvis on modes other than Tiberium-only
     - Fixed player taking damage while flying over Tiberium Ore in a cargo pod
     - Fixed Growth Accelerator disappearing while working
+    - Fixed list of valid inputs for Tiberium Reprocessor being blank
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.5
   Bugfixes:

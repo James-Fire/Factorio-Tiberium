@@ -61,7 +61,7 @@ for order, test in pairs(testingOrder) do
 			name = "tiberium-reprocessing-"..test.."-data",
 			category = "tiberium-reprocessing",
 			energy_required = 0.5,
-			hidden = true,
+			hide_from_player_crafting = true,
 			allow_decomposition = false,
 			crafting_machine_tint = common.tibCraftingTint,
 			ingredients = {

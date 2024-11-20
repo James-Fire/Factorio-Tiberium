@@ -1252,7 +1252,7 @@ function addCreditRecipe(ore)
 
 	if itemOrFluid == "item" then
 		-- Make reprocessor recipe
-		local reprocessingName = "tiberium-reprocessinng-"..ore
+		local reprocessingName = "tiberium-reprocessing-"..ore
 		data:extend{{
 			type = "recipe",
 			name = reprocessingName,
@@ -1262,7 +1262,7 @@ function addCreditRecipe(ore)
 			category = "tiberium-reprocessing",
 			crafting_machine_tint = common.tibCraftingTint,
 			allow_decomposition = false,
-			hidden = true,
+			hide_from_player_crafting = true,
 		}}
 		recipeAddResult(reprocessingName, "tiberium-growth-credit", 1 / oreAmount, "item", true)
 
