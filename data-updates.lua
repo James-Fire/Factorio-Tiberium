@@ -296,4 +296,6 @@ if common.whichPlanet == "pure-nauvis" then
 			end
 		end
 	end
+elseif common.whichPlanet == "nauvis" then
+	data.raw.planet["nauvis"].map_gen_settings.autoplace_settings.entity.settings["tiberium-tiber-rock"] = {frequency = 0}
 end

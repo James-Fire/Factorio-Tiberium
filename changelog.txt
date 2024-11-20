@@ -2,6 +2,7 @@
 Version: 2.0.6
   Bugfixes:
     - Fixed progression in Tiberium Only mode being blocked by not being Crude Oil and Uranium Ore not being minable but for real this time
+    - Fixed Tiber Rocks incorrectly appearing on Nauvis on modes other than Tiberium-only
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.5
   Bugfixes:
