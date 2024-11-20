@@ -51,7 +51,7 @@ data:extend{
 				}
 			}
 		},
-		vehicle_impact_sound = {filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65},
+		impact_category = "metal",
 		starting_attack_sound = {
 			--filename = tiberiumInternalName.."/sound/Obelisk.ogg",
 			filename = tiberiumInternalName.."/sound/Obelisk-firing-mono.ogg",

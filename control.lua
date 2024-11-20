@@ -928,7 +928,7 @@ commands.add_command("tibShareStats",
 	"Generate a string of data with stats your current Factorio game to share with Tiberium mod developers.",
 	function(invocationdata)
 		local fileName = "Tiberium Stats.txt"
-		game.write_file(fileName, "", false, game.player.index)
+		helpers.write_file(fileName, "", false, game.player.index)
 		-- General game state
 		local str = ""
 		str = str .. "version," .. script.active_mods[tiberiumInternalName] .. "|"
@@ -938,13 +938,13 @@ commands.add_command("tibShareStats",
 		str = str .. "rocket," .. tostring(storage.rocketTime) .. "|"
 		str = str .. "blue spawn," .. tostring(storage.wildBlue) .. "|"
 		str = str .. "evo factor," .. game.forces.enemy.get_evolution_factor() .. "|"
-		game.write_file(fileName, str, true, game.player.index)
+		helpers.write_file(fileName, str, true, game.player.index)
 		-- Mod list
 		str = "\n"
 		for name, version in pairs(script.active_mods) do
 			str = str .. name .. "," .. version .. "|"
 		end
-		game.write_file(fileName, str, true, game.player.index)
+		helpers.write_file(fileName, str, true, game.player.index)
 		-- Mod settings
 		str = "\n"
 		local playerSettings = {}
@@ -953,18 +953,18 @@ commands.add_command("tibShareStats",
 				playerSettings[k] = v.value
 			end
 		end
-		for name, _ in pairs(game.get_filtered_mod_setting_prototypes{{filter="mod", mod=tiberiumInternalName}}) do
+		for name, _ in pairs(prototypes.get_mod_setting_filtered{{filter="mod", mod=tiberiumInternalName}}) do
 			str = str..name..","..tostring(playerSettings[name]).."|"
 		end
-		game.write_file(fileName, str, true, game.player.index)
+		helpers.write_file(fileName, str, true, game.player.index)
 		-- Entities
 		str = "\n"
-		for name, _ in pairs(game.get_filtered_entity_prototypes{{filter="name", name="test", invert=true}}) do
+		for name, _ in pairs(prototypes.get_entity_filtered{{filter="name", name="test", invert=true}}) do
 			if string.sub(name, 1, 3) == "tib" then
 				str = str..name..","..game.surfaces[1].count_entities_filtered{name = name}.."|"
 			end
 		end
-		game.write_file(fileName, str, true, game.player.index)
+		helpers.write_file(fileName, str, true, game.player.index)
 		-- Recipes
 		local recipeTable = {}
 		for _, surface in pairs(game.surfaces) do
@@ -984,14 +984,14 @@ commands.add_command("tibShareStats",
 		for name, speed in pairs(recipeTable) do
 			str = str..name..","..speed.."|"
 		end
-		game.write_file(fileName, str, true, game.player.index)
+		helpers.write_file(fileName, str, true, game.player.index)
 		-- Technologies
 		str = "\n"
 		table.sort(storage.technologyTimes[game.player.force.name], function(a,b) return (a[2] == b[2]) and (a[1] < b[1]) or (a[2] < b[2]) end)
 		for _, tech in pairs(storage.technologyTimes[game.player.force.name]) do
 			str = str .. tech[1] .. "," .. tech[2] .. "|"
 		end
-		game.write_file(fileName, str, true, game.player.index)
+		helpers.write_file(fileName, str, true, game.player.index)
 		game.player.print("Saved stats to %AppData%/Roaming/Factorio/script-output/"..fileName)
 		game.player.print("You can share your stats with Tiberium mods here: https://discord.gg/ed4pNP3KrH")
 	end
@@ -1820,8 +1820,8 @@ script.on_event(defines.events.on_player_created, function(event)
 
 			surface.daytime = 0.7
 			crash_site.create_crash_site(surface, {-5,-6}, util.copy(storage.crashed_ship_items), util.copy(storage.crashed_debris_items), util.copy(storage.crashed_ship_parts))
-			util.remove_safe(player, storage.crashed_ship_items)
-			util.remove_safe(player, storage.crashed_debris_items)
+			util.remove_safe(player.character, storage.crashed_ship_items)
+			util.remove_safe(player.character, storage.crashed_debris_items)
 			player.get_main_inventory().sort_and_merge()
 			if player.character then
 				player.character.destructible = false

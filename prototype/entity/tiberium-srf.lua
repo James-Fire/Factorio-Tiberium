@@ -40,7 +40,7 @@ data:extend{
 		corpse = "wall-remnants",
 		repair_sound = {filename = "__base__/sound/manual-repair-simple.ogg"},
 		mined_sound = {filename = "__base__/sound/deconstruct-bricks.ogg"},
-		vehicle_impact_sound = {filename = "__base__/sound/car-stone-impact.ogg", volume = 1.0},
+		impact_category = "metal",
 		working_sound =	{
 			sound = {
 				filename = "__base__/sound/substation.ogg",
@@ -103,7 +103,6 @@ data:extend{
 		flags = {"placeable-neutral", "player-creation", "not-repairable"},
 		subgroup = "remnants",
 		order = "a[remnants]",
-		destructible = false,
 		selection_box = {{-0.5, -0.5}, {0.5, 0.5}},
 		selection_priority = 1,
 		collision_box = {{-0.4, -0.4}, {0.4, 0.4}},

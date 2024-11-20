@@ -226,7 +226,7 @@ if settings.startup["tiberium-advanced-start"].value or common.whichPlanet == "t
 	end
 	for techName, tech in pairs(data.raw.technology) do
 		if tech.research_trigger and tech.research_trigger.type == "mine-entity" then
-			local resource = tech.research_trigger.entity
+			local resource = tech.research_trigger.entity  --[[@as string]]
 			if not string.find(resource, "tiberium") and minableResorces[resource] then
 				-- Change the unlock to science pack and copy cost from prereq
 				local ingredientCount = 0
@@ -234,7 +234,7 @@ if settings.startup["tiberium-advanced-start"].value or common.whichPlanet == "t
 				for _, prereq in pairs(tech.prerequisites or {}) do
 					if data.raw.technology[prereq] and data.raw.technology[prereq].unit then
 						local unit = data.raw.technology[prereq].unit
-						if flib_table.size(unit.ingredients) > ingredientCount then
+						if unit and flib_table.size(unit.ingredients) > ingredientCount then
 							ingredientCount = flib_table.size(unit)
 							copyFrom = prereq
 						end

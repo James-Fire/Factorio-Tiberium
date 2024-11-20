@@ -21,7 +21,6 @@ data:extend{
 		category = "basic-solid-tiberium",
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore.png",
 		icon_size = 64,
-		icon_mipmaps = 4,
 		flags = {"placeable-neutral"},
 		order="a-b-f",
 		minable = {
@@ -84,7 +83,6 @@ data:extend{
 		category = "basic-solid-tiberium",
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png",
 		icon_size = 64,
-		icon_mipmaps = 4,
 		flags = {"placeable-neutral"},
 		order="a-b-f",
 		minable = {
@@ -141,10 +139,10 @@ data:extend{
 }
 
 if data.raw.resource["uranium-ore"] then
-	data.raw.resource["tiberium-ore"].walking_sounds = data.raw.resource["uranium-ore"].walking_sounds
-	data.raw.resource["tiberium-ore-blue"].walking_sounds = data.raw.resource["uranium-ore"].walking_sounds
-	data.raw.resource["tiberium-ore"].driving_sounds = data.raw.resource["uranium-ore"].driving_sounds
-	data.raw.resource["tiberium-ore-blue"].driving_sounds = data.raw.resource["uranium-ore"].driving_sounds
+	data.raw.resource["tiberium-ore"].walking_sound = data.raw.resource["uranium-ore"].walking_sound
+	data.raw.resource["tiberium-ore-blue"].walking_sound = data.raw.resource["uranium-ore"].walking_sound
+	data.raw.resource["tiberium-ore"].driving_sound = data.raw.resource["uranium-ore"].driving_sound
+	data.raw.resource["tiberium-ore-blue"].driving_sound = data.raw.resource["uranium-ore"].driving_sound
 end
 
 local resource_autoplace = require("resource-autoplace");

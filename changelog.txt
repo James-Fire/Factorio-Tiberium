@@ -6,6 +6,7 @@ Version: 2.0.6
     - Fixed player taking damage while flying over Tiberium Ore in a cargo pod
     - Fixed Growth Accelerator disappearing while working
     - Fixed list of valid inputs for Tiberium Reprocessor being blank
+    - Fixed missing sounds
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.5
   Bugfixes:

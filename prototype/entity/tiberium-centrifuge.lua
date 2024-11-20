@@ -205,7 +205,7 @@ data:extend{
 		},
 		open_sound = {filename = "__base__/sound/machine-open.ogg", volume = 0.6},
 		close_sound = {filename = "__base__/sound/machine-close.ogg", volume = 0.6},
-		vehicle_impact_sound = common.sounds.generic_impact,
+		impact_category = "metal-large",
 		working_sound = {
 			sound = {
 				{

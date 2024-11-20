@@ -66,7 +66,7 @@ data:extend{
 			max_sounds_per_type = 3,
 			match_speed_to_activity = true
 		},
-		vehicle_impact_sound = {filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65},
+		impact_category = "metal-large",
 		resistances = {
 			{
 				type = "fire",
@@ -148,7 +148,6 @@ local moncultureNode = util.copy(data.raw["mining-drill"]["tiberium-node-harvest
 moncultureNode.name = "tiberium-monoculture-green-node"
 moncultureNode.localised_name = {"entity-name.tiberium-monoculture-green"}
 moncultureNode.localised_description = {"entity-description.tiberium-monoculture-green"}
-moncultureNode.animations = monocultureGreenAnimation
 moncultureNode.base_picture = monocultureGreenAnimation
 moncultureNode.icons = util.copy(data.raw["assembling-machine"]["tiberium-monoculture-green"].icons)
 moncultureNode.graphics_set = nil
@@ -166,7 +165,6 @@ local monocultureNodeBlue = util.copy(moncultureNode)
 monocultureNodeBlue.name = "tiberium-monoculture-blue-node"
 monocultureNodeBlue.localised_name = {"entity-name.tiberium-monoculture-blue"}
 monocultureNodeBlue.localised_description = {"entity-description.tiberium-monoculture-blue"}
-monocultureNodeBlue.animations = monocultureBlueAnimation
 monocultureNodeBlue.base_picture = monocultureBlueAnimation
 monocultureNodeBlue.icons = util.copy(data.raw["assembling-machine"]["tiberium-monoculture-blue"].icons)
 

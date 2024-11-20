@@ -355,15 +355,6 @@ common.recipe.setResultProbability = function(recipeName, resultName, resultProb
 	if not data.raw["recipe"][recipeName] then return end
 	resultProbability = ((resultProbability~=1) and resultProbability) --wtf does this do
 
-	if data.raw["recipe"][recipeName].result then
-		data.raw["recipe"][recipeName].results = {{
-		name = data.raw["recipe"][recipeName].result,
-		amount = data.raw["recipe"][recipeName].result_count or 1,
-		}}
-		data.raw["recipe"][recipeName].result = nil
-		data.raw["recipe"][recipeName].result_count = nil
-	end
-
 	if data.raw["recipe"][recipeName].results then
 		for index, result in pairs(data.raw["recipe"][recipeName].results) do
 			if result.name == resultName then

@@ -40,7 +40,7 @@ data:extend{
 			type = "void",
 			usage_priority = "secondary-input"
 		},
-		vehicle_impact_sound = common.sounds.generic_impact,
+		impact_category = "metal",
 		open_sound = common.sounds.machine_open,
 		close_sound = common.sounds.machine_close,
 		working_sound = {

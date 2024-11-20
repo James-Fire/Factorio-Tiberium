@@ -53,7 +53,7 @@ data:extend{
 			fade_out_ticks = 40,
 			use_doppler_shift = false
 		},
-		vehicle_impact_sound = {filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65},
+		impact_category = "metal",
 		energy_source = {
 			type = "electric",
 			buffer_capacity = "2MJ",

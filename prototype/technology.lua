@@ -942,8 +942,6 @@ data:extend{
 	{
 		type = "technology",
 		name = "tiberium-explosives",
-		icon_size = 256,
-		icon_mipmaps = 4,
 		icons = util.technology_icon_constant_damage("__base__/graphics/technology/stronger-explosives-3.png"),
 		effects = {
 			{
@@ -984,8 +982,6 @@ data:extend{
 	{
 		type = "technology",
 		name = "tiberium-energy-weapons-damage",
-		icon_size = 256,
-		icon_mipmaps = 4,
 		icons = util.technology_icon_constant_damage("__base__/graphics/technology/laser-weapons-damage.png"),
 		effects = {
 			{
