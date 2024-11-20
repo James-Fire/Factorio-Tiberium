@@ -1124,7 +1124,7 @@ script.on_nth_tick(20, function(event) --Player damage 3 times per second
 			end
 			--Damage players that are standing on Tiberium Ore and not in vehicles
 			local nearby_ore_count = player.physical_surface.count_entities_filtered{name = storage.oreTypes, position = player.physical_position, radius = 1.5}
-			if nearby_ore_count > 0 and not player.character.vehicle and player.character.name ~= "jetpack-flying" then
+			if nearby_ore_count > 0 and not player.character.vehicle and not player.character.driving and player.character.name ~= "jetpack-flying" then
 				safeDamage(player, nearby_ore_count * TiberiumDamage * 0.2)
 			end
 			--Damage players with unsafe Tiberium products in their inventory
