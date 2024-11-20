@@ -209,6 +209,49 @@ for name, assembler in pairs(data.raw["assembling-machine"]) do
 	end
 end
 
+-- Fix some research triggers making Tiberium Only worlds unplayable
+if settings.startup["tiberium-advanced-start"].value or common.whichPlanet == "tiber-start" or common.whichPlanet == "pure-nauvis" then
+	local minableResorces = {}
+	for resourceName, resourceData in pairs(data.raw.resource) do
+		if resourceData.autoplace then  -- Is an autoplace resource
+			local autoplaceControl = data.raw["autoplace-control"][resourceName]
+			if autoplaceControl and autoplaceControl.category == "resource" then -- That shows up on the resource tab of map gen settings
+				if data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings[resourceName] then -- And is present on Nauvis
+					for result in pairs(common.minableResultsTable(resourceData)) do
+						minableResorces[result] = true
+					end
+				end
+			end
+		end
+	end
+	for techName, tech in pairs(data.raw.technology) do
+		if tech.research_trigger and tech.research_trigger.type == "mine-entity" then
+			local resource = tech.research_trigger.entity
+			if not string.find(resource, "tiberium") and minableResorces[resource] then
+				-- Change the unlock to science pack and copy cost from prereq
+				local ingredientCount = 0
+				local copyFrom = nil
+				for _, prereq in pairs(tech.prerequisites or {}) do
+					if data.raw.technology[prereq] and data.raw.technology[prereq].unit then
+						local unit = data.raw.technology[prereq].unit
+						if flib_table.size(unit.ingredients) > ingredientCount then
+							ingredientCount = flib_table.size(unit)
+							copyFrom = prereq
+						end
+					end
+				end
+				if copyFrom then
+					tech.research_trigger = nil
+					tech.unit = util.copy(data.raw.technology[copyFrom].unit)
+				else
+					tech.research_trigger.entity = "tiberium-ore"  -- No prereqs with unit costs, default to mining tiberium
+				end
+			end
+		end
+	end
+end
+
+-- Remove non-Tiberium ores from Tberium-only Nauvis
 if common.whichPlanet == "pure-nauvis" then
 	data.raw.planet["nauvis"].map_gen_settings.autoplace_settings.entity.settings["tiberium-tiber-rock"] = {}
 	local autoplaceExceptions = {
@@ -249,48 +292,6 @@ if common.whichPlanet == "pure-nauvis" then
 							mgpData.basic_settings.autoplace_controls[autoplace] = nil
 						end
 					end
-				end
-			end
-		end
-	end
-end
-
--- Fix some research triggers making Tiberium Only worlds unplayable
-if settings.startup["tiberium-advanced-start"].value or common.whichPlanet == "tiber-start" or common.whichPlanet == "pure-nauvis" then
-	local minableResorces = {}
-	for resourceName, resourceData in pairs(data.raw.resource) do
-		if resourceData.autoplace then  -- Is an autoplace resource
-			local autoplaceControl = data.raw["autoplace-control"][resourceName]
-			if autoplaceControl and autoplaceControl.category == "resource" then -- That shows up on the resource tab of map gen settings
-				if data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings[resourceName] then -- And is present on Nauvis
-					for result in pairs(common.minableResultsTable(resourceData)) do
-						minableResorces[result] = true
-					end
-				end
-			end
-		end
-	end
-	for techName, tech in pairs(data.raw.technology) do
-		if tech.research_trigger and tech.research_trigger.type == "mine-entity" then
-			local resource = tech.research_trigger.entity
-			if not string.find(resource, "tiberium") and minableResorces[resource] then
-				-- Change the unlock to science pack and copy cost from prereq
-				local ingredientCount = 0
-				local copyFrom = nil
-				for _, prereq in pairs(tech.prerequisites or {}) do
-					if data.raw.technology[prereq] and data.raw.technology[prereq].unit then
-						local unit = data.raw.technology[prereq].unit
-						if flib_table.size(unit.ingredients) > ingredientCount then
-							ingredientCount = flib_table.size(unit)
-							copyFrom = prereq
-						end
-					end
-				end
-				if copyFrom then
-					tech.research_trigger = nil
-					tech.unit = util.copy(data.raw.technology[copyFrom].unit)
-				else
-					tech.research_trigger.entity = "tiberium-ore"  -- No prereqs with unit costs, default to mining tiberium
 				end
 			end
 		end
