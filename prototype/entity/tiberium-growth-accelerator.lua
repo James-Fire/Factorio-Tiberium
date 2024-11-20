@@ -13,7 +13,8 @@ local acceleratorSprite = {
 
 local growthAcceleratorNode = util.copy(data.raw["mining-drill"]["tiberium-node-harvester"])
 growthAcceleratorNode.name = "tiberium-growth-accelerator-node"
-growthAcceleratorNode.animations = acceleratorSprite
+growthAcceleratorNode.graphics_set = {}
+growthAcceleratorNode.graphics_set.animation = acceleratorSprite
 growthAcceleratorNode.base_picture = {}
 growthAcceleratorNode.base_picture.sheet = acceleratorSprite
 growthAcceleratorNode.icon = tiberiumInternalName.."/graphics/technology/growth-accelerator.png"
