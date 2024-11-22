@@ -176,25 +176,25 @@ data:extend{
 			pipe_connections = {
 				{
 					direction = defines.direction.south,
-					position = {0, 0.2},
+					position = {0, 0},
 					connection_type = "underground",
 					max_underground_distance = 16,
 				},
 				{
 					direction = defines.direction.north,
-					position = {0, -0.2},
+					position = {0, 0},
 					connection_type = "underground",
 					max_underground_distance = 16,
 				},
 				{
 					direction = defines.direction.east,
-					position = {0.2, 0},
+					position = {0, 0},
 					connection_type = "underground",
 					max_underground_distance = 16,
 				},
 				{
 					direction = defines.direction.west,
-					position = {-0.2, 0},
+					position = {0, 0},
 					connection_type = "underground",
 					max_underground_distance = 16,
 				},
