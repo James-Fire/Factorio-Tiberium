@@ -51,7 +51,7 @@ data:extend{
 		corpse = "centrifuge-remnants",
 		dying_explosion = "medium-explosion",
 		crafting_speed = 1,
-		fixed_recipe = "tiberium-monoculture-green-fixed-recipe",
+		--fixed_recipe = "tiberium-monoculture-green-fixed-recipe",
 		open_sound = {filename = "__base__/sound/machine-open.ogg", volume = 0.85},
 		close_sound = {filename = "__base__/sound/machine-close.ogg", volume = 0.75},
 		working_sound = {
@@ -80,7 +80,7 @@ data:extend{
 		drawing_box_vertical_extension = 1.2,
 		collision_box = {{-1.2, -1.2}, {1.2, 1.2}},
 		selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
-		crafting_categories = {"tiberium-monoculture"},
+		crafting_categories = {"tiberium-monoculture-green"},
 		energy_usage = "50kW",
 		energy_source =	{
 			type = "electric",
@@ -138,7 +138,7 @@ monocultureBlue.name = "tiberium-monoculture-blue"
 monocultureBlue.icons = common.layeredIcons(tiberiumInternalName.."/graphics/entity/monoculture/monoculture-blue.png", 256, tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "sw")
 monocultureBlue.minable = {mining_time = 2, result = "tiberium-monoculture-blue"}
 monocultureBlue.placeable_by = {item = "tiberium-monoculture-blue", count = 1}
-monocultureBlue.fixed_recipe = "tiberium-monoculture-blue-fixed-recipe"
+monocultureBlue.crafting_categories = {"tiberium-monoculture-blue"}
 monocultureBlue.graphics_set.animation = monocultureBlueAnimation
 monocultureBlue.graphics_set.idle_animation = monocultureBlueAnimation
 

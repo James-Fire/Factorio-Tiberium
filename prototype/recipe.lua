@@ -832,8 +832,8 @@ data:extend{
 		name = "tiberium-monoculture-green-fixed-recipe",
 		energy_required = 1,
 		enabled = false,
-		hidden = true,
-		category = "tiberium-monoculture",
+		hide_from_player_crafting = true,
+		category = "tiberium-monoculture-green",
 		crafting_machine_tint = common.tibCraftingBlueTint,
 		ingredients = {
 			{type = "item", name = "tiberium-ore-blue", amount = 4},
@@ -847,8 +847,8 @@ data:extend{
 		name = "tiberium-monoculture-blue-fixed-recipe",
 		energy_required = 1,
 		enabled = false,
-		hidden = true,
-		category = "tiberium-monoculture",
+		hide_from_player_crafting = true,
+		category = "tiberium-monoculture-blue",
 		crafting_machine_tint = common.tibCraftingTint,
 		ingredients = {
 			{type = "item", name = "tiberium-ore", amount = 4},

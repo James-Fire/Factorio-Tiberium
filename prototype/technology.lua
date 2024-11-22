@@ -375,7 +375,15 @@ data:extend{
 			},
 			{
 				type = "unlock-recipe",
+				recipe = "tiberium-monoculture-green-fixed-recipe"
+			},
+			{
+				type = "unlock-recipe",
 				recipe = "tiberium-monoculture-blue"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-monoculture-blue-fixed-recipe"
 			}
 		},
 		prerequisites = {"tiberium-mutation", "tiberium-ore-destruction"},

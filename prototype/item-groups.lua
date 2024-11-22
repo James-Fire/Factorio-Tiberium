@@ -140,7 +140,11 @@ data:extend{
 	},
 	{
 		type = "recipe-category",
-		name = "tiberium-monoculture"
+		name = "tiberium-monoculture-green"
+	},
+	{
+		type = "recipe-category",
+		name = "tiberium-monoculture-blue"
 	},
 	{
 		type = "recipe-category",

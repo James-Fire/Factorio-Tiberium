@@ -1393,6 +1393,7 @@ function on_new_entity(event)
 		}
 	elseif (new_entity.name == "tiberium-monoculture-green") then
 		registerEntity(new_entity)
+		new_entity.set_recipe("tiberium-monoculture-green-fixed-recipe")
 		--Remove tree entity when node is covered
 		removeBlossomTree(surface, position)
 	elseif (new_entity.name == "tiberium-monoculture-blue-node") then
@@ -1405,6 +1406,7 @@ function on_new_entity(event)
 		}
 	elseif (new_entity.name == "tiberium-monoculture-blue") then
 		registerEntity(new_entity)
+		new_entity.set_recipe("tiberium-monoculture-blue-fixed-recipe")
 		--Remove tree entity when node is covered
 		removeBlossomTree(surface, position)
 	elseif (new_entity.name == "tibGrowthNode") then
