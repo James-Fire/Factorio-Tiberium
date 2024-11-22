@@ -1384,7 +1384,7 @@ data:extend{
 		type = "recipe",
 		name = "tiberium-growth",
 		enabled = false,
-		hidden = true,
+		hide_from_player_crafting = true,
 		category = "growth",
 		ingredients = {
 			{type = "item", name = "tiberium-growth-credit", amount = 1}

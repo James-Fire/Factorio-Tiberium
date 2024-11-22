@@ -34,7 +34,7 @@ growthAcceleratorNode.energy_source = {
 
 data:extend{growthAcceleratorNode,
 	{
-		type = "assembling-machine",
+		type = "furnace",
 		name = "tiberium-growth-accelerator",
 		icon = tiberiumInternalName.."/graphics/technology/growth-accelerator.png",
 		icon_size = 128,
@@ -46,7 +46,9 @@ data:extend{growthAcceleratorNode,
 		dying_explosion = "medium-explosion",
 		energy_usage = "1kW",
 		crafting_speed = 1,
-		fixed_recipe = "tiberium-growth",
+		source_inventory_size = 1,
+		result_inventory_size = 1,
+		--fixed_recipe = "tiberium-growth",
 		allowed_effects = {"speed", "consumption"},
 		open_sound = {filename = "__base__/sound/machine-open.ogg", volume = 0.85},
 		close_sound = {filename = "__base__/sound/machine-close.ogg", volume = 0.75},
@@ -75,8 +77,8 @@ data:extend{growthAcceleratorNode,
 		},
 		collision_box = {{-1.2, -1.2}, {1.2, 1.2}},
 		selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
-		always_draw_idle_animation = true,
 		graphics_set = {
+			always_draw_idle_animation = true,
 			animation = {
 				layers = {
 					{

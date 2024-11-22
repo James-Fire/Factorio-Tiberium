@@ -101,7 +101,7 @@ if mods["space-exploration"] then
 		data.raw["mining-drill"][drillName].se_allow_in_space = true
 	end
 	data.raw.beacon["tiberium-beacon-node"].se_allow_in_space = true
-	data.raw["assembling-machine"]["tiberium-growth-accelerator"].se_allow_in_space = true
+	data.raw["furnace"]["tiberium-growth-accelerator"].se_allow_in_space = true
 	data.raw["electric-energy-interface"]["tiberium-sonic-emitter"].se_allow_in_space = true
 	data.raw["electric-energy-interface"]["tiberium-sonic-emitter-blue"].se_allow_in_space = true
 	data.raw["pipe-to-ground"]["tiberium-srf-connector"].se_allow_in_space = true

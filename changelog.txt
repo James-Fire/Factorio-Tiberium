@@ -7,6 +7,7 @@ Version: 2.0.6
     - Fixed Growth Accelerator disappearing while working
     - Fixed list of valid inputs for Tiberium Reprocessor being blank
     - Fixed missing sounds
+    - Fixed Growth Accelerator not accepting quality Tiberium Substrate
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.5
   Bugfixes:
