@@ -1115,6 +1115,7 @@ script.on_nth_tick(20, function(event) --Player damage 3 times per second
 	for _, player in pairs(game.connected_players) do
 		if player.valid and player.character and player.character.valid then
 			--MARV ore deletion
+---@diagnostic disable-next-line: undefined-field
 			if player.physical_vehicle and (player.physical_vehicle.name == "tiberium-marv") and (player.physical_vehicle.get_driver() == player.character) then
 				marvHarvestOre(player.physical_vehicle)
 			end
@@ -1638,7 +1639,9 @@ function UpdateBeaconSpeed(beacon, total_modules)
 end
 
 script.on_event({defines.events.on_technology_effects_reset, defines.events.on_forces_merged, defines.events.on_force_reset}, function(event)
+---@diagnostic disable-next-line: undefined-field
 	updateBeacons(event.force or event.destination)
+---@diagnostic disable-next-line: undefined-field
 	updateResistanceLevel(event.force or event.destination)
 	if whichPlanet == "tiber-start" then
 		correct_space_locations()
@@ -1646,6 +1649,7 @@ script.on_event({defines.events.on_technology_effects_reset, defines.events.on_f
 end)
 
 script.on_event({defines.events.on_research_finished, defines.events.on_research_reversed}, function(event)
+---@diagnostic disable-next-line: undefined-field
 	local tech = event.research
 	updateBeacons(tech.force)
 	updateResistanceLevel(tech.force)

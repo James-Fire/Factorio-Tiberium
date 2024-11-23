@@ -4,7 +4,6 @@ data:extend{
 		name = "tiberium",
 		icon = tiberiumInternalName.."/graphics/technology/tiberium-processing-tech.png",
 		icon_size = 128,
-		inventory_order = "f-m",
 		order = "f-m",
 	},
 	-- Subgroups

@@ -1,3 +1,4 @@
+---@diagnostic disable: inject-field
 flib_table = require("__flib__.table")
 --require("scripts.tib-map-gen-presets")  -- After other mods have added their resources as part of the data step
 

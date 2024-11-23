@@ -1,5 +1,8 @@
+---@diagnostic disable: undefined-field
 --TODO:
 -- Make matrix solver more reliable
+-- Address recipe unlocks behind higher techs
+-- Deal with crude oil/stone being locked behind other planets for pure-nauvis
 
 local flib_table = require("__flib__.table")
 local flib_data_util = require("__flib__.data-util")
@@ -110,7 +113,8 @@ function giantSetupFunction()
 	end
 
 	-- Resources excluded by settings
-	local excludeSetting = string.gsub(settings.startup["tiberium-resource-exclusions"].value, "\"", "")
+	local excludeSetting = settings.startup["tiberium-resource-exclusions"].value  --[[@as string]]
+	excludeSetting = string.gsub(excludeSetting, "\"", "")
 	if excludeSetting then
 		local delim = ","
 		for item in string.gmatch(excludeSetting, "[^"..delim.."]+") do  -- Loop over comma-delimited substrings
@@ -455,8 +459,10 @@ function allAvailableRecipes()
 						--log("~~~ Recipe "..effect.recipe.." unlocked by "..tech)
 						availableRecipes[effect.recipe] = true
 						recipeUnlockTracker["technology"][effect.recipe] = tech
-						if data.raw.recipe[effect.recipe].result and tibComboPacks[data.raw.recipe[effect.recipe].result] and techData.unit then --TODO handle trigger techs
-							tibComboPacks[data.raw.recipe[effect.recipe].result] = techData.unit.ingredients  --save for later
+						for _, product in pairs(data.raw.recipe[effect.recipe].results) do
+							if product.name and tibComboPacks[product.name] and techData.unit then --TODO handle trigger techs
+								tibComboPacks[product.name] = techData.unit.ingredients  --save for later
+							end
 						end
 					else
 						log(tech.." tried to unlock recipe "..effect.recipe.." which does not exist?")
@@ -689,7 +695,7 @@ function packForTech(techName)
 	local packList = {}
 	if data.raw.technology[techName] and data.raw.technology[techName].unit then
 		for _, ingredient in pairs(data.raw.technology[techName].unit.ingredients) do
-			local pack = ingredient.name or ingredient[1]
+			local pack = ingredient[1]
 			packList[pack] = ""
 		end
 	elseif data.raw.technology[techName] and data.raw.technology[techName].research_trigger then
@@ -901,7 +907,7 @@ function fugeTierSetup()
 	-- Fallback to the packs for one of our early-game techs in case nothing qualifies for tier 1
 	if (flib_table.size(science[1]) == 0) and data.raw.technology["tiberium-thermal-research"] then
 		for _, ingredient in pairs(data.raw.technology["tiberium-thermal-research"].unit.ingredients) do
-			local packName = ingredient.name or ingredient[1]
+			local packName = ingredient[1]
 			if tibComboPacks[packName] then
 				science[1][packName] = true
 			end
@@ -1037,7 +1043,7 @@ end
 
 function fugeRawResources(tier)
 	local resourceList = {}
-	local overrideSetting = settings.startup["tiberium-centrifuge-override-"..tier].value
+	local overrideSetting = settings.startup["tiberium-centrifuge-override-"..tier].value  --[[@as string]]
 	overrideSetting = string.gsub(overrideSetting, "\"", "")  -- Strip quotes
 	if string.len(overrideSetting) > 0 then
 		local delim = ","

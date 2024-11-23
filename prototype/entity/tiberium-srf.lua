@@ -175,24 +175,28 @@ data:extend{
 			volume = 1,
 			pipe_connections = {
 				{
+---@diagnostic disable-next-line: assign-type-mismatch
 					direction = defines.direction.south,
 					position = {0, 0},
 					connection_type = "underground",
 					max_underground_distance = 16,
 				},
 				{
+---@diagnostic disable-next-line: assign-type-mismatch
 					direction = defines.direction.north,
 					position = {0, 0},
 					connection_type = "underground",
 					max_underground_distance = 16,
 				},
 				{
+---@diagnostic disable-next-line: assign-type-mismatch
 					direction = defines.direction.east,
 					position = {0, 0},
 					connection_type = "underground",
 					max_underground_distance = 16,
 				},
 				{
+---@diagnostic disable-next-line: assign-type-mismatch
 					direction = defines.direction.west,
 					position = {0, 0},
 					connection_type = "underground",

@@ -2,6 +2,7 @@
 Version: 2.0.7
   Bugfixes:
     - Fixed stone, coal, and crude oil being locked behind off-planet science packs when using "Nauvis has Only Tiberium" setting
+    - Fixed Tiberium Node Harvest and AOE Tiberium Node Harvester using the wrong animations
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.6
   Bugfixes:
