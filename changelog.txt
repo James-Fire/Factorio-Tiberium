@@ -1,4 +1,8 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.7
+  Bugfixes:
+    - Fixed stone, coal, and crude oil being locked behind off-planet science packs when using "Nauvis has Only Tiberium" setting
+---------------------------------------------------------------------------------------------------
 Version: 2.0.6
   Bugfixes:
     - Fixed progression in Tiberium Only mode being blocked by not being Crude Oil and Uranium Ore not being minable but for real this time

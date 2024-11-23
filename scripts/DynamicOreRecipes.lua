@@ -128,15 +128,25 @@ function giantSetupFunction()
 		end
 	end
 	-- Resources included by settings
-	for item, prototype in pairs(data.raw.item) do
-		if prototype.tiberium_raw_resource and not resourceExclusions[item] then
-			rawResources[item] = true
+	for _, prototypeList in pairs({data.raw.item, data.raw.fluid}) do
+		for name, prototype in pairs(prototypeList) do
+			if prototype.tiberium_resource_planet and not resourceExclusions[name] then
+				if allowAlienOres or prototype.tiberium_resource_planet == "nauvis" then
+					rawResources[name] = true
+				end
+				if not resourcePlanets[prototype.tiberium_resource_planet] then
+					resourcePlanets[prototype.tiberium_resource_planet] = {}
+				end
+				resourcePlanets[prototype.tiberium_resource_planet][name] = true
+			end
 		end
 	end
 
 	-- Raw resources
 	for planetName, planetData in pairs(data.raw.planet) do
-		resourcePlanets[planetName] = {}
+		if not resourcePlanets[planetName] then
+			resourcePlanets[planetName] = {}
+		end
 		if planetData.map_gen_settings and planetData.map_gen_settings.autoplace_settings and planetData.map_gen_settings.autoplace_settings.entity
 				and planetData.map_gen_settings.autoplace_settings.entity.settings then
 			for resourceName in pairs(planetData.map_gen_settings.autoplace_settings.entity.settings) do

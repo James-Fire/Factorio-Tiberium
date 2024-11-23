@@ -280,7 +280,9 @@ if common.whichPlanet == "pure-nauvis" then
 				-- Flag resources for centrifuging
 				for itemName in pairs(common.minableResultsTable(data.raw.resource[autoplace])) do
 					if data.raw.item[itemName] then
-						data.raw.item[itemName].tiberium_raw_resource = true
+						data.raw.item[itemName].tiberium_resource_planet = "nauvis"
+					elseif data.raw.fluid[itemName] then
+						data.raw.fluid[itemName].tiberium_resource_planet = "nauvis"
 					end
 				end
 				-- Delete autoplace
