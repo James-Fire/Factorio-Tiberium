@@ -322,6 +322,19 @@ function doUpgradeConversions(data)
 		end
 	end
 
+	if upgradingToVersion(data, tiberiumInternalName, "2.0.7") then
+		for _, stage in pairs(storage.blueProgress) do
+			if stage > 0 then
+				for _, force in pairs(game.forces) do
+					if force.recipes and force.recipes["tiberium-unlock-blue-filter"] then
+						force.recipes["tiberium-unlock-blue-filter"].enabled = true  -- Hidden recipe to add Blue Tiberium to filter selections
+					end
+				end
+				break
+			end
+		end
+	end
+
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
 			(data["mod_changes"]["Factorio-Tiberium-Beta"] and data["mod_changes"]["Factorio-Tiberium-Beta"]["old_version"]) then
 		game.print("[Factorio-Tiberium] Successfully converted save from Beta Tiberium mod to Main Tiberium mod")
@@ -391,7 +404,12 @@ function AddOre(surface, position, amount, oreName, cascaded)
 				if not storage.wildBlue then storage.wildBlue = math.floor(game.tick / 3600) end
 				TiberiumSeedMissile(surface, position, 4 * TiberiumMaxPerTile, oreName)
 				game.print({"tiberium-strings.wild-blue-notification", "[img=item.tiberium-ore-blue]", "[gps="..math.floor(position.x)..","..math.floor(position.y)..","..surface.name.."]"})
-				return false  -- We'll just say that this event can't spawn
+				for _, force in pairs(game.forces) do
+					if force.recipes and force.recipes["tiberium-unlock-blue-filter"] then
+						force.recipes["tiberium-unlock-blue-filter"].enabled = true  -- Hidden recipe to add Blue Tiberium to filter selections
+					end
+				end
+				return nil -- We'll just say that this event can't spawn
 			end
 		elseif surface.count_entities_filtered{area = areaAroundPosition(position, 1), name = "tiberium-ore-blue"} > 0 and
 				(math.random() <= blueSlowdown) then  -- Blue will infect neighbors
@@ -411,10 +429,10 @@ function AddOre(surface, position, amount, oreName, cascaded)
 			oreEntity.amount = math.min(oreEntity.amount + growthRate, TiberiumMaxPerTile)
 		end
 	elseif surface.count_entities_filtered{area = area, name = tiberiumNodeNames} > 0 then
-		return false --Don't place ore on top of nodes
+		return nil --Don't place ore on top of nodes
 	elseif tile.collides_with("resource")
 			or tile.collides_with("water_tile") then
-		return false  -- Don't place on invalid tiles
+		return nil  -- Don't place on invalid tiles
 	else
 		--Tiberium destroys all other non-Tiberium resources as it spreads
 		local otherResources = surface.find_entities_filtered{area = area, type = "resource"}

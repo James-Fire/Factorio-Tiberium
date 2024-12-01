@@ -1399,6 +1399,17 @@ data:extend{
 			}
 		},
 	},
+	{
+		type = "recipe",
+		name = "tiberium-unlock-blue-filter",
+		enabled = false,
+		hidden = true,
+		ingredients = {},
+		energy_required = 999,
+		results = {
+			{type = "item", name = "tiberium-ore-blue", amount = 1}
+		},
+	},
 }
 
 local TibProductivity = {
