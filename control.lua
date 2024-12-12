@@ -323,6 +323,7 @@ function doUpgradeConversions(data)
 	end
 
 	if upgradingToVersion(data, tiberiumInternalName, "2.0.7") then
+		-- Blue tiberium filter backport
 		for _, stage in pairs(storage.blueProgress) do
 			if stage > 0 then
 				for _, force in pairs(game.forces) do
@@ -331,6 +332,16 @@ function doUpgradeConversions(data)
 					end
 				end
 				break
+			end
+		end
+		-- Rebuild SRF globals
+		CnC_SonicWall_OnInit()
+		for _, surface in pairs(game.surfaces) do
+			for wall in surface.find_entities_filtered({name = "tiberium-srf-wall"}) do
+				wall.destroy()
+			end
+			for emitter in surface.find_entities_filtered({name = "tiberium-srf-emitter"}) do
+				CnC_SonicWall_AddNode(emitter, game.tick)
 			end
 		end
 	end
