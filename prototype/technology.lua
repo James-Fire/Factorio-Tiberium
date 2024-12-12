@@ -823,6 +823,21 @@ data:extend{
 				type = "unlock-recipe",
 				recipe = "tiberium-cliff-explosives",
 			},
+			{
+				type = "cliff-deconstruction-enabled",
+				modifier = true,
+				icons = {
+					{
+						icon = "__core__/graphics/icons/technology/effect/effect-deconstruction.png",
+						icon_size = 64,
+					},
+					{
+						icon = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
+						icon_size = 251,
+						shift = {-3, 3},
+					},
+				},
+			},
 		},
 		prerequisites = {"tiberium-containment-tech", "tiberium-military-2", "tiberium-refining-blue", "circuit-network"},
 		unit = {

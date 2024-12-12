@@ -5,6 +5,8 @@ Version: 2.0.7
     - Fixed Tiberium Node Harvest and AOE Tiberium Node Harvester using the wrong animations
     - Fixed not being able to add Blue Tiberium to filters prior to researching Blue Tiberium Mutation
     - Slightly improved performance of SRF
+  Changes:
+    - Allow deconstruction planners to remove Blossom Trees prior to unlocking cliff exlposives
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.6
   Bugfixes:
