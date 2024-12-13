@@ -79,7 +79,7 @@ data:extend{
 		maximum_value = 100,
 		order = "b[growth]2",
 	},
-	--Refining Recipe Settings 
+	--Refining Recipe Settings
 	{
 		type = "int-setting",
 		name = "tiberium-value",
@@ -292,7 +292,7 @@ end
 if not mods["space-age"] then
 	data.raw["string-setting"]["tiberium-on"].allowed_values = {"nauvis", "pure-nauvis"}
 	data.raw["string-setting"]["tiberium-on"].default_value = "nauvis"
-	
+
 	data.raw["bool-setting"]["tiberium-all-planets"].hidden = true
 
 	data.raw["bool-setting"]["tiberium-direct-surface-condition"].hidden = true

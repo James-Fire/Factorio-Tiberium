@@ -1186,7 +1186,7 @@ function addDirectRecipe(ore, easy)
 							name = tech,
 							localised_name = {"technology-name.tiberium-transmutation-tech-planet", {"space-location-name."..planet}},
 							localised_description = {"technology-description.tiberium-transmutation-tech-planet", {"space-location-name."..planet}},
-							icons = common.layeredIcons(tiberiumInternalName.."/graphics/technology/tiberium-transmutation.png", 128, 
+							icons = common.layeredIcons(tiberiumInternalName.."/graphics/technology/tiberium-transmutation.png", 128,
 									data.raw.planet[planet].icon, data.raw.planet[planet].icon_size, "se"),
 							effects = {},
 							unit = util.copy(data.raw.technology["tiberium-transmutation-tech"].unit),

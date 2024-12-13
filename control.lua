@@ -194,16 +194,16 @@ script.on_init(function()
 			game.print{"", {"tiberium-strings.tiber-restart-notice"}}
 			return
 		end
-	
+
 		if remote.interfaces.freeplay then
 			storage.disable_crashsite = remote.call("freeplay", "get_disable_crashsite")
-	
+
 			remote.call("freeplay", "set_disable_crashsite", true)
 			remote.call("freeplay", "set_skip_intro", true)
 		end
-	
+
 		correct_space_locations()
-	
+
 		storage.surface = game.planets["tiber"].create_surface()
 		storage.surface.request_to_generate_chunks({0, 0}, 3)
 		storage.surface.force_generate_chunk_requests()

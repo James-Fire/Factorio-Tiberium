@@ -93,25 +93,13 @@ data:extend{
 			"no-automated-item-insertion"
 		},
 		collision_mask = common.makeCollisionMask({"resource"}), -- disable collision
-		resistances = {
-			{
-				type = "fire",
-				percent = 90
-			},
-			{
-				type = "tiberium",
-				percent = 100
-			}
-		},
 		animation = common.blankAnimation,
-		animation_shadow = common.blankAnimation,
 		energy_source = {
 			type = "electric",
 			usage_priority = "secondary-input"
 		},
 		base_picture = common.blankPicture,
 		supply_area_distance = 0,
-		radius_visualisation_picture = common.blankPicture,
 		distribution_effectivity = 1,
 		module_slots = 32767,
 		allowed_effects = {"speed", "consumption"},

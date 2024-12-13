@@ -553,7 +553,7 @@ data.raw.resource["tibGrowthNode"].created_effect = util.copy(data.raw.resource[
 
 -- Add to planet definitions
 for name,planet in pairs(data.raw.planet) do
-	if (name == "tiber" or settings.startup["tiberium-all-planets"].value or (name == "nauvis" and (common.whichPlanet == "nauvis" or common.whichPlanet == "pure-nauvis"))) 
+	if (name == "tiber" or settings.startup["tiberium-all-planets"].value or (name == "nauvis" and (common.whichPlanet == "nauvis" or common.whichPlanet == "pure-nauvis")))
 			and planet.map_gen_settings and planet.map_gen_settings.autoplace_controls then
 		data:extend{
 			{
