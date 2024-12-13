@@ -302,3 +302,29 @@ if common.whichPlanet == "pure-nauvis" then
 elseif common.whichPlanet == "nauvis" then
 	data.raw.planet["nauvis"].map_gen_settings.autoplace_settings.entity.settings["tiberium-tiber-rock"] = {frequency = 0}
 end
+
+-- Adding Tib Science to all labs
+local tibComboPacks = {}  -- List of packs that need to be processed in the same lab as Tib Science
+for name, technology in pairs(data.raw.technology) do
+	if string.sub(name, 1, 9) == "tiberium-" and technology.unit then
+		for _, ingredient in pairs(technology.unit.ingredients) do
+			local pack = ingredient[1]
+			if (pack ~= "tiberium-science") and data.raw.tool[pack] then -- Don't add Tib Science
+				tibComboPacks[pack] = true
+			end
+		end
+	end
+end
+
+for labName, labData in pairs(data.raw.lab) do
+	local addTib = false
+	if not flib_table.find(labData.inputs or {}, "tiberium-science") then -- Must not already allow Tib Science
+		for pack in pairs(tibComboPacks) do  -- Must use packs from combo list so we don't hit things like module labs
+			if flib_table.find(labData.inputs or {}, pack) then
+				addTib = true
+				break
+			end
+		end
+	end
+	if addTib then table.insert(data.raw.lab[labName].inputs, "tiberium-science") end
+end

@@ -436,14 +436,4 @@ data:extend{
 		fuel_category = "chemical",
 		fuel_emissions_multiplier = common.emissionMultiplier(4),
 	},
-	--Dummy Items
-	{
-		type = "item",
-		name = "tiberium-growth-credit-void",
-		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore.png",
-		icon_size = 64,
-		hidden = true,
-		subgroup = "a-items",
-		stack_size = 200
-	},
 }

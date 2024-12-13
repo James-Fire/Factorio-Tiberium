@@ -1393,7 +1393,7 @@ data:extend{
 		results = {
 			{
 				type = "item",
-				name = "tiberium-growth-credit-void",
+				name = "tiberium-growth-credit",
 				amount = 1,
 				probability = 0
 			}
