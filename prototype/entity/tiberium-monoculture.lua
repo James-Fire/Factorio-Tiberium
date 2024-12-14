@@ -38,7 +38,6 @@ local monocultureBlueAnimation = {
 	}
 }
 
---TODO: add shadows
 data:extend{
 	{
 		type = "assembling-machine",

@@ -1,8 +1,6 @@
----@diagnostic disable: undefined-field
 --TODO:
 -- Make matrix solver more reliable
 -- Address recipe unlocks behind higher techs
--- Deal with crude oil/stone being locked behind other planets for pure-nauvis
 
 local flib_table = require("__flib__.table")
 local flib_data_util = require("__flib__.data-util")
@@ -40,16 +38,19 @@ local allPacks = {}
 local oreMult = {}
 local resourcePlanets = {}
 local surfaces = {
-	aquilo = {restrictions = {property = "pressure", min = 300, max = 300}, technology = "cryogenic-science-pack", pack = "cryogenic-science-pack"},
-	fulgora = {restrictions = {property = "magnetic-field", min = 99, max = 99}, technology = "electromagnetic-science-pack", pack = "electromagnetic-science-pack"},
-	gleba = {restrictions = {property = "pressure", min = 2000, max = 2000}, technology = "agricultural-science-pack", pack = "agricultural-science-pack"},
-	vulcanus = {restrictions = {property = "pressure", min = 4000, max = 4000}, technology = "metallurgic-science-pack", pack = "metallurgic-science-pack"},
-	nauvis = {restrictions = {property = "pressure", min = 1000, max = 1000}, technology = "utility-science-pack", pack = "utility-science-pack"},
-	space = {restrictions = {property = "gravity", min = 0, max = 0}, technology = "space-science-pack", pack = "space-science-pack"},
-	tiber = {restrictions = {property = "pressure", min = 900, max = 900}, technology = "tiberium-mechanical-research", pack = "tiberium-science-pack"},
-}
+	aquilo = 	{restrictions = {{property = "pressure", min = 300, max = 300}}, technology = "cryogenic-science-pack", pack = "cryogenic-science-pack"},
+	fulgora = 	{restrictions = {{property = "magnetic-field", min = 99, max = 99}}, technology = "electromagnetic-science-pack", pack = "electromagnetic-science-pack"},
+	gleba = 	{restrictions = {{property = "pressure", min = 2000, max = 2000}}, technology = "agricultural-science-pack", pack = "agricultural-science-pack"},
+	vulcanus = 	{restrictions = {{property = "pressure", min = 4000, max = 4000}}, technology = "metallurgic-science-pack", pack = "metallurgic-science-pack"},
+	nauvis = 	{restrictions = {{property = "pressure", min = 1000, max = 1000}}, technology = "utility-science-pack", pack = "utility-science-pack"},
+	space = 	{restrictions = {{property = "gravity", min = 0, max = 0}}, technology = "space-science-pack", pack = "space-science-pack"},
+	tiber = 	{restrictions = {{property = "pressure", min = 900, max = 900}}, technology = "tiberium-mechanical-research", pack = "tiberium-science-pack"},
+}  --[=[@as TiberiumPlanetRequirements[]]=]
 for planetName,planetData in pairs(data.raw.planet) do
 	if planetData.tiberium_requirements then
+		if planetData.tiberium_requirements.restrictions and not planetData.tiberium_requirements.restrictions[1] then  --Convert if people were doing it the old way
+			planetData.tiberium_requirements.restrictions = {planetData.tiberium_requirements.restrictions}
+		end
 		surfaces[planetName] = planetData.tiberium_requirements
 	end
 end
@@ -71,6 +72,14 @@ end
 local minableResultsTable = function(prototypeTable)  -- Local version that also checks that the resource has an autoplace
 	if type(prototypeTable) ~= "table" or not prototypeTable.autoplace then return {} end
 	return common.minableResultsTable(prototypeTable)
+end
+
+---Wrapper for table_size so we don't have to confirm type each time we call it
+---@param t any
+---@return integer
+local tableSize = function(t)
+	if type(t) ~= "table" then return 0 end
+	return _ENV.table_size(t)
 end
 
 if mods["space-exploration"] then
@@ -185,7 +194,7 @@ function giantSetupFunction()
 	for recipe in pairs(availableRecipes) do
 		local ingredientList = normalIngredients(recipe)
 		local resultList = normalResults(recipe)
-		if flib_table.size(resultList) == 0 then
+		if not next(resultList) then
 			availableRecipes[recipe] = nil  -- Remove recipes with no outputs
 		else
 			availableRecipes[recipe] = {ingredient = ingredientList, result = resultList}
@@ -244,7 +253,7 @@ function giantSetupFunction()
 	for recipe in pairs(availableRecipes) do
 		local ingredientList = normalIngredients(recipe)
 		local resultList = normalResults(recipe)
-		if flib_table.size(ingredientList) == 0 then
+		if not next(ingredientList) then
 			for result in pairs(resultList) do
 				if not free[result] then
 					free[result] = true
@@ -265,9 +274,9 @@ function giantSetupFunction()
 		local countFreeLoops = 0
 		freeItemIterations = freeItemIterations + 1
 		if debugText then log("$$ Building free item list. Attempt #"..freeItemIterations) end
-		while flib_table.size(newFreeItems) > 0 do
+		while next(newFreeItems) do
 			countFreeLoops = countFreeLoops + 1
-			if debugText then log("On loop #"..countFreeLoops.." there were "..flib_table.size(newFreeItems).." new free items") end
+			if debugText then log("On loop #"..countFreeLoops.." there were "..tableSize(newFreeItems).." new free items") end
 			local nextLoopFreeItems = {}
 			for freeItem in pairs(newFreeItems) do
 				for recipe in pairs(ingredientIndex[freeItem] or {}) do
@@ -321,7 +330,7 @@ function giantSetupFunction()
 		ingredientDepth[item] = 0
 	end
 	-- Now iteratively build up recipes starting from raw resources
-	while flib_table.size(basicMaterials) > 0 do
+	while next(basicMaterials) do
 		local nextMaterials = {}
 		for material in pairs(basicMaterials) do
 			for recipe in pairs(ingredientIndex[material] or {}) do
@@ -354,7 +363,8 @@ function giantSetupFunction()
 	end
 end
 
--- Modifies: oreMult
+---@param item string data.ItemPrototype name
+---@param multiplier any How many Tiberium Ore the item is worth when creating resource conversion recipes
 function addOreMult(item, multiplier)
 	multiplier = tonumber(multiplier)
 	if multiplier and multiplier >= 0 and not oreMult[item] then
@@ -475,7 +485,7 @@ function allAvailableRecipes()
 		-- Dummy recipes for rocket launch products
 		if itemData.rocket_launch_products then
 			local launchResults = common.itemPrototypesFromTable(itemData.rocket_launch_products)
-			if flib_table.size(launchResults) > 0 then  -- Fake recipe for rockets
+			if next(launchResults) then  -- Fake recipe for rockets
 				for silo, siloData in pairs(data.raw["rocket-silo"]) do
 					if siloData.fixed_recipe then
 						local fakeRecipeName = "dummy-recipe-launching-"..item.."-from-"..silo
@@ -547,7 +557,7 @@ function removeBadRecipes(pass)
 					end
 				end
 				local resultList = normalResults(recipe)
-				local numResults = flib_table.size(resultList)
+				local numResults = tableSize(resultList)
 				for result, amount in pairs(resultList) do
 					if emptyBarrel[result] and (numResults > 1) then  -- Bad recipes like unbarreling give empty barrels
 						markBadRecipe(recipe)
@@ -560,7 +570,7 @@ function removeBadRecipes(pass)
 			if not fakeRecipes[recipe] then
 				local resultList = normalResults(recipe)
 				for result, amount in pairs(resultList) do
-					if (rawResources[result] or tibComboPacks[result]) and (flib_table.size(normalIngredients(recipe)) == 0) then  -- Bad recipes give raw resources/science for free
+					if (rawResources[result] or tibComboPacks[result]) and not next(normalIngredients(recipe)) then  -- Bad recipes give raw resources/science for free
 						markBadRecipe(recipe)
 						break
 					end
@@ -612,7 +622,7 @@ function markBadRecipe(recipe)
 	-- Check whether we need to keep it because there are no other ways to get an item
 	for result in pairs(availableRecipes[recipe]["result"]) do
 		-- Not considering free items to avoid permanently marking a recipe as bad based on inaccurate lists of free items
-		if not rawResources[result] and (flib_table.size(resultIndex[result]) == 1) then
+		if not rawResources[result] and (tableSize(resultIndex[result]) == 1) then
 			if debugText then log("Can't mark "..recipe.." as bad because we need it for "..result) end
 			return false
 		end
@@ -640,7 +650,7 @@ function packHierarchy()
 	local packDependencyTier = {}
 	for pack in pairs(tibComboPacks) do
 		local recipe = ""
-		if flib_table.size(resultIndex[pack]) == 1 then
+		if tableSize(resultIndex[pack]) == 1 then
 			recipe = next(resultIndex[pack])
 			log(recipe.." is the only recipe for "..pack)
 			if fakeRecipes[recipe] then log(serpent.block(fakeRecipes[recipe])) end
@@ -905,7 +915,7 @@ function fugeTierSetup()
 	until not somethingNew
 
 	-- Fallback to the packs for one of our early-game techs in case nothing qualifies for tier 1
-	if (flib_table.size(science[1]) == 0) and data.raw.technology["tiberium-thermal-research"] then
+	if not next(science[1]) and data.raw.technology["tiberium-thermal-research"] then
 		for _, ingredient in pairs(data.raw.technology["tiberium-thermal-research"].unit.ingredients) do
 			local packName = ingredient[1]
 			if tibComboPacks[packName] then
@@ -919,7 +929,7 @@ function fugeTierSetup()
 	updatePackWeights(1)
 	updatePackWeights(2)
 
-	if flib_table.size(science[1]) == 0 then  -- Don't know how it would still be empty at this point, but leaving this just in case
+	if not next(science[1]) then  -- Don't know how it would still be empty at this point, but leaving this just in case
 		science[1] = util.copy(science[2])
 	end
 	science[0] = science[1]
@@ -929,7 +939,7 @@ function fugeRecipeTier(tier)
 	-- Return the raw resources needed for the packs or use the override from settings
 	local resourceList = fugeRawResources(tier)
 	-- Fall back to equal bits of everything
-	if flib_table.size(resourceList) == 0 then
+	if not next(resourceList) then
 		local dummyResourceList = {}
 		for resource in pairs(rawResources) do
 			if resource ~= "tiberium-ore" then
@@ -946,8 +956,8 @@ function fugeRecipeTier(tier)
 			fluidList[resource] = true
 		end
 	end
-	if flib_table.size(fluidList) > 2 then
-		log("Uh oh, your tier "..tier.." recipe has "..flib_table.size(fluidList).." fluids")
+	if tableSize(fluidList) > 2 then
+		log("Uh oh, your tier "..tier.." recipe has "..tableSize(fluidList).." fluids")
 		--idk what my plan is for handling this case
 	end
 
@@ -973,7 +983,7 @@ function fugeRecipeTier(tier)
 			recipeAddResult(normalFugeRecipeName, resource, rounded, fluidList[resource] and "fluid" or "item")
 		end
 	end
-	if (sludge > 0) and (flib_table.size(fluidList) < 3) then -- Only create sludge recipe if there is sludge items to convert and we have enough fluid boxes
+	if (sludge > 0) and (tableSize(fluidList) < 3) then -- Only create sludge recipe if there is sludge items to convert and we have enough fluid boxes
 		data.raw.recipe[sludgeFugeRecipeName] = flib_data_util.copy_prototype(data.raw.recipe[normalFugeRecipeName], sludgeFugeRecipeName)
 		data.raw.recipe[sludgeFugeRecipeName].localised_name = {"recipe-name.tiberium-sludge-centrifuging", {(tier > 0 and "fluid-name." or "item-name.")..fluid}}
 		data.raw.recipe[sludgeFugeRecipeName].icon = tiberiumInternalName.."/graphics/icons/"..material.."-sludge-centrifuging.png"
@@ -1033,7 +1043,7 @@ function updatePackWeights(tier)
 		totalPacks = totalPacks + amount
 	end
 	if totalPacks > 0 then
-		packsFromSubsets = makeScaledList(packsFromSubsets, flib_table.size(packsFromSubsets) / totalPacks)  -- Gets scaled again later, this just makes it more readable
+		packsFromSubsets = makeScaledList(packsFromSubsets, tableSize(packsFromSubsets) / totalPacks)  -- Gets scaled again later, this just makes it more readable
 		if debugText then log("Tier "..tier.." pack distribution: "..serpent.block(packsFromSubsets)) end
 		science[tier] = packsFromSubsets
 	else
@@ -1176,7 +1186,7 @@ function addDirectRecipe(ore, easy)
 		for planet, resources in pairs(resourcePlanets) do
 			if resources[ore] or (surfaceRestriction == planet and surfaces[surfaceRestriction]) then
 				if surfaceRestrictTransmute and surfaces[planet] and surfaces[planet].restrictions then
-					data.raw.recipe[recipeName].surface_conditions = {surfaces[planet].restrictions}
+					data.raw.recipe[recipeName].surface_conditions = surfaces[planet].restrictions
 				end
 				if planetTechs and surfaces[planet] and surfaces[planet].technology and surfaces[planet].pack then
 					tech = "tiberium-transmutation-tech-"..planet
@@ -1297,7 +1307,7 @@ end
 singletonRecipes()  -- So fluid recipes come after sludge recipes for molten centrifuging
 
 for k,v in pairs(resultIndex) do
-	if (flib_table.size(v) == 0) and not rawResources[k] then log("~~~ No remaining recipes create "..k) end
+	if not next(v) and not rawResources[k] then log("~~~ No remaining recipes create "..k) end
 end
 
 if debugText then

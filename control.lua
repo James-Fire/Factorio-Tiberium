@@ -2,6 +2,25 @@
 tiberiumInternalName = "Factorio-Tiberium"
 storage = {}
 
+---@class tibDrill
+---@field entity LuaEntity
+---@field name string EntityID
+---@field position MapPosition
+
+---@class tibSonicEmitter
+---@field position MapPosition
+---@field surface LuaSurface
+
+---@class entityDestroyedInfo
+---@field name string EntityID
+---@field type string Prototye Subtype ID
+---@field position MapPosition
+---@field surface LuaSurface
+---@field force LuaForce
+
+---@class entityDestroyedInfoTable
+---@field [uint] entityDestroyedInfo
+
 local crash_site = require("crash-site")
 local util = require("util")
 local migration = require("__flib__.migration")
@@ -18,7 +37,7 @@ local tiberiumNodeNames = {"tibGrowthNode", "tibGrowthNode_infinite"}
 local TiberiumDamage = settings.global["tiberium-damage"].value
 local TiberiumGrowth = settings.startup["tiberium-growth"].value * 10
 local TiberiumMaxPerTile = settings.startup["tiberium-growth"].value * 100 --Force 10:1 ratio with growth
-local TiberiumRadius = settings.startup["tiberium-radius"].value
+local TiberiumRadius = settings.startup["tiberium-radius"].value  --[[@as uint]]
 local TiberiumSpreadNodes = settings.global["tiberium-spread-nodes"].value
 local whichPlanet = settings.startup["tiberium-on"].value
 local BlueTargetEvo = settings.global["tiberium-blue-target-evo"].value
@@ -59,14 +78,13 @@ if burnerTier then
 end
 
 script.on_init(function()
+	helpers.check_prototype_translations()
 	register_with_picker()
-	storage.tibGrowthNodeListIndex = 0
-	storage.tibGrowthNodeList = {}
-	storage.tibMineNodeListIndex = 0
-	storage.tibMineNodeList = {}
-	storage.tibDrills = {}
-	storage.tibSonicEmitters = {}
-	storage.tibOnEntityDestroyed = {}
+	storage.tibGrowthNodeListIndex = 0  --[[@as uint]]
+	storage.tibGrowthNodeList = {}  --[=[@as LuaEntity[]]=]
+	storage.tibDrills = {}  --[=[@as tibDrill[]]=]
+	storage.tibSonicEmitters = {}  --[=[@as tibSonicEmitter[]]=]
+	storage.tibOnEntityDestroyed = {}  --[[@as entityDestroyedInfoTable]]
 
 	-- Each node should spawn tiberium once every 5 minutes (give or take a handful of ticks rounded when dividing)
 	-- Currently allowing this to potentially update every tick but to keep things under control minUpdateInterval
@@ -210,6 +228,7 @@ script.on_init(function()
 	end
 end)
 
+---Lock/unlock space locations based on settings and technologies
 function correct_space_locations()
 	local force = game.forces.player
 	force.unlock_space_location("tiber")
@@ -218,6 +237,7 @@ function correct_space_locations()
 	end
 end
 
+---Generate starting area for non-Nauvis starts
 function chart_starting_area()
 	local r = 200
 	local force = game.forces.player
@@ -226,6 +246,7 @@ function chart_starting_area()
 	force.chart(surface, {{origin.x - r, origin.y - r}, {origin.x + r, origin.y + r}})
 end
 
+---Scale how often Tiberium Nodes get checked for growth based on settings and number of nodes present
 function updateGrowthInterval()
 	if performanceMode and #storage.tibGrowthNodeList and #storage.tibGrowthNodeList > 50 then
 		storage.tibPerformanceMultiplier = #storage.tibGrowthNodeList / 50
@@ -234,6 +255,8 @@ function updateGrowthInterval()
 	storage.intervalBetweenNodeUpdates = math.max(math.floor(18000 * performanceInterval / (#storage.tibGrowthNodeList or 1) / storage.tibFastForward), storage.minUpdateInterval)
 end
 
+---Initialize storage values for new force
+---@param force LuaForce
 function initializeForce(force)
 	if not storage.tiberiumDamageTakenMulti[force.name] then
 		updateResistanceLevel(force)
@@ -252,6 +275,7 @@ script.on_load(function()
 	register_with_picker()
 end)
 
+---Compatibility with Picker Dollies
 function register_with_picker()
 	--register to PickerExtended
 	if remote.interfaces["picker"] and remote.interfaces["picker"]["dolly_moved_entity_id"] then
@@ -263,6 +287,8 @@ function register_with_picker()
 	end
 end
 
+---Hybrid entity script for Picker Dollies
+---@param event EventData.dolly_moved_entity_id
 function OnEntityMoved(event)
 	local entity = event.moved_entity
 	if entity and (entity.name == "tiberium-growth-accelerator") then
@@ -270,7 +296,7 @@ function OnEntityMoved(event)
 		for _, beacon in pairs(beacons) do
 			beacon.teleport(entity.position)
 		end
-	end
+	end  -- TODO aren't there nore hybrid entities to update?
 end
 
 script.on_configuration_changed(function(data)
@@ -311,6 +337,8 @@ script.on_event(defines.events.on_runtime_mod_setting_changed, function(data)
 	end
 end)
 
+---Version migrations
+---@param data ConfigurationChangedData
 function doUpgradeConversions(data)
 	if upgradingToVersion(data, tiberiumInternalName, "2.0.0") then
 		game.print("Unable to convert 1.1 saves into 2.0 saves. If you want to continue playing your save with Tiberium, try version 1.1.30")
@@ -355,6 +383,11 @@ function doUpgradeConversions(data)
 	end
 end
 
+---Check whether we are upgrading to or past the specific version for Tiberium mod, need custom function to support upgrading to/from beta
+---@param data ConfigurationChangedData
+---@param modName string Name of active mod, we check upgrading from both Factorio-Tiberium and Factorio-Tiberium-Beta
+---@param version string
+---@return boolean
 function upgradingToVersion(data, modName, version)
 	if data["mod_changes"][modName] and data["mod_changes"][modName]["new_version"] then
 		local otherModName  -- Can't use normal flib migration, because we want to support going from beta to main mod
@@ -375,18 +408,6 @@ function upgradingToVersion(data, modName, version)
 	return false
 end
 
-function UpdateRecipeUnlocks(force)
-	for _, tech in pairs(force.technologies) do
-		if string.sub(tech.name, 1, 9) == "tiberium-" then
-			for _, effect in pairs(tech.effects) do
-				if effect.type == "unlock-recipe" and string.sub(effect.recipe, 1, 9) == "tiberium-" then
-					force.recipes[effect.recipe].enabled = tech.researched
-				end
-			end
-		end
-	end
-end
-
 local interface = {}
 -- Flag entities with specific names to not take damage from growing Tiberium
 interface.add_tiberium_immunity = function(entity_name) if entity_name then storage.exemptDamageNames[entity_name] = true end end
@@ -395,6 +416,9 @@ interface.add_tiberium_immunity_prototype = function(prototype_name) if prototyp
 
 remote.add_interface("Tiberium", interface)
 
+---Determine probability for green tiberium ore to turn blue based on settings and evo factor
+---@param evoFactor double
+---@return double Probability 
 function BlueSpawnProbability(evoFactor)
 	local maxRate = 0.01
 	local lower = BlueTargetEvo - 0.1
@@ -404,6 +428,13 @@ function BlueSpawnProbability(evoFactor)
 	return maxRate * (evoFactor - lower) / (upper-lower)
 end
 
+---Grow Tiberium Ore at specific position
+---@param surface LuaSurface
+---@param position MapPosition
+---@param amount int
+---@param oreName string?
+---@param cascaded boolean? Whether the growth has already been cascaded to adjacent tiles from the initial placement
+---@return LuaEntity? oreEntity The ore resource entity at the given position, if we were able to find or create one
 function AddOre(surface, position, amount, oreName, cascaded)
 	local overrideOre = (oreName ~= nil)
 	if not oreName then
@@ -430,8 +461,8 @@ function AddOre(surface, position, amount, oreName, cascaded)
 		end
 	end
 	local area = areaAroundPosition(position)
-	local oreEntity = surface.find_entities_filtered{area = area, name = storage.oreTypes}[1]
-	local tile = surface.get_tile(position)
+	local oreEntity = surface.find_entities_filtered{area = area, name = storage.oreTypes}[1]  --[[@as LuaEntity?]]
+	local tile = surface.get_tile(position.x, position.y)
 	local growthRate = math.min(amount, TiberiumMaxPerTile)
 
 	if oreEntity and (oreEntity.name == oreName or (oreEntity.name == "tiberium-ore-blue" and not overrideOre)) then
@@ -495,9 +526,16 @@ function AddOre(surface, position, amount, oreName, cascaded)
 	return oreEntity
 end
 
+---Check if we can place Tiberium Ore at the new position, otherwise place it at the last position
+---@param surface LuaSurface
+---@param position MapPosition
+---@param lastValidPosition MapPosition
+---@param growthRate int
+---@param oreName string
+---@return boolean stopped
 function CheckPoint(surface, position, lastValidPosition, growthRate, oreName)
 	-- These checks are in roughly the order of guessed expense
-	local tile = surface.get_tile(position)
+	local tile = surface.get_tile(position.x, position.y)
 	if not tile or not tile.valid then
 		AddOre(surface, lastValidPosition, growthRate, oreName, false)
 		return true
@@ -539,18 +577,21 @@ function CheckPoint(surface, position, lastValidPosition, growthRate, oreName)
 	if surface.count_entities_filtered{area = area, name = storage.oreTypes} == 0 then
 		AddOre(surface, position, growthRate, oreName, false)
 		return true  --Reached edge of patch, place new ore
-	else
-		return false  --Not at edge of patch, keep going
 	end
+
+	return false  --Not at edge of patch, keep going
 end
 
-function PlaceOre(entity, howMany)
-	if not entity.valid then return end
+---Grow ore around a Blossom Tree
+---@param node LuaEntity
+---@param howMany any
+function PlaceOre(node, howMany)
+	if not node.valid then return end
 	local timer = debugText and game.create_profiler() or 0
 
 	howMany = howMany and math.max(math.floor(howMany / storage.tibPerformanceMultiplier), 1) or 1
-	local surface = entity.surface
-	local position = entity.position
+	local surface = node.surface
+	local position = node.position
 
 	-- Check for powered monoculture structures
 	local oreName
@@ -606,11 +647,11 @@ function PlaceOre(entity, howMany)
 		dx = dx / step
 		dy = dy / step
 
-		local lastValidPosition = position
+		local lastValidPosition = position  --[[@as MapPosition]]
 		local placedOre = false
 		--Check each tile along the line and stop when we've added ore one time
 		repeat
-			local newPosition = {x = lastValidPosition.x + dx, y = lastValidPosition.y + dy}
+			local newPosition = {x = lastValidPosition.x + dx, y = lastValidPosition.y + dy}  --[[@as MapPosition]]
 			placedOre = CheckPoint(surface, newPosition, lastValidPosition, growthRate, oreName)
 			lastValidPosition = newPosition
 			step = step - 1
@@ -627,7 +668,7 @@ function PlaceOre(entity, howMany)
 	end
 
 	-- Tell all mining drills to wake up
-	for i, drill in pairs(storage.tibDrills) do
+	for _, drill in pairs(storage.tibDrills) do
 		if drill.entity and drill.entity.valid then
 			drill.entity.update_connections()
 		end
@@ -638,6 +679,10 @@ function PlaceOre(entity, howMany)
 	end
 end
 
+---Spawn new Blossom Tree
+---@param surface LuaSurface
+---@param position MapPosition
+---@param displayError boolean?
 function CreateNode(surface, position, displayError)
 	-- Enforce minimum distance between nodes
 	if surface.count_entities_filtered{position = position, radius = TiberiumRadius * 0.8, name = tiberiumNodeNames} > 0 then
@@ -691,7 +736,12 @@ function CreateNode(surface, position, displayError)
 	end
 end
 
---Code for making the Liquid Seed spread tib
+---Create a circle of tiberium ore
+---@param surface LuaSurface
+---@param position MapPosition
+---@param amount uint
+---@param oreName? "tiberium-ore"|"tiberium-ore-blue"
+---@param ignoreNode? boolean Whether to spawn ore if the position is directly on top of an existing node, defaults to false
 function TiberiumSeedMissile(surface, position, amount, oreName, ignoreNode)
 	oreName = oreName or "tiberium-ore"
 	local radius = math.floor(amount^0.24)
@@ -720,10 +770,15 @@ function TiberiumSeedMissile(surface, position, amount, oreName, ignoreNode)
 	end
 end
 
-function TiberiumDestructionMissile(surface, position, radius, names)
+---Destroys tiberium ore around a position and deals AOE damage
+---@param surface LuaSurface
+---@param position MapPosition
+---@param radius uint
+---@param oreNames EntityID[] Types of ore to destroy
+function TiberiumDestructionMissile(surface, position, radius, oreNames)
 	local green = 0
 	local blue = 0
-	for _, ore in pairs(surface.find_entities_filtered{position = position, radius = radius, name = names}) do
+	for _, ore in pairs(surface.find_entities_filtered{position = position, radius = radius, name = oreNames}) do
 		if ore.name == "tiberium-ore" then
 			green = green + 1
 		else
@@ -759,7 +814,7 @@ script.on_event(defines.events.on_script_trigger_effect, function(event)
 	elseif event.effect_id == "ore-destruction-sonic-emitter" then
 		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 1.5, {"tiberium-ore", "tiberium-ore-blue"})
 	elseif event.effect_id == "ore-destruction-blue" then
-		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 3, "tiberium-ore-blue")
+		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 3, {"tiberium-ore-blue"})
 	elseif event.effect_id == "ore-destruction-all" then
 		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 3, {"tiberium-ore", "tiberium-ore-blue"})
 	elseif event.effect_id == "ore-destruction-nuke" then
@@ -797,7 +852,6 @@ commands.add_command("tibRebuildLists",
 	"Update lists of mining drills and Tiberium nodes",
 	function()
 		storage.tibGrowthNodeList = {}
-		storage.tibMineNodeList = {}
 		storage.SRF_nodes = {}
 		storage.tibDrills = {}
 		storage.tibSonicEmitters = {}
@@ -1086,9 +1140,11 @@ script.on_event(defines.events.on_tick, function(event)
 				if #ore > 0 then
 					local targetOre = ore[math.random(1, #ore)]
 					local dummy = location.surface.create_entity{name = "tiberium-target-dummy", position = targetOre.position}
-					location.surface.create_entity{name = "tiberium-sonic-emitter-projectile", position = location.position, speed = 0.2, target = dummy}
-					dummy.destroy()
-					emitter.energy = 0
+					if dummy then
+						location.surface.create_entity{name = "tiberium-sonic-emitter-projectile", position = location.position, speed = 0.2, target = dummy}
+						dummy.destroy()
+						emitter.energy = 0
+					end
 				end
 			end
 		end
@@ -1144,9 +1200,8 @@ script.on_nth_tick(20, function(event) --Player damage 3 times per second
 	for _, player in pairs(game.connected_players) do
 		if player.valid and player.character and player.character.valid then
 			--MARV ore deletion
----@diagnostic disable-next-line: undefined-field
 			if player.physical_vehicle and (player.physical_vehicle.name == "tiberium-marv") and (player.physical_vehicle.get_driver() == player.character) then
-				marvHarvestOre(player.physical_vehicle)
+				marvHarvestOre(player.physical_vehicle  --[[@as LuaEntity]])  -- Need override because API thinks physical_vehicle is a MapPosition
 			end
 			--MARV remote driving
 			if player.vehicle and (player.vehicle.name == "tiberium-marv") and (player.vehicle.get_driver() == player) then
@@ -1177,6 +1232,8 @@ script.on_nth_tick(20, function(event) --Player damage 3 times per second
 	end
 end)
 
+---Harvest Tiberium Ore around MARV
+---@param vehicleEntity LuaEntity
 function marvHarvestOre(vehicleEntity)
 	for _, oreName in pairs(storage.oreTypes) do
 		local deleted_ore = vehicleEntity.surface.find_entities_filtered{name = oreName, position = vehicleEntity.position, radius = 4}
@@ -1191,16 +1248,16 @@ function marvHarvestOre(vehicleEntity)
 	end
 end
 
+---Deal tiberium damage to entity or player without crashes because we finally fixed all of those
+---@param entityOrPlayer LuaPlayer|LuaEntity
+---@param damageAmount number
 function safeDamage(entityOrPlayer, damageAmount)
 	if damageAmount <= 0 then return end
 	if not entityOrPlayer or not entityOrPlayer.valid then return end
 	local damageMulti = 1
-	local entity = entityOrPlayer
-	local player = nil
-	if entityOrPlayer and entityOrPlayer.is_player() then
-		player = entityOrPlayer
-		entity = entityOrPlayer.character  -- Need to damage character instead of player
-	end
+	local entity = entityOrPlayer.is_player() and entityOrPlayer.character or entityOrPlayer  --[[@as LuaEntity]]
+	local player = entityOrPlayer.is_player() and entityOrPlayer or nil  --[[@as LuaPlayer?]]
+
 	if entity and entity.valid and entity.health and entity.health > 0 then
 		-- Reduce/prevent growth damage for forces with immunity technologies
 		damageMulti = storage.tiberiumDamageTakenMulti[entity.force.name] or 1
@@ -1223,17 +1280,20 @@ function safeDamage(entityOrPlayer, damageAmount)
 	end
 end
 
+---Register node to grow tiberium ore
+---@param newNode LuaEntity
 function addNodeToGrowthList(newNode)
 	for _, node in pairs(storage.tibGrowthNodeList) do
 		if newNode == node then
-			return false
+			return
 		end
 	end
 	table.insert(storage.tibGrowthNodeList, newNode)
 	updateGrowthInterval()  -- Move call to here so we always update when node count changes
-	return true
 end
 
+---Unregister node to grow tiberium ore before destroying it
+---@param node LuaEntity
 function removeNodeFromGrowthList(node)
 	for i = 1, #storage.tibGrowthNodeList do
 		if storage.tibGrowthNodeList[i] == node then
@@ -1242,12 +1302,15 @@ function removeNodeFromGrowthList(node)
 			if storage.tibGrowthNodeListIndex >= i then
 				storage.tibGrowthNodeListIndex = storage.tibGrowthNodeListIndex - 1
 			end
-			return true
+			return
 		end
 	end
-	return false
 end
 
+---Turn position into box for searching
+---@param position MapPosition
+---@param extraRange int?
+---@return BoundingBox
 function areaAroundPosition(position, extraRange)  --Eventually add more checks to this
 	if type(extraRange) ~= "number" then extraRange = 0 end
 	return {
@@ -1256,34 +1319,13 @@ function areaAroundPosition(position, extraRange)  --Eventually add more checks 
 	}
 end
 
-function validpairs(table, subscript)
-	local function nextvalid(table, k)
-		while true do
-			k = next(table, k)
-			if not k or not table[k] then
-				return nil
-			else
-				if subscript and (type(table[k]) == "table") and table[k][subscript] then
-					if table[k][subscript].valid then
-						return k, table[k]
-					end
-				else
-					if table[k].valid then
-						return k, table[k]
-					end
-				end
-			end
-		end
-	end
-	return nextvalid, table, nil
-end
-
 script.on_nth_tick(60 * 300, function(event)
 	if event.tick > 0 then  -- Have to skip inital tick
 		storageIntegrityChecks()
 	end
 end)
 
+---Revalidate nodes and blue tiberium status
 function storageIntegrityChecks()
 	local nodeCount = 0
 	for _, surface in pairs(game.surfaces) do
@@ -1316,6 +1358,8 @@ function storageIntegrityChecks()
 	end
 end
 
+---Save entity data to storage for later access when object is destroyed
+---@param entity LuaEntity
 function registerEntity(entity)  -- Cache relevant information to storage and register
 	local entityInfo = {}
 	for _, property in pairs({"name", "type", "position", "surface", "force"}) do
@@ -1325,11 +1369,13 @@ function registerEntity(entity)  -- Cache relevant information to storage and re
 	storage.tibOnEntityDestroyed[registration_number] = entityInfo
 end
 
+---Create and manage hybrid entities when new entities are built
+---@param event EventData.on_robot_built_entity|EventData.on_built_entity|EventData.script_raised_built|EventData.script_raised_revive
 function on_new_entity(event)
-	local new_entity = event.created_entity or event.entity --Handle multiple event types
+	local new_entity = event.entity
 	local surface = new_entity.surface
 	local position = new_entity.position
-	local force = new_entity.force
+	local force = new_entity.force  --[[@as LuaForce]]
 	if (new_entity.type == "mining-drill") then
 		registerEntity(new_entity)
 		local duplicate = false
@@ -1349,8 +1395,10 @@ function on_new_entity(event)
 			force = force,
 			raise_built = true
 		}
-		registerEntity(emitter)
-		CnC_SonicWall_AddNode(emitter, event.tick)
+		if emitter then
+			registerEntity(emitter)
+			CnC_SonicWall_AddNode(emitter, event.tick)
+		end
 	elseif (new_entity.name == "tiberium-node-harvester") then
 		registerEntity(new_entity)
 		--Remove tree entity when node is covered
@@ -1408,10 +1456,12 @@ function on_new_entity(event)
 		removeBlossomTree(surface, position)
 		if surface.count_entities_filtered{name = GA_Beacon_Name, position = position} == 0 then
 			local beacon = surface.create_entity{name = GA_Beacon_Name, position = position, force = force}
-			beacon.destructible = false
-			beacon.minable = false
-			local module_count = upgradeLevel(force, "tiberium-growth-acceleration-acceleration")
-			UpdateBeaconSpeed(beacon, module_count)
+			if beacon then
+				beacon.destructible = false
+				beacon.minable = false
+				local module_count = upgradeLevel(force, "tiberium-growth-acceleration-acceleration")
+				UpdateBeaconSpeed(beacon, module_count)
+			end
 		end
 	elseif (new_entity.name == "tiberium-monoculture-green-node") then
 		new_entity.destroy()
@@ -1458,13 +1508,15 @@ script.on_event(defines.events.on_robot_built_entity, on_new_entity)
 script.on_event(defines.events.script_raised_built, on_new_entity)
 script.on_event(defines.events.script_raised_revive, on_new_entity)
 
+---Cleanup after destroyed/deconstructed entities
+---@param event EventData.on_object_destroyed
 function on_remove_entity(event)
-	local entity = storage.tibOnEntityDestroyed[event.registration_number]
+	local entity = storage.tibOnEntityDestroyed[event.registration_number]  --[[@as table]]
 	storage.tibOnEntityDestroyed[event.registration_number] = nil  -- Avoid storage growing forever
 	if not entity then return end
-	local surface = entity.surface
-	local position = entity.position
-	local force = entity.force
+	local surface = entity.surface  --[[@as LuaSurface]]
+	local position = entity.position  --[[@as MapPosition]]
+	local force = entity.force  --[[@as LuaForce]]
 	if (entity.type == "mining-drill") then
 		for i, drill in pairs(storage.tibDrills) do
 			if flib_table.deep_compare(drill.position, position) and (drill.name == entity.name) then
@@ -1529,6 +1581,9 @@ function on_remove_entity(event)
 	end
 end
 
+---Switch node to solid ore version when Tiberium Spike is removed
+---@param surface LuaSurface
+---@param position MapPosition
 function convertUnspikedNode(surface, position)
 	if surface and surface.valid then
 		local area = areaAroundPosition(position)
@@ -1536,7 +1591,7 @@ function convertUnspikedNode(surface, position)
 		for _, node in pairs(nodes) do
 			local spikedNodeRichness = node.amount
 			node.destroy()
-			local newNode = surface.create_entity{
+			surface.create_entity{
 				name = "tibGrowthNode",
 				position = position,
 				force = game.forces.neutral,
@@ -1547,6 +1602,9 @@ function convertUnspikedNode(surface, position)
 	end
 end
 
+---Spawn Blossom Tree cliff decorative on top of invisible node when a new node is created or a node miner is removed
+---@param surface LuaSurface
+---@param position MapPosition
 function createBlossomTree(surface, position)
 	if surface and surface.valid and surface.count_entities_filtered{area = areaAroundPosition(position), name = "tibGrowthNode"} > 0 then
 		surface.create_entity{
@@ -1558,6 +1616,9 @@ function createBlossomTree(surface, position)
 	end
 end
 
+---Destroy Blossom Tree cliff decorative on top of invisible node when node is destroyed or a node miner is placed
+---@param surface LuaSurface
+---@param position MapPosition
 function removeBlossomTree(surface, position)
 	if surface and surface.valid then
 		for _, tree in pairs(surface.find_entities_filtered{area = areaAroundPosition(position), name = "tibNode_tree"}) do
@@ -1566,8 +1627,11 @@ function removeBlossomTree(surface, position)
 	end
 end
 
+---Remove invisible beacon used by Tiberium Control Network and Growth Accelerators when the entity on top of the beacon is destroyed
+---@param surface LuaSurface
+---@param position MapPosition
+---@param name EntityID
 function removeHiddenBeacon(surface, position, name)
-	-- Remove Beacon for Tiberium Control Network
 	if surface and surface.valid then
 		for _, beacon in pairs(surface.find_entities_filtered{name = name, position = position}) do
 			beacon.destroy()
@@ -1577,6 +1641,8 @@ end
 
 script.on_event(defines.events.on_object_destroyed, on_remove_entity)
 
+---Spill ore from any destroyed structure containing Tiberium fluids
+---@param event EventData.on_pre_player_mined_item|EventData.on_robot_pre_mined
 function on_pre_mined(event)
 	local entity = event.entity
 	if entity and entity.fluidbox then
@@ -1602,22 +1668,27 @@ end
 script.on_event(defines.events.on_pre_player_mined_item, on_pre_mined)
 script.on_event(defines.events.on_robot_pre_mined, on_pre_mined)
 
+---Need to handle detonation charges down here because on_object_destroyed can't distinguish between dying and mining
+---@param event EventData.on_entity_died
 function on_entity_died(event)
 	local entity = event.entity
-	-- Need to handle detonation charges down here because on_object_destroyed can't distinguish between dying and mining
 	if entity and (entity.name == "tiberium-detonation-charge") then
 		for _, node in pairs(entity.surface.find_entities_filtered{area = areaAroundPosition(entity.position), name = "tibGrowthNode"}) do
 			removeNodeFromGrowthList(node)
 			node.destroy{raise_destroy = true}
 		end
 	end
-	-- Still do spillage for dying entities
+	-- Still do spillage for dying entities, type mismatch doesn't matter because we only care about event.entity
+	---@diagnostic disable-next-line: param-type-mismatch
 	on_pre_mined(event)
 end
 
 script.on_event(defines.events.on_entity_died, on_entity_died)
 
--- Set modules in hidden beacons for Tiberium Control Network speed bonus
+---Create hidden beacons for Tiberium Control Network speed bonus
+---@param surface LuaSurface
+---@param position MapPosition
+---@param force ForceID
 function ManageTCNBeacon(surface, position, force)
 	for _, entity in pairs(surface.find_entities_filtered{name = TCN_affected_entities, position = position, force = force}) do
 		if entity.valid then
@@ -1628,9 +1699,11 @@ function ManageTCNBeacon(surface, position, force)
 					TCNModules(hiddenBeacon[1], tcnCount)
 				else
 					local newHiddenBeacon = surface.create_entity{name = TCN_Beacon_Name, position = position, force = force}
-					newHiddenBeacon.destructible = false
-					newHiddenBeacon.minable = false
-					TCNModules(newHiddenBeacon, tcnCount)
+					if newHiddenBeacon then
+						newHiddenBeacon.destructible = false
+						newHiddenBeacon.minable = false
+						TCNModules(newHiddenBeacon, tcnCount)
+					end
 				end
 			elseif tcnCount == 0 then
 				for _, beacon in pairs(hiddenBeacon) do
@@ -1641,6 +1714,9 @@ function ManageTCNBeacon(surface, position, force)
 	end
 end
 
+---Decide how many modules should be in the invisible TCN beacon
+---@param beacon LuaEntity
+---@param tcnCount? uint Number of TCNs affected the entity being beaconed
 function TCNModules(beacon, tcnCount)
 	if beacon.valid then
 		if not tcnCount then
@@ -1648,13 +1724,15 @@ function TCNModules(beacon, tcnCount)
 			tcnCount = beacon.surface.count_entities_filtered{area = tcnAOE, name = "tiberium-beacon-node"}
 		end
 		local tcnMulti = math.min(tcnCount, 3)
-		local force = beacon.force
+		local force = beacon.force  --[[@as LuaForce]]
 		local module_count = (upgradeLevel(force, "tiberium-control-network-speed") + 6) * tcnMulti
 		UpdateBeaconSpeed(beacon, module_count)
 	end
 end
 
--- Set modules in hidden beacons for TCN and Growth Accelerator speed bonus
+---Set modules in hidden beacons for TCN and Growth Accelerator speed bonus
+---@param beacon LuaEntity
+---@param total_modules uint
 function UpdateBeaconSpeed(beacon, total_modules)
 	local module_inventory = beacon.get_module_inventory()
 	if module_inventory then
@@ -1687,6 +1765,8 @@ script.on_event({defines.events.on_research_finished, defines.events.on_research
 	end
 end)
 
+---Update reduce damage taken multi for a given force as they unlock military techs
+---@param force LuaForce
 function updateResistanceLevel(force)
 	local level = upgradeLevel(force, "tiberium-military")
 	if level >= 3 then
@@ -1698,6 +1778,10 @@ function updateResistanceLevel(force)
 	end
 end
 
+---Find the highest tier of a tech unlocked for a force
+---@param force LuaForce
+---@param techName TechnologyID
+---@return uint
 function upgradeLevel(force, techName)
 	local best = 0
 	if not (force and force.valid and techName) then return best end
@@ -1715,6 +1799,8 @@ function upgradeLevel(force, techName)
 	end
 end
 
+---Update tiers of all hidden beacon for a force when force-level changes occur
+---@param force LuaForce
 function updateBeacons(force)
 	if force and force.get_entity_count(GA_Beacon_Name) > 0 then -- only update when beacons exist for force
 		local module_count = upgradeLevel(force, "tiberium-growth-acceleration-acceleration")
@@ -1752,6 +1838,8 @@ script.on_event(defines.events.on_player_changed_surface, function(event)
 	end
 end)
 
+---Find starting message based on whether space age is enabled
+---@return LocalisedString
 function get_starting_message()
 	if storage.custom_intro_message then
 		return storage.custom_intro_message
@@ -1762,6 +1850,8 @@ function get_starting_message()
 	return {"msg-intro"}
 end
 
+---Replace standard intro message so we can do cutscenes on other planets
+---@param player LuaPlayer
 function show_intro_message(player)
 	if storage.skip_intro then return end
 
@@ -1820,14 +1910,14 @@ script.on_event(defines.events.on_player_created, function(event)
 			end
 		end
 		if burnerTier then
-			UnlockTechnologyAndPrereqs(player.force, "tiberium-ore-centrifuging")
-			UnlockRecipePrereqs(player.force, "tiberium-centrifuge-0")
+			UnlockTechnologyAndPrereqs(player.force --[[@as LuaForce]], "tiberium-ore-centrifuging")
+			UnlockRecipePrereqs(player.force --[[@as LuaForce]], "tiberium-centrifuge-0")
 		else
-			UnlockTechnologyAndPrereqs(player.force, "tiberium-mechanical-research")
-			UnlockTechnologyAndPrereqs(player.force, "tiberium-slurry-centrifuging")
+			UnlockTechnologyAndPrereqs(player.force --[[@as LuaForce]], "tiberium-mechanical-research")
+			UnlockTechnologyAndPrereqs(player.force --[[@as LuaForce]], "tiberium-slurry-centrifuging")
 		end
 		if easyMode then
-			UnlockTechnologyAndPrereqs(player.force, "tiberium-easy-transmutation-tech")
+			UnlockTechnologyAndPrereqs(player.force --[[@as LuaForce]], "tiberium-easy-transmutation-tech")
 		end
 	end
 	if whichPlanet == "tiber-start" then
@@ -1882,6 +1972,9 @@ script.on_event(defines.events.on_player_created, function(event)
 	end
 end)
 
+---Recursively unlock tech and prerequisites for tech
+---@param force LuaForce
+---@param techName string TechnologyID
 function UnlockTechnologyAndPrereqs(force, techName)
 	if not force.technologies[techName].researched then
 		force.technologies[techName].researched = true
@@ -1891,6 +1984,10 @@ function UnlockTechnologyAndPrereqs(force, techName)
 	end
 end
 
+---Recursively generate table of all tech prerequisites 
+---@param force LuaForce
+---@param techName string TechnologyID
+---@return string[] prereqTechs
 function TechPrereqList(force, techName)
 	local techList = {}
 	if not force.technologies[techName].researched then
@@ -1904,6 +2001,10 @@ function TechPrereqList(force, techName)
 	return techList
 end
 
+---Find a technology that unlocks the given recipe for a specific force
+---@param force LuaForce
+---@param recipeName string RecipeID
+---@return string? TechnologyID
 function FindRecipeTech(force, recipeName)
 	for techName, tech in pairs(force.technologies) do
 		for _, effect in pairs(tech.prototype.effects or {}) do
@@ -1912,9 +2013,12 @@ function FindRecipeTech(force, recipeName)
 			end
 		end
 	end
-	return false
+	return nil
 end
 
+---Unlock tecnologies and prerequisites needed to unlock recipe and production of ingredients for recipe
+---@param force LuaForce
+---@param targetRecipeName string RecipeID
 function UnlockRecipePrereqs(force, targetRecipeName)
 	if not force or not force.valid then return end
 	if not force.recipes[targetRecipeName] then return end

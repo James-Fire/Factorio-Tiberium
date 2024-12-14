@@ -5,7 +5,6 @@ data:extend{
 		name = "tiberium-rounds-magazine",
 		icon = "__base__/graphics/icons/uranium-rounds-magazine.png",
 		icon_size = 64,
-		icon_mipmaps = 4,
 		ammo_category = "bullet",
 		ammo_type = {
 			action = {
@@ -660,7 +659,6 @@ data:extend{
 }
 
 local genericGrenadeCapsule = util.copy(data.raw.capsule.grenade) --TODO icons for this
-genericGrenadeCapsule.cooldown = 10
 genericGrenadeCapsule.subgroup = "a-items"
 genericGrenadeCapsule.icon = nil
 genericGrenadeCapsule.icon_size = nil

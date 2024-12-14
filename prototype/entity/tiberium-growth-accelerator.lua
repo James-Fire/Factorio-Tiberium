@@ -154,12 +154,10 @@ data:extend{
 			}
 		},
 		animation = common.blankAnimation,
-		animation_shadow = common.blankAnimation,
 		energy_usage = "10W",
 		energy_source = {type = "void"},
 		base_picture = common.blankPicture,
 		supply_area_distance = 0,
-		radius_visualisation_picture = common.blankPicture,
 		distribution_effectivity = 1,
 		module_slots = 32767,
 		allowed_effects = {"speed", "consumption"},

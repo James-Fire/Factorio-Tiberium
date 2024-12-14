@@ -11,29 +11,29 @@ common.blankAnimation = {
 	line_length = 1,
 	frame_count = 1,
 	variation_count = 1,
-}
+}  --[[@as data.AnimationSheet]]
 
 common.blankPicture = {
 	filename = "__core__/graphics/empty.png",
 	width = 1,
 	height = 1
-}
+}  --[[@as data.Animation]]
 
 common.blankIcons = {
 	{
 		icon = "__core__/graphics/empty.png",
 		icon_size = 1
 	}
-}
+}  --[=[@as data.IconData[]]=]
 
-common.TiberiumRadius = settings.startup["tiberium-radius"].value
+common.TiberiumRadius = settings.startup["tiberium-radius"].value  --[[@as int]]
 
-common.TiberiumInStartingArea = settings.startup["tiberium-starting-area"].value or (settings.startup["tiberium-on"].value ~= "nauvis") or false
+common.TiberiumInStartingArea = settings.startup["tiberium-starting-area"].value or (settings.startup["tiberium-on"].value ~= "nauvis") or false  --[[@as boolean]]
 
-common.whichPlanet = settings.startup["tiberium-on"].value
+common.whichPlanet = settings.startup["tiberium-on"].value  --[[@as string]]
 
 --Need to force burner tier for tiberium only starts to avoid softlocks
-common.tierZero = settings.startup["tiberium-tier-zero"].value or (settings.startup["tiberium-on"].value == "pure-nauvis") or (settings.startup["tiberium-on"].value == "tiber-start")
+common.tierZero = settings.startup["tiberium-tier-zero"].value or (settings.startup["tiberium-on"].value == "pure-nauvis") or (settings.startup["tiberium-on"].value == "tiber-start")  --[[@as boolean]]
 
 common.hit_effects = require("__base__.prototypes.entity.hit-effects")
 
@@ -44,27 +44,38 @@ common.tibCraftingTint = {
 	secondary	= {r = 0.098039,	g = 1,			b = 0.278431,	a = 1},
 	tertiary	= {r = 0.156863,	g = 0.156863,	b = 0.156863,	a = 0.235294},
 	quaternary	= {r = 0.160784,	g = 0.745098,	b = 0.3058824,	a = 0.345217},
-}
+}  --[[@as data.RecipeTints]]
 
 common.tibCraftingBlueTint = {
 	primary		= {r = 0.2,  g = 0.2, b = 1, a = 1},
 	secondary	= {r = 0.04, g = 0.4, b = 1, a = 1},
 	tertiary	= {r = 0.3,  g = 0.4, b = 1, a = 0.3},
 	quaternary	= {r = 0.3,  g = 0.2, b = 1, a = 0.4},
-}
+}  --[[@as data.RecipeTints]]
 
-common.pollutionMulti = settings.startup["tiberium-pollution-multiplier"].value
+common.pollutionMulti = settings.startup["tiberium-pollution-multiplier"].value  --[[@as double]]
 
+---@param scaling number Why am I multiplying by pollutionMulti and then dividing by 4
+---@param base? number Default pollution amount or 1
+---@return number
 common.emissionMultiplier = function(scaling, base)
 	base = base or 1
 	if common.pollutionMulti == 1 then return base end
 	return math.max(base * scaling * common.pollutionMulti / 4, 1)
 end
 
+---Generate table for prototypes with emissions_per_minute
+---@param scaling number Why am I multiplying by pollutionMulti and then dividing by 4
+---@param base? number Default pollution amount or 1
+---@return table emissions_per_second Scaled pollutant amounts
 common.scaledEmissions = function(scaling, base)
 	return {["pollution"] = common.emissionMultiplier(scaling, base)}
 end
 
+---Unused
+---@param sprite any
+---@param scalar number
+---@return any
 common.scaleUpSprite = function(sprite, scalar)
 	if sprite.layers then
 		for layerIndex, layerSprite in pairs(sprite.layers) do
@@ -76,6 +87,10 @@ common.scaleUpSprite = function(sprite, scalar)
 	return sprite
 end
 
+---Unused
+---@param sprite4Way any
+---@param scalar any
+---@return any
 common.scaleUpSprite4Way = function(sprite4Way, scalar)
 	if sprite4Way.sheet then
 		sprite4Way.sheet = common.scaleUpSprite(sprite4Way.sheet, scalar)
@@ -93,20 +108,31 @@ common.scaleUpSprite4Way = function(sprite4Way, scalar)
 	return sprite4Way
 end
 
+---Apply value to resource item to scale how much is given by Tiberium centrifuging/transmutation recipes
+---@param item data.ItemID
+---@param value number How many Tiberium Ore the item is worth, higher values mean that fewer items will be given by recipes
 common.applyTiberiumValue = function(item, value)
 	if data.raw.item[item] and not data.raw.item[item].tiberium_multiplier then
 		data.raw.item[item].tiberium_multiplier = value
 	end
 end
 
+---Create icons with layerImg on top of baseImg
+---@param baseImg data.FileName Bottom layer filepath
+---@param baseSize? int
+---@param layerImg data.FileName Top layer filepath
+---@param layerSize? int
+---@param corner? "ne"|"se"|"sw"|"nw" Compass direction of which corner the top layer should be shifted to
+---@param targetSize? int What size the top layer should be scaled to
+---@return data.IconData[] Icons Table to be used with prototypes.icons
 common.layeredIcons = function(baseImg, baseSize, layerImg, layerSize, corner, targetSize)
-	baseSize = baseSize or 64
-	layerSize = layerSize or 64
-	targetSize = targetSize or 24
+	baseSize = baseSize or defines.default_icon_size  --[[@as int]]
+	layerSize = layerSize or defines.default_icon_size  --[[@as int]]
+	targetSize = targetSize or math.floor(defines.default_icon_size * 3 / 8)  --[[@as int]]
 	local base = {
 		icon = baseImg,
 		icon_size = baseSize,
-		scale = 64 / baseSize,
+		scale = defines.default_icon_size / baseSize,
 	}
 	local corners = {ne = {x = 1, y = -1}, se = {x = 1, y = 1}, sw = {x = -1, y = 1}, nw = {x = -1, y = -1}}
 	local offset = {}
@@ -124,11 +150,14 @@ common.layeredIcons = function(baseImg, baseSize, layerImg, layerSize, corner, t
 	return {base, layer}
 end
 
+---Generate table of ingredients for recipe
+---@param recipeName data.RecipeID
+---@return ProductDict Ingredients 
 common.recipeIngredientsTable = function(recipeName)
 	local recipe = data.raw["recipe"][recipeName]
 	if recipe then
 		local ingredientTable = common.itemPrototypesFromTable(recipe.ingredients)
-		if debugText and (flib_table.size(ingredientTable) == 0) then log("### Could not find ingredients for "..recipeName) end
+		if debugText and not next(ingredientTable) then log("### Could not find ingredients for "..recipeName) end
 		return ingredientTable
 	else
 		log("### Could not find recipe with name "..recipeName)
@@ -136,11 +165,14 @@ common.recipeIngredientsTable = function(recipeName)
 	end
 end
 
+---Generate table of expect results for recipe
+---@param recipeName data.RecipeID
+---@return ProductDict Products
 common.recipeResultsTable = function(recipeName)
 	local recipe = data.raw["recipe"][recipeName]
 	if recipe then
 		local resultTable = common.itemPrototypesFromTable(recipe.results)
-		if debugText and (flib_table.size(resultTable) == 0) then log("### Could not find results for "..recipeName) end
+		if debugText and not next(resultTable) then log("### Could not find results for "..recipeName) end
 		return resultTable
 	else
 		log("### Could not find recipe with name "..recipeName)
@@ -148,8 +180,23 @@ common.recipeResultsTable = function(recipeName)
 	end
 end
 
+---Generate table of expected results from mining entity
+---@param prototypeTable data.EntityPrototype
+---@return ProductDict MinedProducts
+common.minableResultsTable = function(prototypeTable)  -- Still needed for minable result/results
+	if type(prototypeTable) ~= "table" or not prototypeTable.minable then return {} end
+	local out = common.itemPrototypesFromTable(prototypeTable.minable.results)
+	if not next(out) and prototypeTable.minable.result then  -- Still supports .result as a fallback unlike all other ProductPrototypes
+		out[prototypeTable.minable.result] = tonumber(prototypeTable.minable.count) or 1
+	end
+	return out
+end
+
+---Find expected items from many types of prototype tables
+---@param prototypeTable data.ItemIngredientPrototype|data.FluidIngredientPrototype|data.ItemProductPrototype|data.FluidProductPrototype
+---@return ProductDict
 common.itemPrototypesFromTable = function(prototypeTable)
-	local out = {}
+	local out = {}  --[[@as ProductDict]]
 	if type(prototypeTable) ~= "table" then
 		return out
 	end
@@ -181,23 +228,31 @@ common.itemPrototypesFromTable = function(prototypeTable)
 	return out
 end
 
-common.minableResultsTable = function(prototypeTable)  -- Still needed for minable result/results
-	if type(prototypeTable) ~= "table" or not prototypeTable.minable then return {} end
-	local out = common.itemPrototypesFromTable(prototypeTable.minable.results)
-	if (flib_table.size(out) == 0) and prototypeTable.minable.result then
-		out[prototypeTable.minable.result] = tonumber(prototypeTable.minable.result_count) or tonumber(prototypeTable.minable.count) or 1
-	end
-	return out
-end
-
+---Create collision mask from table of collision layers, surprised this isn't already in collision-mask-util.lua
+---@param arrayOfLayers (data.CollisionLayerID)[]
+---@return data.CollisionMaskConnector
 common.makeCollisionMask = function(arrayOfLayers)
-	local mask = {layers = {}}
+	local mask = {layers = {}}  --[[@as data.CollisionMaskConnector]]
 	for _, layer in pairs(arrayOfLayers) do
 		mask.layers[layer] = true
 	end
 	return mask
 end
 
+---Update prototype to remove specific collision layer, surprised this isn't already in collision-mask-util.lua
+---@param type string Name of prototype subtype
+---@param prototype data.EntityID
+---@param mask data.CollisionLayerID
+common.removeCollisionMask = function(type, prototype, mask)
+	if type and prototype and mask and data.raw[type] and data.raw[type][prototype]
+			and data.raw[type][prototype].collision_mask and data.raw[type][prototype].collision_mask.layers then
+		data.raw[type][prototype].collision_mask.layers[mask] = nil
+	end
+end
+
+---Prototype script to unlock recipe with specific technology, originally from LSlib
+---@param technologyName data.TechnologyID
+---@param recipeName data.RecipeID
 common.technology.addRecipeUnlock = function(technologyName, recipeName)
 	if not data.raw.technology[technologyName] or not data.raw.recipe[recipeName] then return end
 	if not data.raw["technology"][technologyName].effects then
@@ -209,6 +264,9 @@ common.technology.addRecipeUnlock = function(technologyName, recipeName)
 	table.insert(data.raw["technology"][technologyName].effects, {type = "unlock-recipe", recipe = recipeName})
 end
 
+---Prototype script to stop unlocking recipe with specific technology, originally from LSlib
+---@param technologyName data.TechnologyID
+---@param recipeName data.RecipeID
 common.technology.removeRecipeUnlock = function(technologyName, recipeName)
 	if not data.raw.technology[technologyName] or not data.raw.recipe[recipeName] then return end
 	if data.raw["technology"][technologyName].effects then
@@ -224,6 +282,9 @@ common.technology.removeRecipeUnlock = function(technologyName, recipeName)
 	end
 end
 
+---Prototype script to add prerequisite technology to specific technology, originally from LSlib
+---@param technologyName data.TechnologyID
+---@param prerequisiteToAdd data.TechnologyID
 common.technology.addPrerequisite = function(technologyName, prerequisiteToAdd)
 	if data.raw["technology"][technologyName] then
 		if not data.raw["technology"][technologyName].prerequisites then
@@ -236,6 +297,9 @@ common.technology.addPrerequisite = function(technologyName, prerequisiteToAdd)
 	end
 end
 
+---Prototype script to remove prerequisite technology from specific technology, originally from LSlib
+---@param technologyName data.TechnologyID
+---@param prerequisiteToRemove data.TechnologyID
 common.technology.removePrerequisite = function(technologyName, prerequisiteToRemove)
 	if data.raw["technology"][technologyName] and data.raw["technology"][technologyName].prerequisites then
 		for index, prerequisite in pairs(data.raw["technology"][technologyName].prerequisites) do
@@ -250,6 +314,11 @@ common.technology.removePrerequisite = function(technologyName, prerequisiteToRe
 	end
 end
 
+---Prototype script to add ingredient to specific recipe, originally from LSlib
+---@param recipeName data.RecipeID
+---@param ingredientName data.ItemID|data.FluidID
+---@param ingredientAmount? int Defaults to 1
+---@param ingredientType? "item"|"fluid" Defaults to "item"
 common.recipe.addIngredient = function(recipeName, ingredientName, ingredientAmount, ingredientType)
 	if not data.raw["recipe"][recipeName] then return end
 
@@ -272,6 +341,9 @@ common.recipe.addIngredient = function(recipeName, ingredientName, ingredientAmo
 	end
 end
 
+---Prototype script to remove ingredient from specific recipe, originally from LSlib
+---@param recipeName data.RecipeID
+---@param ingredientName data.ItemID|data.FluidID
 common.recipe.removeIngredient = function(recipeName, ingredientName)
 	if not data.raw["recipe"][recipeName] then return end
 
@@ -285,6 +357,11 @@ common.recipe.removeIngredient = function(recipeName, ingredientName)
 	end
 end
 
+---Prototype script to swap ingredient in specific recipe for another, originally from LSlib
+---@param recipeName data.RecipeID
+---@param oldIngredientName data.ItemID|data.FluidID
+---@param newIngredientName data.ItemID|data.FluidID Should be the same type (item/fluid) as the old ingredient
+---@param amountMultiplier? number Ratio of new ingredient to old ingredient, defaults to 1
 common.recipe.editIngredient = function(recipeName, oldIngredientName, newIngredientName, amountMultiplier)
 	amountMultiplier = amountMultiplier or 1
 	if not data.raw["recipe"][recipeName] then return end
@@ -295,15 +372,16 @@ common.recipe.editIngredient = function(recipeName, oldIngredientName, newIngred
 				data.raw["recipe"][recipeName].ingredients[index].name = newIngredientName
 				data.raw["recipe"][recipeName].ingredients[index].amount = math.floor(0.5 + data.raw["recipe"][recipeName].ingredients[index].amount * amountMultiplier)
 				break
-			elseif ingredient[1] and ingredient[1] == oldIngredientName then
-				data.raw["recipe"][recipeName].ingredients[index][1] = newIngredientName
-				data.raw["recipe"][recipeName].ingredients[index][2] = math.floor(0.5 + data.raw["recipe"][recipeName].ingredients[index][2] * amountMultiplier)
-				break
 			end
 		end
 	end
 end
 
+---Prototype script to add result to specific recipe, originally from LSlib
+---@param recipeName data.RecipeID
+---@param resultName data.ItemID|data.FluidID
+---@param resultAmount int
+---@param resultType "item"|"fluid"
 common.recipe.addResult = function(recipeName, resultName, resultAmount, resultType)
 	if not data.raw["recipe"][recipeName] then return end
 
@@ -326,6 +404,11 @@ common.recipe.addResult = function(recipeName, resultName, resultAmount, resultT
 	end
 end
 
+---Prototype script to swap result in specific recipe for another, originally from LSlib
+---@param recipeName data.RecipeID
+---@param oldResultName data.ItemID|data.FluidID
+---@param newResultName data.ItemID|data.FluidID Should be the same type (item/fluid) as the old result
+---@param amountMultiplier number Ratio of new result to old result
 common.recipe.editResult = function(recipeName, oldResultName, newResultName, amountMultiplier)
 	amountMultiplier = amountMultiplier or 1
 	if not data.raw["recipe"][recipeName] then return end
@@ -351,12 +434,16 @@ common.recipe.editResult = function(recipeName, oldResultName, newResultName, am
 	end
 end
 
+---Prototype script to set or remove result probability
+---@param recipeName data.RecipeID
+---@param resultName data.ItemID|data.FluidID
+---@param resultProbability? double Value between 0 and 1
 common.recipe.setResultProbability = function(recipeName, resultName, resultProbability)
 	if not data.raw["recipe"][recipeName] then return end
-	resultProbability = ((resultProbability~=1) and resultProbability) --wtf does this do
+	resultProbability = resultProbability~=1 and resultProbability or nil
 
 	if data.raw["recipe"][recipeName].results then
-		for index, result in pairs(data.raw["recipe"][recipeName].results) do
+		for _, result in pairs(data.raw["recipe"][recipeName].results) do
 			if result.name == resultName then
 				result.probability = resultProbability
 				break

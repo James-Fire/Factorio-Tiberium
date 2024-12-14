@@ -1,5 +1,5 @@
 if mods["alien-biomes"] then  -- Reverting this change so Tiberium can grow on landfill again
-	removeCollisionMask("tile", "landfill", "resource")
+	common.removeCollisionMask("tile", "landfill", "resource")
 end
 
 if mods["space-exploration"] then
@@ -7,7 +7,7 @@ if mods["space-exploration"] then
 	if space_collision_layer then
 		--Since se_allow_in_space isn't respected for alternate miners that don't mine default resources
 		for _, drillName in pairs({"tiberium-network-node", "tiberium-node-harvester", "tiberium-aoe-node-harvester", "tiberium-detonation-charge", "tiberium-growth-accelerator-node", "tiberium-spike"}) do
-			removeCollisionMask("mining-drill", drillName, space_collision_layer)
+			common.removeCollisionMask("mining-drill", drillName, space_collision_layer)
 		end
 	end
 end

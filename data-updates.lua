@@ -1,6 +1,4 @@
----@diagnostic disable: inject-field
 flib_table = require("__flib__.table")
---require("scripts.tib-map-gen-presets")  -- After other mods have added their resources as part of the data step
 
 require("scripts.compatibility.bobsmods")
 require("scripts.compatibility.Krastorio2")
@@ -10,10 +8,10 @@ require("scripts.compatibility.Obelisks-of-light")
 if mods["Orbital Ion Cannon"] or mods["Kux-OrbitalIonCannon"] then
 	common.technology.addPrerequisite("orbital-ion-cannon", "tiberium-military-2")
 	if mods["bobwarfare"] then
-		common.recipe.editIngredient("orbital-ion-cannon", "bob-laser-turret-5", "tiberium-ion-core", 1)
+		common.recipe.editIngredient("orbital-ion-cannon", "bob-laser-turret-5", "tiberium-ion-core")
 		common.technology.removePrerequisite("orbital-ion-cannon", "bob-laser-turrets-5")
 	else
-		common.recipe.editIngredient("orbital-ion-cannon", "laser-turret", "tiberium-ion-core", 1)
+		common.recipe.editIngredient("orbital-ion-cannon", "laser-turret", "tiberium-ion-core")
 	end
 end
 
@@ -52,7 +50,7 @@ if mods["omnimatter"] then
 		omni.matter.add_ignore_resource("tibGrowthNode")
 		omni.matter.add_ignore_resource("tibNode_tree")
 	end
-	common.recipe.editIngredient("tiberium-spike", "pumpjack", "offshore-pump", 1)
+	common.recipe.editIngredient("tiberium-spike", "pumpjack", "offshore-pump")
 end
 
 if mods["pypetroleumhandling"] then
@@ -73,7 +71,7 @@ end
 
 if mods["angelspetrochem"] then
 	-- Replace the vanilla Chemical Plant with one of Angel's, because apparently it's too hard to simply use the vanilla one.
-	common.recipe.editIngredient("tiberium-power-plant", "chemical-plant", "angels-chemical-plant-2", 1)
+	common.recipe.editIngredient("tiberium-power-plant", "chemical-plant", "angels-chemical-plant-2")
 end
 
 if mods["dark-matter-replicators-18"] then

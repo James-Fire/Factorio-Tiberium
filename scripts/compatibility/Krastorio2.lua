@@ -23,8 +23,7 @@ if mods["Krastorio2"] then
 	data.raw["technology"]["tiberium-energy-weapons-damage-10"].prerequisites = {"tiberium-energy-weapons-damage-5"}
 
 	for _, techs in pairs(techPairs) do
-		local level, _ = string.gsub(techs.tib, "%D", "")
-		level = tonumber(level) or 1
+		local level = tonumber(string.gsub(techs.tib, "%D", "")) or 1
 		data.raw["technology"][techs.tib].unit.count_formula = "((L-"..tostring(level - 1)..")^2)*3000"
 		data.raw["technology"][techs.tib].name = techs.tib
 		data.raw["technology"][techs.tib].max_level = techs.max_level
@@ -72,7 +71,7 @@ if mods["Krastorio2"] then
 
 	-- Make Tiberium Magazines usable with rifles again
 	if krastorio.general.getSafeSettingValue("kr-more-realistic-weapon") then
-		common.recipe.editIngredient("tiberium-rounds-magazine", "piercing-rounds-magazine", "rifle-magazine", 1)
+		common.recipe.editIngredient("tiberium-rounds-magazine", "piercing-rounds-magazine", "rifle-magazine")
 	end
 	local oldTibRounds = data.raw.ammo["tiberium-rounds-magazine"]
 	local newTibRounds = util.copy(data.raw.ammo["uranium-rifle-magazine"])
