@@ -8,6 +8,8 @@ Version: 2.0.7
     - Fixed Omnicompression crashes
   Changes:
     - Allow deconstruction planners to remove Blossom Trees prior to unlocking cliff exlposives
+  Features:
+    - Power now propagates across connected SRF Emitters, so you only need to connect electric poles to one emitter per continuous wall (Thank you luan for sharing https://mods.factorio.com/mod/power-propagation)
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.6
   Bugfixes:

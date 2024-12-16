@@ -97,7 +97,44 @@ end
 function CnC_SonicWall_AddNode(entity, tick)
 	table.insert(storage.SRF_nodes, {emitter = entity, position = entity.position})
 	table.insert(storage.SRF_node_ticklist, {emitter = entity, position = entity.position, tick = tick + ceil(entity.electric_buffer_size / entity.get_electric_input_flow_limit())})
+	CnC_SonicWall_ConnectPowerPoles(entity)
 	CnC_SonicWall_DisableNode(entity)  --Destroy any walls that went through where the wall was placed so it can calculate new walls
+end
+
+---Connect hidden power pole to orthogonal power poles to propagate power to adjacent SRF emitters
+---@param emitter LuaEntity
+function CnC_SonicWall_ConnectPowerPoles(emitter)
+	if emitter.surface.has_global_electric_network then return end
+	game.print("Trying to connect power pole for "..emitter.gps_tag)
+	local orthogonal_nodes = CnC_SonicWall_FindNodes(emitter, dirs.both)
+	local pole = emitter.surface.find_entities_filtered{position = emitter.position, name = "tiberium-srf-power-pole"}
+	if next(pole) then game.print("Found power pole at "..pole[1].gps_tag) end
+	if next(pole) and next(orthogonal_nodes) then
+		for _, node in pairs(orthogonal_nodes) do
+			game.print("Found node in range at "..node.gps_tag)
+			local pole2 = emitter.surface.find_entities_filtered{position = node.position, name = "tiberium-srf-power-pole"}
+			if next(pole2) then
+				connect_poles(pole[1], pole2[1])
+			end
+		end
+	end
+end
+
+---Connect two poles together
+---@param pole1 LuaEntity
+---@param pole2 LuaEntity
+function connect_poles(pole1, pole2)
+	if not (pole1 and pole1.valid and pole2 and pole2.valid) then
+		return
+	end
+	game.print("Doing connection from "..pole1.gps_tag.." to "..pole2.gps_tag)
+	-- Get the copper wire connection points
+	local connector1 = pole1.get_wire_connector(defines.wire_connector_id.pole_copper, true)
+	local connector2 = pole2.get_wire_connector(defines.wire_connector_id.pole_copper, true)
+
+	-- Connect the poles
+	local success = connector1.connect_to(connector2, false)
+	game.print("Connnection successful: "..tostring(success))
 end
 
 ---Destroys walls connected to given SRF emitter

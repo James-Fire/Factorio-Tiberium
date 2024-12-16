@@ -1387,8 +1387,17 @@ function on_new_entity(event)
 		end
 		if not duplicate then table.insert(storage.tibDrills, {entity = new_entity, name = new_entity.name, position = position}) end
 	end
+	if (new_entity.type == "electric-pole") and not surface.has_global_electric_network then  -- Connect to existing SRF Poles
+		game.print("We really don't expect to see srf poles here: "..new_entity.name)
+		local srfPoles = surface.find_entities_filtered{position = position, name = "tiberium-srf-power-pole",
+				radius = new_entity.prototype.get_supply_area_distance(new_entity.quality)}
+		for _, pole in pairs(srfPoles) do
+			connect_poles(new_entity, pole)
+		end
+	end
 	if (new_entity.name == "tiberium-srf-connector") then
 		new_entity.destructible = false
+		-- Place actual EEI entity on top of underground pipes
 		local emitter = surface.create_entity{
 			name = "tiberium-srf-emitter",
 			position = position,
@@ -1396,6 +1405,30 @@ function on_new_entity(event)
 			raise_built = true
 		}
 		if emitter then
+			-- Create invisible power poles to propagate power to connected SRF emitters
+			if not surface.has_global_electric_network then
+				local srfPole = surface.create_entity{
+					name = "tiberium-srf-power-pole",
+					position = position,
+					force = force
+				}
+				if srfPole then
+					srfPole.destructible = false
+					-- Connect to existing electric poles that would power the emitter to the new SRF pole
+					for _, pole in pairs(surface.find_entities_filtered{type = "electric-pole", position = position, radius = prototypes.max_electric_pole_supply_area_distance}) do
+						if pole.name ~= "tiberium-srf-power-pole" then
+							for _, connectable in pairs(surface.find_entities_filtered{position = pole.position, name = "tiberium-srf-power-pole",
+									radius = pole.prototype.get_supply_area_distance(pole.quality)}) do
+								if connectable == srfPole then
+									connect_poles(pole, srfPole)
+									break
+								end
+							end
+						end
+					end
+				end
+			end
+
 			registerEntity(emitter)
 			CnC_SonicWall_AddNode(emitter, event.tick)
 		end
@@ -1536,7 +1569,7 @@ function on_remove_entity(event)
 	if not surface or not surface.valid then return end
 	if (entity.name == "tiberium-srf-emitter") or (entity.name == "CnC_SonicWall_Hub") then
 		local ghost = surface.find_entities_filtered{position = entity.position, ghost_name = entity.name}[1]
-		for _, connector in pairs(surface.find_entities_filtered{name = "tiberium-srf-connector", position = position, force = force}) do
+		for _, connector in pairs(surface.find_entities_filtered{name = {"tiberium-srf-connector", "tiberium-srf-power-pole"}, position = position, force = force}) do
 			if ghost then
 				connector.destructible = true
 				connector.die()

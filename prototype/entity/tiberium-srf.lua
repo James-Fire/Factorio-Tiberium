@@ -206,5 +206,41 @@ data:extend{
 			south = srf_sprite,
 			west = srf_sprite,
 		},
-	}
+	},
+	{
+		type = "electric-pole",
+		name = "tiberium-srf-power-pole",
+		flags = {
+			"not-blueprintable",
+			"not-deconstructable",
+			"placeable-off-grid",
+			"not-on-map",
+			"hide-alt-info",
+			"not-selectable-in-game",
+			"not-upgradable",
+			"not-in-kill-statistics",
+			"not-flammable",
+			"not-repairable",
+		},
+		collision_mask = {layers = {}},
+		supply_area_distance = 1,
+		maximum_wire_distance = 16,
+		connection_points = {
+			{
+				wire = {
+					copper = {0, 0},
+					red = {0, 0},
+					green = {0, 0},
+				},
+				shadow = {
+					copper = {0, 0},
+					red = {0, 0},
+					green = {0, 0},
+				},
+			},
+		},
+		auto_connect_up_to_n_wires = 0,
+		draw_copper_wires = false,
+		draw_circuit_wires = false,
+	},
 }
