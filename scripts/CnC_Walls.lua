@@ -14,8 +14,6 @@ local dir_mods = {
 	{x = 0, y = 1, variation = dirs.vert},
 	{x = 0, y = -1, variation = dirs.vert}
 }
-local wall_health = 10000
-local joules_per_hitpoint = 400
 local node_range = 16
 
 local abs   = math.abs
@@ -52,8 +50,8 @@ end
 ---Returns array containing up to 4 entities that could connect to an SRF emitter at the given position
 ---Assumes node_range, dirs, storage.SRF_nodes
 ---@param entity LuaEntity
----@param dir int
----@return table
+---@param dir dirs
+---@return LuaEntity[]
 function CnC_SonicWall_FindNodes(entity, dir)
 	local force = entity.force_index
 	local surf = entity.surface_index

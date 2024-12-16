@@ -1745,18 +1745,19 @@ function UpdateBeaconSpeed(beacon, total_modules)
 	end
 end
 
+---Update script-managed research effects for craft speed and damage reduction when forces change
+---@param event EventData.on_technology_effects_reset|EventData.on_forces_merged|EventData.on_force_reset
 script.on_event({defines.events.on_technology_effects_reset, defines.events.on_forces_merged, defines.events.on_force_reset}, function(event)
----@diagnostic disable-next-line: undefined-field
 	updateBeacons(event.force or event.destination)
----@diagnostic disable-next-line: undefined-field
 	updateResistanceLevel(event.force or event.destination)
 	if whichPlanet == "tiber-start" then
 		correct_space_locations()
 	end
 end)
 
+---Update script-managed research effects for craft speed and damage reduction
+---@param event EventData.on_research_finished|EventData.on_research_reversed
 script.on_event({defines.events.on_research_finished, defines.events.on_research_reversed}, function(event)
----@diagnostic disable-next-line: undefined-field
 	local tech = event.research
 	updateBeacons(tech.force)
 	updateResistanceLevel(tech.force)
@@ -1874,6 +1875,8 @@ script.on_event(defines.events.on_cutscene_waypoint_reached, function(event)
 	end
 end)
 
+---Custom input event added by \base\prototypes\entity\crash-site.lua
+---@param event EventData.CustomInputEvent
 script.on_event("crash-site-skip-cutscene", function(event)
 	if whichPlanet == "tiber-start" then
 		if not storage.crash_site_cutscene_active then return end

@@ -174,6 +174,7 @@ data:extend{tiberiumRocketProjectile,
 --Liquid Tiberium Bomb
 local tibNukeGroundZero = util.copy(data.raw.projectile["atomic-bomb-ground-zero-projectile"])
 tibNukeGroundZero.name = "tiberium-atomic-bomb-ground-zero-projectile"
+---@diagnostic disable-next-line: inject-field
 tibNukeGroundZero.action[1].action_delivery.target_effects.upper_distance_threshold = 50
 local groundZeroDamageEffect = util.copy(tibNukeGroundZero.action[1].action_delivery.target_effects)
 tibNukeGroundZero.action[1].action_delivery.target_effects = {groundZeroDamageEffect, util.copy(groundZeroDamageEffect)}
@@ -182,6 +183,7 @@ tibNukeGroundZero.action[1].radius = 4
 
 local tibNukeWave = util.copy(data.raw.projectile["atomic-bomb-wave"])
 tibNukeWave.name = "tiberium-atomic-bomb-wave"
+---@diagnostic disable-next-line: inject-field
 tibNukeWave.action[1].action_delivery.target_effects.upper_distance_threshold = 50
 local waveDamageEffect = util.copy(tibNukeWave.action[1].action_delivery.target_effects)
 tibNukeWave.action[1].action_delivery.target_effects = {waveDamageEffect, util.copy(waveDamageEffect)}

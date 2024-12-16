@@ -310,9 +310,8 @@ if common.tierZero then
 	}
 	centrifuge0Entity.icons = nil
 	centrifuge0Entity.icon = "__base__/graphics/icons/centrifuge.png"
-	centrifuge0Entity.icon_mipmaps = 4
 	centrifuge0Entity.icon_size = 64
-	centrifuge0Entity.module_specification = nil
+	centrifuge0Entity.module_slots = 0
 	centrifuge0Entity.minable.result = "tiberium-centrifuge-0"
 	centrifuge0Entity.graphics_set.idle_animation = data.raw["assembling-machine"].centrifuge.graphics_set.idle_animation
 	data:extend{centrifuge0Entity}

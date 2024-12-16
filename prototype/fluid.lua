@@ -13,15 +13,14 @@ data:extend{
 			g = 1.0,
 			r = 0.1
 		},
-		flow_to_energy_ratio = 0.3,
 		heat_capacity = "1kJ",
 		icon = tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png",
 		icon_size = 64,
 		max_temperature = 1000,
 		order = "a[fluid]-c[crude-oil]",
+		subgroup = "fluid",
 		fuel_value = "12.5MJ",
 		emissions_multiplier = common.emissionMultiplier(3),
-		pressure_to_speed_ratio = 0.4,
 	},
 	{
 		type = "fluid",
@@ -37,13 +36,12 @@ data:extend{
 			g = 1.0,
 			r = 0.1
 		},
-		flow_to_energy_ratio = 0.3,
 		heat_capacity = "1kJ",
 		icon = tiberiumInternalName.."/graphics/icons/fluid/molten-tiberium.png",
 		icon_size = 64,
 		max_temperature = 1000,
 		order = "a[fluid]-c[crude-oil]",
-		pressure_to_speed_ratio = 0.4,
+		subgroup = "fluid",
 	},
 	{
 		type = "fluid",
@@ -59,13 +57,12 @@ data:extend{
 			g = 0.5,
 			r = 0.3
 		},
-		flow_to_energy_ratio = 0.2,
 		heat_capacity = "1kJ",
 		icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-sludge.png",
 		icon_size = 64,
 		max_temperature = 1000,
 		order = "a[fluid]-d[crude-oil]",
-		pressure_to_speed_ratio = 0.2,
+		subgroup = "fluid",
 	},
 	{
 		type = "fluid",
@@ -81,13 +78,12 @@ data:extend{
 			g = 0.7,
 			r = 0
 		},
-		flow_to_energy_ratio = 0.5,
 		heat_capacity = "1kJ",
 		icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-waste.png",
 		icon_size = 64,
 		max_temperature = 1000,
 		order = "a[fluid]-d[crude-oil]",
-		pressure_to_speed_ratio = 0.05,
+		subgroup = "fluid",
 	},
 	{
 		type = "fluid",
@@ -103,12 +99,11 @@ data:extend{
 			g = 0.9,
 			r = 0.1
 		},
-		flow_to_energy_ratio = 0.5,
 		heat_capacity = "4kJ",
 		icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-slurry-blue.png",
 		icon_size = 64,
 		max_temperature = 1000,
 		order = "a[fluid]-d[crude-oil]",
-		pressure_to_speed_ratio = 0.05,
+		subgroup = "fluid",
 	},
 }

@@ -3,7 +3,6 @@ data:extend{
 		type = "mining-drill",
 		name = "tiberium-detonation-charge",
 		icon = "__base__/graphics/icons/crash-site-chest.png",
-		icon_mipmaps = 4,
 		icon_size = 64,
 		flags = {"placeable-neutral", "player-creation"},
 		minable = {mining_time = 1, result = "tiberium-detonation-charge"},

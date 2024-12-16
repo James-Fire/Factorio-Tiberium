@@ -50,6 +50,12 @@ end
 ---@diagnostic disable-next-line: duplicate-doc-field
 ---@field physical_vehicle LuaEntity? Physical Vehicle is actually an entity, pls fix api
 
+-- Need this because LuaLS is confused about directions
+---@alias defines.direction.north 1
+---@alias defines.direction.east 5
+---@alias defines.direction.south 9
+---@alias defines.direction.west 13
+
 flib = require("__flib__.data-util")
 flib_table = require("__flib__.table")
 common = require("prototype.common")
