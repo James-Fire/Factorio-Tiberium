@@ -365,10 +365,10 @@ function doUpgradeConversions(data)
 		-- Rebuild SRF globals
 		CnC_SonicWall_OnInit()
 		for _, surface in pairs(game.surfaces) do
-			for wall in surface.find_entities_filtered({name = "tiberium-srf-wall"}) do
+			for _, wall in pairs(surface.find_entities_filtered({name = "tiberium-srf-wall"})) do
 				wall.destroy()
 			end
-			for emitter in surface.find_entities_filtered({name = "tiberium-srf-emitter"}) do
+			for _, emitter in pairs(surface.find_entities_filtered({name = "tiberium-srf-emitter"})) do
 				CnC_SonicWall_AddNode(emitter, game.tick)
 			end
 		end
