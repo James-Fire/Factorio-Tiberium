@@ -2,12 +2,16 @@ if common.whichPlanet == "nauvis" or common.whichPlanet == "pure-nauvis" then re
 
 --Tiles
 local tile1 = flib.copy_prototype(data.raw.tile["highland-dark-rock-2"], "tiber-highland-dark-rock-2")
+tile1.localised_name = {"tile-name.highland-dark-rock-2"}
 tile1.autoplace = {probability_expression = "expression_in_range_base(-10, 0.7, 11, 11) + noise_layer_noise(19)"}  --grass-1
 local tile2 = flib.copy_prototype(data.raw.tile["midland-cracked-lichen-dark"], "tiber-midland-cracked-lichen-dark")
+tile2.localised_name = {"tile-name.midland-cracked-lichen-dark"}
 tile2.autoplace = {probability_expression = "expression_in_range_base(0.45, 0.45, 11, 0.8) + noise_layer_noise(20)"}  --grass-2
 local tile3 = flib.copy_prototype(data.raw.tile["midland-cracked-lichen-dull"], "tiber-midland-cracked-lichen-dull")
+tile3.localised_name = {"tile-name.midland-cracked-lichen-dull"}
 tile3.autoplace = {probability_expression = "expression_in_range_base(-10, 0.6, 0.65, 0.9) + noise_layer_noise(21)"}  --grass-3
 local tile4 = flib.copy_prototype(data.raw.tile["pit-rock"], "tiber-pit-rock")
+tile4.localised_name = {"tile-name.pit-rock"}
 tile4.autoplace = {probability_expression = "expression_in_range_base(-10, 0.5, 0.55, 0.7) + noise_layer_noise(22)"}  -- grass-4
 data:extend{tile1, tile2, tile3, tile4}
 

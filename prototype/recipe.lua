@@ -59,6 +59,7 @@ for order, test in pairs(testingOrder) do
 		{
 			type = "recipe",
 			name = "tiberium-reprocessing-"..test.."-data",
+			localised_name = {"recipe-name.tiberium-reprocessing-generic"},
 			category = "tiberium-reprocessing",
 			energy_required = 0.5,
 			hide_from_player_crafting = true,

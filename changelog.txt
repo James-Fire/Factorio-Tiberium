@@ -6,6 +6,7 @@ Version: 2.0.7
     - Fixed not being able to add Blue Tiberium to filters prior to researching Blue Tiberium Mutation
     - Slightly improved performance of SRF
     - Fixed Omnicompression crashes
+    - Fixed missing names on prototypes that were only viewable through Factoriopedia
   Changes:
     - Allow deconstruction planners to remove Blossom Trees prior to unlocking cliff exlposives
   Features:

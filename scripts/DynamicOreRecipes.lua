@@ -1282,6 +1282,7 @@ function addCreditRecipe(ore)
 		data:extend{{
 			type = "recipe",
 			name = reprocessingName,
+			localised_name = {"recipe-name.tiberium-reprocessing-generic"},
 			ingredients = {{type = "item", name = ore, amount = 1}},
 			results = {},
 			energy_required = energy / oreAmount,  -- Preserve the energy-per-input-ore from the other recipe
