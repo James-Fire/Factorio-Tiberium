@@ -1388,7 +1388,7 @@ function on_new_entity(event)
 		if not duplicate then table.insert(storage.tibDrills, {entity = new_entity, name = new_entity.name, position = position}) end
 	end
 	if (new_entity.type == "electric-pole") and not surface.has_global_electric_network then  -- Connect to existing SRF Poles
-		game.print("We really don't expect to see srf poles here: "..new_entity.name)
+		if debugText then game.print("We really don't expect to see srf poles here: "..new_entity.name) end
 		local srfPoles = surface.find_entities_filtered{position = position, name = "tiberium-srf-power-pole",
 				radius = new_entity.prototype.get_supply_area_distance(new_entity.quality)}
 		for _, pole in pairs(srfPoles) do
