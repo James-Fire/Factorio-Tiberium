@@ -1,4 +1,8 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.8
+  Bugfixes:
+    - Fixed debug information for power poles not being locked behind debug setting
+---------------------------------------------------------------------------------------------------
 Version: 2.0.7
   Bugfixes:
     - Fixed stone, coal, and crude oil being locked behind off-planet science packs when using "Nauvis has Only Tiberium" setting
