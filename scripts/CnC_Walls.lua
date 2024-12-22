@@ -105,13 +105,13 @@ end
 ---@param emitter LuaEntity
 function CnC_SonicWall_ConnectPowerPoles(emitter)
 	if emitter.surface.has_global_electric_network then return end
-	game.print("Trying to connect power pole for "..emitter.gps_tag)
+	if debugText then game.print("Trying to connect power pole for "..emitter.gps_tag) end
 	local orthogonal_nodes = CnC_SonicWall_FindNodes(emitter, dirs.both)
 	local pole = emitter.surface.find_entities_filtered{position = emitter.position, name = "tiberium-srf-power-pole"}
 	if next(pole) then game.print("Found power pole at "..pole[1].gps_tag) end
 	if next(pole) and next(orthogonal_nodes) then
 		for _, node in pairs(orthogonal_nodes) do
-			game.print("Found node in range at "..node.gps_tag)
+			if debugText then game.print("Found node in range at "..node.gps_tag) end
 			local pole2 = emitter.surface.find_entities_filtered{position = node.position, name = "tiberium-srf-power-pole"}
 			if next(pole2) then
 				connect_poles(pole[1], pole2[1])
@@ -127,14 +127,14 @@ function connect_poles(pole1, pole2)
 	if not (pole1 and pole1.valid and pole2 and pole2.valid) then
 		return
 	end
-	game.print("Doing connection from "..pole1.gps_tag.." to "..pole2.gps_tag)
+	if debugText then game.print("Doing connection from "..pole1.gps_tag.." to "..pole2.gps_tag) end
 	-- Get the copper wire connection points
 	local connector1 = pole1.get_wire_connector(defines.wire_connector_id.pole_copper, true)
 	local connector2 = pole2.get_wire_connector(defines.wire_connector_id.pole_copper, true)
 
 	-- Connect the poles
 	local success = connector1.connect_to(connector2, false)
-	game.print("Connnection successful: "..tostring(success))
+	if debugText then game.print("Connnection successful: "..tostring(success)) end
 end
 
 ---Destroys walls connected to given SRF emitter
@@ -150,7 +150,7 @@ function CnC_SonicWall_DisableNode(entity)
 		local ty = y + dir.y
 		local key = string.format("%g:%g:%g", surf, tx, ty)
 		while storage.SRF_segments[key] do
-			game.print(string.format("disable wall at %g:%g:%g", surf, tx, ty))
+			if debugText then game.print(string.format("disable wall at %g:%g:%g", surf, tx, ty)) end
 			local segment = storage.SRF_segments[key]
 			if segment.direction == dir.variation then
 				storage.SRF_segments[key].wall.destroy()
