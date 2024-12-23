@@ -2,6 +2,7 @@
 Version: 2.0.8
   Bugfixes:
     - Fixed debug information for power poles not being locked behind debug setting
+    - Fixed crash from encountering recipes with no results
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.7
   Bugfixes:
