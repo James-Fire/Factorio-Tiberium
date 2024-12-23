@@ -469,7 +469,7 @@ function allAvailableRecipes()
 						--log("~~~ Recipe "..effect.recipe.." unlocked by "..tech)
 						availableRecipes[effect.recipe] = true
 						recipeUnlockTracker["technology"][effect.recipe] = tech
-						for _, product in pairs(data.raw.recipe[effect.recipe].results) do
+						for _, product in pairs(data.raw.recipe[effect.recipe].results or {}) do
 							if product.name and tibComboPacks[product.name] and techData.unit then --TODO handle trigger techs
 								tibComboPacks[product.name] = techData.unit.ingredients  --save for later
 							end
