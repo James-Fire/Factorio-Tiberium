@@ -108,7 +108,7 @@ function CnC_SonicWall_ConnectPowerPoles(emitter)
 	if debugText then game.print("Trying to connect power pole for "..emitter.gps_tag) end
 	local orthogonal_nodes = CnC_SonicWall_FindNodes(emitter, dirs.both)
 	local pole = emitter.surface.find_entities_filtered{position = emitter.position, name = "tiberium-srf-power-pole"}
-	if next(pole) then game.print("Found power pole at "..pole[1].gps_tag) end
+	if next(pole) and debugText then game.print("Found power pole at "..pole[1].gps_tag) end
 	if next(pole) and next(orthogonal_nodes) then
 		for _, node in pairs(orthogonal_nodes) do
 			if debugText then game.print("Found node in range at "..node.gps_tag) end
