@@ -1370,7 +1370,7 @@ function registerEntity(entity)  -- Cache relevant information to storage and re
 end
 
 ---Create and manage hybrid entities when new entities are built
----@param event EventData.on_robot_built_entity|EventData.on_built_entity|EventData.script_raised_built|EventData.script_raised_revive
+---@param event EventData.on_robot_built_entity|EventData.on_built_entity|EventData.script_raised_built|EventData.script_raised_revive|EventData.on_space_platform_built_entity
 function on_new_entity(event)
 	local new_entity = event.entity
 	local surface = new_entity.surface
@@ -1540,6 +1540,7 @@ script.on_event(defines.events.on_built_entity, on_new_entity)
 script.on_event(defines.events.on_robot_built_entity, on_new_entity)
 script.on_event(defines.events.script_raised_built, on_new_entity)
 script.on_event(defines.events.script_raised_revive, on_new_entity)
+script.on_event(defines.events.on_space_platform_built_entity, on_new_entity)
 
 ---Cleanup after destroyed/deconstructed entities
 ---@param event EventData.on_object_destroyed

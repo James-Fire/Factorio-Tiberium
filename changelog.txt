@@ -1,4 +1,8 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.9
+  Bugfixes:
+    - Fixed missing events for structures built on space platforms
+---------------------------------------------------------------------------------------------------
 Version: 2.0.8
   Bugfixes:
     - Fixed debug information for power poles not being locked behind debug setting
