@@ -50,6 +50,9 @@ end
 ---@diagnostic disable-next-line: duplicate-doc-field
 ---@field physical_vehicle LuaEntity? Physical Vehicle is actually an entity, pls fix api
 
+---@class LuaRecipePrototype
+---@field auto_recycle boolean Whether to include this recipe when calculating reverse crafting recipes for recycling
+
 -- Need this because LuaLS is confused about directions
 ---@alias defines.direction.north 1
 ---@alias defines.direction.east 5

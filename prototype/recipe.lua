@@ -834,6 +834,7 @@ data:extend{
 		energy_required = 1,
 		enabled = false,
 		hide_from_player_crafting = true,
+		auto_recycle = false,
 		category = "tiberium-monoculture-green",
 		crafting_machine_tint = common.tibCraftingBlueTint,
 		ingredients = {
@@ -849,6 +850,7 @@ data:extend{
 		energy_required = 1,
 		enabled = false,
 		hide_from_player_crafting = true,
+		auto_recycle = false,
 		category = "tiberium-monoculture-blue",
 		crafting_machine_tint = common.tibCraftingTint,
 		ingredients = {
