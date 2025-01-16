@@ -49,6 +49,11 @@ local easyMode = settings.startup["tiberium-easy-recipes"].value
 local burnerTier = settings.startup["tiberium-tier-zero"].value
 local performanceMode = settings.global["tiberium-auto-scale-performance"].value
 local debugText = settings.global["tiberium-debug-text"].value
+local function debugPrint(message)
+	if debugText then
+		game.print(message or "")
+	end
+end
 -- Starting items, if the option is ticked.
 local tiberium_start = {
 	["assembling-machine-2"] = 5,
@@ -674,9 +679,7 @@ function PlaceOre(node, howMany)
 		end
 	end
 
-	if debugText then
-		game.print({"", timer, " end of place ore at ", position.x, ", ", position.y, "|", math.random()})
-	end
+	debugPrint({"", timer, " end of place ore at ", position.x, ", ", position.y, "|", math.random()})
 end
 
 ---Spawn new Blossom Tree
@@ -1332,10 +1335,8 @@ function storageIntegrityChecks()
 		nodeCount = nodeCount + surface.count_entities_filtered{name = "tibGrowthNode"}
 	end
 	if nodeCount ~= #storage.tibGrowthNodeList then
-		if debugText then
-			game.print("!!!Warning: "..nodeCount.." Tiberium nodes exist while there are "..#storage.tibGrowthNodeList.." nodes growing.")
-			game.print("Rebuilding Tiberium node growth list.")
-		end
+		debugPrint("!!!Warning: "..nodeCount.." Tiberium nodes exist while there are "..#storage.tibGrowthNodeList.." nodes growing.")
+		debugPrint("Rebuilding Tiberium node growth list.")
 		storage.tibGrowthNodeList = {}
 		for _, surface in pairs(game.surfaces) do
 			for _, node in pairs(surface.find_entities_filtered{name = "tibGrowthNode"}) do
@@ -1388,7 +1389,7 @@ function on_new_entity(event)
 		if not duplicate then table.insert(storage.tibDrills, {entity = new_entity, name = new_entity.name, position = position}) end
 	end
 	if (new_entity.type == "electric-pole") and not surface.has_global_electric_network then  -- Connect to existing SRF Poles
-		if debugText then game.print("We really don't expect to see srf poles here: "..new_entity.name) end
+		debugPrint("We really don't expect to see srf poles here: "..new_entity.name)
 		local srfPoles = surface.find_entities_filtered{position = position, name = "tiberium-srf-power-pole",
 				radius = new_entity.prototype.get_supply_area_distance(new_entity.quality)}
 		for _, pole in pairs(srfPoles) do
@@ -1688,12 +1689,12 @@ function on_pre_mined(event)
 		greenTibOre = greenTibOre + 4 * (fluidContents["liquid-tiberium"] or 0)
 		greenTibOre = greenTibOre * oreValueMulti
 		if greenTibOre > 0 then
-			if debugText then game.print("Created "..tostring(greenTibOre).." green Tiberium ore") end
+			debugPrint("Created "..tostring(greenTibOre).." green Tiberium ore")
 			TiberiumSeedMissile(entity.surface, entity.position, greenTibOre)
 		end
 		local blueTibOre = (fluidContents["tiberium-slurry-blue"] or 0)
 		if blueTibOre > 0 then
-			if debugText then game.print("Created "..tostring(blueTibOre).." blue Tiberium ore") end
+			debugPrint("Created "..tostring(blueTibOre).." blue Tiberium ore")
 			TiberiumSeedMissile(entity.surface, entity.position, blueTibOre, "tiberium-ore-blue")
 		end
 	end
@@ -2083,7 +2084,7 @@ function UnlockRecipePrereqs(force, targetRecipeName)
 		local unlockTech = nil
 		for _, tech in pairs(techs) do
 			local score = flib_table.size(TechPrereqList(force, tech))
-			game.print(tech.." requires "..tostring(score).." prereqs to provide us with "..ingredient)
+			debugPrint(tech.." requires "..tostring(score).." prereqs to provide us with "..ingredient)
 			if score < best then
 				best = score
 				unlockTech = tech
@@ -2092,7 +2093,7 @@ function UnlockRecipePrereqs(force, targetRecipeName)
 		if unlockTech then
 			UnlockTechnologyAndPrereqs(force, unlockTech)
 		end
-		if debugText then game.print("Unlocking "..tostring(best).." technologies to allow access to "..tostring(ingredient)) end
+		debugPrint("Unlocking "..tostring(best).." technologies to allow access to "..tostring(ingredient))
 	end
 end
 

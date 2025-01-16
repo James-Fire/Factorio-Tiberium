@@ -3,6 +3,7 @@ Version: 2.0.9
   Bugfixes:
     - Fixed missing events for structures built on space platforms
     - Fixed Tiberium having lossless recycling recipes
+    - Fixed "Found power pole" messages to no longer appear when debug mode is turned off
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.8
   Bugfixes:

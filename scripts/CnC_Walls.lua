@@ -1,6 +1,11 @@
 -- Basic setup, variables to use. (Might expose to settings sometime? Or perhaps make research allow for longer wall segments?)
 local flib_table = require("__flib__.table")
 local debugText = settings.global["tiberium-debug-text"].value
+local function debugPrint(message)
+	if debugText then
+		game.print(message or "")
+	end
+end
 
 ---@enum dirs Directions for wall segment graphics variations
 local dirs = {
@@ -105,13 +110,13 @@ end
 ---@param emitter LuaEntity
 function CnC_SonicWall_ConnectPowerPoles(emitter)
 	if emitter.surface.has_global_electric_network then return end
-	if debugText then game.print("Trying to connect power pole for "..emitter.gps_tag) end
+	debugPrint("Trying to connect power pole for "..emitter.gps_tag)
 	local orthogonal_nodes = CnC_SonicWall_FindNodes(emitter, dirs.both)
 	local pole = emitter.surface.find_entities_filtered{position = emitter.position, name = "tiberium-srf-power-pole"}
-	if next(pole) and debugText then game.print("Found power pole at "..pole[1].gps_tag) end
+	if next(pole) then debugPrint("Found power pole at "..pole[1].gps_tag) end
 	if next(pole) and next(orthogonal_nodes) then
 		for _, node in pairs(orthogonal_nodes) do
-			if debugText then game.print("Found node in range at "..node.gps_tag) end
+			debugPrint("Found node in range at "..node.gps_tag)
 			local pole2 = emitter.surface.find_entities_filtered{position = node.position, name = "tiberium-srf-power-pole"}
 			if next(pole2) then
 				connect_poles(pole[1], pole2[1])
@@ -127,14 +132,14 @@ function connect_poles(pole1, pole2)
 	if not (pole1 and pole1.valid and pole2 and pole2.valid) then
 		return
 	end
-	if debugText then game.print("Doing connection from "..pole1.gps_tag.." to "..pole2.gps_tag) end
+	debugPrint("Doing connection from "..pole1.gps_tag.." to "..pole2.gps_tag)
 	-- Get the copper wire connection points
 	local connector1 = pole1.get_wire_connector(defines.wire_connector_id.pole_copper, true)
 	local connector2 = pole2.get_wire_connector(defines.wire_connector_id.pole_copper, true)
 
 	-- Connect the poles
 	local success = connector1.connect_to(connector2, false)
-	if debugText then game.print("Connnection successful: "..tostring(success)) end
+	debugPrint("Connnection successful: "..tostring(success))
 end
 
 ---Destroys walls connected to given SRF emitter
@@ -150,7 +155,7 @@ function CnC_SonicWall_DisableNode(entity)
 		local ty = y + dir.y
 		local key = string.format("%g:%g:%g", surf, tx, ty)
 		while storage.SRF_segments[key] do
-			if debugText then game.print(string.format("disable wall at %g:%g:%g", surf, tx, ty)) end
+			debugPrint(string.format("disable wall at %g:%g:%g", surf, tx, ty))
 			local segment = storage.SRF_segments[key]
 			if segment.direction == dir.variation then
 				storage.SRF_segments[key].wall.destroy()
@@ -181,19 +186,19 @@ function CnC_SonicWall_DeleteNode(entity, tick)
 	local gps = string.format("[gps=%g,%g,%s]", entity.position.x, entity.position.y, entity.surface.name)
 	if k then
 		table.remove(storage.SRF_nodes, k)
-		if debugText then game.print("Destroyed SRF at "..gps.." removed from SRF_nodes, "..#storage.SRF_nodes.." entries remain") end
+		debugPrint("Destroyed SRF at "..gps.." removed from SRF_nodes, "..#storage.SRF_nodes.." entries remain")
 	end
 
 	k = find_value_in_table(storage.SRF_node_ticklist, entity.position, "position")
 	if k then
 		table.remove(storage.SRF_node_ticklist, k)
-		if debugText then game.print("Destroyed SRF at x: "..gps.." removed from SRF_node_ticklist, "..#storage.SRF_node_ticklist.." entries remain") end
+		debugPrint("Destroyed SRF at x: "..gps.." removed from SRF_node_ticklist, "..#storage.SRF_node_ticklist.." entries remain")
 	end
 
 	k = find_value_in_table(storage.SRF_low_power_ticklist, entity.position, "position")
 	if k then
 		table.remove(storage.SRF_low_power_ticklist, k)
-		if debugText then game.print("Destroyed SRF at x: "..gps.." removed from SRF_low_power_ticklist, "..#storage.SRF_low_power_ticklist.." entries remain") end
+		debugPrint("Destroyed SRF at x: "..gps.." removed from SRF_low_power_ticklist, "..#storage.SRF_low_power_ticklist.." entries remain")
 	end
 
 	CnC_SonicWall_DisableNode(entity)
