@@ -4,6 +4,9 @@ Version: 2.0.9
     - Fixed missing events for structures built on space platforms
     - Fixed Tiberium having lossless recycling recipes
     - Fixed "Found power pole" messages to no longer appear when debug mode is turned off
+    - Fixed a few typos
+  Changes:
+    - Made the "Require Resource Seed for Transmutation" setting not apply to fluids to avoid soft-locking some settings combinations
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.8
   Bugfixes:

@@ -1171,7 +1171,7 @@ function addDirectRecipe(ore, easy)
 	else
 		common.recipe.addIngredient(recipeName, "tiberium-primed-reactant", 1, "item")
 	end
-	if addSeed and not easy then
+	if addSeed and not easy and itemOrFluid == "item" then
 		common.recipe.addIngredient(recipeName, ore, 1, itemOrFluid)
 		oreAmount = oreAmount + 1
 	end
