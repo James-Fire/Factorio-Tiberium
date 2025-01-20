@@ -318,6 +318,37 @@ script.on_configuration_changed(function(data)
 	end
 	-- Apply new settings
 	storageIntegrityChecks()
+
+	-- Apply missing map gen settings
+	if data["mod_changes"][tiberiumInternalName] and data["mod_changes"][tiberiumInternalName]["new_version"]
+			and not data["mod_changes"][tiberiumInternalName]["old_version"] then
+		for name, planet in pairs(game.planets) do
+			-- Pull settings for each planet and then apply to map gen settings for each planet enabled
+			if planet.surface and (name == "tiber"
+					or (name == "nauvis" and (settings.startup["tiberium-on"].value == "nauvis" or settings.startup["tiberium-on"].value == "pure-nauvis"))
+					or (settings.startup["tiberium-on-"..name] and settings.startup["tiberium-on-"..name].value)
+					or (not settings.startup["tiberium-on-"..name] and settings.startup["tiberium-on-all-other-planets"].value)) then
+				local map_gen_settings = planet.surface.map_gen_settings  --[[@as MapGenSettings]]
+				if map_gen_settings.autoplace_settings.entity.settings["tibGrowthNode"] == nil then
+					map_gen_settings.autoplace_controls[name.."_tibGrowthNode"] = {}
+					map_gen_settings.autoplace_settings.entity.settings["tibGrowthNode"] = {}
+					planet.surface.map_gen_settings = map_gen_settings
+					planet.surface.regenerate_entity("tibGrowthNode")
+				end
+			end
+		end
+		-- Make sure they are added to growth list, do a growth tick, and spawn blossom trees
+		storageIntegrityChecks()
+		for _, node in pairs(storage.tibGrowthNodeList) do
+			if node.valid then
+				PlaceOre(node, 10)
+				local treeBlockers = {"tibNode_tree", "tiberium-node-harvester", "tiberium-spike", "tiberium-growth-accelerator", "tiberium-detonation-charge", "tiberium-monoculture-green", "tiberium-monoculture-blue"}
+				if node.surface.count_entities_filtered{area = areaAroundPosition(node.position), name = treeBlockers} == 0 then
+					createBlossomTree(node.surface, node.position)
+				end
+			end
+		end
+	end
 end)
 
 script.on_event(defines.events.on_runtime_mod_setting_changed, function(data)

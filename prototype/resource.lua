@@ -550,22 +550,3 @@ end
 
 -- Make islands for Tiberium on Aquilo
 data.raw.resource["tibGrowthNode"].created_effect = util.copy(data.raw.resource["crude-oil"].created_effect)
-
--- Add to planet definitions
-for name,planet in pairs(data.raw.planet) do
-	if (name == "tiber" or settings.startup["tiberium-all-planets"].value or (name == "nauvis" and (common.whichPlanet == "nauvis" or common.whichPlanet == "pure-nauvis")))
-			and planet.map_gen_settings and planet.map_gen_settings.autoplace_controls then
-		data:extend{
-			{
-				type = "autoplace-control",
-				name = name.."_tibGrowthNode",
-				richness = true,
-				order = string.sub(planet.order or "z",1,1).."-g",  --After Nauvis uranium
-				category = "resource",
-				localised_name = {"autoplace-control-names.tibGrowthNode"},
-			}
-		}
-		planet.map_gen_settings.autoplace_controls[name.."_tibGrowthNode"] = {}
-		planet.map_gen_settings.autoplace_settings.entity.settings["tibGrowthNode"] = {}
-	end
-end

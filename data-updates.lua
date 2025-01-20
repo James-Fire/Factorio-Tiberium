@@ -208,6 +208,28 @@ for name, assembler in pairs(data.raw["assembling-machine"]) do
 	end
 end
 
+-- Add Tiberium to planet definitions
+for name,planet in pairs(data.raw.planet) do
+	if planet.map_gen_settings and planet.map_gen_settings.autoplace_controls and
+			(name == "tiber"
+			or (name == "nauvis" and (common.whichPlanet == "nauvis" or common.whichPlanet == "pure-nauvis"))
+			or (settings.startup["tiberium-on-"..name] and settings.startup["tiberium-on-"..name].value)
+			or (not settings.startup["tiberium-on-"..name] and settings.startup["tiberium-on-all-other-planets"].value)) then
+		data:extend{
+			{
+				type = "autoplace-control",
+				name = name.."_tibGrowthNode",
+				richness = true,
+				order = string.sub(planet.order or "z",1,1).."-g",  --After Nauvis uranium
+				category = "resource",
+				localised_name = {"autoplace-control-names.tibGrowthNode"},
+			}
+		}
+		planet.map_gen_settings.autoplace_controls[name.."_tibGrowthNode"] = {}
+		planet.map_gen_settings.autoplace_settings.entity.settings["tibGrowthNode"] = {}
+	end
+end
+
 -- Fix some research triggers making Tiberium Only worlds unplayable
 if settings.startup["tiberium-advanced-start"].value or common.whichPlanet == "tiber-start" or common.whichPlanet == "pure-nauvis" then
 	local minableResorces = {}
