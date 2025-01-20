@@ -131,12 +131,12 @@ function giantSetupFunction()
 		end
 	end
 	for fluid, prototype in pairs(data.raw.fluid) do
-		if prototype.tiberium_resource_exclusion then
+		if prototype.tiberium_resource_exclusion or string.find(fluid, "dummy") then
 			resourceExclusions[fluid] = true
 		end
 	end
 	for item, prototype in pairs(data.raw.item) do
-		if prototype.tiberium_resource_exclusion then
+		if prototype.tiberium_resource_exclusion or string.find(item, "dummy") then
 			resourceExclusions[item] = true
 		end
 	end
