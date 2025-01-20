@@ -268,10 +268,16 @@ data:extend{
 		map_grid = false
 	},
 	{
+		type = "autoplace-control",
+		name = "tiber-rocks",
+		category = "terrain",
+		order = "c-y2"
+	},
+	{
 		type = "simple-entity",
 		name = "tiberium-tiber-rock",
 		autoplace = {
-			control = "rocks",
+			control = "tiber-rocks",
 			local_expressions = {
 				control = "control:rocks:size",
 				multiplier = 0.1,

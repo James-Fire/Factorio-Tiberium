@@ -9,10 +9,12 @@ Version: 2.0.9
     - Fixed crash from modded ores that gave science packs when mined instead of items
     - Fixed SRF Emitters sometimes not connecting to nearby power poles
     - Fixed SRF Emitters rarely being unpowered but not displaying the low power icon
+    - Fixed Tiber Rocks spawning on Nauvis when they shouldn't
     - Fixed a few typos
   Changes:
     - Split the "Tiberium on All Planets" setting up into per-planet settings to make it less confusing and easier to add to existing saves
     - Made the "Require Resource Seed for Transmutation" setting not apply to fluids to avoid soft-locking some settings combinations
+    - Split Rocks and Tiber Rocks to be separate settings on the Terrain tab
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.8
   Bugfixes:

@@ -56,7 +56,7 @@ data:extend{
 				--["enemy-base"] = {},
 				--["iron-ore"] = {},
 				nauvis_cliff = {},
-				rocks = {},
+				["tiber-rocks"] = {},
 				starting_area_moisture = {},
 				--stone = {},
 				trees = {},
