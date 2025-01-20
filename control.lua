@@ -330,7 +330,9 @@ script.on_configuration_changed(function(data)
 					or (not settings.startup["tiberium-on-"..name] and settings.startup["tiberium-on-all-other-planets"].value)) then
 				local map_gen_settings = planet.surface.map_gen_settings  --[[@as MapGenSettings]]
 				if map_gen_settings.autoplace_settings.entity.settings["tibGrowthNode"] == nil then
+					---@diagnostic disable-next-line: missing-fields
 					map_gen_settings.autoplace_controls[name.."_tibGrowthNode"] = {}
+					---@diagnostic disable-next-line: missing-fields
 					map_gen_settings.autoplace_settings.entity.settings["tibGrowthNode"] = {}
 					planet.surface.map_gen_settings = map_gen_settings
 					planet.surface.regenerate_entity("tibGrowthNode")
@@ -1421,8 +1423,8 @@ function on_new_entity(event)
 	end
 	if (new_entity.type == "electric-pole") and not surface.has_global_electric_network then  -- Connect to existing SRF Poles
 		debugPrint("We really don't expect to see srf poles here: "..new_entity.name)
-		local srfPoles = surface.find_entities_filtered{position = position, name = "tiberium-srf-power-pole",
-				radius = new_entity.prototype.get_supply_area_distance(new_entity.quality)}
+		local srfPoles = surface.find_entities_filtered{name = "tiberium-srf-power-pole",
+				area = areaAroundPosition(position, math.floor(new_entity.prototype.get_supply_area_distance(new_entity.quality)))}
 		for _, pole in pairs(srfPoles) do
 			connect_poles(new_entity, pole)
 		end
@@ -1447,10 +1449,11 @@ function on_new_entity(event)
 				if srfPole then
 					srfPole.destructible = false
 					-- Connect to existing electric poles that would power the emitter to the new SRF pole
-					for _, pole in pairs(surface.find_entities_filtered{type = "electric-pole", position = position, radius = prototypes.max_electric_pole_supply_area_distance}) do
+					for _, pole in pairs(surface.find_entities_filtered{type = "electric-pole",
+							area = areaAroundPosition(position, math.floor(prototypes.max_electric_pole_supply_area_distance))}) do
 						if pole.name ~= "tiberium-srf-power-pole" then
-							for _, connectable in pairs(surface.find_entities_filtered{position = pole.position, name = "tiberium-srf-power-pole",
-									radius = pole.prototype.get_supply_area_distance(pole.quality)}) do
+							for _, connectable in pairs(surface.find_entities_filtered{name = "tiberium-srf-power-pole",
+									area = areaAroundPosition(pole.position, math.floor(pole.prototype.get_supply_area_distance(pole.quality)))}) do
 								if connectable == srfPole then
 									connect_poles(pole, srfPole)
 									break

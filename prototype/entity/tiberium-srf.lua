@@ -223,7 +223,7 @@ data:extend{
 			"not-repairable",
 		},
 		collision_mask = {layers = {}},
-		supply_area_distance = 1,
+		supply_area_distance = 0.5,
 		maximum_wire_distance = 16,
 		connection_points = {
 			{
