@@ -6,6 +6,7 @@ Version: 2.0.9
     - Fixed "Found power pole" messages to no longer appear when debug mode is turned off
     - Fixed Tiberium not spawning after being added to an in-progress save (Thanks to Brevven and Xorimuth)
     - Fixed recipes to stop autogenerating for unharvestable dummy resources from other mods
+    - Fixed crash from modded ores that gave science packs when mined instead of items
     - Fixed a few typos
   Changes:
     - Split the "Tiberium on All Planets" setting up into per-planet settings to make it less confusing and easier to add to existing saves

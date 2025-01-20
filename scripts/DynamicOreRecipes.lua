@@ -1141,7 +1141,7 @@ function addDirectRecipe(ore, easy)
 	local oreAmount = 64 / (oreMult[ore] or 1)
 	local addSeed = settings.startup["tiberium-direct-catalyst"].value
 	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"
-	local surfaceRestriction = data.raw[itemOrFluid][ore].tiberium_surface
+	local surfaceRestriction = (data.raw[itemOrFluid][ore] and data.raw[itemOrFluid][ore].tiberium_surface) or (data.raw.tool[ore] and data.raw.tool[ore].tiberium_surface)
 	local tech = easy and "tiberium-easy-transmutation-tech" or data.raw.fluid[ore] and "tiberium-molten-centrifuging" or "tiberium-transmutation-tech"
 	local category = "chemistry" --data.raw.fluid[ore] and "chemistry" or "tiberium-transmutation"
 	local energy = 12
