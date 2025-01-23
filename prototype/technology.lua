@@ -743,7 +743,7 @@ data:extend{
 				effect_description = {"technology-description.tiberium-military-total-immunity"}
 			},
 		},
-		prerequisites = {"tiberium-military-2", "tiberium-containment-tech", "power-armor-mk2", "artillery"},
+		prerequisites = {"tiberium-military-2", "tiberium-containment-tech", "power-armor-mk2"},
 		unit = {
 			count = 200,
 			ingredients = {
@@ -753,6 +753,32 @@ data:extend{
 				{"military-science-pack", 1},
 				{"chemical-science-pack", 1},
 				{"utility-science-pack", 1},
+			},
+			time = 30
+		}
+	},
+	{
+		type = "technology",
+		name = "tiberium-artillery",
+		icons = common.layeredIcons("__base__/graphics/technology/artillery.png", 256, tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png", 64, "se"),
+		effects = {
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-artillery-shell"
+			},
+		},
+		prerequisites = {"tiberium-military-3", "artillery"},
+		unit = {
+			count = 200,
+			ingredients = {
+				{"tiberium-science", 1},
+				{"automation-science-pack", 1},
+				{"logistic-science-pack", 1},
+				{"military-science-pack", 1},
+				{"chemical-science-pack", 1},
+				{"utility-science-pack", 1},
+				{"space-science-pack", 1},
+				{"metallurgic-science-pack", 1},
 			},
 			time = 30
 		}

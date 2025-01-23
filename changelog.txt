@@ -15,6 +15,7 @@ Version: 2.0.9
     - Split the "Tiberium on All Planets" setting up into per-planet settings to make it less confusing and easier to add to existing saves
     - Made the "Require Resource Seed for Transmutation" setting not apply to fluids to avoid soft-locking some settings combinations
     - Split Rocks and Tiber Rocks to be separate settings on the Terrain tab
+    - Moved Tiberium Artillery to a separate technology to reduce prerequisites for Tiberium Military 3
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.8
   Bugfixes:
