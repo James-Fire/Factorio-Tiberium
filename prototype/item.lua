@@ -72,6 +72,7 @@ data:extend{
 		durability_description_key = "description.science-pack-remaining-amount-key",
 		durability_description_value = "description.science-pack-remaining-amount-value",
 		stack_size = 200,
+		weight = 1000,
 	},
 	--Structures
 	{
@@ -156,7 +157,8 @@ data:extend{
 		subgroup = "a-buildings",
 		order = "b[srf]",
 		place_result = "tiberium-reprocessor",
-		stack_size = 50
+		stack_size = 50,
+		weight = 100000,
 	},
 	-- {
 	-- 	type = "item",
@@ -176,7 +178,8 @@ data:extend{
 		subgroup = "a-buildings",
 		order = "b[srf]",
 		place_result = "tiberium-srf-connector",
-		stack_size = 50
+		stack_size = 50,
+		weight = 50000,
 	},
 	{
 		type = "item",
@@ -187,7 +190,8 @@ data:extend{
 		subgroup = "a-buildings",
 		order = "b[srf]-2",
 		place_result = "tiberium-sonic-emitter",
-		stack_size = 50
+		stack_size = 50,
+		weight = 50000,
 	},
 	{
 		type = "item",
@@ -197,7 +201,8 @@ data:extend{
 		subgroup = "a-buildings",
 		order = "b[srf]-3",
 		place_result = "tiberium-sonic-emitter-blue",
-		stack_size = 50
+		stack_size = 50,
+		weight = 50000,
 	},
 	{
 		type = "item",
@@ -237,7 +242,8 @@ data:extend{
 		subgroup = "a-buildings",
 		order = "f[tiberium-obelisk-of-light]",
 		place_result = "tiberium-obelisk-of-light",
-		stack_size = 50
+		stack_size = 50,
+		weight = 100000,
 	},
 	{
 		type = "item",
@@ -247,7 +253,8 @@ data:extend{
 		subgroup = "a-buildings",
 		order = "f[tiberium-advanced-guard-tower]",
 		place_result = "tiberium-advanced-guard-tower",
-		stack_size = 50
+		stack_size = 50,
+		weight = 100000,
 	},
 	-- Node structures
 	{
@@ -259,6 +266,7 @@ data:extend{
 		order = "a[node-harvester]",
 		place_result = "tiberium-node-harvester",
 		stack_size = 20,
+		weight = 100000,
 	},
 	{
 		type = "item",
@@ -269,6 +277,7 @@ data:extend{
 		order = "b[tiberium-growth-accelerator]",
 		place_result = "tiberium-growth-accelerator-node",
 		stack_size = 20,
+		weight = 50000,
 	},
 	{
 		type = "item",
@@ -289,6 +298,7 @@ data:extend{
 		order = "d[tiberium-spike]",
 		place_result = "tiberium-spike",
 		stack_size = 20,
+		weight = 100000,
 	},
 	{
 		type = "item",
@@ -297,7 +307,8 @@ data:extend{
 		subgroup = "a-node-buildings",
 		order = "e[tiberium-monoculture-green]",
 		place_result = "tiberium-monoculture-green-node",
-		stack_size = 20
+		stack_size = 20,
+		weight = 100000,
 	},
 	{
 		type = "item",
@@ -307,6 +318,7 @@ data:extend{
 		order = "f[tiberium-monoculture-blue]",
 		place_result = "tiberium-monoculture-blue-node",
 		stack_size = 50
+		weight = 100000,
 	},
 	--Military
 	{
@@ -363,6 +375,7 @@ data:extend{
 		subgroup = "a-items",
 		order = "a[tiberium-ore]",
 		stack_size = 200,
+		weight = 10000,
 	},
 	{
 		type = "item",
@@ -373,6 +386,7 @@ data:extend{
 		subgroup = "a-items",
 		order = "a[tiberium-ore]",
 		stack_size = 200,
+		weight = 10000,
 	},
 	{
 		type = "item",
@@ -383,6 +397,7 @@ data:extend{
 		subgroup = "a-items",
 		order = "a[tiberium-ore]",
 		stack_size = 200,
+		weight = 5000,
 	},
 	{
 		type = "item",
@@ -392,7 +407,8 @@ data:extend{
 		flags = {},
 		subgroup = "a-intermediates",
 		order = "a[tiberium-ore]",
-		stack_size = 200
+		stack_size = 200,
+		weight = 2500,
 	},
 	{
 		type = "item",
@@ -402,7 +418,8 @@ data:extend{
 		flags = {},
 		subgroup = "a-intermediates",
 		order = "a[tiberium-ore]",
-		stack_size = 100
+		stack_size = 100,
+		weight = 2000,
 	},
 	{
 		type = "item",
@@ -416,6 +433,7 @@ data:extend{
 		fuel_value = "2MJ",
 		fuel_category = "chemical",
 		fuel_emissions_multiplier = common.emissionMultiplier(4),
+		weight = 2000,
 	},
 	{
 		type = "item",
@@ -429,5 +447,6 @@ data:extend{
 		fuel_value = "8MJ",
 		fuel_category = "chemical",
 		fuel_emissions_multiplier = common.emissionMultiplier(4),
+		weight = 2000,
 	},
 }

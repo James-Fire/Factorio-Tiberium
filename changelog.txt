@@ -16,6 +16,7 @@ Version: 2.0.9
     - Made the "Require Resource Seed for Transmutation" setting not apply to fluids to avoid soft-locking some settings combinations
     - Split Rocks and Tiber Rocks to be separate settings on the Terrain tab
     - Moved Tiberium Artillery to a separate technology to reduce prerequisites for Tiberium Military 3
+    - Updated rocket capacity on most items
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.8
   Bugfixes:

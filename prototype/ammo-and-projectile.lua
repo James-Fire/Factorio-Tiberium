@@ -33,7 +33,8 @@ data:extend{
 		magazine_size = 10,
 		subgroup = "a-items",
 		order = "b[basic-clips]-d[tiberium-rounds-magazine]",
-		stack_size = 200
+		stack_size = 100,
+		weight = 20000,
 	}
 }
 
@@ -167,7 +168,8 @@ data:extend{tiberiumRocketProjectile,
 		},
 		subgroup = "a-items",
 		order = "c[rocket-launcher]-a[basic]",
-		stack_size = 200
+		stack_size = 100,
+		weight = 40000,
 	},
 }
 
@@ -453,7 +455,8 @@ data:extend{tibNukeGroundZero, tibNukeWave, tibNukeProjectile,
 		},
 		subgroup = "a-items",
 		order = "c[rocket-launcher]-b[atomic-bomb]",
-		stack_size = 10
+		stack_size = 10,
+		weight = 1000000,
 	},
 }
 
@@ -570,7 +573,8 @@ data:extend{tibSeedProjectile,
 		},
 		subgroup = "a-items",
 		order = "c[rocket-launcher]-c[seed-missile]",
-		stack_size = 10
+		stack_size = 10,
+		weight = 100000,
 	},
 }
 
@@ -614,7 +618,8 @@ data:extend{tibSeedBlueProjectile,
 		},
 		subgroup = "a-items",
 		order = "c[rocket-launcher]-c[seed-missile]",
-		stack_size = 10
+		stack_size = 10,
+		weight = 100000,
 	},
 }
 
@@ -657,6 +662,7 @@ data:extend{
 		order = "e[flamethrower]",
 		stack_size = 100,
 		subgroup = "a-items",
+		weight = 10000,
 	},
 }
 
@@ -860,7 +866,8 @@ data:extend{catalystAll, catalystBlue, invisibleChainReactionAll, invisibleChain
 		},
 		subgroup = "a-items",
 		order = "c[rocket-launcher]-a[basic]",
-		stack_size = 200
+		stack_size = 100,
+		weight = 40000,
 	},
 	{
 		type = "ammo",
@@ -886,7 +893,8 @@ data:extend{catalystAll, catalystBlue, invisibleChainReactionAll, invisibleChain
 		},
 		subgroup = "a-items",
 		order = "c[rocket-launcher]-a[basic]",
-		stack_size = 200
+		stack_size = 100,
+		weight = 40000,
 	},
 }
 
