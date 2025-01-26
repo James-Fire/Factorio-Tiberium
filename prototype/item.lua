@@ -317,7 +317,7 @@ data:extend{
 		subgroup = "a-node-buildings",
 		order = "f[tiberium-monoculture-blue]",
 		place_result = "tiberium-monoculture-blue-node",
-		stack_size = 50
+		stack_size = 20,
 		weight = 100000,
 	},
 	--Military
@@ -340,7 +340,7 @@ data:extend{
 		flags = {},
 		order = "c[tiberium-fuel-cell]-a[empty-cell]",
 		subgroup = "a-intermediates",
-		stack_size = 100
+		stack_size = 50
 	},
 	{
 		type = "item",
@@ -350,7 +350,7 @@ data:extend{
 		flags = {},
 		order = "c[tiberium-fuel-cell]-c[dirty-cell]",
 		subgroup = "a-intermediates",
-		stack_size = 5
+		stack_size = 50
 	},
 	{
 		type = "item",
@@ -386,7 +386,7 @@ data:extend{
 		subgroup = "a-items",
 		order = "a[tiberium-ore]",
 		stack_size = 200,
-		weight = 10000,
+		weight = 5000,
 	},
 	{
 		type = "item",
@@ -397,7 +397,7 @@ data:extend{
 		subgroup = "a-items",
 		order = "a[tiberium-ore]",
 		stack_size = 200,
-		weight = 5000,
+		weight = 10000,
 	},
 	{
 		type = "item",
