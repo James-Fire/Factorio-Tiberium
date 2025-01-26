@@ -21,6 +21,12 @@ storage = {}
 ---@class entityDestroyedInfoTable
 ---@field [uint] entityDestroyedInfo
 
+---@class entityGridRegistry
+---@field [LuaEntity] boolean
+
+---@class playerGridRegistry
+---@field [uint] boolean
+
 local crash_site = require("crash-site")
 local util = require("util")
 local migration = require("__flib__.migration")
@@ -160,6 +166,8 @@ script.on_init(function()
 		storage.exemptDamageNames[name] = true
 	end
 
+	storage.tiberiumPoweredPlayers = {}  --[=[@as playerGridRegistry]=]
+	storage.tiberiumPoweredEntities = {}  --[=[@as entityGridRegistry]=]
 	storage.tiberiumDamageTakenMulti = {}
 	storage.technologyTimes = {}
 	for _, force in pairs(game.forces) do
@@ -410,6 +418,12 @@ function doUpgradeConversions(data)
 				CnC_SonicWall_AddNode(emitter, game.tick)
 			end
 		end
+	end
+
+	if upgradingToVersion(data, tiberiumInternalName, "2.0.9") then
+		-- Initialize new globals
+		storage.tiberiumPoweredPlayers = {}
+		storage.tiberiumPoweredEntities = {}
 	end
 
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and
@@ -1248,6 +1262,21 @@ script.on_nth_tick(20, function(event) --Player damage 3 times per second
 			if nearby_ore_count > 0 and not player.character.vehicle and not player.character.driving and player.character.name ~= "jetpack-flying" then
 				safeDamage(player, nearby_ore_count * TiberiumDamage * 0.2)
 			end
+			if player.character.grid then
+				if nearby_ore_count > 0 then
+					if swapEquipment(player.character.grid, "tiberium-generator-equipment", "tiberium-generator-equipment-on") then
+						--Play powerup sound for player
+						player.play_sound({path = "tiberium-generator-on"})
+						storage.tiberiumPoweredPlayers[player.index] = true
+					end
+				elseif storage.tiberiumPoweredPlayers[player.index] then
+					if swapEquipment(player.character.grid, "tiberium-generator-equipment-on", "tiberium-generator-equipment") then
+						--Play powerdown sound for player
+						player.play_sound({path = "tiberium-generator-off"})
+						storage.tiberiumPoweredPlayers[player.index] = nil
+					end
+				end
+			end
 			--Damage players with unsafe Tiberium products in their inventory
 			local damagingItems = 0
 			for _, inventory in pairs({player.get_inventory(defines.inventory.character_main), player.get_inventory(defines.inventory.character_trash)}) do
@@ -1266,6 +1295,21 @@ script.on_nth_tick(20, function(event) --Player damage 3 times per second
 			end
 		end
 	end
+	for entity, status in pairs(storage.tiberiumPoweredEntities) do
+		if entity.valid and entity.grid then
+			if entity.surface.count_entities_filtered{name = storage.oreTypes, position = entity.position, radius = 1.5} > 0 then
+				if swapEquipment(entity.grid, "tiberium-generator-equipment", "tiberium-generator-equipment-on") then
+					storage.tiberiumPoweredEntities[entity] = true
+				end
+			elseif status then
+				if swapEquipment(entity.grid, "tiberium-generator-equipment-on", "tiberium-generator-equipment") then
+					storage.tiberiumPoweredEntities[entity] = false
+				end
+			end
+		elseif not entity.valid then
+			storage.tiberiumPoweredEntities[entity] = nil
+		end
+	end
 end)
 
 ---Harvest Tiberium Ore around MARV
@@ -1282,6 +1326,23 @@ function marvHarvestOre(vehicleEntity)
 			vehicleEntity.insert{name = oreName, count = math.floor(harvested_amount)}
 		end
 	end
+end
+
+---comment
+---@param grid LuaEquipmentGrid
+---@param oldEquipment string
+---@param newEquipment string
+function swapEquipment(grid, oldEquipment, newEquipment)
+	local equipment = grid.find(oldEquipment)
+	local worked = equipment ~= nil
+	while equipment do
+		local position = equipment.position
+		local quality = equipment.quality
+		grid.take({equipment = equipment})
+		grid.put({name = newEquipment, position = position, quality = quality})
+		equipment = grid.find(oldEquipment)
+	end
+	return worked
 end
 
 ---Deal tiberium damage to entity or player without crashes because we finally fixed all of those
@@ -1428,6 +1489,9 @@ function on_new_entity(event)
 		for _, pole in pairs(srfPoles) do
 			connect_poles(new_entity, pole)
 		end
+	end
+	if new_entity.grid then
+		storage.tiberiumPoweredEntities[new_entity] = false
 	end
 	if (new_entity.name == "tiberium-srf-connector") then
 		new_entity.destructible = false

@@ -736,7 +736,7 @@ data:extend{
 			},
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-artillery-shell"
+				recipe = "tiberium-generator-equipment"
 			},
 			{
 				type = "nothing",

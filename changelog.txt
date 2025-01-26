@@ -20,6 +20,8 @@ Version: 2.0.9
     - Changed fuel cell stack sizes from 50, 100, 5 to 50, 50, 50
     - Changed Monoculture stack sizes from 20, 50 to 20, 20
     - Updated rocket capacity on most items
+  Features:
+    - New equipment: Tiberium Radiation Absorbtion Generator that generates substantially more power while standing on Tiberium Ore
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.8
   Bugfixes:

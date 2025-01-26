@@ -1257,6 +1257,25 @@ data:extend{
 		},
 		icon_size = 64
 	},
+	{
+		type = "recipe",
+		name = "tiberium-generator-equipment",
+		category = "crafting",
+		subgroup = "a-items",
+		energy_required = 10,
+		enabled = false,
+		ingredients = {
+			{type = "item", name = "processing-unit", amount = 160},
+			{type = "item", name = "low-density-structure", amount = 16},
+			{type = "item", name = "tiberium-ion-core", amount = 16}
+		},
+		results = {
+			{type = "item", name = "tiberium-generator-equipment", amount = 1}
+		},
+		icon = tiberiumInternalName.."/graphics/icons/NuclearBatteryOn.png",
+		icon_size = 128,
+		order = "f[energy-source]",
+	}
 }
 
 -- Other

@@ -365,6 +365,44 @@ data:extend{
 		fuel_value = "4GJ",
 		stack_size = 50
 	},
+	{
+		type = "item",
+		name = "tiberium-generator-equipment",
+		place_as_equipment_result = "tiberium-generator-equipment",
+		icon = tiberiumInternalName.."/graphics/icons/NuclearBatteryOff.png",
+		icon_size = 128,
+		pick_sound = {
+			filename = "__base__/sound/item/reactor-inventory-pickup.ogg",
+			volume = 0.6
+		},
+		drop_sound = {
+			filename = "__base__/sound/item/reactor-inventory-move.ogg",
+			volume = 0.7
+		},
+		flags = {},
+		order = "a[energy-source]-b[fission-reactor]",
+		subgroup = "equipment",
+		stack_size = 20
+	},
+	{
+		type = "item",
+		name = "tiberium-generator-equipment-on",
+		place_as_equipment_result = "tiberium-generator-equipment",
+		icon = tiberiumInternalName.."/graphics/icons/NuclearBatteryOn.png",
+		icon_size = 128,
+		pick_sound = {
+			filename = "__base__/sound/item/reactor-inventory-pickup.ogg",
+			volume = 0.6
+		},
+		drop_sound = {
+			filename = "__base__/sound/item/reactor-inventory-move.ogg",
+			volume = 0.7
+		},
+		flags = {},
+		order = "a[energy-source]-b[fission-reactor]",
+		subgroup = "equipment",
+		stack_size = 20
+	},
 	--Other
 	{
 		type = "item",
@@ -375,7 +413,7 @@ data:extend{
 		subgroup = "a-items",
 		order = "a[tiberium-ore]",
 		stack_size = 200,
-		weight = 10000,
+		weight = 5000,
 	},
 	{
 		type = "item",
@@ -386,7 +424,7 @@ data:extend{
 		subgroup = "a-items",
 		order = "a[tiberium-ore]",
 		stack_size = 200,
-		weight = 5000,
+		weight = 10000,
 	},
 	{
 		type = "item",
