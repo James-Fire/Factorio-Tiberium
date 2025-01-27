@@ -21,7 +21,7 @@ Version: 2.0.9
     - Changed Monoculture stack sizes from 20, 50 to 20, 20
     - Updated rocket capacity on most items
   Features:
-    - New equipment: Tiberium Radiation Absorbtion Generator that generates substantially more power while standing on Tiberium Ore
+    - New equipment: Tiberium Radiation Absorption Generator that generates substantially more power while standing on Tiberium Ore
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.8
   Bugfixes:
