@@ -328,7 +328,12 @@ if not mods["space-age"] then
 	data.raw["string-setting"]["tiberium-on"].allowed_values = {"nauvis", "pure-nauvis"}
 	data.raw["string-setting"]["tiberium-on"].default_value = "nauvis"
 
-	data.raw["bool-setting"]["tiberium-all-planets"].hidden = true
+	data.raw["bool-setting"]["tiberium-on-nauvis"].hidden = true
+	data.raw["bool-setting"]["tiberium-on-vulcanus"].hidden = true
+	data.raw["bool-setting"]["tiberium-on-gleba"].hidden = true
+	data.raw["bool-setting"]["tiberium-on-fulgora"].hidden = true
+	data.raw["bool-setting"]["tiberium-on-aquilo"].hidden = true
+	data.raw["bool-setting"]["tiberium-on-all-other-planets"].hidden = true
 
 	data.raw["bool-setting"]["tiberium-direct-surface-condition"].hidden = true
 	data.raw["bool-setting"]["tiberium-direct-surface-condition"].default_value = false

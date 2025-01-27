@@ -6,9 +6,9 @@ local flib_table = require("__flib__.table")
 local flib_data_util = require("__flib__.data-util")
 local debugText = settings.startup["tiberium-debug-text-startup"].value
 local easyMode = settings.startup["tiberium-easy-recipes"].value
-local surfaceRestrictTransmute = settings.startup["tiberium-direct-surface-condition"].value
-local planetTechs = settings.startup["tiberium-direct-planet-techs"].value
-local allowAlienOres = settings.startup["tiberium-centrifuge-alien-ores"].value
+local surfaceRestrictTransmute = settings.startup["tiberium-direct-surface-condition"].value and mods["space-age"]
+local planetTechs = settings.startup["tiberium-direct-planet-techs"].value and mods["space-age"]
+local allowAlienOres = settings.startup["tiberium-centrifuge-alien-ores"].value and mods["space-age"]
 local free = {}
 local excludedCrafting = {["transport-drone-request"] = true, ["auto-fabricator"] = true} --Rigorous way to do this?
 
@@ -1137,7 +1137,7 @@ end
 --Creates recipes to turn Molten Tiberium directly into raw materials
 --Assumes oreMult
 function addDirectRecipe(ore, easy)
-	local recipeName = (easy and "tiberium-slurry" or "tiberium").."-tranmutation-to-"..ore
+	local recipeName = (easy and "tiberium-slurry" or "tiberium").."-transmutation-to-"..ore
 	local oreAmount = 64 / (oreMult[ore] or 1)
 	local addSeed = settings.startup["tiberium-direct-catalyst"].value
 	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"

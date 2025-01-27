@@ -165,3 +165,8 @@ if common.tierZero and (common.whichPlanet == "pure-nauvis" or common.whichPlane
 	common.technology.addPrerequisite("electronics", "tiberium-ore-centrifuging")
 	common.technology.addPrerequisite("steam-power", "tiberium-ore-centrifuging")
 end
+if not mods["space-age"] then
+	data.raw.technology["tiberium-artillery"] = nil
+	table.insert(data.raw.technology["tiberium-military-3"].effects, {type = "unlock-recipe", recipe = "tiberium-artillery-shell"})
+	table.insert(data.raw.technology["tiberium-military-3"].prerequisites, "artillery")
+end

@@ -1,4 +1,8 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.10
+  Bugfixes:
+    - Fixed startup crash when Space Age is not active
+---------------------------------------------------------------------------------------------------
 Version: 2.0.9
   Bugfixes:
     - Fixed missing events for structures built on space platforms
