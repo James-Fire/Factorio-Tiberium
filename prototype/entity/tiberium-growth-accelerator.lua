@@ -2,7 +2,7 @@ require("prototype.entity.tiberium-node-harvester")
 
 local acceleratorSprite = {
 	-- Centrifuge C
-	filename = "__base__/graphics/entity/centrifuge/centrifuge-C.png",
+	filename = tiberiumInternalName.."/graphics/entity/centrifuge/centrifuge-C.png",
 	priority = "high",
 	scale = 0.5,
 	line_length = 8,
@@ -83,7 +83,7 @@ data:extend{growthAcceleratorNode,
 				layers = {
 					{
 						blend_mode = "additive",
-						filename = "__base__/graphics/entity/centrifuge/centrifuge-C-light.png",
+						filename = tiberiumInternalName.."/graphics/entity/centrifuge/centrifuge-C-light.png",
 						frame_count = 64,
 						height = 207,
 						scale = 0.5,
@@ -97,7 +97,7 @@ data:extend{growthAcceleratorNode,
 				layers = {
 					acceleratorSprite,
 					{
-						filename = "__base__/graphics/entity/centrifuge/centrifuge-C-shadow.png",
+						filename = tiberiumInternalName.."/graphics/entity/centrifuge/centrifuge-C-shadow.png",
 						draw_as_shadow = true,
 						priority = "high",
 						scale = 0.5,

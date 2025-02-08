@@ -379,7 +379,7 @@ data:extend{
 			"placeable-neutral",
 			"placeable-off-grid"
 		},
-		icon = "__base__/graphics/icons/huge-rock.png",
+		icon = tiberiumInternalName.."/graphics/icons/huge-rock.png",
 		impact_category = "stone",
 		map_color = {
 			129,
@@ -424,120 +424,7 @@ data:extend{
 			}
 		},
 		order = "b[decorative]-l[rock]-a[huge]",
-		pictures = {
-			{
-				filename = "__base__/graphics/decorative/huge-rock/huge-rock-05.png",
-				height = 179,
-				scale = 0.5,
-				shift = {0.25, 0.0625},
-				width = 201
-			},
-			{
-				filename = "__base__/graphics/decorative/huge-rock/huge-rock-06.png",
-				height = 171,
-				scale = 0.5,
-				shift = {0.429688, 0.046875},
-				width = 233
-			},
-			{
-				filename = "__base__/graphics/decorative/huge-rock/huge-rock-07.png",
-				height = 192,
-				scale = 0.5,
-				shift = {0.398438, 0.03125},
-				width = 240
-			},
-			{
-				filename = "__base__/graphics/decorative/huge-rock/huge-rock-08.png",
-				height = 175,
-				scale = 0.5,
-				shift = {0.148438, 0.132812},
-				width = 219
-			},
-			{
-				filename = "__base__/graphics/decorative/huge-rock/huge-rock-09.png",
-				height = 208,
-				scale = 0.5,
-				shift = {0.3125, 0.0625},
-				width = 240
-			},
-			{
-				filename = "__base__/graphics/decorative/huge-rock/huge-rock-10.png",
-				height = 190,
-				scale = 0.5,
-				shift = {0.1875, 0.046875},
-				width = 243
-			},
-			{
-				filename = "__base__/graphics/decorative/huge-rock/huge-rock-11.png",
-				height = 185,
-				scale = 0.5,
-				shift = {0.398438, 0.0546875},
-				width = 249
-			},
-			{
-				filename = "__base__/graphics/decorative/huge-rock/huge-rock-12.png",
-				height = 163,
-				scale = 0.5,
-				shift = {0.34375, 0.0390625},
-				width = 273
-			},
-			{
-				filename = "__base__/graphics/decorative/huge-rock/huge-rock-13.png",
-				height = 175,
-				scale = 0.5,
-				shift = {0.273438, 0.0234375},
-				width = 275
-			},
-			{
-				filename = "__base__/graphics/decorative/huge-rock/huge-rock-14.png",
-				height = 215,
-				scale = 0.5,
-				shift = {0.195312, 0.0390625},
-				width = 241
-			},
-			{
-				filename = "__base__/graphics/decorative/huge-rock/huge-rock-15.png",
-				height = 181,
-				scale = 0.5,
-				shift = {0.523438, 0.03125},
-				width = 318
-			},
-			{
-				filename = "__base__/graphics/decorative/huge-rock/huge-rock-16.png",
-				height = 224,
-				scale = 0.5,
-				shift = {0.0546875, 0.0234375},
-				width = 217
-			},
-			{
-				filename = "__base__/graphics/decorative/huge-rock/huge-rock-17.png",
-				height = 228,
-				scale = 0.5,
-				shift = {0.226562, 0.046875},
-				width = 332
-			},
-			{
-				filename = "__base__/graphics/decorative/huge-rock/huge-rock-18.png",
-				height = 243,
-				scale = 0.5,
-				shift = {0.195312, 0.0390625},
-				width = 290
-			},
-			{
-				filename = "__base__/graphics/decorative/huge-rock/huge-rock-19.png",
-				height = 225,
-				scale = 0.5,
-				shift = {0.609375, 0.0234375},
-				width = 349
-			},
-			{
-				filename = "__base__/graphics/decorative/huge-rock/huge-rock-20.png",
-				height = 250,
-				scale = 0.5,
-				shift = {0.132812, 0.03125},
-				width = 287
-			}
-		},
+		pictures = {},
 		render_layer = "object",
 		resistances = {
 			{
@@ -550,6 +437,9 @@ data:extend{
 	}
 }
 
+if data.raw["simple-entity"]["huge-rock"] then
+	data.raw["simple-entity"]["tiberium-tiber-rock"].pictures = data.raw["simple-entity"]["huge-rock"].pictures
+end
 for _,picture in pairs(data.raw["simple-entity"]["tiberium-tiber-rock"].pictures) do
 	picture.tint = {r = 0.7, g = 0.9, b = 0.6, a = 1}
 end

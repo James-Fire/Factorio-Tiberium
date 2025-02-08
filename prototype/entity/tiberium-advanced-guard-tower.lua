@@ -84,7 +84,7 @@ data:extend{
 		water_reflection = {
 			orientation_to_variation = false,
 			pictures = {
-				filename = "__base__/graphics/entity/gun-turret/gun-turret-reflection.png",
+				filename = tiberiumInternalName.."/graphics/entity/advanced-guard-tower/gun-turret-reflection.png",
 				height = 32,
 				priority = "extra-high",
 				scale = 5,

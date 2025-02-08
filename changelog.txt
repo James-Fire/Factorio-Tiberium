@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.11
+  Bugfixes:
+    - Fixed crash from base graphics dimensions changing and updated sprite definitions to make them resilient to changes to base graphics
+    - Fixed Tiberium Centrifuges glowing when they weren't active
+---------------------------------------------------------------------------------------------------
 Version: 2.0.10
   Bugfixes:
     - Fixed startup crash when Space Age is not active

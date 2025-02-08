@@ -3,8 +3,7 @@ data:extend{
 	{
 		type = "ammo",
 		name = "tiberium-rounds-magazine",
-		icon = "__base__/graphics/icons/uranium-rounds-magazine.png",
-		icon_size = 64,
+		icons = common.blankIcons,
 		ammo_category = "bullet",
 		ammo_type = {
 			action = {
@@ -37,62 +36,23 @@ data:extend{
 		weight = 20000,
 	}
 }
+if data.raw.ammo["uranium-rounds-magazine"] then
+	data.raw.ammo["tiberium-rounds-magazine"].icons = nil
+	data.raw.ammo["tiberium-rounds-magazine"].icon = data.raw.ammo["uranium-rounds-magazine"].icon
+	data.raw.ammo["tiberium-rounds-magazine"].icon_size = data.raw.ammo["uranium-rounds-magazine"].icon_size
+	data.raw.ammo["tiberium-rounds-magazine"].pictures = data.raw.ammo["uranium-rounds-magazine"].pictures
+end
 
 --Tiberium Core Missile
-local genericRocketProjectile = {
-	type = "projectile",
-	name = "generic-rocket",
-	flags = {"not-on-map"},
-	acceleration = 0.005,
-	action = {},
-	light = {intensity = 0.5, size = 4},
-	animation = {
-		layers = {
-			util.sprite_load("__base__/graphics/entity/rocket/rocket", {
-				scale = 0.5,
-				repeat_count = 8,
-				frame_count = 1,
-				rotate_shift = true,
-				priority = "high"
-			}),
-			util.sprite_load("__base__/graphics/entity/rocket/rocket-tinted-tip", {
-				scale = 0.5,
-				repeat_count = 8,
-				frame_count = 1,
-				rotate_shift = true,
-				priority = "high",
-			}),
-				util.sprite_load("__base__/graphics/entity/rocket/rocket-lights", {
-				blend_mode = "additive",
-				draw_as_glow = true,
-				scale = 0.5,
-				frame_count = 8,
-				rotate_shift = true,
-				priority = "high",
-			}),
-		}
-	},
-	shadow = util.sprite_load("__base__/graphics/entity/rocket/rocket", {
-		draw_as_shadow = true,
-		scale = 0.5,
-		frame_count = 1,
-		rotate_shift = true,
-		priority = "high"
-	}),
-	smoke = {
-		{
-			name = "smoke-fast",
-			deviation = {0.15, 0.15},
-			frequency = 1,
-			position = {0, 1},
-			slow_down_factor = 1,
-			starting_frame = 3,
-			starting_frame_deviation = 5,
-			starting_frame_speed = 0,
-			starting_frame_speed_deviation = 5
-		}
-	}
-}
+local genericRocketProjectile = data.raw.projectile.rocket
+genericRocketProjectile.acceleration = 0.005
+genericRocketProjectile.light = {intensity = 0.5, size = 4}
+
+if genericRocketProjectile.animation and genericRocketProjectile.animation.layers then
+	for _, layer in pairs(genericRocketProjectile.animation.layers) do
+		layer.tint = nil
+	end
+end
 
 local tiberiumRocketProjectile = flib.copy_prototype(genericRocketProjectile, "tiberium-rocket")
 tiberiumRocketProjectile.action = {
@@ -673,11 +633,11 @@ genericGrenadeCapsule.icon_size = nil
 
 local destroyBlueCapsule = flib.copy_prototype(genericGrenadeCapsule, "tiberium-grenade-blue")
 destroyBlueCapsule.capsule_action.attack_parameters.ammo_type.action[1].action_delivery.projectile = "tiberium-grenade-blue"
-destroyBlueCapsule.icons = common.layeredIcons("__base__/graphics/icons/grenade.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "sw")
+destroyBlueCapsule.icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/grenade.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "sw")
 
 local destroyGreenCapsule = flib.copy_prototype(genericGrenadeCapsule, "tiberium-grenade-all")
 destroyGreenCapsule.capsule_action.attack_parameters.ammo_type.action[1].action_delivery.projectile = "tiberium-grenade-all"
-destroyGreenCapsule.icons = common.layeredIcons("__base__/graphics/icons/grenade.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "sw")
+destroyGreenCapsule.icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/grenade.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "sw")
 
 local genericGrenadeProjectile = util.copy(data.raw.projectile.grenade)
 genericGrenadeProjectile.action = {
@@ -845,7 +805,7 @@ data:extend{catalystAll, catalystBlue, invisibleChainReactionAll, invisibleChain
 	{
 		type = "ammo",
 		name = "tiberium-catalyst-missile-all",
-		icons = common.layeredIcons("__base__/graphics/icons/explosive-rocket.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "ne"),
+		icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/explosive-rocket.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "ne"),
 		ammo_category = "rocket",
 		ammo_type = {
 			range_modifier = 5,
@@ -872,7 +832,7 @@ data:extend{catalystAll, catalystBlue, invisibleChainReactionAll, invisibleChain
 	{
 		type = "ammo",
 		name = "tiberium-catalyst-missile-blue",
-		icons = common.layeredIcons("__base__/graphics/icons/explosive-rocket.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "ne"),
+		icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/explosive-rocket.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "ne"),
 		ammo_category = "rocket",
 		ammo_type = {
 			range_modifier = 5,

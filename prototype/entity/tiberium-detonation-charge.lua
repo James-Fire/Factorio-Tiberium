@@ -2,7 +2,7 @@ data:extend{
 	{
 		type = "mining-drill",
 		name = "tiberium-detonation-charge",
-		icon = "__base__/graphics/icons/crash-site-chest.png",
+		icon = tiberiumInternalName.."/graphics/icons/crash-site-chest.png",
 		icon_size = 64,
 		flags = {"placeable-neutral", "player-creation"},
 		minable = {mining_time = 1, result = "tiberium-detonation-charge"},
@@ -12,7 +12,7 @@ data:extend{
 				north = {
 					layers = {
 						{
-							filename = "__base__/graphics/entity/crash-site-chests/crash-site-chest-1.png",
+							filename = tiberiumInternalName.."/graphics/entity/crash-site-chests/crash-site-chest-1.png",
 							height = 76,
 							width = 120,
 							priority = "extra-high",
@@ -21,7 +21,7 @@ data:extend{
 						},
 						{
 							draw_as_shadow = true,
-							filename = "__base__/graphics/entity/crash-site-chests/crash-site-chest-1-shadow.png",
+							filename = tiberiumInternalName.."/graphics/entity/crash-site-chests/crash-site-chest-1-shadow.png",
 							height = 128,
 							width = 210,
 							priority = "extra-high",

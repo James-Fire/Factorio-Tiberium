@@ -83,126 +83,7 @@ data:extend{
 				render_layer = "lower-object-above-shadow",
 			},
 		},
-		graphics_set = {
-			animation = {
-				layers = {
-					-- Centrifuge C
-					{
-						filename = "__base__/graphics/entity/centrifuge/centrifuge-C-light.png",
-						priority = "high",
-						scale = 0.5,
-						blend_mode = "additive", -- centrifuge
-						line_length = 8,
-						width = 190,
-						height = 207,
-						frame_count = 64,
-						shift = util.by_pixel(0, -27.25)
-					},
-					-- Centrifuge B
-					{
-						filename = "__base__/graphics/entity/centrifuge/centrifuge-B-light.png",
-						priority = "high",
-						scale = 0.5,
-						blend_mode = "additive", -- centrifuge
-						line_length = 8,
-						width = 131,
-						height = 206,
-						frame_count = 64,
-						shift = util.by_pixel(16.75, 0.5)
-					},
-					-- Centrifuge A
-					{
-						filename = "__base__/graphics/entity/centrifuge/centrifuge-A-light.png",
-						priority = "high",
-						scale = 0.5,
-						blend_mode = "additive", -- centrifuge
-						line_length = 8,
-						width = 108,
-						height = 197,
-						frame_count = 64,
-						shift = util.by_pixel(-23.5, -1.75)
-					},
-				}
-			},
-			always_draw_idle_animation = true,
-			idle_animation = {
-				layers = {
-					-- Centrifuge C
-					{
-						filename = "__base__/graphics/entity/centrifuge/centrifuge-C.png",
-						tint = greenFugeTint,
-						priority = "high",
-						scale = 0.5,
-						line_length = 8,
-						width = 237,
-						height = 214,
-						frame_count = 64,
-						shift = util.by_pixel(-0.25, -26.5)
-					},
-					{
-						filename = "__base__/graphics/entity/centrifuge/centrifuge-C-shadow.png",
-						draw_as_shadow = true,
-						priority = "high",
-						scale = 0.5,
-						line_length = 8,
-						width = 279,
-						height = 152,
-						frame_count = 64,
-						shift = util.by_pixel(16.75, -10)
-					},
-					-- Centrifuge B
-					{
-						filename = "__base__/graphics/entity/centrifuge/centrifuge-B.png",
-						priority = "high",
-						scale = 0.5,
-						line_length = 8,
-						width = 156,
-						height = 234,
-						frame_count = 64,
-						shift = util.by_pixel(23, 6.5)
-					},
-					{
-						filename = "__base__/graphics/entity/centrifuge/centrifuge-B-shadow.png",
-						draw_as_shadow = true,
-						priority = "high",
-						scale = 0.5,
-						line_length = 8,
-						width = 251,
-						height = 149,
-						frame_count = 64,
-						shift = util.by_pixel(63.25, 15.25)
-					},
-					-- Centrifuge A
-					{
-						filename = "__base__/graphics/entity/centrifuge/centrifuge-A.png",
-						priority = "high",
-						scale = 0.5,
-						line_length = 8,
-						width = 139,
-						height = 246,
-						frame_count = 64,
-						shift = util.by_pixel(-26.25, 3.5)
-					},
-					{
-						filename = "__base__/graphics/entity/centrifuge/centrifuge-A-shadow.png",
-						priority = "high",
-						draw_as_shadow = true,
-						scale = 0.5,
-						line_length = 8,
-						width = 230,
-						height = 124,
-						frame_count = 64,
-						shift = util.by_pixel(8.5, 23.5)
-					},
-				},
-			},
-			working_visualisations = {
-				{
-					effect = "uranium-glow", -- changes alpha based on energy source light intensity
-					light = {intensity = 0.6, size = 9.9, shift = {0.0, 0.0}, color = {r = 0.0, g = 1.0, b = 0.0}}
-				}
-			},
-		},
+		graphics_set = data.raw["assembling-machine"]["centrifuge"] and data.raw["assembling-machine"]["centrifuge"].graphics_set or {},
 		open_sound = {filename = "__base__/sound/machine-open.ogg", volume = 0.6},
 		close_sound = {filename = "__base__/sound/machine-close.ogg", volume = 0.6},
 		impact_category = "metal-large",
@@ -233,21 +114,15 @@ data:extend{
 		energy_usage = tostring(300 * (30 / 31)).."kW",  --Scale for nice max consumption
 		module_slots = 0,
 		allowed_effects = {"consumption", "speed", "productivity", "pollution"},
-		water_reflection = {
-			pictures = {
-				filename = "__base__/graphics/entity/centrifuge/centrifuge-reflection.png",
-				priority = "extra-high",
-				width = 28,
-				height = 32,
-				shift = util.by_pixel(0, 65),
-				variation_count = 1,
-				scale = 5,
-			},
-			rotate = false,
-			orientation_to_variation = false
-		}
+		water_reflection = data.raw["assembling-machine"]["centrifuge"] and data.raw["assembling-machine"]["centrifuge"].water_reflection or {},
 	}
 }
+
+for _, layer in pairs(data.raw["assembling-machine"]["tiberium-centrifuge-1"].graphics_set.idle_animation.layers) do
+	if layer.filename == "__base__/graphics/entity/centrifuge/centrifuge-C.png" then
+		layer.tint = greenFugeTint
+	end
+end
 
 --Tiberium Centrifuge 2
 local centrifuge2Entity = util.copy(data.raw["assembling-machine"]["tiberium-centrifuge-1"])
@@ -309,7 +184,7 @@ if common.tierZero then
 		}
 	}
 	centrifuge0Entity.icons = nil
-	centrifuge0Entity.icon = "__base__/graphics/icons/centrifuge.png"
+	centrifuge0Entity.icon = tiberiumInternalName.."/graphics/icons/centrifuge.png"
 	centrifuge0Entity.icon_size = 64
 	centrifuge0Entity.module_slots = 0
 	centrifuge0Entity.minable.result = "tiberium-centrifuge-0"

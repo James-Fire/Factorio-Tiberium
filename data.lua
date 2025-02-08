@@ -42,6 +42,9 @@ end
 ---@class data.TechnologyPrototype
 ---@field check_science_packs_incompatibilities boolean
 
+---@class data.RecipePrototype
+---@field auto_recycle boolean Whether to include this recipe when calculating reverse crafting recipes for recycling
+
 ---@class EventData.dolly_moved_entity_id
 ---@field moved_entity LuaEntity
 ---@field start_pos MapPosition
@@ -50,8 +53,6 @@ end
 ---@diagnostic disable-next-line: duplicate-doc-field
 ---@field physical_vehicle LuaEntity? Physical Vehicle is actually an entity, pls fix api
 
----@class LuaRecipePrototype
----@field auto_recycle boolean Whether to include this recipe when calculating reverse crafting recipes for recycling
 
 -- Need this because LuaLS is confused about directions
 ---@alias defines.direction.north 1

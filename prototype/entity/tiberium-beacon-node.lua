@@ -30,7 +30,7 @@ data:extend{
 			shift = {0.34375, 0.046875},
 		},
 		radius_visualisation_picture = {
-			filename = "__base__/graphics/entity/beacon/beacon-radius-visualization.png",
+			filename = tiberiumInternalName.."/graphics/entity/beacon/beacon-radius-visualization.png",
 			priority = "extra-high-no-scale",
 			width = 10,
 			height = 10
@@ -62,19 +62,6 @@ data:extend{
 		energy_usage = "10MW",
 		distribution_effectivity = 0,
 		module_slots = 0,
-		water_reflection = {
-			pictures = {
-				filename = "__base__/graphics/entity/beacon/beacon-reflection.png",
-				priority = "extra-high",
-				width = 24,
-				height = 28,
-				shift = util.by_pixel(0, 55),
-				variation_count = 1,
-				scale = 5,
-			},
-			rotate = false,
-			orientation_to_variation = false
-		}
 	},
 	--Invisible beacons for Growth Accelerator speed research
 	{

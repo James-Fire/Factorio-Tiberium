@@ -48,7 +48,6 @@ for order, test in pairs(testingOrder) do
 				icon = tiberiumInternalName.."/graphics/icons/"..simpleName.."-"..test..".png",
 				icon_size = 64,
 				localised_name = {"recipe-name.tiberium-testing-generic", {"recipe-name.tiberium-testing-"..test}},
-				main_product = "",
 				subgroup = "a-"..simpleName.."-science",
 				order = order,
 			}
@@ -216,9 +215,6 @@ data:extend{
 		results = {
 			{type = "fluid", name = "tiberium-slurry-blue", amount = 16},
 		},
-		icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-slurry-blue.png",
-		icon_size = 64,
-		main_product = "",
 		subgroup = "a-refining",
 		order = "a-2"
 	},
@@ -237,7 +233,6 @@ data:extend{
 		results = {
 			{type = "fluid", name = "liquid-tiberium", amount = 16},
 		},
-		main_product = "",
 		icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-refining-blue.png",
 		icon_size = 64,
 		subgroup = "a-refining",
@@ -276,7 +271,6 @@ data:extend{
 		results = {
 			{type = "item", name = "tiberium-ore-blue", amount = 1},
 		},
-		main_product = "",
 		icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-75%.png", 64,
 			tiberiumInternalName.."/graphics/icons/growth-credit.png", 64, "ne"),
 		allow_decomposition = false,
@@ -325,9 +319,6 @@ data:extend{
 		results = {
 			{type = "fluid", name = "tiberium-slurry", amount = 16}
 		},
-		icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-waste.png",
-		icon_size = 64,
-		main_product = "",
 		subgroup = "a-refining",
 		order = "a"
 	},
@@ -345,8 +336,7 @@ data:extend{
 		results = {
 			{type = "fluid", name = "molten-tiberium", amount = 10}
 		},
-		icon = tiberiumInternalName.."/graphics/icons/fluid/molten-tiberium.png",
-		icon_size = 64,
+		main_product = "molten-tiberium",
 		subgroup = "a-refining",
 		order = "b"
 	},
@@ -385,8 +375,7 @@ data:extend{
 			{type = "fluid", name = "liquid-tiberium", amount = 10},
 			{type = "fluid", name = "water", amount = 10},
 		},
-		icon = tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png",
-		icon_size = 64,
+		main_product = "liquid-tiberium",
 		subgroup = "a-refining",
 		order = "c-1"
 	},
@@ -406,7 +395,7 @@ data:extend{
 			{type = "fluid", name = "water", amount = 10},
 		},
 		icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png", 64,
-			"__base__/graphics/icons/fluid/steam.png", 64, "ne"),
+			tiberiumInternalName.."/graphics/icons/fluid/steam.png", 64, "ne"),
 		subgroup = "a-refining",
 		order = "c-2"
 	},
@@ -423,9 +412,6 @@ data:extend{
 		results = {
 			{type = "fluid", name = "tiberium-sludge", amount = 10}
 		},
-		icon = tiberiumInternalName.."/graphics/icons/fluid/tiberium-sludge.png",
-		icon_size = 64,
-		main_product = "",
 		subgroup = "a-refining",
 		order = "d-1"
 	},
@@ -444,7 +430,6 @@ data:extend{
 		},
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-recycling.png",
 		icon_size = 32,
-		main_product = "",
 		subgroup = "a-refining",
 		allow_decomposition = false,
 		order = "d-2"
@@ -1198,9 +1183,6 @@ data:extend{
 		results = {
 			{type = "item", name = "nuclear-fuel", amount = 1},
 		},
-		icon = "__base__/graphics/icons/nuclear-fuel.png",
-		icon_size = 64,
-		main_product = "",
 		order = "b[tiberium-nuclear-fuel]"
 	},
 	{

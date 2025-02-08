@@ -95,7 +95,7 @@ data:extend{
 				icon_size = 32,
 			},
 			{
-				icon = "__base__/graphics/icons/centrifuge.png",
+				icon = tiberiumInternalName.."/graphics/icons/centrifuge.png",
 				icon_size = 64,
 				scale = 28/64,
 			},
@@ -116,7 +116,7 @@ data:extend{
 				icon_size = 32,
 			},
 			{
-				icon = "__base__/graphics/icons/centrifuge.png",
+				icon = tiberiumInternalName.."/graphics/icons/centrifuge.png",
 				icon_size = 64,
 				scale = 28/64,
 			},
@@ -137,7 +137,7 @@ data:extend{
 				icon_size = 32,
 			},
 			{
-				icon = "__base__/graphics/icons/centrifuge.png",
+				icon = tiberiumInternalName.."/graphics/icons/centrifuge.png",
 				icon_size = 64,
 				scale = 28/64,
 			},
@@ -207,7 +207,7 @@ data:extend{
 	{
 		type = "item",
 		name = "tiberium-network-node",
-		icon = "__base__/graphics/icons/electric-mining-drill.png",
+		icon = tiberiumInternalName.."/graphics/icons/electric-mining-drill.png",
 		icon_size = 64,
 		order = "h[tiberium-network-node]",
 		place_result = "tiberium-network-node",
@@ -227,7 +227,7 @@ data:extend{
 	{
 		type = "item",
 		name = "tiberium-aoe-node-harvester",
-		icon = "__base__/graphics/icons/pumpjack.png",
+		icon = tiberiumInternalName.."/graphics/icons/pumpjack.png",
 		icon_size = 32,
 		order = "c[aoe-node-harvester]",
 		place_result = "tiberium-aoe-node-harvester",
@@ -260,7 +260,7 @@ data:extend{
 	{
 		type = "item",
 		name = "tiberium-node-harvester",
-		icon = "__base__/graphics/icons/pumpjack.png",
+		icon = tiberiumInternalName.."/graphics/icons/pumpjack.png",
 		icon_size = 64,
 		subgroup = "a-node-buildings",
 		order = "a[node-harvester]",
@@ -282,7 +282,7 @@ data:extend{
 	{
 		type = "item",
 		name = "tiberium-detonation-charge",
-		icon = "__base__/graphics/icons/crash-site-chest.png",
+		icon = tiberiumInternalName.."/graphics/icons/crash-site-chest.png",
 		icon_size = 64,
 		subgroup = "a-node-buildings",
 		order = "c[tiberium-detonation-charge]",
@@ -355,7 +355,7 @@ data:extend{
 	{
 		type = "item",
 		name = "tiberium-fuel-cell",
-		icon = "__base__/graphics/icons/uranium-fuel-cell.png",
+		icon = tiberiumInternalName.."/graphics/icons/uranium-fuel-cell.png",
 		icon_size = 64,
 		flags = {},
 		order = "c[tiberium-fuel-cell]-b[fuel-cell]",

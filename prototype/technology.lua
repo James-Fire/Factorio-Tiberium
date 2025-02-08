@@ -760,7 +760,7 @@ data:extend{
 	{
 		type = "technology",
 		name = "tiberium-artillery",
-		icons = common.layeredIcons("__base__/graphics/technology/artillery.png", 256, tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png", 64, "se"),
+		icons = common.layeredIcons(tiberiumInternalName.."/graphics/technology/artillery.png", 256, tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png", 64, "se"),
 		effects = {
 			{
 				type = "unlock-recipe",
@@ -995,6 +995,7 @@ data:extend{
 	{
 		type = "technology",
 		name = "tiberium-explosives",
+		-- Feels safe to assume that their util function will continue to work with their icon dimensions
 		icons = util.technology_icon_constant_damage("__base__/graphics/technology/stronger-explosives-3.png"),
 		effects = {
 			{

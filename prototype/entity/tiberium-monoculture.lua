@@ -98,7 +98,7 @@ data:extend{
 				{
 					animation = {
 						animation_speed = 0.4,
-						filename = "__base__/graphics/entity/chemical-plant/chemical-plant-smoke-outer.png",
+						filename = tiberiumInternalName.."/graphics/entity/chemical-plant/chemical-plant-smoke-outer.png",
 						frame_count = 47,
 						height = 188,
 						scale = 0.5,
@@ -114,7 +114,7 @@ data:extend{
 				{
 					animation = {
 						animation_speed = 0.4,
-						filename = "__base__/graphics/entity/chemical-plant/chemical-plant-smoke-inner.png",
+						filename = tiberiumInternalName.."/graphics/entity/chemical-plant/chemical-plant-smoke-inner.png",
 						frame_count = 47,
 						height = 84,
 						scale = 0.5,
