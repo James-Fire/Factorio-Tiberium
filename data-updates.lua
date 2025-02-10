@@ -48,6 +48,7 @@ if mods["omnimatter"] then
 	if omni then
 		omni.matter.add_ignore_resource("tiberium-ore")
 		omni.matter.add_ignore_resource("tibGrowthNode")
+		omni.matter.add_ignore_resource("nauvis_tibGrowthNode")
 		omni.matter.add_ignore_resource("tibNode_tree")
 	end
 	common.recipe.editIngredient("tiberium-spike", "pumpjack", "offshore-pump")

@@ -145,7 +145,7 @@ if data.raw.resource["uranium-ore"] then
 	data.raw.resource["tiberium-ore-blue"].driving_sound = data.raw.resource["uranium-ore"].driving_sound
 end
 
-local resource_autoplace = require("resource-autoplace");
+local resource_autoplace = require("resource-autoplace")
 resource_autoplace.initialize_patch_set("tibGrowthNode", common.TiberiumInStartingArea)  -- TODO
 local autoplaceName = common.whichPlanet == "nauvis" and "nauvis_tibGrowthNode" or common.whichPlanet == "pure-nauvis" and "nauvis_tibGrowthNode" or "tiber_tibGrowthNode"
 
