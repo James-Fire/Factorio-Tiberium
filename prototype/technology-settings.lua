@@ -66,7 +66,7 @@ if settings.startup["tiberium-technology-triggers"].value then
 	data.raw.technology["tiberium-liquid-centrifuging"].unit = nil
 	data.raw.technology["tiberium-liquid-centrifuging"].research_trigger = {type = "craft-fluid", fluid = "liquid-tiberium"}
 
-	if common.tierZero then
+	if common.tierZero and common.whichPlanet ~= "nauvis" then
 		data.raw.technology["tiberium-ore-centrifuging"].unit = nil
 		data.raw.technology["tiberium-ore-centrifuging"].research_trigger = {type = "mine-entity", entity = "tiberium-tiber-rock"}
 	end

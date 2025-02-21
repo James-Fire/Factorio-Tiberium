@@ -4,6 +4,7 @@ Version: 2.0.11
     - Fixed crash from base graphics dimensions changing and updated sprite definitions to make them resilient to changes to base graphics
     - Fixed Tiberium Centrifuges glowing when they weren't active
     - Fixed Tiberium not spawning on Nauvis with certain setting combinations when Omnimatter is active (bug introduced in 2.0.9)
+    - Fixed crash when using Burner Centrifuge setting with Nauvis has Tiberium setting
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.10
   Bugfixes:
