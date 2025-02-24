@@ -136,6 +136,16 @@ function giantSetupFunction()
 		end
 	end
 
+	-- Recipe categories excluded by settings
+	local excludeRecipes = settings.startup["tiberium-recipe-category-exclusions"].value  --[[@as string]]
+	excludeRecipes = string.gsub(excludeRecipes, "\"", "")
+	if excludeRecipes then
+		local delim = ","
+		for category in string.gmatch(excludeRecipes, "[^"..delim.."]+") do  -- Loop over comma-delimited substrings
+			excludedCrafting[category] = true
+		end
+	end
+
 	-- Resources excluded by settings
 	local excludeSetting = settings.startup["tiberium-resource-exclusions"].value  --[[@as string]]
 	excludeSetting = string.gsub(excludeSetting, "\"", "")
