@@ -174,6 +174,15 @@ data:extend{
 		default_value = true,
 		order = "d[direct]4",
 	},
+	{
+		type = "string-setting",
+		name = "tiberium-resource-inclusions",
+		setting_type = "startup",
+		default_value = "",
+		allow_blank = true,
+		auto_trim = true,
+		order = "d[direct]5",
+	},
 	--Centrifuging recipe settings
 	{
 		type = "string-setting",

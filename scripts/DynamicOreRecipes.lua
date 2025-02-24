@@ -21,6 +21,7 @@ local availableRecipes = {}
 local fakeRecipes = {}
 local rawResources = {}
 local resourceExclusions = {}
+local resourceInclusions = {}
 local tibComboPacks = {}
 local techCosts = {}
 local catalyst = {}
@@ -82,6 +83,20 @@ local tableSize = function(t)
 	return _ENV.table_size(t)
 end
 
+---Locate prototype of given name
+---@param name string
+---@return string? prototypeType
+---@return data.ItemPrototype|data.FluidPrototype|data.ToolPrototype|data.CapsulePrototype|data.ModulePrototype? inventoryItemPrototype
+local function findItemPrototype(name)
+	for _, prototypeType in pairs({"item", "fluid", "tool", "capsule", "ammo", "module", "item-with-entity-data", "gun", "armor", "selection-tool",
+			"rail-planner", "repair-tool", "blueprint", "deconstruction-item", "upgrade-item", "blueprint-book", "space-platform-starter-pack", "spidertron-remote"}) do
+		if data.raw[prototypeType] and data.raw[prototypeType][name] then
+			return prototypeType, util.copy(data.raw[prototypeType][name])
+		end
+	end
+	return nil, nil
+end
+
 if mods["space-exploration"] then
 	for itemName, item in pairs(data.raw.item) do
 		if item.subgroup == "core-fragments" then
@@ -141,6 +156,22 @@ function giantSetupFunction()
 		end
 	end
 	-- Resources included by settings
+	local includeSetting = settings.startup["tiberium-resource-inclusions"].value  --[[@as string]]
+	includeSetting = string.gsub(includeSetting, "\"", "")
+	log("includeSetting: "..includeSetting)
+	if includeSetting then
+		local delim = ","
+		for name in string.gmatch(includeSetting, "[^"..delim.."]+") do  -- Loop over comma-delimited substrings
+			log("Successfully parsed "..name)
+			local prototypeType, _ = findItemPrototype(name)
+			if prototypeType then
+				rawResources[name] = true
+				resourceInclusions[name] = true
+				log("Successfully added "..name.." as raw resource")
+			end
+		end
+	end
+
 	for _, prototypeList in pairs({data.raw.item, data.raw.fluid}) do
 		for name, prototype in pairs(prototypeList) do
 			if prototype.tiberium_resource_planet and not resourceExclusions[name] then
@@ -963,12 +994,12 @@ function fugeRecipeTier(tier)
 
 	-- Make actual recipe changes
 	local material = (tier == 0) and "ore" or (tier == 1) and "slurry" or (tier == 2) and "molten" or "liquid"
-	local fluid = (tier == 0) and "tiberium-ore" or (tier == 1) and "tiberium-slurry" or (tier == 2) and "molten-tiberium" or "liquid-tiberium"
+	local tibIngredient = (tier == 0) and "tiberium-ore" or (tier == 1) and "tiberium-slurry" or (tier == 2) and "molten-tiberium" or "liquid-tiberium"
 	local ingredientAmount = (tier ~= 1) and math.max(160 / settings.startup["tiberium-value"].value, 1) or 16
 	local normalFugeRecipeName = "tiberium-"..material.."-centrifuging"
 	local sludgeFugeRecipeName = "tiberium-"..material.."-sludge-centrifuging"
-	common.recipe.addIngredient(normalFugeRecipeName, fluid, ingredientAmount, tier > 0 and "fluid" or "item")
-	if debugText then log("Tier "..tier.." centrifuge: "..ingredientAmount.." "..fluid) end
+	common.recipe.addIngredient(normalFugeRecipeName, tibIngredient, ingredientAmount, tier > 0 and "fluid" or "item")
+	if debugText then log("Tier "..tier.." centrifuge: "..ingredientAmount.." "..tibIngredient) end
 	local sludge = 0
 	local sludgeDict = {}
 	for resource, amount in pairs(resourceList) do
@@ -985,7 +1016,7 @@ function fugeRecipeTier(tier)
 	end
 	if (sludge > 0) and (tableSize(fluidList) < 3) then -- Only create sludge recipe if there is sludge items to convert and we have enough fluid boxes
 		data.raw.recipe[sludgeFugeRecipeName] = flib_data_util.copy_prototype(data.raw.recipe[normalFugeRecipeName], sludgeFugeRecipeName)
-		data.raw.recipe[sludgeFugeRecipeName].localised_name = {"recipe-name.tiberium-sludge-centrifuging", {(tier > 0 and "fluid-name." or "item-name.")..fluid}}
+		data.raw.recipe[sludgeFugeRecipeName].localised_name = {"recipe-name.tiberium-sludge-centrifuging", {(tier > 0 and "fluid-name." or "item-name.")..tibIngredient}}
 		data.raw.recipe[sludgeFugeRecipeName].icon = tiberiumInternalName.."/graphics/icons/"..material.."-sludge-centrifuging.png"
 		data.raw.recipe[sludgeFugeRecipeName].icon_size = 32
 		data.raw.recipe[sludgeFugeRecipeName].icons = nil
@@ -1069,7 +1100,8 @@ function fugeRawResources(tier)
 					log("tiberium-centrifuge-override-"..tier.." setting has an invalid number for item "..item)
 				end
 			end
-			if data.raw.item[item] or data.raw.fluid[item] then
+			local prototypeType, _ = findItemPrototype(item)
+			if prototypeType then
 				resourceList[item] = amount
 			else
 				log("tiberium-centrifuge-override-"..tier.." setting has an invalid item: "..item)
@@ -1117,17 +1149,20 @@ function fugeScaleResources(resourceList, tier)
 end
 
 function singletonRecipes()
-	for resourceName, resourceData in pairs(data.raw.resource) do
+	for _, resourceData in pairs(data.raw.resource) do
 		for ore in pairs(minableResultsTable(resourceData)) do
 			if ore ~= "tiberium-ore" then
-				if not oreMult[ore] or (oreMult[ore] ~= math.huge and oreMult[ore] ~= 0) then  -- Don't create recipes for infinite or zero ore
-					addCreditRecipe(ore)
-					if not resourceExclusions[ore] then
-						addDirectRecipe(ore, false)
-						if easyMode then
-							addDirectRecipe(ore, true)
-						end
-					end
+				resourceInclusions[ore] = true
+			end
+		end
+	end
+	for ore in pairs(resourceInclusions) do
+		if not oreMult[ore] or (oreMult[ore] ~= math.huge and oreMult[ore] ~= 0) then  -- Don't create recipes for infinite or zero ore
+			addCreditRecipe(ore)
+			if not resourceExclusions[ore] then
+				addDirectRecipe(ore, false)
+				if easyMode then
+					addDirectRecipe(ore, true)
 				end
 			end
 		end
@@ -1230,33 +1265,24 @@ function addCreditRecipe(ore)
 	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"
 	local energy = 0.5 * settings.startup["tiberium-growth"].value * settings.startup["tiberium-value"].value
 	local order = (not oreMult[ore] and "a-" or oreMult[ore] > 1 and "b-" or "c-")..ore
-	local oreIcon, oreIconSize, oreTint
-	if data.raw["item"][ore] then
-		local icon = flib_data_util.create_icons(data.raw["item"][ore])[1]
-		oreIcon = icon.icon
-		oreIconSize = icon.icon_size
-		oreTint = icon.tint
-	elseif data.raw["fluid"][ore] then
-		local icon = flib_data_util.create_icons(data.raw["fluid"][ore])[1]
-		oreIcon = icon.icon
-		oreIconSize = icon.icon_size
-		oreTint = icon.tint
-	end
 	local icons = {
 		{
 			icon = tiberiumInternalName.."/graphics/icons/growth-credit.png",
 			icon_size = 64,
 		},
 	}
-	if oreIcon then
-		icons[2] = {
-			icon = oreIcon,
-			icon_size = oreIconSize,
-			icon_mipmaps = ore.icon_mipmaps,
-			scale = 12.0 / (oreIconSize or 64), -- scale = 0.5 * 32 / icon_size simplified
-			shift = {10, -10},
-			tint = oreTint,
-		}
+	local prototypeType, prototypeTable = findItemPrototype(ore)
+	if prototypeType then
+		local oreIcon = flib_data_util.create_icons(prototypeTable)
+		if oreIcon and oreIcon[1] and oreIcon[1].icon then
+			icons[2] = {
+				icon = oreIcon[1].icon,
+				icon_size = oreIcon[1].icon_size,
+				scale = 12.0 / (oreIcon[1].icon_size or 64), -- scale = 0.5 * 32 / icon_size simplified
+				shift = {10, -10},
+				tint = oreIcon[1].tint,
+			}
+		end
 	end
 	data:extend{{
 		type = "recipe",
