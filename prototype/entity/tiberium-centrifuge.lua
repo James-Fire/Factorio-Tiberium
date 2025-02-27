@@ -83,7 +83,7 @@ data:extend{
 				render_layer = "lower-object-above-shadow",
 			},
 		},
-		graphics_set = data.raw["assembling-machine"]["centrifuge"] and data.raw["assembling-machine"]["centrifuge"].graphics_set or {},
+		graphics_set = data.raw["assembling-machine"]["centrifuge"] and util.copy(data.raw["assembling-machine"]["centrifuge"].graphics_set) or {},
 		open_sound = {filename = "__base__/sound/machine-open.ogg", volume = 0.6},
 		close_sound = {filename = "__base__/sound/machine-close.ogg", volume = 0.6},
 		impact_category = "metal-large",
@@ -114,7 +114,7 @@ data:extend{
 		energy_usage = tostring(300 * (30 / 31)).."kW",  --Scale for nice max consumption
 		module_slots = 0,
 		allowed_effects = {"consumption", "speed", "productivity", "pollution"},
-		water_reflection = data.raw["assembling-machine"]["centrifuge"] and data.raw["assembling-machine"]["centrifuge"].water_reflection or {},
+		water_reflection = data.raw["assembling-machine"]["centrifuge"] and util.copy(data.raw["assembling-machine"]["centrifuge"].water_reflection) or {},
 	}
 }
 

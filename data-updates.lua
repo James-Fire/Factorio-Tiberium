@@ -3,6 +3,7 @@ flib_table = require("__flib__.table")
 require("scripts.compatibility.bobsmods")
 require("scripts.compatibility.Krastorio2")
 require("scripts.compatibility.Obelisks-of-light")
+require("scripts.compatibility.finely-crafted-graphics")
 
 -- Orbital Ion Cannon
 if mods["Orbital Ion Cannon"] or mods["Kux-OrbitalIonCannon"] then

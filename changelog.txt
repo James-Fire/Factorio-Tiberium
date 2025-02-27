@@ -6,6 +6,7 @@ Version: 2.0.11
     - Fixed Tiberium not spawning on Nauvis with certain setting combinations when Omnimatter is active (bug introduced in 2.0.9)
     - Fixed crash when using Burner Centrifuge setting with Nauvis has Tiberium setting
   Features:
+    - Added support for using high-resolution graphics from Finely Crafted Graphics (Art credit to Hurricane)
     - Added support for turning Tiberium into things other than items or fluids. Allows better compatibility with mods that rely on non-item prototypes or using settings to add recipes for things like tools (e.g. Tenemut), capsules (e.g. Jellynut), ammo (e.g. Piercing Rounds Magazine), etc
     - Added setting "Include Specific Resources" to allow users to flag any item as a valid output for centrifuging and to have transmutation recipes added for it. Note that adding intermediate ingredients as resources will typicall cause centrifuging recipes to rebalance to give the added resource instead of the original ores (e.g. if you add Steel Plate to this setting, you will see the Iron Ore centrifuging output decrease and be replaced with Steel Plates)
     - Added setting "Exclude Recipe Categories from Centrifuging Calculations" to allow users to fine-tune centrifuging recipes and avoid game-breaking recipes from other without needing to wait for a patch
