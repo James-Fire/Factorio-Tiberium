@@ -71,8 +71,8 @@ data:extend{
 			pictures = {
 				filename = "__base__/graphics/entity/beacon/beacon-reflection.png",
 				priority = "extra-high",
-				width = 24,
-				height = 28,
+				width = 18,
+				height = 29,
 				shift = util.by_pixel(0, 55),
 				variation_count = 1,
 				scale = 5,
