@@ -179,34 +179,45 @@ end
 
 ---Called by on_entity_died in control.lua
 ---Modifies storage.SRF_nodes, storage.SRF_node_ticklist, storage.SRF_low_power_ticklist
----@param entity LuaEntity
+---@param entity LuaEntity?
+---@param position MapPosition
 ---@param tick uint
-function CnC_SonicWall_DeleteNode(entity, tick)
-	local k = find_value_in_table(storage.SRF_nodes, entity.position, "position")
-	local gps = string.format("[gps=%g,%g,%s]", entity.position.x, entity.position.y, entity.surface.name)
+function CnC_SonicWall_DeleteNode(entity, position, tick)
+	local k = find_value_in_table(storage.SRF_nodes, position, "position")
 	if k then
 		table.remove(storage.SRF_nodes, k)
-		debugPrint("Destroyed SRF at "..gps.." removed from SRF_nodes, "..#storage.SRF_nodes.." entries remain")
+		if entity and entity.valid then
+			local gps = string.format("[gps=%g,%g,%s]", entity.position.x, entity.position.y, entity.surface.name)
+			debugPrint("Destroyed SRF at "..gps.." removed from SRF_nodes, "..#storage.SRF_nodes.." entries remain")
+		end
 	end
 
-	k = find_value_in_table(storage.SRF_node_ticklist, entity.position, "position")
+	k = find_value_in_table(storage.SRF_node_ticklist, position, "position")
 	if k then
 		table.remove(storage.SRF_node_ticklist, k)
-		debugPrint("Destroyed SRF at x: "..gps.." removed from SRF_node_ticklist, "..#storage.SRF_node_ticklist.." entries remain")
+		if entity and entity.valid then
+			local gps = string.format("[gps=%g,%g,%s]", entity.position.x, entity.position.y, entity.surface.name)
+			debugPrint("Destroyed SRF at "..gps.." removed from SRF_node_ticklist, "..#storage.SRF_node_ticklist.." entries remain")
+		end
 	end
 
-	k = find_value_in_table(storage.SRF_low_power_ticklist, entity.position, "position")
+	k = find_value_in_table(storage.SRF_low_power_ticklist, position, "position")
 	if k then
 		table.remove(storage.SRF_low_power_ticklist, k)
-		debugPrint("Destroyed SRF at x: "..gps.." removed from SRF_low_power_ticklist, "..#storage.SRF_low_power_ticklist.." entries remain")
+		if entity and entity.valid then
+			local gps = string.format("[gps=%g,%g,%s]", entity.position.x, entity.position.y, entity.surface.name)
+			debugPrint("Destroyed SRF at "..gps.." removed from SRF_low_power_ticklist, "..#storage.SRF_low_power_ticklist.." entries remain")
+		end
 	end
 
-	CnC_SonicWall_DisableNode(entity)
-	--Tell connected walls to reevaluate their connections
-	local connected_nodes = CnC_SonicWall_FindNodes(entity, dirs.both)
-	for i = 1, #connected_nodes do
-		if not find_value_in_table(storage.SRF_node_ticklist, connected_nodes[i].position, "position") then
-			table.insert(storage.SRF_node_ticklist, {emitter = connected_nodes[i], position = connected_nodes[i].position, tick = tick + 10})
+	if entity and entity.valid then
+		CnC_SonicWall_DisableNode(entity)
+		--Tell connected walls to reevaluate their connections
+		local connected_nodes = CnC_SonicWall_FindNodes(entity, dirs.both)
+		for i = 1, #connected_nodes do
+			if not find_value_in_table(storage.SRF_node_ticklist, connected_nodes[i].position, "position") then
+				table.insert(storage.SRF_node_ticklist, {emitter = connected_nodes[i], position = connected_nodes[i].position, tick = tick + 10})
+			end
 		end
 	end
 end
@@ -331,12 +342,18 @@ function CnC_SonicWall_OnTick(event)
 	end
 
 	if cur_tick % 60 == 0 then --Check for all emitters for low power once per second
-		for _, entry in pairs(storage.SRF_nodes) do
-			local ticks_rem = entry.emitter.energy / entry.emitter.electric_drain
-			if ticks_rem > 5 and ticks_rem <= 65 then
-				if not find_value_in_table(storage.SRF_low_power_ticklist, entry.emitter.position, "position") then
-					table.insert(storage.SRF_low_power_ticklist, {emitter = entry.emitter, position = entry.position, tick = cur_tick + ceil(ticks_rem)})
+		for i = #storage.SRF_nodes, 1, -1 do
+			local entry = storage.SRF_nodes[i]
+			if entry.emitter.valid then
+				local ticks_rem = entry.emitter.energy / entry.emitter.electric_drain
+				if ticks_rem > 5 and ticks_rem <= 65 then
+					if not find_value_in_table(storage.SRF_low_power_ticklist, entry.emitter.position, "position") then
+						table.insert(storage.SRF_low_power_ticklist, {emitter = entry.emitter, position = entry.position, tick = cur_tick + ceil(ticks_rem)})
+					end
 				end
+			else
+				debugPrint("Removed invalid SRF emitter from storage.SRF_nodes at position x="..tostring(entry.position.x).." y="..tostring(entry.position.y))
+				table.remove(storage.SRF_nodes, i)
 			end
 		end
 	end
@@ -348,7 +365,7 @@ function CnC_SonicWall_OnTick(event)
 		elseif low.tick <= cur_tick and low.emitter then
 			local ticks_rem = low.emitter.energy / low.emitter.electric_drain
 			if ticks_rem <= 5 then
-				CnC_SonicWall_DeleteNode(low.emitter, cur_tick)  --Removes it from low power ticklist as well
+				CnC_SonicWall_DeleteNode(low.emitter, low.position, cur_tick)  --Removes it from low power ticklist as well
 				CnC_SonicWall_AddNode(low.emitter, cur_tick)
 			else
 				low.tick = cur_tick + ceil(ticks_rem)

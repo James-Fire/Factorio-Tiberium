@@ -5,6 +5,7 @@ Version: 2.0.11
     - Fixed Tiberium Centrifuges glowing when they weren't active
     - Fixed Tiberium not spawning on Nauvis with certain setting combinations when Omnimatter is active (bug introduced in 2.0.9)
     - Fixed crash when using Burner Centrifuge setting with Nauvis has Tiberium setting
+    - Fixed SRF invalid entity crash for deleted surfaces
   Features:
     - Added support for using high-resolution graphics from Finely Crafted Graphics (Art credit to Hurricane)
     - Added support for turning Tiberium into things other than items or fluids. Allows better compatibility with mods that rely on non-item prototypes or using settings to add recipes for things like tools (e.g. Tenemut), capsules (e.g. Jellynut), ammo (e.g. Piercing Rounds Magazine), etc

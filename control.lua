@@ -1666,6 +1666,10 @@ function on_remove_entity(event)
 			end
 		end
 	end
+	if (entity.name == "tiberium-srf-emitter") or (entity.name == "CnC_SonicWall_Hub") then
+		CnC_SonicWall_DeleteNode(entity, position, event.tick) -- Remove from storage even if surface no longer exists
+	end
+	
 	if not surface or not surface.valid then return end
 	if (entity.name == "tiberium-srf-emitter") or (entity.name == "CnC_SonicWall_Hub") then
 		local ghost = surface.find_entities_filtered{position = entity.position, ghost_name = entity.name}[1]
@@ -1680,7 +1684,6 @@ function on_remove_entity(event)
 		if ghost then
 			ghost.destroy()
 		end
-		CnC_SonicWall_DeleteNode(entity, event.tick)
 	elseif (entity.name == "tiberium-beacon-node") then
 		--Remove Beacon for Tiberium Control Network
 		local tcnAOE = areaAroundPosition(position, TiberiumRadius * 0.5 + 1)
