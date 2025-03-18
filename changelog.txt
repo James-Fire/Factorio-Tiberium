@@ -1,4 +1,8 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.12
+  Features:
+    - Updated French translation (Thanks to Dae)
+---------------------------------------------------------------------------------------------------
 Version: 2.0.11
   Bugfixes:
     - Fixed crash from base graphics dimensions changing and updated sprite definitions to make them resilient to changes to base graphics
