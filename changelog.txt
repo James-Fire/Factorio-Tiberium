@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.31
+Date: 2025-03-30
+  Changes:
+    - Added recipe to make rails with Tiberium sludge, since there is no stone
+---------------------------------------------------------------------------------------------------
 Version: 1.1.30
   Bugfixes:
     - Fixed crash when deleting surface that has SRF emitters on it (this one slipped through 1.1.17's surface fixes)

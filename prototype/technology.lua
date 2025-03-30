@@ -163,6 +163,10 @@ data:extend{
 			},
 			{
 				type = "unlock-recipe",
+				recipe = "tiberium-sludge-to-rails"
+			},
+			{
+				type = "unlock-recipe",
 				recipe = "tiberium-sludge-to-concrete"
 			},
 			{
