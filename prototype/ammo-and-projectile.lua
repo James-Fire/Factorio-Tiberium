@@ -3,11 +3,9 @@ data:extend{
 	{
 		type = "ammo",
 		name = "tiberium-rounds-magazine",
-		icon = "__base__/graphics/icons/uranium-rounds-magazine.png",
-		icon_size = 64,
-		icon_mipmaps = 4,
+		icons = common.blankIcons,
+		ammo_category = "bullet",
 		ammo_type = {
-			category = "bullet",
 			action = {
 				type = "direct",
 				action_delivery = {
@@ -34,49 +32,27 @@ data:extend{
 		magazine_size = 10,
 		subgroup = "a-items",
 		order = "b[basic-clips]-d[tiberium-rounds-magazine]",
-		stack_size = 200
+		stack_size = 100,
+		weight = 20000,
 	}
 }
+if data.raw.ammo["uranium-rounds-magazine"] then
+	data.raw.ammo["tiberium-rounds-magazine"].icons = nil
+	data.raw.ammo["tiberium-rounds-magazine"].icon = data.raw.ammo["uranium-rounds-magazine"].icon
+	data.raw.ammo["tiberium-rounds-magazine"].icon_size = data.raw.ammo["uranium-rounds-magazine"].icon_size
+	data.raw.ammo["tiberium-rounds-magazine"].pictures = data.raw.ammo["uranium-rounds-magazine"].pictures
+end
 
 --Tiberium Core Missile
-local genericRocketProjectile = {
-	type = "projectile",
-	name = "generic-rocket",
-	flags = {"not-on-map"},
-	acceleration = 0.005,
-	action = {},
-	light = {intensity = 0.5, size = 4},
-	animation = {
-		filename = "__base__/graphics/entity/rocket/rocket.png",
-		frame_count = 8,
-		line_length = 8,
-		width = 9,
-		height = 35,
-		shift = {0, 0},
-		priority = "high"
-	},
-	shadow = {
-		filename = "__base__/graphics/entity/rocket/rocket-shadow.png",
-		frame_count = 1,
-		width = 7,
-		height = 24,
-		priority = "high",
-		shift = {0, 0}
-	},
-	smoke = {
-		{
-			name = "smoke-fast",
-			deviation = {0.15, 0.15},
-			frequency = 1,
-			position = {0, 1},
-			slow_down_factor = 1,
-			starting_frame = 3,
-			starting_frame_deviation = 5,
-			starting_frame_speed = 0,
-			starting_frame_speed_deviation = 5
-		}
-	}
-}
+local genericRocketProjectile = data.raw.projectile.rocket
+genericRocketProjectile.acceleration = 0.005
+genericRocketProjectile.light = {intensity = 0.5, size = 4}
+
+if genericRocketProjectile.animation and genericRocketProjectile.animation.layers then
+	for _, layer in pairs(genericRocketProjectile.animation.layers) do
+		layer.tint = nil
+	end
+end
 
 local tiberiumRocketProjectile = flib.copy_prototype(genericRocketProjectile, "tiberium-rocket")
 tiberiumRocketProjectile.action = {
@@ -135,8 +111,8 @@ data:extend{tiberiumRocketProjectile,
 		name = "tiberium-rocket",
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-rocket.png",
 		icon_size = 64,
+		ammo_category = "rocket",
 		ammo_type = {
-			category = "rocket",
 			action = {
 				type = "direct",
 				action_delivery = {
@@ -152,24 +128,27 @@ data:extend{tiberiumRocketProjectile,
 		},
 		subgroup = "a-items",
 		order = "c[rocket-launcher]-a[basic]",
-		stack_size = 200
+		stack_size = 100,
+		weight = 40000,
 	},
 }
 
 --Liquid Tiberium Bomb
-local tibNukeGroundZero = table.deepcopy(data.raw.projectile["atomic-bomb-ground-zero-projectile"])
+local tibNukeGroundZero = util.copy(data.raw.projectile["atomic-bomb-ground-zero-projectile"])
 tibNukeGroundZero.name = "tiberium-atomic-bomb-ground-zero-projectile"
+---@diagnostic disable-next-line: inject-field
 tibNukeGroundZero.action[1].action_delivery.target_effects.upper_distance_threshold = 50
-local groundZeroDamageEffect = table.deepcopy(tibNukeGroundZero.action[1].action_delivery.target_effects)
-tibNukeGroundZero.action[1].action_delivery.target_effects = {groundZeroDamageEffect, table.deepcopy(groundZeroDamageEffect)}
+local groundZeroDamageEffect = util.copy(tibNukeGroundZero.action[1].action_delivery.target_effects)
+tibNukeGroundZero.action[1].action_delivery.target_effects = {groundZeroDamageEffect, util.copy(groundZeroDamageEffect)}
 tibNukeGroundZero.action[1].action_delivery.target_effects[2].damage = {amount = 250, type = "tiberium"}
 tibNukeGroundZero.action[1].radius = 4
 
-local tibNukeWave = table.deepcopy(data.raw.projectile["atomic-bomb-wave"])
+local tibNukeWave = util.copy(data.raw.projectile["atomic-bomb-wave"])
 tibNukeWave.name = "tiberium-atomic-bomb-wave"
+---@diagnostic disable-next-line: inject-field
 tibNukeWave.action[1].action_delivery.target_effects.upper_distance_threshold = 50
-local waveDamageEffect = table.deepcopy(tibNukeWave.action[1].action_delivery.target_effects)
-tibNukeWave.action[1].action_delivery.target_effects = {waveDamageEffect, table.deepcopy(waveDamageEffect)}
+local waveDamageEffect = util.copy(tibNukeWave.action[1].action_delivery.target_effects)
+tibNukeWave.action[1].action_delivery.target_effects = {waveDamageEffect, util.copy(waveDamageEffect)}
 tibNukeWave.action[1].action_delivery.target_effects[2].damage = {amount = 1000, type = "tiberium"}
 tibNukeWave.action[1].radius = 4
 
@@ -188,7 +167,7 @@ tibNukeProjectile.action = {
 				tile_name = "nuclear-ground",
 				apply_projection = true,
 				radius = 12,
-				tile_collision_mask = {"water-tile"}
+				tile_collision_mask = common.makeCollisionMask({"water_tile"})
 			},
 			{
 				type = "destroy-cliffs",
@@ -395,7 +374,7 @@ tibNukeProjectile.action = {
 							{
 								type = "create-entity",
 								entity_name = "nuclear-smouldering-smoke-source",
-								tile_collision_mask = {"water-tile"},
+								tile_collision_mask = common.makeCollisionMask({"water_tile"}),
 							}
 						},
 					},
@@ -416,11 +395,11 @@ data:extend{tibNukeGroundZero, tibNukeWave, tibNukeProjectile,
 		name = "tiberium-nuke",
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-nuke.png",
 		icon_size = 64,
+		ammo_category = "rocket",
 		ammo_type = {
 			range_modifier = 5,
 			cooldown_modifier = 3,
 			target_type = "position",
-			category = "rocket",
 			action = {
 				type = "direct",
 				action_delivery = {
@@ -436,7 +415,8 @@ data:extend{tibNukeGroundZero, tibNukeWave, tibNukeProjectile,
 		},
 		subgroup = "a-items",
 		order = "c[rocket-launcher]-b[atomic-bomb]",
-		stack_size = 10
+		stack_size = 10,
+		weight = 1000000,
 	},
 }
 
@@ -533,11 +513,11 @@ data:extend{tibSeedProjectile,
 		name = "tiberium-seed",
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-seed-rocket.png",
 		icon_size = 64,
+		ammo_category = "rocket",
 		ammo_type = {
 			range_modifier = 5,
 			cooldown_modifier = 3,
 			target_type = "position",
-			category = "rocket",
 			action = {
 				type = "direct",
 				action_delivery = {
@@ -553,7 +533,8 @@ data:extend{tibSeedProjectile,
 		},
 		subgroup = "a-items",
 		order = "c[rocket-launcher]-c[seed-missile]",
-		stack_size = 10
+		stack_size = 10,
+		weight = 100000,
 	},
 }
 
@@ -577,11 +558,11 @@ data:extend{tibSeedBlueProjectile,
 		name = "tiberium-seed-blue",
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-seed-rocket-blue.png",
 		icon_size = 64,
+		ammo_category = "rocket",
 		ammo_type = {
 			range_modifier = 5,
 			cooldown_modifier = 3,
 			target_type = "position",
-			category = "rocket",
 			action = {
 				type = "direct",
 				action_delivery = {
@@ -597,7 +578,8 @@ data:extend{tibSeedBlueProjectile,
 		},
 		subgroup = "a-items",
 		order = "c[rocket-launcher]-c[seed-missile]",
-		stack_size = 10
+		stack_size = 10,
+		weight = 100000,
 	},
 }
 
@@ -606,6 +588,7 @@ data:extend{
 	{
 		type = "ammo",
 		name = "tiberium-chemical-sprayer-ammo",
+		ammo_category = "flamethrower",
 		ammo_type = {
 			{
 				action = {
@@ -615,7 +598,6 @@ data:extend{
 					},
 					type = "direct"
 				},
-				category = "flamethrower",
 				clamp_position = true,
 				source_type = "default",
 				target_type = "position"
@@ -628,7 +610,6 @@ data:extend{
 					},
 					type = "direct"
 				},
-				category = "flamethrower",
 				clamp_position = true,
 				consumption_modifier = 1.125,
 				source_type = "vehicle",
@@ -641,24 +622,24 @@ data:extend{
 		order = "e[flamethrower]",
 		stack_size = 100,
 		subgroup = "a-items",
+		weight = 10000,
 	},
 }
 
-local genericGrenadeCapsule = table.deepcopy(data.raw.capsule.grenade) --TODO icons for this
-genericGrenadeCapsule.cooldown = 10
+local genericGrenadeCapsule = util.copy(data.raw.capsule.grenade) --TODO icons for this
 genericGrenadeCapsule.subgroup = "a-items"
 genericGrenadeCapsule.icon = nil
 genericGrenadeCapsule.icon_size = nil
 
 local destroyBlueCapsule = flib.copy_prototype(genericGrenadeCapsule, "tiberium-grenade-blue")
 destroyBlueCapsule.capsule_action.attack_parameters.ammo_type.action[1].action_delivery.projectile = "tiberium-grenade-blue"
-destroyBlueCapsule.icons = common.layeredIcons("__base__/graphics/icons/grenade.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "sw")
+destroyBlueCapsule.icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/grenade.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "sw")
 
 local destroyGreenCapsule = flib.copy_prototype(genericGrenadeCapsule, "tiberium-grenade-all")
 destroyGreenCapsule.capsule_action.attack_parameters.ammo_type.action[1].action_delivery.projectile = "tiberium-grenade-all"
-destroyGreenCapsule.icons = common.layeredIcons("__base__/graphics/icons/grenade.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "sw")
+destroyGreenCapsule.icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/grenade.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "sw")
 
-local genericGrenadeProjectile = table.deepcopy(data.raw.projectile.grenade)
+local genericGrenadeProjectile = util.copy(data.raw.projectile.grenade)
 genericGrenadeProjectile.action = {
 	{
 		type = "direct",
@@ -683,13 +664,13 @@ local sonicProjectile = flib.copy_prototype(genericGrenadeProjectile, "tiberium-
 sonicProjectile.animation = {
 	animation_speed = 0.5,
 	--draw_as_glow = true,
-	filename = "__base__/graphics/entity/beam/hr-tileable-beam-END-light.png",
+	filename = tiberiumInternalName.."/graphics/entity/sonic-emitter/hr-tileable-beam-END-light.png",
 	frame_count = 16,
 	height = 93,
 	width = 91,
 	line_length = 4,
 	priority = "high",
-	--shift = {0.03125, 0.03125},
+	shift = {0.03125, 0.03125},
 }
 sonicProjectile.created_effect = {
 	type = "direct",
@@ -824,9 +805,9 @@ data:extend{catalystAll, catalystBlue, invisibleChainReactionAll, invisibleChain
 	{
 		type = "ammo",
 		name = "tiberium-catalyst-missile-all",
-		icons = common.layeredIcons("__base__/graphics/icons/explosive-rocket.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "ne", 10),
+		icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/explosive-rocket.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "ne"),
+		ammo_category = "rocket",
 		ammo_type = {
-			category = "rocket",
 			range_modifier = 5,
 			cooldown_modifier = 3,
 			target_type = "position",
@@ -845,14 +826,15 @@ data:extend{catalystAll, catalystBlue, invisibleChainReactionAll, invisibleChain
 		},
 		subgroup = "a-items",
 		order = "c[rocket-launcher]-a[basic]",
-		stack_size = 200
+		stack_size = 100,
+		weight = 40000,
 	},
 	{
 		type = "ammo",
 		name = "tiberium-catalyst-missile-blue",
-		icons = common.layeredIcons("__base__/graphics/icons/explosive-rocket.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "ne", 10),
+		icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/explosive-rocket.png", 64, tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "ne"),
+		ammo_category = "rocket",
 		ammo_type = {
-			category = "rocket",
 			range_modifier = 5,
 			cooldown_modifier = 3,
 			target_type = "position",
@@ -871,7 +853,8 @@ data:extend{catalystAll, catalystBlue, invisibleChainReactionAll, invisibleChain
 		},
 		subgroup = "a-items",
 		order = "c[rocket-launcher]-a[basic]",
-		stack_size = 200
+		stack_size = 100,
+		weight = 40000,
 	},
 }
 
@@ -919,25 +902,14 @@ tibCliffProj.action[1].action_delivery.target_effects = {
 tibCliffProj.animation = {
 	animation_speed = 0.25,
 	draw_as_glow = true,
-	filename = tiberiumInternalName.."/graphics/entity/cliff-explosives/tiberium-cliff-explosives.png",
+	filename = tiberiumInternalName.."/graphics/entity/cliff-explosives/hr-tiberium-cliff-explosives.png",
 	frame_count = 16,
-	height = 30,
-	width = 26,
-	hr_version = {
-		animation_speed = 0.25,
-		draw_as_glow = true,
-		filename = tiberiumInternalName.."/graphics/entity/cliff-explosives/hr-tiberium-cliff-explosives.png",
-		frame_count = 16,
-		height = 58,
-		width = 52,
-		line_length = 8,
-		priority = "high",
-		scale = 0.5,
-		shift = {0.015625, -0.140625},
-	},
+	height = 58,
+	width = 52,
+	scale = 0.5,
+	shift = {0.015625, -0.140625},
 	line_length = 8,
 	priority = "high",
-	shift = {0, -0.125},
 }
 
 data:extend{tibCliffCapsule, tibCliffProj}

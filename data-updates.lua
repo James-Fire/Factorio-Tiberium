@@ -1,23 +1,24 @@
-require("scripts/tib-map-gen-presets")  -- After other mods have added their resources as part of the data step
+flib_table = require("__flib__.table")
 
-require("scripts/compatibility/bobsmods")
-require("scripts/compatibility/Krastorio2")
-require("scripts/compatibility/Obelisks-of-light")
+require("scripts.compatibility.bobsmods")
+require("scripts.compatibility.Krastorio2")
+require("scripts.compatibility.Obelisks-of-light")
+require("scripts.compatibility.finely-crafted-graphics")
 
 -- Orbital Ion Cannon
 if mods["Orbital Ion Cannon"] or mods["Kux-OrbitalIonCannon"] then
-	LSlib.technology.addPrerequisite("orbital-ion-cannon", "tiberium-military-2")
+	common.technology.addPrerequisite("orbital-ion-cannon", "tiberium-military-2")
 	if mods["bobwarfare"] then
-		LSlib.recipe.editIngredient("orbital-ion-cannon", "bob-laser-turret-5", "tiberium-ion-core", 1)
-		LSlib.technology.removePrerequisite("orbital-ion-cannon", "bob-laser-turrets-5")
+		common.recipe.editIngredient("orbital-ion-cannon", "bob-laser-turret-5", "tiberium-ion-core")
+		common.technology.removePrerequisite("orbital-ion-cannon", "bob-laser-turrets-5")
 	else
-		LSlib.recipe.editIngredient("orbital-ion-cannon", "laser-turret", "tiberium-ion-core", 1)
+		common.recipe.editIngredient("orbital-ion-cannon", "laser-turret", "tiberium-ion-core")
 	end
 end
 
 if mods["MoreScience"] then
 	for techName, techData in pairs(data.raw.technology) do
-		if string.sub(techName, 1, 9) == "tiberium-" then
+		if string.sub(techName, 1, 9) == "tiberium-" and techData.unit then
 			-- Most techs have the new science packs added to them
 			if (techName ~= "tiberium-mechanical-research") and (techName ~= "tiberium-slurry-centrifuging")
 					and (techName ~= "tiberium-military-1") and (techName ~= "tiberium-thermal-research")
@@ -48,30 +49,31 @@ if mods["omnimatter"] then
 	if omni then
 		omni.matter.add_ignore_resource("tiberium-ore")
 		omni.matter.add_ignore_resource("tibGrowthNode")
+		omni.matter.add_ignore_resource("nauvis_tibGrowthNode")
 		omni.matter.add_ignore_resource("tibNode_tree")
 	end
-	LSlib.recipe.editIngredient("tiberium-spike", "pumpjack", "offshore-pump", 1)
+	common.recipe.editIngredient("tiberium-spike", "pumpjack", "offshore-pump")
 end
 
 if mods["pypetroleumhandling"] then
 	-- Move Liquid Tiberium recipe to Reformer
-	LSlib.recipe.setCraftingCategory("tiberium-liquid-processing", "reformer")
-	LSlib.recipe.setCraftingCategory("tiberium-liquid-processing-hot", "reformer")
+	data.raw.recipe["tiberium-liquid-processing"].category = "reformer"
+	data.raw.recipe["tiberium-liquid-processing-hot"].category = "reformer"
 	-- Move both Molten Tiberium recipes to Light Oil Refinery
-	LSlib.recipe.setCraftingCategory("tiberium-molten-processing", "lor")
-	LSlib.recipe.setCraftingCategory("tiberium-advanced-molten-processing", "lor")
+	data.raw.recipe["tiberium-molten-processing"].category = "lor"
+	data.raw.recipe["tiberium-advanced-molten-processing"].category = "lor"
 end
 
 if mods["IndustrialRevolution"] then
 	if data.raw["assembling-machine"]["oil-refinery"] then
-	    data.raw["assembling-machine"]["oil-refinery"].fixed_recipe = nil
-	    data.raw["assembling-machine"]["oil-refinery"].show_recipe_icon = true
+		data.raw["assembling-machine"]["oil-refinery"].fixed_recipe = nil
+		data.raw["assembling-machine"]["oil-refinery"].show_recipe_icon = true
 	end
 end
 
 if mods["angelspetrochem"] then
 	-- Replace the vanilla Chemical Plant with one of Angel's, because apparently it's too hard to simply use the vanilla one.
-	LSlib.recipe.editIngredient("tiberium-power-plant", "chemical-plant", "angels-chemical-plant-2", 1)
+	common.recipe.editIngredient("tiberium-power-plant", "chemical-plant", "angels-chemical-plant-2")
 end
 
 if mods["dark-matter-replicators-18"] then
@@ -94,13 +96,13 @@ if mods["space-exploration"] then
 	common.applyTiberiumValue("se-naquium-ore", 32)
 	se_resources["tibGrowthNode"] = {}
 	se_resources["tibGrowthNode"].has_starting_area_placement = common.TiberiumInStartingArea
-	
+
 	-- These do nothing other than tiberium-growth-accelerator and tiberium-srf-connector, but I like to pretend
 	for _, drillName in pairs({"tiberium-network-node", "tiberium-node-harvester", "tiberium-aoe-node-harvester", "tiberium-detonation-charge", "tiberium-growth-accelerator-node", "tiberium-spike"}) do
 		data.raw["mining-drill"][drillName].se_allow_in_space = true
 	end
 	data.raw.beacon["tiberium-beacon-node"].se_allow_in_space = true
-	data.raw["assembling-machine"]["tiberium-growth-accelerator"].se_allow_in_space = true
+	data.raw["furnace"]["tiberium-growth-accelerator"].se_allow_in_space = true
 	data.raw["electric-energy-interface"]["tiberium-sonic-emitter"].se_allow_in_space = true
 	data.raw["electric-energy-interface"]["tiberium-sonic-emitter-blue"].se_allow_in_space = true
 	data.raw["pipe-to-ground"]["tiberium-srf-connector"].se_allow_in_space = true
@@ -156,7 +158,7 @@ end
 table.insert(data.raw.character.character.mining_categories, "basic-solid-tiberium")
 
 for _, drill in pairs(data.raw["mining-drill"]) do
-	if LSlib.utils.table.hasValue(drill.resource_categories, "basic-solid") then
+	if flib_table.find(drill.resource_categories, "basic-solid") then
 		table.insert(drill.resource_categories, "basic-solid-tiberium")
 	end
 end
@@ -184,6 +186,7 @@ end
 if data.raw.resource["uranium-ore"] then
 	data.raw.resource["uranium-ore"]["map_color"] = {0.0, 0.5, 0.0}
 	common.applyTiberiumValue("uranium-ore", 8)
+	data.raw.item["uranium-ore"].tiberium_surface = "nauvis"
 end
 
 -- Flag any item as being convertible to sludge for centrifuging recipes by setting the tiberium_sludge property to true
@@ -192,17 +195,161 @@ if data.raw.item.stone then
 end
 
 -- Flag items as empty barrels for detecting un-barreling recipes in data-final-fixes
-if data.raw.item["empty-barrel"] then
-	data.raw.item["empty-barrel"].tiberium_empty_barrel = true
+if data.raw.item["barrel"] then
+	data.raw.item["barrel"].tiberium_empty_barrel = true
 end
 
 -- Enable Tiberium Science recipes at all assemblers that meet certain category requirements
 for name, assembler in pairs(data.raw["assembling-machine"]) do
 	local categories = assembler.crafting_categories or {}
-	if LSlib.utils.table.hasValue(categories, "chemistry") and not LSlib.utils.table.hasValue(categories, "tiberium-science") then
-		LSlib.entity.addCraftingCategory("assembling-machine", name, "basic-tiberium-science")
-		LSlib.entity.addCraftingCategory("assembling-machine", name, "tiberium-science")
-	elseif LSlib.utils.table.hasValue(categories, "crafting") and not LSlib.utils.table.hasValue(categories, "basic-tiberium-science") then
-		LSlib.entity.addCraftingCategory("assembling-machine", name, "basic-tiberium-science")
+	if flib_table.find(categories, "chemistry") and not flib_table.find(categories, "tiberium-science") then
+		table.insert(data.raw["assembling-machine"][name].crafting_categories, "basic-tiberium-science")
+		table.insert(data.raw["assembling-machine"][name].crafting_categories, "tiberium-science")
+	elseif flib_table.find(categories, "crafting") and not flib_table.find(categories, "basic-tiberium-science") then
+		table.insert(data.raw["assembling-machine"][name].crafting_categories, "basic-tiberium-science")
 	end
+end
+
+-- Add Tiberium to planet definitions
+for name,planet in pairs(data.raw.planet) do
+	if planet.map_gen_settings and planet.map_gen_settings.autoplace_controls and
+			(name == "tiber"
+			or (name == "nauvis" and (common.whichPlanet == "nauvis" or common.whichPlanet == "pure-nauvis"))
+			or (settings.startup["tiberium-on-"..name] and settings.startup["tiberium-on-"..name].value)
+			or (not settings.startup["tiberium-on-"..name] and settings.startup["tiberium-on-all-other-planets"].value)) then
+		data:extend{
+			{
+				type = "autoplace-control",
+				name = name.."_tibGrowthNode",
+				richness = true,
+				order = string.sub(planet.order or "z",1,1).."-g",  --After Nauvis uranium
+				category = "resource",
+				localised_name = {"autoplace-control-names.tibGrowthNode"},
+			}
+		}
+		planet.map_gen_settings.autoplace_controls[name.."_tibGrowthNode"] = {}
+		planet.map_gen_settings.autoplace_settings.entity.settings["tibGrowthNode"] = {}
+	end
+end
+
+-- Fix some research triggers making Tiberium Only worlds unplayable
+if settings.startup["tiberium-advanced-start"].value or common.whichPlanet == "tiber-start" or common.whichPlanet == "pure-nauvis" then
+	local minableResorces = {}
+	for resourceName, resourceData in pairs(data.raw.resource) do
+		if resourceData.autoplace then  -- Is an autoplace resource
+			local autoplaceControl = data.raw["autoplace-control"][resourceName]
+			if autoplaceControl and autoplaceControl.category == "resource" then -- That shows up on the resource tab of map gen settings
+				if data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings[resourceName] then -- And is present on Nauvis
+					for result in pairs(common.minableResultsTable(resourceData)) do
+						minableResorces[result] = true
+					end
+				end
+			end
+		end
+	end
+	for techName, tech in pairs(data.raw.technology) do
+		if tech.research_trigger and tech.research_trigger.type == "mine-entity" then
+			local resource = tech.research_trigger.entity  --[[@as string]]
+			if not string.find(resource, "tiberium") and minableResorces[resource] then
+				-- Change the unlock to science pack and copy cost from prereq
+				local ingredientCount = 0
+				local copyFrom = nil
+				for _, prereq in pairs(tech.prerequisites or {}) do
+					if data.raw.technology[prereq] and data.raw.technology[prereq].unit then
+						local unit = data.raw.technology[prereq].unit
+						if unit and flib_table.size(unit.ingredients) > ingredientCount then
+							ingredientCount = flib_table.size(unit)
+							copyFrom = prereq
+						end
+					end
+				end
+				if copyFrom then
+					tech.research_trigger = nil
+					tech.unit = util.copy(data.raw.technology[copyFrom].unit)
+				else
+					tech.research_trigger.entity = "tiberium-ore"  -- No prereqs with unit costs, default to mining tiberium
+				end
+			end
+		end
+	end
+end
+
+-- Remove non-Tiberium ores from Tberium-only Nauvis
+if common.whichPlanet == "pure-nauvis" then
+	data.raw.planet["nauvis"].map_gen_settings.autoplace_settings.entity.settings["tiberium-tiber-rock"] = {}
+	data.raw.planet["nauvis"].map_gen_settings.autoplace_controls["tiber-rocks"] = {}
+	local autoplaceExceptions = {
+		["nauvis_tibGrowthNode"] = true,
+		["trees"] = true,
+		["enemy-base"] = true,
+		["lithia-water"] = true,
+		["termal2"] = true,
+	}
+	for autoplace in pairs(data.raw.planet["nauvis"].map_gen_settings.autoplace_controls) do
+		if not autoplaceExceptions[autoplace] and data.raw["autoplace-control"][autoplace]
+				and data.raw["autoplace-control"][autoplace].category == "resource" then
+			data.raw.planet["nauvis"].map_gen_settings.autoplace_controls[autoplace] = nil
+			data.raw.planet["nauvis"].map_gen_settings.autoplace_settings.entity.settings[autoplace] = nil
+			local autoplaceInUse = false
+			for planetName,planetData in pairs(data.raw.planet) do
+				if planetName ~= "nauvis" then
+					if planetData.map_gen_settings and planetData.map_gen_settings.autoplace_controls
+							and planetData.map_gen_settings.autoplace_controls[autoplace] then
+						autoplaceInUse = true
+						break
+					end
+				end
+			end
+			if not autoplaceInUse then
+				-- Flag resources for centrifuging
+				for itemName in pairs(common.minableResultsTable(data.raw.resource[autoplace])) do
+					if data.raw.item[itemName] then
+						data.raw.item[itemName].tiberium_resource_planet = "nauvis"
+					elseif data.raw.fluid[itemName] then
+						data.raw.fluid[itemName].tiberium_resource_planet = "nauvis"
+					end
+				end
+				-- Delete autoplace
+				data.raw["autoplace-control"][autoplace] = nil
+				-- Remove autoplace from map gen presets so we don't crash
+				for _,mgpCatData in pairs(data.raw["map-gen-presets"]) do
+					for _,mgpData in pairs(mgpCatData) do
+						if mgpData.basic_settings and mgpData.basic_settings.autoplace_controls then
+							mgpData.basic_settings.autoplace_controls[autoplace] = nil
+						end
+					end
+				end
+			end
+		end
+	end
+elseif common.whichPlanet == "nauvis" then
+	--data.raw.planet["nauvis"].map_gen_settings.autoplace_settings.entity.settings["tiberium-tiber-rock"] = {frequency = 0}
+	data.raw["autoplace-control"]["tiber-rocks"] = nil
+	data.raw["simple-entity"]["tiberium-tiber-rock"] = nil
+end
+
+-- Adding Tib Science to all labs
+local tibComboPacks = {}  -- List of packs that need to be processed in the same lab as Tib Science
+for name, technology in pairs(data.raw.technology) do
+	if string.sub(name, 1, 9) == "tiberium-" and technology.unit then
+		for _, ingredient in pairs(technology.unit.ingredients) do
+			local pack = ingredient[1]
+			if (pack ~= "tiberium-science") and data.raw.tool[pack] then -- Don't add Tib Science
+				tibComboPacks[pack] = true
+			end
+		end
+	end
+end
+
+for labName, labData in pairs(data.raw.lab) do
+	local addTib = false
+	if not flib_table.find(labData.inputs or {}, "tiberium-science") then -- Must not already allow Tib Science
+		for pack in pairs(tibComboPacks) do  -- Must use packs from combo list so we don't hit things like module labs
+			if flib_table.find(labData.inputs or {}, pack) then
+				addTib = true
+				break
+			end
+		end
+	end
+	if addTib then table.insert(data.raw.lab[labName].inputs, "tiberium-science") end
 end

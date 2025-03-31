@@ -1,15 +1,17 @@
 {
-    "name": "Factorio-Tiberium",
-    "version": "1.1.31",
-    "title": "Factorio and Conquer: Tiberian Dawn",
-    "author": "JamesFire",
-    "contact": "",
-    "homepage": "https://discord.gg/freXKz5",
-    "factorio_version": "1.1",
-    "dependencies": [
-		"base >= 1.1.0",
-		"LSlib >= 2020.8.22",
-		"flib >= 0.3.0",
+	"name": "Factorio-Tiberium",
+	"title": "Factorio and Conquer: Tiberian Dawn",
+	"description": "○🌐Adds Tiberium ore that spreads - Harvest it, refine it, and convert it to power, weapons, and other ores. By Zillo7 (0.15), SAH4001 (0.16), Oktabyte (0.17), JamesFire and randomflyingtaco (0.18+)",
+
+	"author": "JamesFire",
+	"contact": "",
+	"homepage": "https://discord.gg/freXKz5",
+	"version": "2.0.12",
+	"factorio_version": "2.0",
+	"dependencies": [
+		"base",
+		"flib >= 0.15.0",
+		"? space-age",
 		"? informatron",
 		"? 5dim_battlefield >= 1.0.4",
 		"? alien-biomes",
@@ -21,6 +23,7 @@
 		"? bobrevamp >= 1.0.0",
 		"? bobplates >= 1.0.0",
 		"? DiscoScience >= 1.0.0",
+		"? finely-crafted-graphics",
 		"? Krastorio2",
 		"? Kux-OrbitalIonCannon",
 		"? Mining-Drones-Tiberium",
@@ -32,6 +35,5 @@
 		"? RampantResources >= 1.2.0",
 		"? space-exploration",
 		"? space-exploration-postprocess >= 0.6.18"
-	],
-    "description": "○🌐Adds Tiberium ore that spreads - Harvest it, refine it, and convert it to power, weapons, and other ores. By Zillo7 (0.15), SAH4001 (0.16), Oktabyte (0.17), JamesFire and randomflyingtaco (0.18+)"
+	]
 }

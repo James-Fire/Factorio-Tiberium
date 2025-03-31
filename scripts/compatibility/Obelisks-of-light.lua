@@ -1,21 +1,23 @@
 if mods["Obelisks-of-light"] then
 	--Item
 	for _, property in pairs({"stack_size", "subgroup", "order"}) do
-		data.raw.item["obelisk-of-light"][property] = table.deepcopy(data.raw.item["tiberium-obelisk-of-light"][property])
+		data.raw.item["obelisk-of-light"][property] = util.copy(data.raw.item["tiberium-obelisk-of-light"][property])
 	end
 	data.raw.item["tiberium-obelisk-of-light"].place_result = "obelisk-of-light"
 	--Recipes: delete/hide his recipes, duplicate my recipe and update outputs
 	for _, property in pairs({"energy_required", "subgroup", "ingredients"}) do
-		data.raw.recipe["obelisk-of-light"][property] = table.deepcopy(data.raw.recipe["tiberium-obelisk-of-light"][property])
+		data.raw.recipe["obelisk-of-light"][property] = util.copy(data.raw.recipe["tiberium-obelisk-of-light"][property])
 	end
 	data.raw.recipe["tiberium-obelisk-of-light"].hidden = true
 	--Tech: delete his tech, update recipe unlocks on my tech
-	LSlib.technology.addRecipeUnlock("tiberium-military-2", "obelisk-of-light")
-	LSlib.technology.removeRecipeUnlock("tiberium-military-2", "tiberium-obelisk-of-light")
-	LSlib.technology.setHidden("Obelisks-of-light")
-	for tech, _ in pairs(data.raw.technology) do
-		if string.sub(tech, 1, 22) == "Obelisk-weapons-damage" or string.sub(tech, 1, 22) == "Obelisk-Shooting-Speed" then
-			LSlib.technology.setHidden(tech)  --Don't need custom weapon category upgrades since we are using default laser group
+	common.technology.addRecipeUnlock("tiberium-military-2", "obelisk-of-light")
+	common.technology.removeRecipeUnlock("tiberium-military-2", "tiberium-obelisk-of-light")
+	if data.raw.technology["Obelisks-of-light"] then
+		data.raw.technology["Obelisks-of-light"].hidden = true
+	end
+	for technologyName, _ in pairs(data.raw.technology) do
+		if string.sub(technologyName, 1, 22) == "Obelisk-weapons-damage" or string.sub(technologyName, 1, 22) == "Obelisk-Shooting-Speed" then
+			data.raw.technology[technologyName].hidden = true --Don't need custom weapon category upgrades since we are using default laser group
 		end
 	end
 	--Entity: Translate his sprites/animations but use my sounds
@@ -24,7 +26,7 @@ if mods["Obelisks-of-light"] then
 		local turret = data.raw["electric-turret"][name]
 		if turret then
 			for _, property in pairs({"attack_parameters", "max_health", "collision_box", "selection_box", "energy_source", "map_color", "starting_attack_sound"}) do
-				turret[property] = table.deepcopy(data.raw["electric-turret"]["tiberium-obelisk-of-light"][property])
+				turret[property] = util.copy(data.raw["electric-turret"]["tiberium-obelisk-of-light"][property])
 			end
 		end
 	end

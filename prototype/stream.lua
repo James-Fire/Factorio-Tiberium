@@ -67,7 +67,7 @@ data:extend{
 		particle_start_scale = 0.2,
 		particle_vertical_acceleration = 0.003,
 		shadow = {
-			filename = "__base__/graphics/entity/acid-projectile/projectile-shadow.png",
+			filename = tiberiumInternalName.."/graphics/entity/acid-projectile/projectile-shadow.png",
 			frame_count = 33,
 			height = 16,
 			line_length = 5,
@@ -91,7 +91,6 @@ data:extend{
 		-- },
 		spine_animation = {
 			animation_speed = 2,
-			axially_symmetrical = false,
 			blend_mode = "additive",
 			direction_count = 1,
 			filename = tiberiumInternalName.."/graphics/entity/chemsprayer-stream/flamethrower-fire-stream-spine.png",

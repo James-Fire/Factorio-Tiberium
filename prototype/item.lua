@@ -67,11 +67,12 @@ data:extend{
 		icon_size = 32,
 		flags = {},
 		subgroup = "a-items",
-		order = "a[science]-f[science-pack]",
+		order = "g[tiberium-science]",  -- After space science
 		durability = 1,
 		durability_description_key = "description.science-pack-remaining-amount-key",
 		durability_description_value = "description.science-pack-remaining-amount-value",
 		stack_size = 200,
+		weight = 1000,
 	},
 	--Structures
 	{
@@ -94,7 +95,7 @@ data:extend{
 				icon_size = 32,
 			},
 			{
-				icon = "__base__/graphics/icons/centrifuge.png",
+				icon = tiberiumInternalName.."/graphics/icons/centrifuge.png",
 				icon_size = 64,
 				scale = 28/64,
 			},
@@ -115,7 +116,7 @@ data:extend{
 				icon_size = 32,
 			},
 			{
-				icon = "__base__/graphics/icons/centrifuge.png",
+				icon = tiberiumInternalName.."/graphics/icons/centrifuge.png",
 				icon_size = 64,
 				scale = 28/64,
 			},
@@ -136,7 +137,7 @@ data:extend{
 				icon_size = 32,
 			},
 			{
-				icon = "__base__/graphics/icons/centrifuge.png",
+				icon = tiberiumInternalName.."/graphics/icons/centrifuge.png",
 				icon_size = 64,
 				scale = 28/64,
 			},
@@ -156,7 +157,8 @@ data:extend{
 		subgroup = "a-buildings",
 		order = "b[srf]",
 		place_result = "tiberium-reprocessor",
-		stack_size = 50
+		stack_size = 50,
+		weight = 100000,
 	},
 	-- {
 	-- 	type = "item",
@@ -176,34 +178,36 @@ data:extend{
 		subgroup = "a-buildings",
 		order = "b[srf]",
 		place_result = "tiberium-srf-connector",
-		stack_size = 50
+		stack_size = 50,
+		weight = 50000,
 	},
 	{
 		type = "item",
 		name = "tiberium-sonic-emitter",
 		icons =  common.layeredIcons(tiberiumInternalName.."/graphics/entity/sonic-emitter/CNCTW_Sonic_Emitter_Cameo.png", 128,
-			tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "ne", 12),
+			tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "ne"),
 		icon_size = 128,
 		subgroup = "a-buildings",
 		order = "b[srf]-2",
 		place_result = "tiberium-sonic-emitter",
-		stack_size = 50
+		stack_size = 50,
+		weight = 50000,
 	},
 	{
 		type = "item",
 		name = "tiberium-sonic-emitter-blue",
 		icons =  common.layeredIcons(tiberiumInternalName.."/graphics/entity/sonic-emitter/CNCTW_Sonic_Emitter_Cameo.png", 128,
-			tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "ne", 12),
+			tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "ne"),
 		subgroup = "a-buildings",
 		order = "b[srf]-3",
 		place_result = "tiberium-sonic-emitter-blue",
-		stack_size = 50
+		stack_size = 50,
+		weight = 50000,
 	},
 	{
 		type = "item",
 		name = "tiberium-network-node",
-		icon = "__base__/graphics/icons/electric-mining-drill.png",
-		icon_mipmaps = 4,
+		icon = tiberiumInternalName.."/graphics/icons/electric-mining-drill.png",
 		icon_size = 64,
 		order = "h[tiberium-network-node]",
 		place_result = "tiberium-network-node",
@@ -223,8 +227,7 @@ data:extend{
 	{
 		type = "item",
 		name = "tiberium-aoe-node-harvester",
-		icon = "__base__/graphics/icons/pumpjack.png",
-		icon_mipmaps = 4,
+		icon = tiberiumInternalName.."/graphics/icons/pumpjack.png",
 		icon_size = 32,
 		order = "c[aoe-node-harvester]",
 		place_result = "tiberium-aoe-node-harvester",
@@ -239,7 +242,8 @@ data:extend{
 		subgroup = "a-buildings",
 		order = "f[tiberium-obelisk-of-light]",
 		place_result = "tiberium-obelisk-of-light",
-		stack_size = 50
+		stack_size = 50,
+		weight = 100000,
 	},
 	{
 		type = "item",
@@ -249,19 +253,20 @@ data:extend{
 		subgroup = "a-buildings",
 		order = "f[tiberium-advanced-guard-tower]",
 		place_result = "tiberium-advanced-guard-tower",
-		stack_size = 50
+		stack_size = 50,
+		weight = 100000,
 	},
 	-- Node structures
 	{
 		type = "item",
 		name = "tiberium-node-harvester",
-		icon = "__base__/graphics/icons/pumpjack.png",
-		icon_mipmaps = 4,
+		icon = tiberiumInternalName.."/graphics/icons/pumpjack.png",
 		icon_size = 64,
 		subgroup = "a-node-buildings",
 		order = "a[node-harvester]",
 		place_result = "tiberium-node-harvester",
 		stack_size = 20,
+		weight = 100000,
 	},
 	{
 		type = "item",
@@ -272,12 +277,12 @@ data:extend{
 		order = "b[tiberium-growth-accelerator]",
 		place_result = "tiberium-growth-accelerator-node",
 		stack_size = 20,
+		weight = 50000,
 	},
 	{
 		type = "item",
 		name = "tiberium-detonation-charge",
-		icon = "__base__/graphics/icons/crash-site-chest.png",
-		icon_mipmaps = 4,
+		icon = tiberiumInternalName.."/graphics/icons/crash-site-chest.png",
 		icon_size = 64,
 		subgroup = "a-node-buildings",
 		order = "c[tiberium-detonation-charge]",
@@ -293,6 +298,7 @@ data:extend{
 		order = "d[tiberium-spike]",
 		place_result = "tiberium-spike",
 		stack_size = 20,
+		weight = 100000,
 	},
 	{
 		type = "item",
@@ -301,7 +307,8 @@ data:extend{
 		subgroup = "a-node-buildings",
 		order = "e[tiberium-monoculture-green]",
 		place_result = "tiberium-monoculture-green-node",
-		stack_size = 20
+		stack_size = 20,
+		weight = 100000,
 	},
 	{
 		type = "item",
@@ -310,7 +317,8 @@ data:extend{
 		subgroup = "a-node-buildings",
 		order = "f[tiberium-monoculture-blue]",
 		place_result = "tiberium-monoculture-blue-node",
-		stack_size = 50
+		stack_size = 20,
+		weight = 100000,
 	},
 	--Military
 	{
@@ -332,7 +340,7 @@ data:extend{
 		flags = {},
 		order = "c[tiberium-fuel-cell]-a[empty-cell]",
 		subgroup = "a-intermediates",
-		stack_size = 100
+		stack_size = 50
 	},
 	{
 		type = "item",
@@ -342,12 +350,12 @@ data:extend{
 		flags = {},
 		order = "c[tiberium-fuel-cell]-c[dirty-cell]",
 		subgroup = "a-intermediates",
-		stack_size = 5
+		stack_size = 50
 	},
 	{
 		type = "item",
 		name = "tiberium-fuel-cell",
-		icon = "__base__/graphics/icons/uranium-fuel-cell.png",
+		icon = tiberiumInternalName.."/graphics/icons/uranium-fuel-cell.png",
 		icon_size = 64,
 		flags = {},
 		order = "c[tiberium-fuel-cell]-b[fuel-cell]",
@@ -356,6 +364,44 @@ data:extend{
 		burnt_result = "tiberium-dirty-cell",
 		fuel_value = "4GJ",
 		stack_size = 50
+	},
+	{
+		type = "item",
+		name = "tiberium-generator-equipment",
+		place_as_equipment_result = "tiberium-generator-equipment",
+		icon = tiberiumInternalName.."/graphics/icons/NuclearBatteryOff.png",
+		icon_size = 128,
+		pick_sound = {
+			filename = "__base__/sound/item/reactor-inventory-pickup.ogg",
+			volume = 0.6
+		},
+		drop_sound = {
+			filename = "__base__/sound/item/reactor-inventory-move.ogg",
+			volume = 0.7
+		},
+		flags = {},
+		order = "a[energy-source]-b[fission-reactor]",
+		subgroup = "equipment",
+		stack_size = 20
+	},
+	{
+		type = "item",
+		name = "tiberium-generator-equipment-on",
+		place_as_equipment_result = "tiberium-generator-equipment",
+		icon = tiberiumInternalName.."/graphics/icons/NuclearBatteryOn.png",
+		icon_size = 128,
+		pick_sound = {
+			filename = "__base__/sound/item/reactor-inventory-pickup.ogg",
+			volume = 0.6
+		},
+		drop_sound = {
+			filename = "__base__/sound/item/reactor-inventory-move.ogg",
+			volume = 0.7
+		},
+		flags = {},
+		order = "a[energy-source]-b[fission-reactor]",
+		subgroup = "equipment",
+		stack_size = 20
 	},
 	--Other
 	{
@@ -367,6 +413,7 @@ data:extend{
 		subgroup = "a-items",
 		order = "a[tiberium-ore]",
 		stack_size = 200,
+		weight = 5000,
 	},
 	{
 		type = "item",
@@ -377,6 +424,7 @@ data:extend{
 		subgroup = "a-items",
 		order = "a[tiberium-ore]",
 		stack_size = 200,
+		weight = 10000,
 	},
 	{
 		type = "item",
@@ -387,6 +435,7 @@ data:extend{
 		subgroup = "a-items",
 		order = "a[tiberium-ore]",
 		stack_size = 200,
+		weight = 10000,
 	},
 	{
 		type = "item",
@@ -396,7 +445,8 @@ data:extend{
 		flags = {},
 		subgroup = "a-intermediates",
 		order = "a[tiberium-ore]",
-		stack_size = 200
+		stack_size = 200,
+		weight = 2500,
 	},
 	{
 		type = "item",
@@ -406,44 +456,35 @@ data:extend{
 		flags = {},
 		subgroup = "a-intermediates",
 		order = "a[tiberium-ore]",
-		stack_size = 100
+		stack_size = 100,
+		weight = 2000,
 	},
 	{
 		type = "item",
 		name = "tiberium-ore",
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore.png",
 		icon_size = 64,
-		icon_mipmaps = 4,
 		flags = {},
 		subgroup = "raw-resource",
 		order = "a[tiberium-ore]",
 		stack_size = 50,
 		fuel_value = "2MJ",
 		fuel_category = "chemical",
-		fuel_emissions_multiplier = common.scalePollution(4),
+		fuel_emissions_multiplier = common.emissionMultiplier(4),
+		weight = 2000,
 	},
 	{
 		type = "item",
 		name = "tiberium-ore-blue",
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png",
 		icon_size = 64,
-		icon_mipmaps = 4,
 		flags = {},
 		subgroup = "raw-resource",
 		order = "a[tiberium-ore]",
 		stack_size = 50,
 		fuel_value = "8MJ",
 		fuel_category = "chemical",
-		fuel_emissions_multiplier = common.scalePollution(4),
-	},
-	--Dummy Items
-	{
-		type = "item",
-		name = "tiberium-growth-credit-void",
-		icon = tiberiumInternalName.."/graphics/icons/tiberium-ore.png",
-		icon_size = 64,
-		flags = {"hidden"},
-		subgroup = "a-items",
-		stack_size = 200
+		fuel_emissions_multiplier = common.emissionMultiplier(4),
+		weight = 2000,
 	},
 }

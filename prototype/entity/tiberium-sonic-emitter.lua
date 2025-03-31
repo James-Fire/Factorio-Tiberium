@@ -4,7 +4,6 @@ local sonic_sprite = {
 			filename = tiberiumInternalName.."/graphics/entity/sonic-emitter/CNCTW_Sonic_Emitter_Cameo.png",
 			priority = "extra-high",
 			frame_count = 1,
-			axially_symmetrical = false,
 			direction_count = 1,
 			width = 128,
 			height = 128,
@@ -15,7 +14,6 @@ local sonic_sprite = {
 			filename = tiberiumInternalName.."/graphics/entity/sonic-emitter/sonic-emitter-shadow.png",
 			--priority = "extra-high",
 			frame_count = 1,
-			axially_symmetrical = false,
 			direction_count = 1,
 			width = 155,
 			height = 96,
@@ -31,22 +29,23 @@ data:extend{
 		type = "electric-energy-interface",
 		name = "tiberium-sonic-emitter",
 		icons = common.layeredIcons(tiberiumInternalName.."/graphics/entity/sonic-emitter/CNCTW_Sonic_Emitter_Cameo.png", 128,
-				tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "ne", 12),
+				tiberiumInternalName.."/graphics/icons/tiberium-ore.png", 64, "ne"),
 		flags = {"placeable-neutral", "player-creation"},
 		collision_box = {{-0.7, -0.7}, {0.7, 0.7}},
 		selection_box = {{-1, -1}, {1, 1}},
 		minable = {mining_time = 0.5, result = "tiberium-sonic-emitter"},
 		max_health = 250,
 		corpse = "laser-turret-remnants",
+		drawing_box_vertical_extension = 0.7,
 		dying_explosion = "laser-turret-explosion",
 		working_sound =	{
 			sound = {
-			  filename = "__base__/sound/substation.ogg",
-			  volume = 0.4
+				filename = "__base__/sound/substation.ogg",
+				volume = 0.4
 			},
 			idle_sound = {
-			  filename = "__base__/sound/accumulator-idle.ogg",
-			  volume = 0.4
+				filename = "__base__/sound/accumulator-idle.ogg",
+				volume = 0.4
 			},
 			max_sounds_per_type = 3,
 			audible_distance_modifier = 0.5,
@@ -54,7 +53,7 @@ data:extend{
 			fade_out_ticks = 40,
 			use_doppler_shift = false
 		},
-		vehicle_impact_sound = {filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65},
+		impact_category = "metal",
 		energy_source = {
 			type = "electric",
 			buffer_capacity = "2MJ",
@@ -86,7 +85,8 @@ data:extend{
 	{
 		type = "fish",
 		name = "tiberium-target-dummy",
-		flags = {"hidden", "placeable-off-grid", "placeable-neutral"},
+		flags = {"placeable-off-grid", "placeable-neutral"},
+		hidden = true,
 		icon = common.blankPicture.filename,
 		icon_size = 1,
 		pictures = {common.blankPicture},
@@ -95,6 +95,6 @@ data:extend{
 
 local emitterBlue = flib.copy_prototype(data.raw["electric-energy-interface"]["tiberium-sonic-emitter"], "tiberium-sonic-emitter-blue")
 emitterBlue.icons = common.layeredIcons(tiberiumInternalName.."/graphics/entity/sonic-emitter/CNCTW_Sonic_Emitter_Cameo.png", 128,
-		tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "ne", 12)
+		tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-20-114-10.png", 64, "ne")
 
 data:extend{emitterBlue}

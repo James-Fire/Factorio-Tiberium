@@ -1,39 +1,39 @@
 local Informatron = {} -- informatron pages implementation.
 
 function Informatron.menu(player_index)
-  local player = game.players[player_index]
-  local menu = {
-    tiberium_growth = {
-		nodes = 1,
-		growth_accelerator = 1,
-		tiberium_seed = 1,
-	},
-	harvesting = {
-		node_harvester = 1,
-		tiberium_spike = 1,
-		tiberium_control_node = 1,
-		aoe_node_harvester = 1,
-		tiberium_control_network = 1,
-	},
-	refining = {
-		tiberium_ore = 1,
-		sludge = 1,
-		slurry = 1,
-		molten = 1,
-		liquid = 1,
-		centrifuging = 1,
-	},
-	containment = {
-		armor = 1,
-		sonic_fences = 1,
-		MARV = 1,
-	},
-	weaponry = {
-		ion_projector = 1,
-		tiberium_missiles = 1,
-	},
-  }
-  return menu
+	local player = game.players[player_index]
+	local menu = {
+		tiberium_growth = {
+			nodes = 1,
+			growth_accelerator = 1,
+			tiberium_seed = 1,
+		},
+		harvesting = {
+			node_harvester = 1,
+			tiberium_spike = 1,
+			tiberium_control_node = 1,
+			aoe_node_harvester = 1,
+			tiberium_control_network = 1,
+		},
+		refining = {
+			tiberium_ore = 1,
+			sludge = 1,
+			slurry = 1,
+			molten = 1,
+			liquid = 1,
+			centrifuging = 1,
+		},
+		containment = {
+			armor = 1,
+			sonic_fences = 1,
+			MARV = 1,
+		},
+		weaponry = {
+			ion_projector = 1,
+			tiberium_missiles = 1,
+		},
+	}
+	return menu
 end
 
 function Informatron.page_content(page_name, player_index, element)

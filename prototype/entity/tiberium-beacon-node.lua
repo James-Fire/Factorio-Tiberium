@@ -9,10 +9,10 @@ data:extend{
 		max_health = 200,
 		corpse = "beacon-remnants",
 		dying_explosion = "beacon-explosion",
+		drawing_box_vertical_extension = 0.7,
 		collision_box = {{-1.2, -1.2}, {1.2, 1.2}},
 		selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
 		damaged_trigger_effect = common.hit_effects.entity(),
-		drawing_box = {{-1.5, -2.2}, {1.5, 1.3}},
 		allowed_effects = {"consumption"},
 		animation = {
 			animation_speed = 0.5,
@@ -30,7 +30,7 @@ data:extend{
 			shift = {0.34375, 0.046875},
 		},
 		radius_visualisation_picture = {
-			filename = "__base__/graphics/entity/beacon/beacon-radius-visualization.png",
+			filename = tiberiumInternalName.."/graphics/entity/beacon/beacon-radius-visualization.png",
 			priority = "extra-high-no-scale",
 			width = 10,
 			height = 10
@@ -40,7 +40,7 @@ data:extend{
 			type = "void",
 			usage_priority = "secondary-input"
 		},
-		vehicle_impact_sound = common.sounds.generic_impact,
+		impact_category = "metal",
 		open_sound = common.sounds.machine_open,
 		close_sound = common.sounds.machine_close,
 		working_sound = {
@@ -61,25 +61,7 @@ data:extend{
 		},
 		energy_usage = "10MW",
 		distribution_effectivity = 0,
-		module_specification = {
-			module_slots = 0,
-			module_info_icon_shift = {0, 0},
-			module_info_multi_row_initial_height_modifier = -0.3,
-			module_info_max_icons_per_row = 2,
-		},
-		water_reflection = {
-			pictures = {
-				filename = "__base__/graphics/entity/beacon/beacon-reflection.png",
-				priority = "extra-high",
-				width = 24,
-				height = 28,
-				shift = util.by_pixel(0, 55),
-				variation_count = 1,
-				scale = 5,
-			},
-			rotate = false,
-			orientation_to_variation = false
-		}
+		module_slots = 0,
 	},
 	--Invisible beacons for Growth Accelerator speed research
 	{
@@ -97,30 +79,16 @@ data:extend{
 			"no-automated-item-removal",
 			"no-automated-item-insertion"
 		},
-		collision_mask = {"resource-layer"}, -- disable collision
-		resistances = {
-			{
-				type = "fire",
-				percent = 90
-			},
-			{
-				type = "tiberium",
-				percent = 100
-			}
-		},
+		collision_mask = common.makeCollisionMask({"resource"}), -- disable collision
 		animation = common.blankAnimation,
-		animation_shadow = common.blankAnimation,
 		energy_source = {
 			type = "electric",
 			usage_priority = "secondary-input"
 		},
 		base_picture = common.blankPicture,
 		supply_area_distance = 0,
-		radius_visualisation_picture = common.blankPicture,
 		distribution_effectivity = 1,
-		module_specification = {
-			module_slots = 65535,
-		},
+		module_slots = 32767,
 		allowed_effects = {"speed", "consumption"},
 		selection_box = {{0, 0}, {0, 0}},
 		collision_box = {{-1.4, -1.4}, {1.4, 1.4}},

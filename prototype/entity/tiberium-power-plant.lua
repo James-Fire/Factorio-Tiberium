@@ -17,7 +17,6 @@ data:extend{
 		scale_fluid_usage = true,
 		collision_box = {{-2.2, -2.2}, {2.2, 2.2}},
 		selection_box = {{-2.5, -2.5}, {2.5, 2.5}},
-		drawing_box = {{-2.5, -2.5}, {2.5, 2.5}},
 		energy_source = {
 			type = "electric",
 			usage_priority = "secondary-output",
@@ -34,7 +33,7 @@ data:extend{
 			height = 256,
 			scale = 0.70,
 		},
-		vehicle_impact_sound =	{filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65},
+		impact_category = "metal-large",
 		working_sound = {
 			sound = {
 				{
@@ -58,11 +57,12 @@ data:extend{
 		},
 		fluid_box = {
 			base_area = 4,
+			volume = 100,
 			pipe_connections = {
-				{type = "input-output", position = {0, 3}},
-				{type = "input-output", position = {0, -3}},
-				{type = "input-output", position = {3, 0}},
-				{type = "input-output", position = {-3, 0}},
+				{direction = defines.direction.south, flow_direction = "input-output", position = {0, 2}},
+				{direction = defines.direction.north, flow_direction = "input-output", position = {0, -2}},
+				{direction = defines.direction.east, flow_direction = "input-output", position = {2, 0}},
+				{direction = defines.direction.west, flow_direction = "input-output", position = {-2, 0}},
 			},
 			filter = "liquid-tiberium",
 			production_type = "input-output",

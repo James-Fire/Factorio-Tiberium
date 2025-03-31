@@ -41,7 +41,7 @@ data:extend{
 			},
 			-- Molten to fluid and molten centrifuging with sludge recipes created and added to this tech by /scripts/DynamicOreRecipes
 		},
-		prerequisites = {"tiberium-slurry-centrifuging", "tiberium-thermal-research", "advanced-electronics", "concrete"},
+		prerequisites = {"tiberium-slurry-centrifuging", "tiberium-thermal-research", "advanced-circuit", "concrete"},
 		unit = {
 			count = 200,
 			ingredients = {
@@ -280,6 +280,10 @@ data:extend{
 			},
 			{
 				type = "unlock-recipe",
+				recipe = "tiberium-growth"
+			},
+			{
+				type = "unlock-recipe",
 				recipe = "tiberium-reprocessor"
 			},
 			--  Tiberium Substrate recipes created and added to this tech by /scripts/DynamicOreRecipes
@@ -375,7 +379,15 @@ data:extend{
 			},
 			{
 				type = "unlock-recipe",
+				recipe = "tiberium-monoculture-green-fixed-recipe"
+			},
+			{
+				type = "unlock-recipe",
 				recipe = "tiberium-monoculture-blue"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-monoculture-blue-fixed-recipe"
 			}
 		},
 		prerequisites = {"tiberium-mutation", "tiberium-ore-destruction"},
@@ -728,14 +740,14 @@ data:extend{
 			},
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-artillery-shell"
+				recipe = "tiberium-generator-equipment"
 			},
 			{
 				type = "nothing",
 				effect_description = {"technology-description.tiberium-military-total-immunity"}
 			},
 		},
-		prerequisites = {"tiberium-military-2", "tiberium-containment-tech", "power-armor-mk2", "artillery"},
+		prerequisites = {"tiberium-military-2", "tiberium-containment-tech", "power-armor-mk2"},
 		unit = {
 			count = 200,
 			ingredients = {
@@ -745,6 +757,32 @@ data:extend{
 				{"military-science-pack", 1},
 				{"chemical-science-pack", 1},
 				{"utility-science-pack", 1},
+			},
+			time = 30
+		}
+	},
+	{
+		type = "technology",
+		name = "tiberium-artillery",
+		icons = common.layeredIcons(tiberiumInternalName.."/graphics/technology/artillery.png", 256, tiberiumInternalName.."/graphics/icons/fluid/liquid-tiberium.png", 64, "se"),
+		effects = {
+			{
+				type = "unlock-recipe",
+				recipe = "tiberium-artillery-shell"
+			},
+		},
+		prerequisites = {"tiberium-military-3", "artillery"},
+		unit = {
+			count = 200,
+			ingredients = {
+				{"tiberium-science", 1},
+				{"automation-science-pack", 1},
+				{"logistic-science-pack", 1},
+				{"military-science-pack", 1},
+				{"chemical-science-pack", 1},
+				{"utility-science-pack", 1},
+				{"space-science-pack", 1},
+				{"metallurgic-science-pack", 1},
 			},
 			time = 30
 		}
@@ -815,6 +853,21 @@ data:extend{
 				type = "unlock-recipe",
 				recipe = "tiberium-cliff-explosives",
 			},
+			{
+				type = "cliff-deconstruction-enabled",
+				modifier = true,
+				icons = {
+					{
+						icon = "__core__/graphics/icons/technology/effect/effect-deconstruction.png",
+						icon_size = 64,
+					},
+					{
+						icon = tiberiumInternalName.."/graphics/entity/nodes/tiberium_blossom_tree.png",
+						icon_size = 251,
+						shift = {-3, 3},
+					},
+				},
+			},
 		},
 		prerequisites = {"tiberium-containment-tech", "tiberium-military-2", "tiberium-refining-blue", "circuit-network"},
 		unit = {
@@ -848,7 +901,7 @@ data:extend{
 				recipe = "tiberium-seed-blue"
 			},
 		},
-		prerequisites = {"tiberium-military-3", "rocket-control-unit", "tiberium-rocketry"},
+		prerequisites = {"tiberium-military-3", "processing-unit", "tiberium-rocketry"},
 		unit = {
 			count = 200,
 			ingredients = {
@@ -868,15 +921,15 @@ data:extend{
 		name = 	"tiberium-growth-acceleration-acceleration",
 		icons = {
 			{
-			  icon = tiberiumInternalName.."/graphics/technology/growth-accelerator.png",
-			  icon_size = 128,
+				icon = tiberiumInternalName.."/graphics/technology/growth-accelerator.png",
+				icon_size = 128,
 			},
 			{
-			  icon = "__core__/graphics/icons/technology/constants/constant-speed.png",
-			  icon_size = 128,
-			  icon_mipmaps = 3,
-			  scale = 64 / 128,
-			  shift = {50, 50}
+				icon = "__core__/graphics/icons/technology/constants/constant-speed.png",
+				icon_size = 128,
+				icon_mipmaps = 3,
+				scale = 64 / 128,
+				shift = {50, 50}
 			},
 		},
 		effects = {
@@ -908,15 +961,15 @@ data:extend{
 		name = 	"tiberium-control-network-speed",
 		icons = {
 			{
-			  icon = tiberiumInternalName.."/graphics/technology/effect-transmission.png",
-			  icon_size = 128,
+				icon = tiberiumInternalName.."/graphics/technology/effect-transmission.png",
+				icon_size = 128,
 			},
 			{
-			  icon = "__core__/graphics/icons/technology/constants/constant-speed.png",
-			  icon_size = 128,
-			  icon_mipmaps = 3,
-			  scale = 64 / 128,
-			  shift = {50, 50}
+				icon = "__core__/graphics/icons/technology/constants/constant-speed.png",
+				icon_size = 128,
+				icon_mipmaps = 3,
+				scale = 64 / 128,
+				shift = {50, 50}
 			},
 		},
 		effects = {
@@ -946,8 +999,7 @@ data:extend{
 	{
 		type = "technology",
 		name = "tiberium-explosives",
-		icon_size = 256,
-		icon_mipmaps = 4,
+		-- Feels safe to assume that their util function will continue to work with their icon dimensions
 		icons = util.technology_icon_constant_damage("__base__/graphics/technology/stronger-explosives-3.png"),
 		effects = {
 			{
@@ -988,9 +1040,7 @@ data:extend{
 	{
 		type = "technology",
 		name = "tiberium-energy-weapons-damage",
-		icon_size = 256,
-		icon_mipmaps = 4,
-		icons = util.technology_icon_constant_damage("__base__/graphics/technology/energy-weapons-damage.png"),
+		icons = util.technology_icon_constant_damage("__base__/graphics/technology/laser-weapons-damage.png"),
 		effects = {
 			{
 				type = "ammo-damage",
@@ -1003,7 +1053,7 @@ data:extend{
 				modifier = 0.3
 			}
 		},
-		prerequisites = {"tiberium-military-3", "energy-weapons-damage-6", "space-science-pack"},
+		prerequisites = {"tiberium-military-3", "laser-weapons-damage-6", "space-science-pack"},
 		unit = {
 			count_formula = "2^(L-2)*1000",
 			ingredients = {

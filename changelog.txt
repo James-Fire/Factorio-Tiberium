@@ -1,8 +1,133 @@
 ---------------------------------------------------------------------------------------------------
-Version: 1.1.31
+Version: 2.0.13
 Date: 2025-03-30
   Changes:
     - Added recipe to make rails with Tiberium sludge, since there is no stone
+---------------------------------------------------------------------------------------------------
+Version: 2.0.12
+  Features:
+    - Updated French translation (Thanks to Dae)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.11
+  Bugfixes:
+    - Fixed crash from base graphics dimensions changing and updated sprite definitions to make them resilient to changes to base graphics
+    - Fixed Tiberium Centrifuges glowing when they weren't active
+    - Fixed Tiberium not spawning on Nauvis with certain setting combinations when Omnimatter is active (bug introduced in 2.0.9)
+    - Fixed crash when using Burner Centrifuge setting with Nauvis has Tiberium setting
+    - Fixed SRF invalid entity crash for deleted surfaces
+  Features:
+    - Added support for using high-resolution graphics from Finely Crafted Graphics (Art credit to Hurricane)
+    - Added support for turning Tiberium into things other than items or fluids. Allows better compatibility with mods that rely on non-item prototypes or using settings to add recipes for things like tools (e.g. Tenemut), capsules (e.g. Jellynut), ammo (e.g. Piercing Rounds Magazine), etc
+    - Added setting "Include Specific Resources" to allow users to flag any item as a valid output for centrifuging and to have transmutation recipes added for it. Note that adding intermediate ingredients as resources will typicall cause centrifuging recipes to rebalance to give the added resource instead of the original ores (e.g. if you add Steel Plate to this setting, you will see the Iron Ore centrifuging output decrease and be replaced with Steel Plates)
+    - Added setting "Exclude Recipe Categories from Centrifuging Calculations" to allow users to fine-tune centrifuging recipes and avoid game-breaking recipes from other without needing to wait for a patch
+---------------------------------------------------------------------------------------------------
+Version: 2.0.10
+  Bugfixes:
+    - Fixed startup crash when Space Age is not active
+---------------------------------------------------------------------------------------------------
+Version: 2.0.9
+  Bugfixes:
+    - Fixed missing events for structures built on space platforms
+    - Fixed Tiberium having lossless recycling recipes
+    - Fixed "Found power pole" messages to no longer appear when debug mode is turned off
+    - Fixed Tiberium not spawning after being added to an in-progress save (Thanks to Brevven and Xorimuth)
+    - Fixed recipes to stop autogenerating for unharvestable dummy resources from other mods
+    - Fixed crash from modded ores that gave science packs when mined instead of items
+    - Fixed SRF Emitters sometimes not connecting to nearby power poles
+    - Fixed SRF Emitters rarely being unpowered but not displaying the low power icon
+    - Fixed Tiber Rocks spawning on Nauvis when they shouldn't
+    - Fixed a few typos
+  Changes:
+    - Split the "Tiberium on All Planets" setting up into per-planet settings to make it less confusing and easier to add to existing saves
+    - Made the "Require Resource Seed for Transmutation" setting not apply to fluids to avoid soft-locking some settings combinations
+    - Split Rocks and Tiber Rocks to be separate settings on the Terrain tab
+    - Moved Tiberium Artillery to a separate technology to reduce prerequisites for Tiberium Military 3
+    - Changed ammo and rocket stack sizes from 200 to 100
+    - Changed fuel cell stack sizes from 50, 100, 5 to 50, 50, 50
+    - Changed Monoculture stack sizes from 20, 50 to 20, 20
+    - Updated rocket capacity on most items
+  Features:
+    - New equipment: Tiberium Radiation Absorption Generator that generates substantially more power while standing on Tiberium Ore
+---------------------------------------------------------------------------------------------------
+Version: 2.0.8
+  Bugfixes:
+    - Fixed debug information for power poles not being locked behind debug setting
+    - Fixed crash from encountering recipes with no results
+---------------------------------------------------------------------------------------------------
+Version: 2.0.7
+  Bugfixes:
+    - Fixed stone, coal, and crude oil being locked behind off-planet science packs when using "Nauvis has Only Tiberium" setting
+    - Fixed Tiberium Node Harvest and AOE Tiberium Node Harvester using the wrong animations
+    - Fixed not being able to add Blue Tiberium to filters prior to researching Blue Tiberium Mutation
+    - Slightly improved performance of SRF
+    - Fixed Omnicompression crashes
+    - Fixed missing names on prototypes that were only viewable through Factoriopedia
+  Changes:
+    - Allow deconstruction planners to remove Blossom Trees prior to unlocking cliff exlposives
+  Features:
+    - Power now propagates across connected SRF Emitters, so you only need to connect electric poles to one emitter per continuous wall (Thank you luan for sharing https://mods.factorio.com/mod/power-propagation)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.6
+  Bugfixes:
+    - Fixed progression in Tiberium Only mode being blocked by not being Crude Oil and Uranium Ore not being minable but for real this time
+    - Fixed Tiber Rocks incorrectly appearing on Nauvis on modes other than Tiberium-only
+    - Fixed player taking damage while flying over Tiberium Ore in a cargo pod
+    - Fixed Growth Accelerator disappearing while working
+    - Fixed list of valid inputs for Tiberium Reprocessor being blank
+    - Fixed missing sounds
+    - Fixed Growth Accelerator not accepting quality Tiberium Substrate
+    - Fixed Tiberium Monocultures not allowing quality recipes
+---------------------------------------------------------------------------------------------------
+Version: 2.0.5
+  Bugfixes:
+    - Fixed FindRecipeTech crash when used with mods that changed gear or brick recipe
+    - Fixed icon for Tiberium Ore and Tiberium Ore Centrifuging
+    - Fixed crash and hid irrelevant planet settings when Space Age is disabled. If you are still crashing, use the restore mod default settings option and then redo your settings after you stop crashing
+    - Fixed centrifuging recipes having no products when using the "Nauvis has Only Tiberium" option
+---------------------------------------------------------------------------------------------------
+Version: 2.0.4
+  Bugfixes:
+    - Added missing Growth Acclerator recipe name
+    - Fixed crash from other mods disabling rocks and decoratives
+    - Fixed crash from other mods adding planets (oops)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.3
+  Bugfixes:
+    - Fixed progression in Tiberium Only mode being blocked by not being Crude Oil and Uranium Ore not being minable
+    - Fixed Tiberium Only map generation preset not working with new planets
+    - Fixed Tiberium Centrifuging breaking progression by giving almost pure scrap instead of ores
+    - Fixed Blue Tiberium Ore icon mipmaps spilling into adjacent images
+    - Fixed Tiberium technology order so they don't all appear in a block on the "List of technologies"
+    - Fixed collison mask crash from tibChangeTerrain command or blocking spawning a Blossom Tree under another entity
+    - Fixed missing recipe names for Tiberium Monoculture structures
+    - Fixed projectile animation for Sonic Emitters
+    - Fixed structures images being cut off in entity tooltips
+    - Fixed missing image for Tiberium Detonation Charge
+  Changes:
+    - Reorganized settings menu, check your mod settings to sure they still have the values that you want
+    - Changed Tiberium Slurry Centrifuging to unlock when you craft Tiberium Slurry instead of Water (oops)
+    - Corrected Tiberium refining recipes to reflect the new water-to-steam ratio in Factorio 2.0
+    - Made Tiberium Centrifuges immune to damage from Tiberium growing so you can now safely place them on Tiberium Ore
+    - Tiberium Burner Centrifuge recipes now takes half as many gears and are always enabled for Tiberium-only starts
+    - Transmutation recipes for ores from other planets now require science packs from those planets to unlock and can only be produced on their planets of origin (both of these can be turned off with settings)
+  Features:
+    - Added new planet Tiber where you can discover Tiberium as well as setting to start on Tiber instead of Nauvis (Thanks to CodeGreen for making this possible)
+    - Added new Tiberium on All Planets setting to enable Tiberium naturally spawning on all planets
+    - Added new setting to allow Tiberium Centrifuging to give ores from any surface. Can be useful for modded playthroughs, but will bring back the scrap in vanilla. Use the Override Centrifuging Outputs or Exlcude Specific Resources settings to tweak as needed.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.2
+  Bugfixes:
+    - Fixed crash with P.U.M.P. mod
+    - Fixed Growth Accelerator message crash
+    - Fixed player taking damage while looking at Tiberium Ore in map view
+    - Fixed MARV not harvesting ore when driving remotely
+    - Fixed Blue Tiberium spawn notification GPS coordinates to link to the correct planet
+---------------------------------------------------------------------------------------------------
+Version: 2.0.1
+  Features:
+    - Moved to Factorio version 2.0 (playable with Space Age but not balanced/reworked for Space Age)
+    - Added triggers to some technologies to automatically unlock them as you mine and refine Tiberium
+    - Added setting to go back to old technologies without triggers
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.30
   Bugfixes:

@@ -7,6 +7,7 @@ data:extend{
 		flags = {"placeable-player", "placeable-enemy", "player-creation"},
 		minable = {mining_time = 0.5, result = "tiberium-obelisk-of-light"},
 		max_health = 1000,
+		drawing_box_vertical_extension = 0.5,
 		collision_box = {{-1.2, -1.7}, {1.2, 1.7}},
 		selection_box = {{-1.5, -2}, {1.5, 2}},
 		rotation_speed = 0.01,
@@ -35,20 +36,22 @@ data:extend{
 		},
 		energy_glow_animation = laser_turret_shooting_glow(),
 		glow_light_intensity = 0.5, -- defaults to 0
-		base_picture = {
-			layers = {
-				{
-					filename = tiberiumInternalName.."/graphics/entity/obelisk-of-light/obelisk-of-light.png",
-					priority = "high",
-					width = 114,
-					height = 222,
-					direction_count = 1,
-					frame_count = 1,
-					scale = 0.8
+		graphics_set = {
+			animation = {
+				layers = {
+					{
+						filename = tiberiumInternalName.."/graphics/entity/obelisk-of-light/obelisk-of-light.png",
+						priority = "high",
+						width = 114,
+						height = 222,
+						direction_count = 1,
+						frame_count = 1,
+						scale = 0.8
+					}
 				}
 			}
 		},
-		vehicle_impact_sound = {filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65},
+		impact_category = "metal",
 		starting_attack_sound = {
 			--filename = tiberiumInternalName.."/sound/Obelisk.ogg",
 			filename = tiberiumInternalName.."/sound/Obelisk-firing-mono.ogg",
@@ -67,8 +70,8 @@ data:extend{
 			source_offset = {0, 0},
 			damage_modifier = 12,
 			--warmup = 120,
+			ammo_category = "obelisk",
 			ammo_type = {
-				category = "obelisk",
 				energy_consumption = "2000kJ",
 				action = {
 					type = "direct",

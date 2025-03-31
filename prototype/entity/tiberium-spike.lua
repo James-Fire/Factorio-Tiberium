@@ -8,13 +8,13 @@ tiberiumSpike.subgroup = "a-buildings"
 tiberiumSpike.order = "g[tiberium-spike]"
 tiberiumSpike.resource_categories = {}
 tiberiumSpike.resource_searching_radius = 0.49
-tiberiumSpike.collision_mask = {"water-tile", "player-layer"}
+tiberiumSpike.collision_mask = common.makeCollisionMask({"water_tile", "player"})
 table.insert(tiberiumSpike.resource_categories, "advanced-liquid-tiberium")
 table.insert(tiberiumSpike.resource_categories, "advanced-solid-tiberium")
 tiberiumSpike.energy_source = {
 	type = "void",
 	usage_priority = "secondary-input",
-	emissions_per_minute = 5 * common.scalePollution(4),
+	emissions_per_minute = common.scaledEmissions(4, 5),
 }
 tiberiumSpike.next_upgrade = nil
 tiberiumSpike.fast_replaceable_group = nil

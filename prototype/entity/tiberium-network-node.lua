@@ -1,4 +1,4 @@
-local tiberiumNetworkNode = table.deepcopy(data.raw["mining-drill"]["electric-mining-drill"])
+local tiberiumNetworkNode = util.copy(data.raw["mining-drill"]["electric-mining-drill"])
 tiberiumNetworkNode.name = "tiberium-network-node"
 tiberiumNetworkNode.energy_usage = "10000kW"
 tiberiumNetworkNode.mining_speed = 10
@@ -11,7 +11,7 @@ table.insert(tiberiumNetworkNode.resource_categories, "basic-solid-tiberium")
 tiberiumNetworkNode.energy_source = {
 	type = "electric",
 	usage_priority = "secondary-input",
-	emissions_per_minute = 50 * common.scalePollution(4)
+	emissions_per_minute = common.scaledEmissions(4, 50)
 }
 tiberiumNetworkNode.next_upgrade = nil
 tiberiumNetworkNode.fast_replaceable_group = nil
