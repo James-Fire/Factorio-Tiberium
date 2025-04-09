@@ -65,5 +65,5 @@ if data.raw.item["bob-solar-panel-3"] then
 end
 --Pumpjack 4
 if data.raw.item["bob-pumpjack-3"] then
-	common.recipe.editIngredient("tiberium-spike", "pumpjack", "bob-bob-pumpjack-3")
+	common.recipe.editIngredient("tiberium-spike", "pumpjack", "bob-pumpjack-3")
 end
