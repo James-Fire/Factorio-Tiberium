@@ -4,6 +4,8 @@ Version: 2.0.12
     - Fixed crash with Bob's Mods
     - Fixed crash when Nauvis is missing autoplace definitions (recipes will still behave strangely but not crash)
     - Fixed crash with modded rocket silos
+  Changes:
+    - Removed some nuclear prerequisites for Tiberium Power
   Features:
     - Updated French translation (Thanks to Dae)
 ---------------------------------------------------------------------------------------------------

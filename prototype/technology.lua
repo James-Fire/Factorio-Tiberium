@@ -111,6 +111,10 @@ data:extend{
 		effects = {
 			{
 				type = "unlock-recipe",
+				recipe = "steam-turbine"
+			},
+			{
+				type = "unlock-recipe",
 				recipe = "tiberium-power-plant"
 			},
 			{
@@ -134,7 +138,7 @@ data:extend{
 				recipe = "tiberium-liquid-processing-hot"
 			},
 		},
-		prerequisites = {"tiberium-nuclear-research", "nuclear-power"},
+		prerequisites = {"tiberium-nuclear-research"},
 		unit = {
 			count = 400,
 			ingredients = {

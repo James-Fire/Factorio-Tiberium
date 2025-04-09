@@ -115,6 +115,9 @@ if common.whichPlanet == "tiber" then
 			common.technology.addPrerequisite(technolgyName, "planet-discovery-tiber")
 		end
 	end
+	-- Remove uranium requirement for Tiberium Nuclear Research (we'll figure out something permanent later)
+	common.technology.removePrerequisite("tiberium-nuclear-research", "uranium-processing")
+
 elseif common.whichPlanet == "tiber-start" then
 	-- Lock Nauvis behind tech
 	data:extend{{
