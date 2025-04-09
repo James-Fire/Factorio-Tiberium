@@ -275,7 +275,8 @@ function giantSetupFunction()
 	end
 	for _, tree in pairs(data.raw["tree"]) do
 		if tree.autoplace and tree.autoplace.control then
-			if data.raw.planet.nauvis.map_gen_settings.autoplace_controls[tree.autoplace.control] then
+			if data.raw.planet.nauvis and data.raw.planet.nauvis.map_gen_settings and data.raw.planet.nauvis.map_gen_settings.autoplace_controls and
+					data.raw.planet.nauvis.map_gen_settings.autoplace_controls[tree.autoplace.control] then
 				for item in pairs(minableResultsTable(tree)) do
 					free[item] = true
 				end
@@ -532,8 +533,12 @@ function allAvailableRecipes()
 						local fakeRecipeName = "dummy-recipe-launching-"..item.."-from-"..silo
 						local partName = next(normalResults(siloData.fixed_recipe))
 						local numParts = tonumber(siloData.rocket_parts_required) or 1
-						fakeRecipes[fakeRecipeName] = true
-						availableRecipes[fakeRecipeName] = {ingredient = {[item] = 1, [partName] = numParts}, result = launchResults}
+						if partName then
+							fakeRecipes[fakeRecipeName] = true
+							availableRecipes[fakeRecipeName] = {ingredient = {[item] = 1, [partName] = numParts}, result = launchResults}
+						else
+							log(fakeRecipeName.." failed to have any recipe results")
+						end
 					end
 				end
 			end

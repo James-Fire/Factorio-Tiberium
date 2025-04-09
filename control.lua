@@ -2065,7 +2065,9 @@ script.on_event(defines.events.on_player_created, function(event)
 
 		if not storage.nauvis_visited then
 			local nauvis = game.get_surface("nauvis") --[[@as LuaSurface]]
-			nauvis.clear()
+			if nauvis then
+				nauvis.clear()
+			end
 		end
 
 		if not storage.init then

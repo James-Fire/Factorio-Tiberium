@@ -239,7 +239,9 @@ if settings.startup["tiberium-advanced-start"].value or common.whichPlanet == "t
 		if resourceData.autoplace then  -- Is an autoplace resource
 			local autoplaceControl = data.raw["autoplace-control"][resourceName]
 			if autoplaceControl and autoplaceControl.category == "resource" then -- That shows up on the resource tab of map gen settings
-				if data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings[resourceName] then -- And is present on Nauvis
+				if data.raw.planet.nauvis and data.raw.planet.nauvis.map_gen_settings and data.raw.planet.nauvis.map_gen_settings.autoplace_settings and
+						data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity and data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings and
+						data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings[resourceName] then -- And is present on Nauvis
 					for result in pairs(common.minableResultsTable(resourceData)) do
 						minableResorces[result] = true
 					end
@@ -276,46 +278,51 @@ end
 
 -- Remove non-Tiberium ores from Tberium-only Nauvis
 if common.whichPlanet == "pure-nauvis" then
-	data.raw.planet["nauvis"].map_gen_settings.autoplace_settings.entity.settings["tiberium-tiber-rock"] = {}
-	data.raw.planet["nauvis"].map_gen_settings.autoplace_controls["tiber-rocks"] = {}
-	local autoplaceExceptions = {
-		["nauvis_tibGrowthNode"] = true,
-		["trees"] = true,
-		["enemy-base"] = true,
-		["lithia-water"] = true,
-		["termal2"] = true,
-	}
-	for autoplace in pairs(data.raw.planet["nauvis"].map_gen_settings.autoplace_controls) do
-		if not autoplaceExceptions[autoplace] and data.raw["autoplace-control"][autoplace]
-				and data.raw["autoplace-control"][autoplace].category == "resource" then
-			data.raw.planet["nauvis"].map_gen_settings.autoplace_controls[autoplace] = nil
-			data.raw.planet["nauvis"].map_gen_settings.autoplace_settings.entity.settings[autoplace] = nil
-			local autoplaceInUse = false
-			for planetName,planetData in pairs(data.raw.planet) do
-				if planetName ~= "nauvis" then
-					if planetData.map_gen_settings and planetData.map_gen_settings.autoplace_controls
-							and planetData.map_gen_settings.autoplace_controls[autoplace] then
-						autoplaceInUse = true
-						break
+	if data.raw.planet.nauvis and data.raw.planet.nauvis.map_gen_settings and data.raw.planet.nauvis.map_gen_settings.autoplace_settings and
+			data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity and data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings then
+		data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings["tiberium-tiber-rock"] = {}
+	end
+	if data.raw.planet.nauvis and data.raw.planet.nauvis.map_gen_settings and data.raw.planet.nauvis.map_gen_settings.autoplace_controls then
+		data.raw.planet.nauvis.map_gen_settings.autoplace_controls["tiber-rocks"] = {}
+		local autoplaceExceptions = {
+			["nauvis_tibGrowthNode"] = true,
+			["trees"] = true,
+			["enemy-base"] = true,
+			["lithia-water"] = true,
+			["termal2"] = true,
+		}
+		for autoplace in pairs(data.raw.planet.nauvis.map_gen_settings.autoplace_controls) do
+			if not autoplaceExceptions[autoplace] and data.raw["autoplace-control"][autoplace]
+					and data.raw["autoplace-control"][autoplace].category == "resource" then
+				data.raw.planet.nauvis.map_gen_settings.autoplace_controls[autoplace] = nil
+				data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings[autoplace] = nil
+				local autoplaceInUse = false
+				for planetName,planetData in pairs(data.raw.planet) do
+					if planetName ~= "nauvis" then
+						if planetData.map_gen_settings and planetData.map_gen_settings.autoplace_controls
+								and planetData.map_gen_settings.autoplace_controls[autoplace] then
+							autoplaceInUse = true
+							break
+						end
 					end
 				end
-			end
-			if not autoplaceInUse then
-				-- Flag resources for centrifuging
-				for itemName in pairs(common.minableResultsTable(data.raw.resource[autoplace])) do
-					if data.raw.item[itemName] then
-						data.raw.item[itemName].tiberium_resource_planet = "nauvis"
-					elseif data.raw.fluid[itemName] then
-						data.raw.fluid[itemName].tiberium_resource_planet = "nauvis"
+				if not autoplaceInUse then
+					-- Flag resources for centrifuging
+					for itemName in pairs(common.minableResultsTable(data.raw.resource[autoplace])) do
+						if data.raw.item[itemName] then
+							data.raw.item[itemName].tiberium_resource_planet = "nauvis"
+						elseif data.raw.fluid[itemName] then
+							data.raw.fluid[itemName].tiberium_resource_planet = "nauvis"
+						end
 					end
-				end
-				-- Delete autoplace
-				data.raw["autoplace-control"][autoplace] = nil
-				-- Remove autoplace from map gen presets so we don't crash
-				for _,mgpCatData in pairs(data.raw["map-gen-presets"]) do
-					for _,mgpData in pairs(mgpCatData) do
-						if mgpData.basic_settings and mgpData.basic_settings.autoplace_controls then
-							mgpData.basic_settings.autoplace_controls[autoplace] = nil
+					-- Delete autoplace
+					data.raw["autoplace-control"][autoplace] = nil
+					-- Remove autoplace from map gen presets so we don't crash
+					for _,mgpCatData in pairs(data.raw["map-gen-presets"]) do
+						for _,mgpData in pairs(mgpCatData) do
+							if mgpData.basic_settings and mgpData.basic_settings.autoplace_controls then
+								mgpData.basic_settings.autoplace_controls[autoplace] = nil
+							end
 						end
 					end
 				end
@@ -323,7 +330,7 @@ if common.whichPlanet == "pure-nauvis" then
 		end
 	end
 elseif common.whichPlanet == "nauvis" then
-	--data.raw.planet["nauvis"].map_gen_settings.autoplace_settings.entity.settings["tiberium-tiber-rock"] = {frequency = 0}
+	--data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings["tiberium-tiber-rock"] = {frequency = 0}
 	data.raw["autoplace-control"]["tiber-rocks"] = nil
 	data.raw["simple-entity"]["tiberium-tiber-rock"] = nil
 end
