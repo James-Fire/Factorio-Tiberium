@@ -47,21 +47,23 @@ if mods["Krastorio2"] then
 		}
 	for technology_name, technology in pairs(data.raw.technology) do
 		if string.sub(technology_name, 1, 9) == "tiberium-" then
+			if technology.unit and technology.unit.ingredients then
 			technology.check_science_packs_incompatibilities = false
 			-- Do a version of pack incompatibilities
 			local ingredients = technology.unit.ingredients
-			if ingredients and #ingredients > 1 then
-				local has_space = false
-				for i = 1, #ingredients do
-					if ingredients[i][1] == "space-science-pack" then
-						has_space = true
-						break
+				if ingredients and #ingredients > 1 then
+					local has_space = false
+					for i = 1, #ingredients do
+						if ingredients[i][1] == "space-science-pack" then
+							has_space = true
+							break
+						end
 					end
-				end
-				if has_space then
-					for i = #ingredients, 1, -1 do
-						if science_pack_incompatibilities[ingredients[i][1]] then
-							table.remove(ingredients, i)
+					if has_space then
+						for i = #ingredients, 1, -1 do
+							if science_pack_incompatibilities[ingredients[i][1]] then
+								table.remove(ingredients, i)
+							end
 						end
 					end
 				end
@@ -70,8 +72,22 @@ if mods["Krastorio2"] then
 	end
 
 	-- Make Tiberium Magazines usable with rifles again
-	if krastorio.general.getSafeSettingValue("kr-more-realistic-weapon") then
-		common.recipe.editIngredient("tiberium-rounds-magazine", "piercing-rounds-magazine", "rifle-magazine")
+	-- if krastorio.general.getSafeSettingValue("kr-more-realistic-weapon") then
+	-- 	common.recipe.editIngredient("tiberium-rounds-magazine", "piercing-rounds-magazine", "rifle-magazine")
+	-- end
+	if mods["Krastorio2"] then
+		if settings.startup["tiberium-on"].value == "nauvis" then
+			local dummy_item = table.deepcopy(data.raw["item"]["simple-entity-with-force"])
+			local dummy_resource = table.deepcopy(data.raw["resource"]["stone"])
+			dummy_item.name = "tiberium-tiber-rock"
+			dummy_item.hidden_in_factoriopedia = true
+			dummy_resource.name = "tiberium-tiber-rock"
+			dummy_resource.hidden_in_factoriopedia = true
+			data:extend({dummy_item, dummy_resource})
+		end
+	end
+	if settings.startup ["kr-more-realistic-weapon"] then
+			common.recipe.editIngredient("tiberium-rounds-magazine", "piercing-rounds-magazine", "kr-rifle-magazine")
 	end
 	local oldTibRounds = data.raw.ammo["tiberium-rounds-magazine"]
 	local newTibRounds = util.copy(data.raw.ammo["uranium-rifle-magazine"])

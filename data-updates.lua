@@ -277,7 +277,7 @@ if settings.startup["tiberium-advanced-start"].value or common.whichPlanet == "t
 end
 
 -- Remove non-Tiberium ores from Tberium-only Nauvis
-if common.whichPlanet == "pure-nauvis" then
+if common.whichPlanet == "pure-nauvis" and not mods["Krastorio2"] then
 	if data.raw.planet.nauvis and data.raw.planet.nauvis.map_gen_settings and data.raw.planet.nauvis.map_gen_settings.autoplace_settings and
 			data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity and data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings then
 		data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings["tiberium-tiber-rock"] = {}
