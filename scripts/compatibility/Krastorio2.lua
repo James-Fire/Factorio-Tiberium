@@ -71,10 +71,8 @@ if mods["Krastorio2"] then
 		end
 	end
 
-	-- Make Tiberium Magazines usable with rifles again
-	-- if krastorio.general.getSafeSettingValue("kr-more-realistic-weapon") then
-	-- 	common.recipe.editIngredient("tiberium-rounds-magazine", "piercing-rounds-magazine", "rifle-magazine")
-	-- end
+	--make a dummy item cause i cannot understand how tiberium-tiber-rock is being made and if you dont do this the game hangs with a missing entityID
+	--for tiberium-tiber-rock, this is so god awful stuff but it works so?????
 	if mods["Krastorio2"] then
 		if settings.startup["tiberium-on"].value == "nauvis" then
 			local dummy_item = table.deepcopy(data.raw["item"]["simple-entity-with-force"])
@@ -86,6 +84,10 @@ if mods["Krastorio2"] then
 			data:extend({dummy_item, dummy_resource})
 		end
 	end
+	-- Make Tiberium Magazines usable with rifles again
+	-- if krastorio.general.getSafeSettingValue("kr-more-realistic-weapon") then
+	-- 	common.recipe.editIngredient("tiberium-rounds-magazine", "piercing-rounds-magazine", "rifle-magazine")
+	-- end
 	if settings.startup ["kr-more-realistic-weapon"] then
 			common.recipe.editIngredient("tiberium-rounds-magazine", "piercing-rounds-magazine", "kr-rifle-magazine")
 	end
