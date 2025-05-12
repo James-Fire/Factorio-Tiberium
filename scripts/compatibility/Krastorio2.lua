@@ -78,9 +78,7 @@ if mods["Krastorio2"] then
 			local dummy_item = table.deepcopy(data.raw["item"]["simple-entity-with-force"])
 			local dummy_resource = table.deepcopy(data.raw["resource"]["stone"])
 			dummy_item.name = "tiberium-tiber-rock"
-			dummy_item.hidden_in_factoriopedia = true
 			dummy_resource.name = "tiberium-tiber-rock"
-			dummy_resource.hidden_in_factoriopedia = true
 			data:extend({dummy_item, dummy_resource})
 		end
 	end

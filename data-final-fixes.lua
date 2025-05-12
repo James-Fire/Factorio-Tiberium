@@ -43,3 +43,4 @@ end
 
 require("scripts.DynamicOreRecipes")
 require("scripts.compatibility.pumpmod")
+require("scripts.compatibility.Krastorio2-final-fixes")
