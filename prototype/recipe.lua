@@ -475,7 +475,7 @@ data:extend{
 				icon_size = 64,
 			},
 			{
-				icon = tiberiumInternalName .. "graphics/icons/fluid/tiberium-sludge.png",
+				icon = tiberiumInternalName .. "/graphics/icons/fluid/tiberium-sludge.png",
 				icon_size = 64,
 				scale = 0.25,
 				shift = { 6, -6 }

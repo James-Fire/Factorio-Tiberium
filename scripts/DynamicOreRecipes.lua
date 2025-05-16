@@ -695,9 +695,8 @@ function packHierarchy()
 	local recipeForPack = {}
 	local packDependencyTier = {}
 	for pack in pairs(tibComboPacks) do
-		local recipe = ""
 		if tableSize(resultIndex[pack]) == 1 then
-			recipe = next(resultIndex[pack])
+			local recipe = next(resultIndex[pack])
 			log(recipe.." is the only recipe for "..pack)
 			if fakeRecipes[recipe] then log(serpent.block(fakeRecipes[recipe])) end
 			recipeForPack[pack] = recipe
@@ -1101,7 +1100,8 @@ function fugeRawResources(tier)
 	local resourceList = {}
 	local overrideSetting = settings.startup["tiberium-centrifuge-override-"..tier].value  --[[@as string]]
 	overrideSetting = string.gsub(overrideSetting, "\"", "")  -- Strip quotes
-	if string.len(overrideSetting) > 0 then
+	-- Only use the override string if it is something other than the default text
+	if string.len(overrideSetting) > 0 and not string.find(overrideSetting, "Vanilla settings example:") then
 		local delim = ","
 		local subDelim = ":"
 		for sub in string.gmatch(overrideSetting, "[^"..delim.."]+") do  -- Loop over comma-delimited substrings
