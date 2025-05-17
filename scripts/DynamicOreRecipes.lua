@@ -4,6 +4,7 @@
 
 local flib_table = require("__flib__.table")
 local flib_data_util = require("__flib__.data-util")
+local flib_locale = require("__flib__.locale")
 local debugText = settings.startup["tiberium-debug-text-startup"].value
 local easyMode = settings.startup["tiberium-easy-recipes"].value
 local surfaceRestrictTransmute = settings.startup["tiberium-direct-surface-condition"].value and mods["space-age"]
@@ -1188,6 +1189,7 @@ end
 --Assumes oreMult
 function addDirectRecipe(ore, easy)
 	local recipeName = (easy and "tiberium-slurry" or "tiberium").."-transmutation-to-"..ore
+	local _, orePrototype = findItemPrototype(ore)
 	local oreAmount = 64 / (oreMult[ore] or 1)
 	local addSeed = settings.startup["tiberium-direct-catalyst"].value
 	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"
@@ -1201,9 +1203,10 @@ function addDirectRecipe(ore, easy)
 	data:extend{{
 		type = "recipe",
 		name = recipeName,
-		localised_name = {itemOrFluid.."-name."..ore},
+		localised_name = data.raw.fluid[ore] and {"fluid-name."..ore} or flib_locale.of_item(orePrototype),
 		ingredients = {},
 		results = {},
+		main_product = ore,
 		energy_required = energy,
 		order = order,
 		enabled = false,
@@ -1226,7 +1229,6 @@ function addDirectRecipe(ore, easy)
 		oreAmount = oreAmount + 1
 	end
 	recipeAddResult(recipeName, ore, oreAmount, itemOrFluid)
-	data.raw.recipe[recipeName].main_product = ore
 	if settings.startup["tiberium-byproduct-direct"].value then  -- Direct Sludge Waste setting
 		local WastePerCycle = math.max(10 / settings.startup["tiberium-value"].value, 1)
 		common.recipe.addResult(recipeName, "tiberium-sludge", WastePerCycle, "fluid")
