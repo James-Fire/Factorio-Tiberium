@@ -1,7 +1,7 @@
 if mods["Krastorio2"] then
 	-- Define ore values
-	common.applyTiberiumValue("raw-imersite", 8)
-	common.applyTiberiumValue("raw-rare-metals", 8)
+	common.applyTiberiumValue("kr-imersite", 8)
+	common.applyTiberiumValue("kr-rare-metal-ore", 8)
 
 	-- Fix our infinites to match
 	local techPairs = {
@@ -39,7 +39,7 @@ if mods["Krastorio2"] then
 
 	-- Make Krastorio stop removing Tiberium Science Packs from our techs
 	local science_pack_incompatibilities = {
-			["basic-tech-card"] = true,
+			["kr-basic-tech-card"] = true,
 			["automation-science-pack"] = true,
 			["logistic-science-pack"] = true,
 			["military-science-pack"] = true,
@@ -49,7 +49,7 @@ if mods["Krastorio2"] then
 		if string.sub(technology_name, 1, 9) == "tiberium-" then
 			technology.check_science_packs_incompatibilities = false
 			-- Do a version of pack incompatibilities
-			local ingredients = technology.unit.ingredients
+			local ingredients = technology.unit and technology.unit.ingredients
 			if ingredients and #ingredients > 1 then
 				local has_space = false
 				for i = 1, #ingredients do
@@ -70,11 +70,11 @@ if mods["Krastorio2"] then
 	end
 
 	-- Make Tiberium Magazines usable with rifles again
-	if krastorio.general.getSafeSettingValue("kr-more-realistic-weapon") then
-		common.recipe.editIngredient("tiberium-rounds-magazine", "piercing-rounds-magazine", "rifle-magazine")
+	if settings.startup["kr-realistic-weapons"] and settings.startup["kr-realistic-weapons"].value then
+		common.recipe.editIngredient("tiberium-rounds-magazine", "piercing-rounds-magazine", "kr-rifle-magazine")
 	end
 	local oldTibRounds = data.raw.ammo["tiberium-rounds-magazine"]
-	local newTibRounds = util.copy(data.raw.ammo["uranium-rifle-magazine"])
+	local newTibRounds = util.copy(data.raw.ammo["kr-uranium-rifle-magazine"])
 	if newTibRounds then
 		--newTibRounds.icon = oldTibRounds.icon  -- I guess we'll keep the Krastorio icon to blend in
 		newTibRounds.name = oldTibRounds.name

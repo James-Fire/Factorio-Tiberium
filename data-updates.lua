@@ -329,10 +329,6 @@ if common.whichPlanet == "pure-nauvis" then
 			end
 		end
 	end
-elseif common.whichPlanet == "nauvis" then
-	--data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings["tiberium-tiber-rock"] = {frequency = 0}
-	data.raw["autoplace-control"]["tiber-rocks"] = nil
-	data.raw["simple-entity"]["tiberium-tiber-rock"] = nil
 end
 
 -- Adding Tib Science to all labs

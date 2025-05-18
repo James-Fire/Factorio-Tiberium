@@ -266,182 +266,187 @@ data:extend{
 		},
 		map_color = {0.2, 0.9, 0},
 		map_grid = false
-	},
-	{
-		type = "autoplace-control",
-		name = "tiber-rocks",
-		category = "terrain",
-		order = "c-y2"
-	},
-	{
-		type = "simple-entity",
-		name = "tiberium-tiber-rock",
-		autoplace = {
-			control = "tiber-rocks",
-			local_expressions = {
-				control = "control:rocks:size",
-				multiplier = 0.1,
-				penalty = 1.5,
-				region_box = "range_select_base(distance, 20, 80, 10, -1, 0)"
-			},
-			order = "a[doodad]-a[rock]-a[huge]",
-			probability_expression = "multiplier * control * (rock_noise + region_box - penalty)" --Make them more common around spawn
-		},
-		collision_box = {{-1.5, -1.1}, {1.5, 1.1}},
-		count_as_rock_for_filtered_deconstruction = true,
-		damaged_trigger_effect = {
-			damage_type_filters = "fire",
-			entity_name = "rock-damaged-explosion",
-			offset_deviation = {{-0.5, -0.5}, {0.5, 0.5}},
-			offsets = {{0, 1}},
-			type = "create-entity"
-		},
-		deconstruction_alternative = "big-rock",
-		dying_trigger_effect = {
-			{
-				affects_target = false,
-				frame_speed = 1,
-				frame_speed_deviation = 0,
-				initial_height = 0.3,
-				initial_height_deviation = 0.5,
-				initial_vertical_speed = 0.11500000000000001,
-				initial_vertical_speed_deviation = 0.05,
-				offset_deviation = {{-0.0789, -0.1}, {0.0789, 0.1}},
-				offsets = {{0, 0}},
-				particle_name = "huge-rock-stone-particle-small",
-				probability = 1,
-				repeat_count = 15,
-				repeat_count_deviation = 2,
-				show_in_tooltip = false,
-				speed_from_center = 0.04,
-				speed_from_center_deviation = 0.03,
-				type = "create-particle"
-			},
-			{
-				affects_target = false,
-				frame_speed = 1,
-				frame_speed_deviation = 0,
-				initial_height = 0.5,
-				initial_height_deviation = 0.5,
-				initial_vertical_speed = 0.085999999999999979,
-				initial_vertical_speed_deviation = 0.05,
-				offset_deviation = {{-0.0789, -0.1}, {0.0789, 0.1}},
-				offsets = {{0, 0}},
-				particle_name = "huge-rock-stone-particle-big",
-				probability = 1,
-				repeat_count = 5,
-				repeat_count_deviation = 3,
-				show_in_tooltip = false,
-				speed_from_center = 0.04,
-				speed_from_center_deviation = 0.05,
-				type = "create-particle"
-			},
-			{
-				affects_target = false,
-				frame_speed = 1,
-				frame_speed_deviation = 0,
-				initial_height = 0.4,
-				initial_height_deviation = 0.5,
-				initial_vertical_speed = 0.069000000000000004,
-				initial_vertical_speed_deviation = 0.05,
-				offset_deviation = {{-0.1, -0.0789}, {0.1, 0.0789}},
-				offsets = {{0, 0}},
-				particle_name = "huge-rock-stone-particle-tiny",
-				probability = 1,
-				repeat_count = 10,
-				repeat_count_deviation = 10,
-				show_in_tooltip = false,
-				speed_from_center = 0.02,
-				speed_from_center_deviation = 0.05,
-				type = "create-particle"
-			},
-			{
-				affects_target = false,
-				frame_speed = 1,
-				frame_speed_deviation = 0,
-				initial_height = 0.4,
-				initial_height_deviation = 0.60999999999999996,
-				initial_vertical_speed = 0.085,
-				initial_vertical_speed_deviation = 0.05,
-				offset_deviation = {{-0.1, -0.0789}, {0.1, 0.0789}},
-				offsets = {{0, 0}},
-				particle_name = "huge-rock-stone-particle-medium",
-				probability = 1,
-				repeat_count = 15,
-				repeat_count_deviation = 10,
-				show_in_tooltip = false,
-				speed_from_center = 0.05,
-				speed_from_center_deviation = 0.05,
-				type = "create-particle"
-			}
-		},
-		flags = {
-			"placeable-neutral",
-			"placeable-off-grid"
-		},
-		icon = tiberiumInternalName.."/graphics/icons/huge-rock.png",
-		impact_category = "stone",
-		map_color = {
-			129,
-			105,
-			78
-		},
-		max_health = 2000,
-		minable = {
-			mining_particle = "stone-particle",
-			mining_time = 3,
-			results = {
-				{
-					amount_max = 50,
-					amount_min = 24,
-					name = "stone",
-					type = "item"
-				},
-				{
-					amount_max = 50,
-					amount_min = 24,
-					name = "iron-ore",
-					type = "item"
-				},
-				{
-					amount_max = 30,
-					amount_min = 12,
-					name = "copper-ore",
-					type = "item"
-				}
-			}
-		},
-		mined_sound = {
-			switch_vibration_data = {
-				filename = "__core__/sound/deconstruct-bricks.bnvib",
-				gain = 0.32000000000000002
-			},
-			variations = {
-				{
-					filename = "__base__/sound/deconstruct-bricks.ogg",
-					volume = 1
-				}
-			}
-		},
-		order = "b[decorative]-l[rock]-a[huge]",
-		pictures = {},
-		render_layer = "object",
-		resistances = {
-			{
-				percent = 100,
-				type = "fire"
-			}
-		},
-		selection_box = {{-1.7, -1.3}, {1.7, 1.3}},
-		subgroup = "grass",
 	}
 }
 
-if data.raw["simple-entity"]["huge-rock"] then
-	data.raw["simple-entity"]["tiberium-tiber-rock"].pictures = data.raw["simple-entity"]["huge-rock"].pictures
-end
-for _,picture in pairs(data.raw["simple-entity"]["tiberium-tiber-rock"].pictures) do
-	picture.tint = {r = 0.7, g = 0.9, b = 0.6, a = 1}
+if common.whichPlanet ~= "nauvis" then
+	data:extend{
+		{
+			type = "autoplace-control",
+			name = "tiber-rocks",
+			category = "terrain",
+			order = "c-y2"
+		},
+		{
+			type = "simple-entity",
+			name = "tiberium-tiber-rock",
+			autoplace = {
+				control = "tiber-rocks",
+				local_expressions = {
+					control = "control:rocks:size",
+					multiplier = 0.1,
+					penalty = 1.5,
+					region_box = "range_select_base(distance, 20, 80, 10, -1, 0)"
+				},
+				order = "a[doodad]-a[rock]-a[huge]",
+				probability_expression = "multiplier * control * (rock_noise + region_box - penalty)" --Make them more common around spawn
+			},
+			collision_box = {{-1.5, -1.1}, {1.5, 1.1}},
+			count_as_rock_for_filtered_deconstruction = true,
+			damaged_trigger_effect = {
+				damage_type_filters = "fire",
+				entity_name = "rock-damaged-explosion",
+				offset_deviation = {{-0.5, -0.5}, {0.5, 0.5}},
+				offsets = {{0, 1}},
+				type = "create-entity"
+			},
+			deconstruction_alternative = "big-rock",
+			dying_trigger_effect = {
+				{
+					affects_target = false,
+					frame_speed = 1,
+					frame_speed_deviation = 0,
+					initial_height = 0.3,
+					initial_height_deviation = 0.5,
+					initial_vertical_speed = 0.11500000000000001,
+					initial_vertical_speed_deviation = 0.05,
+					offset_deviation = {{-0.0789, -0.1}, {0.0789, 0.1}},
+					offsets = {{0, 0}},
+					particle_name = "huge-rock-stone-particle-small",
+					probability = 1,
+					repeat_count = 15,
+					repeat_count_deviation = 2,
+					show_in_tooltip = false,
+					speed_from_center = 0.04,
+					speed_from_center_deviation = 0.03,
+					type = "create-particle"
+				},
+				{
+					affects_target = false,
+					frame_speed = 1,
+					frame_speed_deviation = 0,
+					initial_height = 0.5,
+					initial_height_deviation = 0.5,
+					initial_vertical_speed = 0.085999999999999979,
+					initial_vertical_speed_deviation = 0.05,
+					offset_deviation = {{-0.0789, -0.1}, {0.0789, 0.1}},
+					offsets = {{0, 0}},
+					particle_name = "huge-rock-stone-particle-big",
+					probability = 1,
+					repeat_count = 5,
+					repeat_count_deviation = 3,
+					show_in_tooltip = false,
+					speed_from_center = 0.04,
+					speed_from_center_deviation = 0.05,
+					type = "create-particle"
+				},
+				{
+					affects_target = false,
+					frame_speed = 1,
+					frame_speed_deviation = 0,
+					initial_height = 0.4,
+					initial_height_deviation = 0.5,
+					initial_vertical_speed = 0.069000000000000004,
+					initial_vertical_speed_deviation = 0.05,
+					offset_deviation = {{-0.1, -0.0789}, {0.1, 0.0789}},
+					offsets = {{0, 0}},
+					particle_name = "huge-rock-stone-particle-tiny",
+					probability = 1,
+					repeat_count = 10,
+					repeat_count_deviation = 10,
+					show_in_tooltip = false,
+					speed_from_center = 0.02,
+					speed_from_center_deviation = 0.05,
+					type = "create-particle"
+				},
+				{
+					affects_target = false,
+					frame_speed = 1,
+					frame_speed_deviation = 0,
+					initial_height = 0.4,
+					initial_height_deviation = 0.60999999999999996,
+					initial_vertical_speed = 0.085,
+					initial_vertical_speed_deviation = 0.05,
+					offset_deviation = {{-0.1, -0.0789}, {0.1, 0.0789}},
+					offsets = {{0, 0}},
+					particle_name = "huge-rock-stone-particle-medium",
+					probability = 1,
+					repeat_count = 15,
+					repeat_count_deviation = 10,
+					show_in_tooltip = false,
+					speed_from_center = 0.05,
+					speed_from_center_deviation = 0.05,
+					type = "create-particle"
+				}
+			},
+			flags = {
+				"placeable-neutral",
+				"placeable-off-grid"
+			},
+			icon = tiberiumInternalName.."/graphics/icons/huge-rock.png",
+			impact_category = "stone",
+			map_color = {
+				129,
+				105,
+				78
+			},
+			max_health = 2000,
+			minable = {
+				mining_particle = "stone-particle",
+				mining_time = 3,
+				results = {
+					{
+						amount_max = 50,
+						amount_min = 24,
+						name = "stone",
+						type = "item"
+					},
+					{
+						amount_max = 50,
+						amount_min = 24,
+						name = "iron-ore",
+						type = "item"
+					},
+					{
+						amount_max = 30,
+						amount_min = 12,
+						name = "copper-ore",
+						type = "item"
+					}
+				}
+			},
+			mined_sound = {
+				switch_vibration_data = {
+					filename = "__core__/sound/deconstruct-bricks.bnvib",
+					gain = 0.32000000000000002
+				},
+				variations = {
+					{
+						filename = "__base__/sound/deconstruct-bricks.ogg",
+						volume = 1
+					}
+				}
+			},
+			order = "b[decorative]-l[rock]-a[huge]",
+			pictures = {},
+			render_layer = "object",
+			resistances = {
+				{
+					percent = 100,
+					type = "fire"
+				}
+			},
+			selection_box = {{-1.7, -1.3}, {1.7, 1.3}},
+			subgroup = "grass",
+		}
+	}
+
+	if data.raw["simple-entity"]["huge-rock"] then
+		data.raw["simple-entity"]["tiberium-tiber-rock"].pictures = data.raw["simple-entity"]["huge-rock"].pictures
+	end
+	for _,picture in pairs(data.raw["simple-entity"]["tiberium-tiber-rock"].pictures) do
+		picture.tint = {r = 0.7, g = 0.9, b = 0.6, a = 1}
+	end
 end
 
 -- Make islands for Tiberium on Aquilo
