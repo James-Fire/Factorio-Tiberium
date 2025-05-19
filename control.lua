@@ -548,7 +548,7 @@ function AddOre(surface, position, amount, oreName, cascaded)
 			CreateNode(surface, position)  -- Rarely turn trees into blossom trees
 		else
 			oreEntity = surface.create_entity{name = oreName, amount = growthRate, position = position, enable_cliff_removal = false}
-			if storage.tiberiumTerrain then
+			if storage.tiberiumTerrain and surface.platform == nil then
 				surface.set_tiles({{name = storage.tiberiumTerrain, position = position}}, true, false)
 			end
 			surface.destroy_decoratives{position = position} --Remove decoration on tile on spread.
@@ -772,7 +772,7 @@ function CreateNode(surface, position, displayError)
 			end
 		end
 		-- Aesthetic changes
-		if storage.tiberiumTerrain then
+		if storage.tiberiumTerrain and surface.platform == nil then
 			local newTiles = {}
 			local oldTiles = surface.find_tiles_filtered{area = area, collision_mask = {"ground_tile"}}
 			for i, tile in pairs(oldTiles) do
@@ -1016,18 +1016,20 @@ commands.add_command("tibChangeTerrain",
 		if terrain == "nil" then
 			storage.tiberiumTerrain = nil
 			game.print("Disabled Tiberium terrain texture.")
-		else
+		elseif prototypes.tile[terrain] then
 			storage.tiberiumTerrain = terrain
 			game.print("Changed Tiberium terrain texture to "..terrain..". If UPS drops, you can use '/tibChangeTerrain nil' to disable this feature.")
 			--Ore
 			for _, surface in pairs(game.surfaces) do
-				for _, ore in pairs(surface.find_entities_filtered{name = storage.oreTypes}) do
-					ore.surface.set_tiles({{name = terrain, position = ore.position}}, true, false)
+				if surface.platform == nil then
+					for _, ore in pairs(surface.find_entities_filtered{name = storage.oreTypes}) do
+						ore.surface.set_tiles({{name = terrain, position = ore.position}}, true, false)
+					end
 				end
 			end
 			--Nodes
 			for _, node in pairs(storage.tibGrowthNodeList) do
-				if node.valid then
+				if node.valid and node.surface and node.surface.platform == nil then
 					local position = node.position
 					local area = areaAroundPosition(position, 1)
 					local newTiles = {}
@@ -1038,6 +1040,8 @@ commands.add_command("tibChangeTerrain",
 					node.surface.set_tiles(newTiles, true, false)
 				end
 			end
+		else
+			game.player.print("Could not find tile with name "..terrain)
 		end
 	end
 )
@@ -1166,7 +1170,7 @@ script.on_event(defines.events.on_chunk_generated, function(event)
 		--Cosmetic stuff
 		local tileArea = areaAroundPosition(position, 0.9)
 		surface.destroy_decoratives{area = tileArea}
-		if storage.tiberiumTerrain then
+		if storage.tiberiumTerrain and surface.platform == nil then
 			local newTiles = {}
 			local oldTiles = surface.find_tiles_filtered{area = tileArea, collision_mask = {"ground_tile"}}
 			for i, tile in pairs(oldTiles) do
