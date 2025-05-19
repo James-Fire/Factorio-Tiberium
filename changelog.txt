@@ -8,6 +8,7 @@ Version: 2.0.12
     - Fixed Tiberium Primed Reactant recipes missing recipe names with some mod combinations 
   Changes:
     - Removed some nuclear prerequisites for Tiberium Power
+    - Resource conversion ratios are now automatically weighted by how difficult they are to mine
   Features:
     - Updated French translation (Thanks to Dae)
     - Added default to Tiberium Centrifuging Override settings to make it easier to tweak/revert to vanilla output ratios

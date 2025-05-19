@@ -73,7 +73,13 @@ end
 
 local minableResultsTable = function(prototypeTable)  -- Local version that also checks that the resource has an autoplace
 	if type(prototypeTable) ~= "table" or not prototypeTable.autoplace then return {} end
-	return common.minableResultsTable(prototypeTable)
+	local out = common.minableResultsTable(prototypeTable)
+	if prototypeTable.minable and prototypeTable.minable.mining_time then
+		for k,v in pairs(out) do
+			out[k] = v/prototypeTable.minable.mining_time
+		end
+	end
+	return out
 end
 
 ---Wrapper for table_size so we don't have to confirm type each time we call it
@@ -169,16 +175,13 @@ function giantSetupFunction()
 	-- Resources included by settings
 	local includeSetting = settings.startup["tiberium-resource-inclusions"].value  --[[@as string]]
 	includeSetting = string.gsub(includeSetting, "\"", "")
-	log("includeSetting: "..includeSetting)
 	if includeSetting then
 		local delim = ","
 		for name in string.gmatch(includeSetting, "[^"..delim.."]+") do  -- Loop over comma-delimited substrings
-			log("Successfully parsed "..name)
 			local prototypeType, _ = findItemPrototype(name)
 			if prototypeType then
 				rawResources[name] = true
 				resourceInclusions[name] = true
-				log("Successfully added "..name.." as raw resource")
 			end
 		end
 	end
@@ -1166,9 +1169,10 @@ end
 
 function singletonRecipes()
 	for _, resourceData in pairs(data.raw.resource) do
-		for ore in pairs(minableResultsTable(resourceData)) do
+		for ore, perSecond in pairs(minableResultsTable(resourceData)) do
 			if ore ~= "tiberium-ore" then
 				resourceInclusions[ore] = true
+				addOreMult(ore, 1/perSecond)
 			end
 		end
 	end
