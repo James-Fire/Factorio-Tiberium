@@ -9,6 +9,7 @@ Version: 2.0.12
     - Fixed Crude Oil missing from Centrifuging Recipes when Factorissimo 3 is active
     - Fixed crash with tibChangeTerrain command
     - Fixed tibChangeTerrain command destroying space platforms
+    - Fixed destroyed SRF Emitters not removing connected walls (introduced in version 2.0.11)
   Changes:
     - Removed some nuclear prerequisites for Tiberium Power
     - Resource conversion ratios are now automatically weighted by how difficult they are to mine

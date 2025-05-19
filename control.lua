@@ -1671,7 +1671,7 @@ function on_remove_entity(event)
 		end
 	end
 	if (entity.name == "tiberium-srf-emitter") or (entity.name == "CnC_SonicWall_Hub") then
-		CnC_SonicWall_DeleteNode(entity, position, event.tick) -- Remove from storage even if surface no longer exists
+		CnC_SonicWall_DeleteNode(surface, position, event.tick) -- Remove from storage even if surface no longer exists
 	end
 	
 	if not surface or not surface.valid then return end

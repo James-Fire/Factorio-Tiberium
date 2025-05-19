@@ -54,20 +54,18 @@ end
 
 ---Returns array containing up to 4 entities that could connect to an SRF emitter at the given position
 ---Assumes node_range, dirs, storage.SRF_nodes
----@param entity LuaEntity
+---@param surface LuaSurface
+---@param position MapPosition
 ---@param dir dirs
 ---@return LuaEntity[]
-function CnC_SonicWall_FindNodes(entity, dir)
-	local force = entity.force_index
-	local surf = entity.surface_index
-	local pos = entity.position
+function CnC_SonicWall_FindNodes(surface, position, dir)
 	local near_nodes = {nil, nil, nil, nil}
 	local near_dists = {node_range, node_range * -1, node_range, node_range * -1}
 	for _, entry in pairs(storage.SRF_nodes) do
 		local emitter = entry.emitter
-		if emitter and emitter.valid and force == emitter.force_index and surf == emitter.surface_index then
-			local x_diff = entry.position.x - pos.x
-			local y_diff = entry.position.y - pos.y
+		if emitter and emitter.valid and surface.index == emitter.surface_index then
+			local x_diff = entry.position.x - position.x
+			local y_diff = entry.position.y - position.y
 			if (y_diff == 0) and (dir == dirs.horz or dir == dirs.both) then  -- Horizontally aligned
 				if x_diff > 0 and x_diff <= near_dists[1] then
 					near_nodes[1] = emitter
@@ -103,7 +101,7 @@ function CnC_SonicWall_AddNode(entity, tick)
 	table.insert(storage.SRF_nodes, {emitter = entity, position = entity.position})
 	table.insert(storage.SRF_node_ticklist, {emitter = entity, position = entity.position, tick = tick + ceil(entity.electric_buffer_size / entity.get_electric_input_flow_limit())})
 	CnC_SonicWall_ConnectPowerPoles(entity)
-	CnC_SonicWall_DisableNode(entity)  --Destroy any walls that went through where the wall was placed so it can calculate new walls
+	CnC_SonicWall_DisableNode(entity.surface, entity.position)  --Destroy any walls that went through where the wall was placed so it can calculate new walls
 end
 
 ---Connect hidden power pole to orthogonal power poles to propagate power to adjacent SRF emitters
@@ -111,7 +109,7 @@ end
 function CnC_SonicWall_ConnectPowerPoles(emitter)
 	if emitter.surface.has_global_electric_network then return end
 	debugPrint("Trying to connect power pole for "..emitter.gps_tag)
-	local orthogonal_nodes = CnC_SonicWall_FindNodes(emitter, dirs.both)
+	local orthogonal_nodes = CnC_SonicWall_FindNodes(emitter.surface, emitter.position, dirs.both)
 	local pole = emitter.surface.find_entities_filtered{position = emitter.position, name = "tiberium-srf-power-pole"}
 	if next(pole) then debugPrint("Found power pole at "..pole[1].gps_tag) end
 	if next(pole) and next(orthogonal_nodes) then
@@ -144,11 +142,12 @@ end
 
 ---Destroys walls connected to given SRF emitter
 ---Modifies storage.SRF_segments
----@param entity LuaEntity
-function CnC_SonicWall_DisableNode(entity)
-	local surf = entity.surface.index
-	local x = floor(entity.position.x)
-	local y = floor(entity.position.y)
+---@param surface LuaSurface
+---@param position MapPosition
+function CnC_SonicWall_DisableNode(surface, position)
+	local surf = surface.index
+	local x = floor(position.x)
+	local y = floor(position.y)
 
 	for _, dir in pairs(dir_mods) do
 		local tx = x + dir.x
@@ -179,15 +178,15 @@ end
 
 ---Called by on_entity_died in control.lua
 ---Modifies storage.SRF_nodes, storage.SRF_node_ticklist, storage.SRF_low_power_ticklist
----@param entity LuaEntity?
+---@param surface LuaSurface
 ---@param position MapPosition
 ---@param tick uint
-function CnC_SonicWall_DeleteNode(entity, position, tick)
+function CnC_SonicWall_DeleteNode(surface, position, tick)
 	local k = find_value_in_table(storage.SRF_nodes, position, "position")
 	if k then
 		table.remove(storage.SRF_nodes, k)
-		if entity and entity.valid then
-			local gps = string.format("[gps=%g,%g,%s]", entity.position.x, entity.position.y, entity.surface.name)
+		if surface and surface.valid and position then
+			local gps = string.format("[gps=%g,%g,%s]", position.x, position.y, surface.name)
 			debugPrint("Destroyed SRF at "..gps.." removed from SRF_nodes, "..#storage.SRF_nodes.." entries remain")
 		end
 	end
@@ -195,8 +194,8 @@ function CnC_SonicWall_DeleteNode(entity, position, tick)
 	k = find_value_in_table(storage.SRF_node_ticklist, position, "position")
 	if k then
 		table.remove(storage.SRF_node_ticklist, k)
-		if entity and entity.valid then
-			local gps = string.format("[gps=%g,%g,%s]", entity.position.x, entity.position.y, entity.surface.name)
+		if surface and surface.valid and position then
+			local gps = string.format("[gps=%g,%g,%s]", position.x, position.y, surface.name)
 			debugPrint("Destroyed SRF at "..gps.." removed from SRF_node_ticklist, "..#storage.SRF_node_ticklist.." entries remain")
 		end
 	end
@@ -204,16 +203,16 @@ function CnC_SonicWall_DeleteNode(entity, position, tick)
 	k = find_value_in_table(storage.SRF_low_power_ticklist, position, "position")
 	if k then
 		table.remove(storage.SRF_low_power_ticklist, k)
-		if entity and entity.valid then
-			local gps = string.format("[gps=%g,%g,%s]", entity.position.x, entity.position.y, entity.surface.name)
+		if surface and surface.valid and position then
+			local gps = string.format("[gps=%g,%g,%s]", position.x, position.y, surface.name)
 			debugPrint("Destroyed SRF at "..gps.." removed from SRF_low_power_ticklist, "..#storage.SRF_low_power_ticklist.." entries remain")
 		end
 	end
 
-	if entity and entity.valid then
-		CnC_SonicWall_DisableNode(entity)
+	if surface and surface.valid and position then
+		CnC_SonicWall_DisableNode(surface, position)
 		--Tell connected walls to reevaluate their connections
-		local connected_nodes = CnC_SonicWall_FindNodes(entity, dirs.both)
+		local connected_nodes = CnC_SonicWall_FindNodes(surface, position, dirs.both)
 		for i = 1, #connected_nodes do
 			if not find_value_in_table(storage.SRF_node_ticklist, connected_nodes[i].position, "position") then
 				table.insert(storage.SRF_node_ticklist, {emitter = connected_nodes[i], position = connected_nodes[i].position, tick = tick + 10})
@@ -226,7 +225,7 @@ end
 ---Assumes storage.SRF_segments, dirs
 ---@param surf LuaSurface
 ---@param pos MapPosition
----@param dir uint
+---@param dir dirs
 ---@param force ForceID
 ---@return boolean
 function CnC_SonicWall_TestWall(surf, pos, dir, force)
@@ -322,7 +321,7 @@ function CnC_SonicWall_OnTick(event)
 			local emitter = charging.emitter
 			local charge_rem = emitter.electric_buffer_size - emitter.energy
 			if charge_rem <= 0 then
-				local connected_nodes = CnC_SonicWall_FindNodes(emitter, dirs.both)
+				local connected_nodes = CnC_SonicWall_FindNodes(emitter.surface, emitter.position, dirs.both)
 				for _, node in pairs(connected_nodes) do
 					if node.energy > 0 then  --Doesn't need to be fully powered as long as it was once fully powered
 						if not find_value_in_table(storage.SRF_node_ticklist, node.position, "position") then
@@ -365,7 +364,7 @@ function CnC_SonicWall_OnTick(event)
 		elseif low.tick <= cur_tick and low.emitter then
 			local ticks_rem = low.emitter.energy / low.emitter.electric_drain
 			if ticks_rem <= 5 then
-				CnC_SonicWall_DeleteNode(low.emitter, low.position, cur_tick)  --Removes it from low power ticklist as well
+				CnC_SonicWall_DeleteNode(low.emitter.surface, low.position, cur_tick)  --Removes it from low power ticklist as well
 				CnC_SonicWall_AddNode(low.emitter, cur_tick)
 			else
 				low.tick = cur_tick + ceil(ticks_rem)
