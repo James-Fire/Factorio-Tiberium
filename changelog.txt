@@ -5,7 +5,8 @@ Version: 2.0.12
     - Fixed crash with Krastorio 2
     - Fixed crash when Nauvis is missing autoplace definitions (recipes will still behave strangely but not crash)
     - Fixed crash with modded rocket silos
-    - Fixed Tiberium Primed Reactant recipes missing recipe names with some mod combinations 
+    - Fixed Tiberium Primed Reactant recipes missing recipe names with some mod combinations
+    - Fixed Crude Oil missing from Centrifuging Recipes when Factorissimo 3 is active
   Changes:
     - Removed some nuclear prerequisites for Tiberium Power
     - Resource conversion ratios are now automatically weighted by how difficult they are to mine

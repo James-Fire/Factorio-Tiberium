@@ -11,7 +11,7 @@ local surfaceRestrictTransmute = settings.startup["tiberium-direct-surface-condi
 local planetTechs = settings.startup["tiberium-direct-planet-techs"].value and mods["space-age"]
 local allowAlienOres = settings.startup["tiberium-centrifuge-alien-ores"].value and mods["space-age"]
 local free = {}
-local excludedCrafting = {["transport-drone-request"] = true, ["auto-fabricator"] = true} --Rigorous way to do this?
+local excludedCrafting = {["transport-drone-request"] = true, ["auto-fabricator"] = true, ["borehole-pump"] = true} --Rigorous way to do this?
 
 --Debugging for findRecipe
 local unreachable = {}
@@ -1201,7 +1201,7 @@ function addDirectRecipe(ore, easy)
 	local tech = easy and "tiberium-easy-transmutation-tech" or data.raw.fluid[ore] and "tiberium-molten-centrifuging" or "tiberium-transmutation-tech"
 	local category = "chemistry" --data.raw.fluid[ore] and "chemistry" or "tiberium-transmutation"
 	local energy = 12
-	local order = (not oreMult[ore] and "a-" or oreMult[ore] > 1 and "b-" or "c-")..ore
+	local order = (not oreMult[ore] and "a-" or oreMult[ore] > 1 and "b-" or oreMult[ore] == 1 and "c-" or "d-")..ore
 	local subgroup = easy and "a-direct-easy" or "a-direct"
 
 	data:extend{{
