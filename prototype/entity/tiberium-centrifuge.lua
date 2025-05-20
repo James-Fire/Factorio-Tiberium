@@ -113,7 +113,7 @@ data:extend{
 		},
 		energy_usage = tostring(300 * (30 / 31)).."kW",  --Scale for nice max consumption
 		module_slots = 0,
-		allowed_effects = {"consumption", "speed", "productivity", "pollution"},
+		allowed_effects = {"consumption", "speed", "productivity", "pollution", "quality"},
 		water_reflection = data.raw["assembling-machine"]["centrifuge"] and util.copy(data.raw["assembling-machine"]["centrifuge"].water_reflection) or {},
 	}
 }

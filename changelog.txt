@@ -13,6 +13,7 @@ Version: 2.0.12
   Changes:
     - Removed some nuclear prerequisites for Tiberium Power
     - Resource conversion ratios are now automatically weighted by how difficult they are to mine
+    - Quality modules can now be used in Tiberium Centrifuges
   Features:
     - Updated French translation (Thanks to Dae)
     - Added default to Tiberium Centrifuging Override settings to make it easier to tweak/revert to vanilla output ratios
