@@ -11,8 +11,7 @@ local acceleratorSprite = {
 	frame_count = 64
 }
 
-local growthAcceleratorNode = util.copy(data.raw["mining-drill"]["tiberium-node-harvester"])
-growthAcceleratorNode.name = "tiberium-growth-accelerator-node"
+local growthAcceleratorNode = flib.copy_prototype(data.raw["mining-drill"]["tiberium-node-harvester"], "tiberium-growth-accelerator-node")
 growthAcceleratorNode.graphics_set = {}
 growthAcceleratorNode.graphics_set.animation = acceleratorSprite
 growthAcceleratorNode.base_picture = {}
