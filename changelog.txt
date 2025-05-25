@@ -1,5 +1,7 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.13
+  Bugfixes:
+    - Fixed crash from variable name conflicts with other mods (Rubia)
   Changes:
     - Node Harvesters, AOE Node Harvesters, and Tiberium Network Node will now output stacked ore onto belts
 ---------------------------------------------------------------------------------------------------

@@ -1,4 +1,6 @@
+flib = require("__flib__.data-util")
 flib_table = require("__flib__.table")
+common = require("prototype.common")
 
 require("scripts.compatibility.bobsmods")
 require("scripts.compatibility.Krastorio2")

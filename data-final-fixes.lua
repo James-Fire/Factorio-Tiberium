@@ -1,3 +1,7 @@
+flib = require("__flib__.data-util")
+flib_table = require("__flib__.table")
+common = require("prototype.common")
+
 if mods["alien-biomes"] then  -- Reverting this change so Tiberium can grow on landfill again
 	common.removeCollisionMask("tile", "landfill", "resource")
 end
