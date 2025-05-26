@@ -34,7 +34,6 @@ local flib_table = require("__flib__.table")
 require("scripts.CnC_Walls") --Note, to make SonicWalls work / be passable
 require("scripts.informatron.informatron_remote_interface")
 
-local GA_Beacon_Name = "tiberium-growth-accelerator-beacon"
 local Speed_Module_Name = "tiberium-growth-accelerator-speed-module"
 local TCN_Beacon_Name = "TCN-beacon"
 local TCN_affected_entities = {"tiberium-aoe-node-harvester", "tiberium-spike", "tiberium-node-harvester", "tiberium-network-node"}
@@ -1590,15 +1589,6 @@ function on_new_entity(event)
 		registerEntity(new_entity)
 		--Remove tree entity when node is covered
 		removeBlossomTree(surface, position)
-		if surface.count_entities_filtered{name = GA_Beacon_Name, position = position} == 0 then
-			local beacon = surface.create_entity{name = GA_Beacon_Name, position = position, force = force}
-			if beacon then
-				beacon.destructible = false
-				beacon.minable = false
-				local module_count = upgradeLevel(force, "tiberium-growth-acceleration-acceleration")
-				UpdateBeaconSpeed(beacon, module_count)
-			end
-		end
 	elseif (new_entity.name == "tiberium-monoculture-green-node") then
 		new_entity.destroy()
 		surface.create_entity{
@@ -1708,7 +1698,6 @@ function on_remove_entity(event)
 	elseif (entity.name == "tiberium-growth-accelerator") then
 		--Spawn tree entity when node is uncovered
 		createBlossomTree(surface, position)
-		removeHiddenBeacon(surface, position, GA_Beacon_Name)
 	elseif (entity.name == "tiberium-monoculture-green") then
 		createBlossomTree(surface, position)
 	elseif (entity.name == "tiberium-monoculture-blue") then
@@ -1943,14 +1932,6 @@ end
 ---Update tiers of all hidden beacon for a force when force-level changes occur
 ---@param force LuaForce
 function updateBeacons(force)
-	if force and force.get_entity_count(GA_Beacon_Name) > 0 then -- only update when beacons exist for force
-		local module_count = upgradeLevel(force, "tiberium-growth-acceleration-acceleration")
-		for _, surface in pairs(game.surfaces) do
-			for _, beacon in pairs(surface.find_entities_filtered{name = GA_Beacon_Name, force = force}) do
-				UpdateBeaconSpeed(beacon, module_count)
-			end
-		end
-	end
 	if force and force.get_entity_count(TCN_Beacon_Name) > 0 then -- only update when beacons exist for force
 		for _, surface in pairs(game.surfaces) do
 			for _, beacon in pairs(surface.find_entities_filtered{name = TCN_Beacon_Name, force = force}) do

@@ -1,7 +1,6 @@
 local tiberiumSpike = flib.copy_prototype(data.raw["mining-drill"]["pumpjack"], "tiberium-spike")
 tiberiumSpike.icon_size = 128
 tiberiumSpike.icon = tiberiumInternalName.."/graphics/icons/tiberium-spike.png"
-tiberiumSpike.icon_mipmaps = nil
 tiberiumSpike.radius_visualisation_picture = data.raw["mining-drill"]["pumpjack"].radius_visualisation_picture
 tiberiumSpike.mining_speed = 5
 tiberiumSpike.subgroup = "a-buildings"

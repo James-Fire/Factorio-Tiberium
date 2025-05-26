@@ -11,7 +11,8 @@ local acceleratorSprite = {
 	frame_count = 64
 }
 
-local growthAcceleratorNode = flib.copy_prototype(data.raw["mining-drill"]["tiberium-node-harvester"], "tiberium-growth-accelerator-node")
+local growthAcceleratorNode = util.copy(data.raw["mining-drill"]["tiberium-node-harvester"])
+growthAcceleratorNode.name = "tiberium-growth-accelerator-node"
 growthAcceleratorNode.graphics_set = {}
 growthAcceleratorNode.graphics_set.animation = acceleratorSprite
 growthAcceleratorNode.base_picture = {}
@@ -22,6 +23,7 @@ growthAcceleratorNode.icons = nil
 growthAcceleratorNode.graphics_set = nil
 growthAcceleratorNode.integration_patch = nil
 growthAcceleratorNode.wet_mining_graphics_set = nil
+growthAcceleratorNode.module_slots = 0
 growthAcceleratorNode.mining_speed = settings.startup["tiberium-growth"].value * 10 / 15
 growthAcceleratorNode.vector_to_place_result = {0, 0}
 growthAcceleratorNode.energy_usage = "1kW"
@@ -125,55 +127,4 @@ data:extend{growthAcceleratorNode,
 			emissions_per_minute = common.scaledEmissions(4),
 		},
 	},
-}
-
---Invisible beacons for Growth Accelerator speed research
-data:extend{
-	{
-		type = "beacon",
-		name = "tiberium-growth-accelerator-beacon",
-		flags = {
-			"hide-alt-info",
-			"not-blueprintable",
-			"not-deconstructable",
-			"placeable-off-grid",
-			"not-on-map",
-			"no-automated-item-removal",
-			"no-automated-item-insertion"
-		},
-		collision_mask = common.makeCollisionMask({"resource"}), -- disable collision
-		resistances = {
-			{
-				type = "fire",
-				percent = 90
-			},
-			{
-				type = "tiberium",
-				percent = 100
-			}
-		},
-		animation = common.blankAnimation,
-		energy_usage = "10W",
-		energy_source = {type = "void"},
-		base_picture = common.blankPicture,
-		supply_area_distance = 0,
-		distribution_effectivity = 1,
-		module_slots = 32767,
-		allowed_effects = {"speed", "consumption"},
-		selection_box = {{0, 0}, {0, 0}},
-		collision_box = {{-1.4, -1.4}, {1.4, 1.4}},
-	},
-	-- hidden speed modules matching infinite tech bonus size
-	{
-		type = "module",
-		name = "tiberium-growth-accelerator-speed-module",
-		icon = "__core__/graphics/empty.png",
-		icon_size = 1,
-		hidden = true,
-		subgroup = "module",
-		category = "speed",
-		tier = 0,
-		stack_size = 1,
-		effect = {speed = 0.25, consumption = 0.40},
-	}
 }

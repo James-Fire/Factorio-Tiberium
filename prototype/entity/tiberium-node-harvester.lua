@@ -1,7 +1,6 @@
 local tiberiumNodeHarvester = flib.copy_prototype(data.raw["mining-drill"]["electric-mining-drill"], "tiberium-node-harvester")
 tiberiumNodeHarvester.icons = util.copy(data.raw["mining-drill"]["pumpjack"].icons)
 tiberiumNodeHarvester.icon_size = 64
-tiberiumNodeHarvester.icon_mipmaps = nil
 tiberiumNodeHarvester.base_picture = data.raw["mining-drill"]["pumpjack"].base_picture
 tiberiumNodeHarvester.radius_visualisation_picture = data.raw["mining-drill"]["pumpjack"].radius_visualisation_picture
 tiberiumNodeHarvester.graphics_set = data.raw["mining-drill"]["pumpjack"].graphics_set

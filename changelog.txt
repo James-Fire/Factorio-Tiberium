@@ -4,6 +4,8 @@ Version: 2.0.13
     - Fixed crash from variable name conflicts with other mods (Rubia)
   Changes:
     - Node Harvesters, AOE Node Harvesters, and Tiberium Network Node will now output stacked ore onto belts
+    - Changed Growth Acceleration Improvement to give productivity instead of crafting speed
+    - Rescaled and renamed Growth Accleration Improvement to match vanilla recipe productivity technologies
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.12
   Bugfixes:

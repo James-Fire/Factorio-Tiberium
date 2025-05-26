@@ -929,34 +929,33 @@ data:extend{
 				icon_size = 128,
 			},
 			{
-				icon = "__core__/graphics/icons/technology/constants/constant-speed.png",
+				icon = "__core__/graphics/icons/technology/constants/constant-recipe-productivity.png",
 				icon_size = 128,
-				icon_mipmaps = 3,
 				scale = 64 / 128,
-				shift = {50, 50}
+				shift = {50, 50},
+				floating = true
 			},
 		},
 		effects = {
 			{
-				type = "nothing",
-				effect_description = {"technology-description.tiberium-growth-acceleration-acceleration-effect", "+25%"}
+				type = "change-recipe-productivity",
+				recipe = "tiberium-growth",
+				change = 0.1
 			}
 		},
 		prerequisites = {"tiberium-growth-acceleration", "space-science-pack"},
 		unit = {
-			count_formula = "2^(L-1)*1000",
+			count_formula = "1.5^L*500",
 			ingredients = {
 				{"tiberium-science", 1},
 				{"automation-science-pack", 1},
 				{"logistic-science-pack", 1},
 				{"chemical-science-pack", 1},
 				{"production-science-pack", 1},
-				{"utility-science-pack", 1},
-				{"space-science-pack", 1}
 			},
 			time = 30
 		},
-		max_level = "infinite",
+		max_level = 30,
 		upgrade = true,
 		order = "e-l-f"
 	},
@@ -971,9 +970,9 @@ data:extend{
 			{
 				icon = "__core__/graphics/icons/technology/constants/constant-speed.png",
 				icon_size = 128,
-				icon_mipmaps = 3,
 				scale = 64 / 128,
-				shift = {50, 50}
+				shift = {50, 50},
+				floating = true
 			},
 		},
 		effects = {

@@ -423,7 +423,6 @@ data:extend{tibNukeGroundZero, tibNukeWave, tibNukeProjectile,
 --Tiberium Artillery Shell
 local tibArtilleryAmmo = flib.copy_prototype(data.raw.ammo["artillery-shell"], "tiberium-artillery-shell")
 tibArtilleryAmmo.icon = tiberiumInternalName.."/graphics/icons/tiberium-artillery-shell.png"
-tibArtilleryAmmo.icon_mipmaps = 1
 tibArtilleryAmmo.subgroup = "a-items"
 tibArtilleryAmmo.order = "d[explosive-cannon-shell]-d[tiberium-artillery]"
 tibArtilleryAmmo.ammo_type.action.action_delivery.projectile = "tiberium-artillery-projectile"
