@@ -38,6 +38,7 @@ local Speed_Module_Name = "tiberium-growth-accelerator-speed-module"
 local TCN_Beacon_Name = "TCN-beacon"
 local TCN_affected_entities = {"tiberium-aoe-node-harvester", "tiberium-spike", "tiberium-node-harvester", "tiberium-network-node"}
 local tiberiumNodeNames = {"tibGrowthNode", "tibGrowthNode_infinite"}
+local tiberiumNodeStructures = {"tibNode_tree", "tiberium-node-harvester", "tiberium-spike", "tiberium-growth-accelerator", "tiberium-detonation-charge", "tiberium-monoculture-green", "tiberium-monoculture-blue"}
 
 local TiberiumDamage = settings.global["tiberium-damage"].value
 local TiberiumGrowth = settings.startup["tiberium-growth"].value * 10
@@ -297,18 +298,24 @@ function register_with_picker()
 	if remote.interfaces["PickerDollies"] and remote.interfaces["PickerDollies"]["dolly_moved_entity_id"] then
 		script.on_event(remote.call("PickerDollies", "dolly_moved_entity_id"), OnEntityMoved)
 	end
+	if remote.interfaces["PickerDollies"] and remote.interfaces["PickerDollies"]["add_blacklist_name"] then
+		for _, name in pairs(tiberiumNodeStructures) do
+			remote.call("PickerDollies", "add_blacklist_name", name)
+		end
+		remote.call("PickerDollies", "add_blacklist_name", "tiberium-srf-wall")
+		remote.call("PickerDollies", "add_blacklist_name", "tiberium-srf-connector")
+		remote.call("PickerDollies", "add_blacklist_name", "tiberium-srf-power-pole")
+	end
 end
 
 ---Hybrid entity script for Picker Dollies
 ---@param event EventData.dolly_moved_entity_id
 function OnEntityMoved(event)
-	local entity = event.moved_entity
-	if entity and (entity.name == "tiberium-growth-accelerator") then
-		local beacons = entity.surface.find_entities_filtered{name = GA_Beacon_Name, position = event.start_pos}
-		for _, beacon in pairs(beacons) do
-			beacon.teleport(entity.position)
-		end
-	end  -- TODO aren't there nore hybrid entities to update?
+	if event.moved_entity then
+		debugPrint("Entity moved "..event.moved_entity.gps_tag)
+		entity_removed_cleanup(event.moved_entity, game.tick, event.start_pos)
+		on_new_entity(event)
+	end
 end
 
 script.on_configuration_changed(function(data)
@@ -351,8 +358,7 @@ script.on_configuration_changed(function(data)
 		for _, node in pairs(storage.tibGrowthNodeList) do
 			if node.valid then
 				PlaceOre(node, 10)
-				local treeBlockers = {"tibNode_tree", "tiberium-node-harvester", "tiberium-spike", "tiberium-growth-accelerator", "tiberium-detonation-charge", "tiberium-monoculture-green", "tiberium-monoculture-blue"}
-				if node.surface.count_entities_filtered{area = areaAroundPosition(node.position), name = treeBlockers} == 0 then
+				if node.surface.count_entities_filtered{area = areaAroundPosition(node.position), name = tiberiumNodeStructures} == 0 then
 					createBlossomTree(node.surface, node.position)
 				end
 			end
@@ -1217,8 +1223,7 @@ script.on_event(defines.events.on_tick, function(event)
 				PlaceOre(node, 10)
 				local position = node.position
 				local surface = node.surface
-				local treeBlockers = {"tibNode_tree", "tiberium-node-harvester", "tiberium-spike", "tiberium-growth-accelerator", "tiberium-detonation-charge", "tiberium-monoculture-green", "tiberium-monoculture-blue"}
-				if surface.count_entities_filtered{area = areaAroundPosition(position), name = treeBlockers} == 0 then
+				if surface.count_entities_filtered{area = areaAroundPosition(position), name = tiberiumNodeStructures} == 0 then
 					createBlossomTree(surface, position)
 				end
 				-- 10 second cooldown on API call to avoid spam once you get to 100+ nodes
@@ -1468,9 +1473,9 @@ function registerEntity(entity)  -- Cache relevant information to storage and re
 end
 
 ---Create and manage hybrid entities when new entities are built
----@param event EventData.on_robot_built_entity|EventData.on_built_entity|EventData.script_raised_built|EventData.script_raised_revive|EventData.on_space_platform_built_entity
+---@param event EventData.on_robot_built_entity|EventData.on_built_entity|EventData.script_raised_built|EventData.script_raised_revive|EventData.on_space_platform_built_entity|EventData.dolly_moved_entity_id
 function on_new_entity(event)
-	local new_entity = event.entity
+	local new_entity = event.entity or event.moved_entity
 	local surface = new_entity.surface
 	local position = new_entity.position
 	local force = new_entity.force  --[[@as LuaForce]]
@@ -1483,7 +1488,9 @@ function on_new_entity(event)
 				break
 			end
 		end
-		if not duplicate then table.insert(storage.tibDrills, {entity = new_entity, name = new_entity.name, position = position}) end
+		if not duplicate then
+			table.insert(storage.tibDrills, {entity = new_entity, name = new_entity.name, position = position})
+		end
 	end
 	if (new_entity.type == "electric-pole") and not surface.has_global_electric_network then  -- Connect to existing SRF Poles
 		debugPrint("We really don't expect to see srf poles here: "..new_entity.name)
@@ -1499,41 +1506,40 @@ function on_new_entity(event)
 	if (new_entity.name == "tiberium-srf-connector") then
 		new_entity.destructible = false
 		-- Place actual EEI entity on top of underground pipes
-		local emitter = surface.create_entity{
+		surface.create_entity{
 			name = "tiberium-srf-emitter",
 			position = position,
 			force = force,
 			raise_built = true
 		}
-		if emitter then
-			-- Create invisible power poles to propagate power to connected SRF emitters
-			if not surface.has_global_electric_network then
-				local srfPole = surface.create_entity{
-					name = "tiberium-srf-power-pole",
-					position = position,
-					force = force
-				}
-				if srfPole then
-					srfPole.destructible = false
-					-- Connect to existing electric poles that would power the emitter to the new SRF pole
-					for _, pole in pairs(surface.find_entities_filtered{type = "electric-pole",
-							area = areaAroundPosition(position, math.floor(prototypes.max_electric_pole_supply_area_distance))}) do
-						if pole.name ~= "tiberium-srf-power-pole" then
-							for _, connectable in pairs(surface.find_entities_filtered{name = "tiberium-srf-power-pole",
-									area = areaAroundPosition(pole.position, math.floor(pole.prototype.get_supply_area_distance(pole.quality)))}) do
-								if connectable == srfPole then
-									connect_poles(pole, srfPole)
-									break
-								end
+	elseif (new_entity.name == "tiberium-srf-emitter") then
+		-- Create invisible power poles to propagate power to connected SRF emitters
+		if not surface.has_global_electric_network then
+			local srfPole = surface.create_entity{
+				name = "tiberium-srf-power-pole",
+				position = position,
+				force = force
+			}
+			if srfPole then
+				srfPole.destructible = false
+				-- Connect to existing electric poles that would power the emitter to the new SRF pole
+				for _, pole in pairs(surface.find_entities_filtered{type = "electric-pole",
+						area = areaAroundPosition(position, math.floor(prototypes.max_electric_pole_supply_area_distance))}) do
+					if pole.name ~= "tiberium-srf-power-pole" then
+						for _, connectable in pairs(surface.find_entities_filtered{name = "tiberium-srf-power-pole",
+								area = areaAroundPosition(pole.position, math.floor(pole.prototype.get_supply_area_distance(pole.quality)))}) do
+							if connectable == srfPole then
+								connect_poles(pole, srfPole)
+								break
 							end
 						end
 					end
 				end
 			end
-
-			registerEntity(emitter)
-			CnC_SonicWall_AddNode(emitter, event.tick)
 		end
+
+		registerEntity(new_entity)
+		CnC_SonicWall_AddNode(new_entity, event.tick)
 	elseif (new_entity.name == "tiberium-node-harvester") then
 		registerEntity(new_entity)
 		--Remove tree entity when node is covered
@@ -1637,12 +1643,22 @@ script.on_event(defines.events.on_space_platform_built_entity, on_new_entity)
 
 ---Cleanup after destroyed/deconstructed entities
 ---@param event EventData.on_object_destroyed
-function on_remove_entity(event)
+function on_object_destroyed(event)
 	local entity = storage.tibOnEntityDestroyed[event.registration_number]  --[[@as table]]
 	storage.tibOnEntityDestroyed[event.registration_number] = nil  -- Avoid storage growing forever
-	if not entity then return end
+	if entity then
+		entity_removed_cleanup(entity, event.tick)
+	end
+end
+
+---comment
+---@param entity LuaEntity
+---@param tick? int8
+---@param position? MapPosition
+function entity_removed_cleanup(entity, tick, position)
 	local surface = entity.surface  --[[@as LuaSurface]]
-	local position = entity.position  --[[@as MapPosition]]
+	tick = tick or game.tick
+	position = position or entity.position  --[[@as MapPosition]]
 	local force = entity.force  --[[@as LuaForce]]
 	if (entity.type == "mining-drill") then
 		for i, drill in pairs(storage.tibDrills) do
@@ -1661,7 +1677,7 @@ function on_remove_entity(event)
 		end
 	end
 	if (entity.name == "tiberium-srf-emitter") or (entity.name == "CnC_SonicWall_Hub") then
-		CnC_SonicWall_DeleteNode(surface, position, event.tick) -- Remove from storage even if surface no longer exists
+		CnC_SonicWall_DeleteNode(surface, position, tick) -- Remove from storage even if surface no longer exists
 	end
 	
 	if not surface or not surface.valid then return end
@@ -1768,7 +1784,7 @@ function removeHiddenBeacon(surface, position, name)
 	end
 end
 
-script.on_event(defines.events.on_object_destroyed, on_remove_entity)
+script.on_event(defines.events.on_object_destroyed, on_object_destroyed)
 
 ---Spill ore from any destroyed structure containing Tiberium fluids
 ---@param event EventData.on_pre_player_mined_item|EventData.on_robot_pre_mined
