@@ -161,6 +161,13 @@ elseif common.whichPlanet == "tiber-start" then
 	common.technology.addPrerequisite("tree-seeding", "planet-discovery-nauvis")
 	common.technology.addPrerequisite("planet-discovery-aquilo", "planet-discovery-nauvis")
 end
+
+if common.whichPlanet == "pure-nauvis" or common.whichPlanet == "nauvis" then
+	data.raw.technology["tiberium-advanced-containment-tech"].localised_description = {"technology-description.tiberium-advanced-containment-tech", {"space-location-name.nauvis"}}
+else
+	data.raw.technology["tiberium-advanced-containment-tech"].localised_description = {"technology-description.tiberium-advanced-containment-tech", {"space-location-name.tiber"}}
+end
+
 if common.tierZero and (common.whichPlanet == "pure-nauvis" or common.whichPlanet == "tiber-start") then
 	-- Do this for tiberium-only starts to make progression clearer
 	data.raw.technology["tiberium-ore-centrifuging"].unit = nil
@@ -168,6 +175,7 @@ if common.tierZero and (common.whichPlanet == "pure-nauvis" or common.whichPlane
 	common.technology.addPrerequisite("electronics", "tiberium-ore-centrifuging")
 	common.technology.addPrerequisite("steam-power", "tiberium-ore-centrifuging")
 end
+
 if not mods["space-age"] then
 	data.raw.technology["tiberium-artillery"] = nil
 	table.insert(data.raw.technology["tiberium-military-3"].effects, {type = "unlock-recipe", recipe = "tiberium-artillery-shell"})
