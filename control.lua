@@ -1268,9 +1268,9 @@ script.on_nth_tick(20, function(event) --Player damage 3 times per second
 			--Damage players that are standing on Tiberium Ore and not in vehicles
 			local nearby_ore_count = player.physical_surface.count_entities_filtered{name = storage.oreTypes, position = player.physical_position, radius = 1.5}
 			if nearby_ore_count > 0 and not player.character.vehicle and not player.character.driving and player.character.name ~= "jetpack-flying" then
-				safeDamage(player, nearby_ore_count * TiberiumDamage * 0.2)
+				safeDamage(player, nearby_ore_count * TiberiumDamage * 0.2) -- If the character is destroyed by this damage, then player.character will be nil from now on.
 			end
-			if player.character.grid then
+			if player.character and player.character.valid and player.character.grid then
 				if nearby_ore_count > 0 then
 					if swapEquipment(player.character.grid, "tiberium-generator-equipment", "tiberium-generator-equipment-on") then
 						--Play powerup sound for player
