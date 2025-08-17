@@ -1,11 +1,11 @@
 data:extend{
 	{
 		type = "beacon",
-		name = "tiberium-beacon-node",
+		name = "tiberium-control-node",
 		icon = tiberiumInternalName.."/graphics/icons/beacon.png",
 		icon_size = 32,
 		flags = {"placeable-player", "player-creation"},
-		minable = {mining_time = 0.2, result = "tiberium-beacon-node"},
+		minable = {mining_time = 0.2, result = "tiberium-control-node"},
 		max_health = 200,
 		corpse = "beacon-remnants",
 		dying_explosion = "beacon-explosion",
@@ -66,7 +66,7 @@ data:extend{
 	--Invisible beacons for Growth Accelerator speed research
 	{
 		type = "beacon",
-		name = "TCN-beacon",
+		name = "tiberium-control-node-hidden-beacon",
 		energy_usage = "5MW",
 		icon = tiberiumInternalName.."/graphics/icons/beacon.png",
 		icon_size = 32,
@@ -93,4 +93,17 @@ data:extend{
 		selection_box = {{0, 0}, {0, 0}},
 		collision_box = {{-1.4, -1.4}, {1.4, 1.4}},
 	},
+		-- hidden speed modules matching infinite tech bonus size
+	{
+		type = "module",
+		name = "tiberium-control-node-hidden-beacon-speed-module",
+		icon = "__core__/graphics/empty.png",
+		icon_size = 1,
+		hidden = true,
+		subgroup = "module",
+		category = "speed",
+		tier = 0,
+		stack_size = 1,
+		effect = {speed = 0.25, consumption = 0.40},
+	}
 }

@@ -693,7 +693,7 @@ data:extend{
 	},
 	{
 		type = "recipe",
-		name = "tiberium-beacon-node",
+		name = "tiberium-control-node",
 		energy_required = 20,
 		enabled = false,
 		subgroup = "a-buildings",
@@ -704,7 +704,7 @@ data:extend{
 			{type = "item", name = "steel-plate", amount = 50}
 		},
 		results = {
-			{type = "item", name = "tiberium-beacon-node", amount = 1},
+			{type = "item", name = "tiberium-control-node", amount = 1},
 		},
 	},
 	{

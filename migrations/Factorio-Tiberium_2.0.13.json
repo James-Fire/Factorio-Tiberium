@@ -1,0 +1,13 @@
+{
+  "recipe": [
+    ["tiberium-beacon-node", "tiberium-control-node"]
+  ],
+  "item": [
+    ["tiberium-beacon-node", "tiberium-control-node"],
+    ["tiberium-growth-accelerator-speed-module", "tiberium-control-node-hidden-beacon-speed-module"]
+  ],
+  "entity": [
+    ["tiberium-beacon-node", "tiberium-control-node"],
+    ["TCN-node", "tiberium-control-node-hidden-beacon"]
+  ]
+}

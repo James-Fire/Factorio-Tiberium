@@ -84,7 +84,7 @@ prototypes["electric-turret"] = {
 	"tiberium-obelisk-of-light",
 }
 prototypes["beacon"] = {
-	"tiberium-beacon-node",
+	"tiberium-control-node",
 }
 prototypes["generator"] = {
 	"tiberium-power-plant",

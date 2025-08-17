@@ -448,7 +448,7 @@ data:extend{
 		effects = {
 			{
 				type = "unlock-recipe",
-				recipe = "tiberium-beacon-node"
+				recipe = "tiberium-control-node"
 			},
 			{
 				type = "unlock-recipe",

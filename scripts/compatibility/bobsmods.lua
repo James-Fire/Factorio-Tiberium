@@ -21,12 +21,12 @@ if data.raw.item["bob-titanium-plate"] then
 	common.recipe.editIngredient("tiberium-ion-core", "steel-plate", "bob-titanium-plate")
 	common.recipe.editIngredient("tiberium-marv", "steel-plate", "bob-titanium-plate")
 	common.recipe.editIngredient("tiberium-power-plant", "steel-plate", "bob-titanium-plate")
-	common.recipe.editIngredient("tiberium-beacon-node", "steel-plate", "bob-titanium-plate")
+	common.recipe.editIngredient("tiberium-control-node", "steel-plate", "bob-titanium-plate")
 	common.recipe.editIngredient("tiberium-aoe-node-harvester", "steel-plate", "bob-titanium-plate")
 end
 --Gold
 if data.raw.item["bob-gold-plate"] then
-	common.recipe.editIngredient("tiberium-beacon-node", "copper-plate", "bob-gold-plate")
+	common.recipe.editIngredient("tiberium-control-node", "copper-plate", "bob-gold-plate")
 	common.recipe.editIngredient("tiberium-srf-emitter", "copper-plate", "bob-gold-plate")
 end
 --Steel Pipe
@@ -48,11 +48,11 @@ if data.raw.item["bob-lead-plate"] then
 end
 --Beacon 3
 if data.raw.item["bob-beacon-3"] then
-	common.recipe.editIngredient("tiberium-beacon-node", "beacon", "bob-beacon-3")
+	common.recipe.editIngredient("tiberium-control-node", "beacon", "bob-beacon-3")
 end
 --Advanced Processing Units
 if data.raw.item["bob-advanced-processing-unit"] then
-	common.recipe.editIngredient("tiberium-beacon-node", "processing-unit", "bob-advanced-processing-unit")
+	common.recipe.editIngredient("tiberium-control-node", "processing-unit", "bob-advanced-processing-unit")
 	common.recipe.editIngredient("tiberium-spike", "processing-unit", "bob-advanced-processing-unit")
 end
 --Chemical Plant 2

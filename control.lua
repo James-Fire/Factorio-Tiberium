@@ -34,8 +34,8 @@ local flib_table = require("__flib__.table")
 require("scripts.CnC_Walls") --Note, to make SonicWalls work / be passable
 require("scripts.informatron.informatron_remote_interface")
 
-local Speed_Module_Name = "tiberium-growth-accelerator-speed-module"
-local TCN_Beacon_Name = "TCN-beacon"
+local Speed_Module_Name = "tiberium-control-node-hidden-beacon-speed-module"
+local TCN_Beacon_Name = "tiberium-control-node-hidden-beacon"
 local TCN_affected_entities = {"tiberium-aoe-node-harvester", "tiberium-spike", "tiberium-node-harvester", "tiberium-network-node"}
 local tiberiumNodeNames = {"tibGrowthNode", "tibGrowthNode_infinite"}
 local tiberiumNodeStructures = {"tibNode_tree", "tiberium-node-harvester", "tiberium-spike", "tiberium-growth-accelerator", "tiberium-detonation-charge", "tiberium-monoculture-green", "tiberium-monoculture-blue"}
@@ -1554,7 +1554,7 @@ function on_new_entity(event)
 		registerEntity(new_entity)
 		--Place Beacon for Tiberium Control Network
 		ManageTCNBeacon(surface, position, force)
-	elseif (new_entity.name == "tiberium-beacon-node") then
+	elseif (new_entity.name == "tiberium-control-node") then
 		registerEntity(new_entity)
 		--Place Beacon for Drills in range of Tiberium Control Network
 		local tcnAOE = areaAroundPosition(position, TiberiumRadius * 0.5 + 1)
@@ -1694,7 +1694,7 @@ function entity_removed_cleanup(entity, tick, position)
 		if ghost then
 			ghost.destroy()
 		end
-	elseif (entity.name == "tiberium-beacon-node") then
+	elseif (entity.name == "tiberium-control-node") then
 		--Remove Beacon for Tiberium Control Network
 		local tcnAOE = areaAroundPosition(position, TiberiumRadius * 0.5 + 1)
 		for _, beacon in pairs(surface.find_entities_filtered{area = tcnAOE, name = TCN_Beacon_Name, force = force}) do
@@ -1838,7 +1838,7 @@ function ManageTCNBeacon(surface, position, force)
 	for _, entity in pairs(surface.find_entities_filtered{name = TCN_affected_entities, position = position, force = force}) do
 		if entity.valid then
 			local hiddenBeacon = surface.find_entities_filtered{name = TCN_Beacon_Name, position = position}
-			local tcnCount = surface.count_entities_filtered{area = areaAroundPosition(position, TiberiumRadius * 0.5 + 1), name = "tiberium-beacon-node"}
+			local tcnCount = surface.count_entities_filtered{area = areaAroundPosition(position, TiberiumRadius * 0.5 + 1), name = "tiberium-control-node"}
 			if tcnCount >= 1 then
 				if next(hiddenBeacon) then
 					TCNModules(hiddenBeacon[1], tcnCount)
@@ -1866,7 +1866,7 @@ function TCNModules(beacon, tcnCount)
 	if beacon.valid then
 		if not tcnCount then
 			local tcnAOE = areaAroundPosition(beacon.position, TiberiumRadius * 0.5	+ 1)
-			tcnCount = beacon.surface.count_entities_filtered{area = tcnAOE, name = "tiberium-beacon-node"}
+			tcnCount = beacon.surface.count_entities_filtered{area = tcnAOE, name = "tiberium-control-node"}
 		end
 		local tcnMulti = math.min(tcnCount, 3)
 		local force = beacon.force  --[[@as LuaForce]]

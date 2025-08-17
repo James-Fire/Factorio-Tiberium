@@ -103,7 +103,7 @@ if mods["space-exploration"] then
 	for _, drillName in pairs({"tiberium-network-node", "tiberium-node-harvester", "tiberium-aoe-node-harvester", "tiberium-detonation-charge", "tiberium-growth-accelerator-node", "tiberium-spike"}) do
 		data.raw["mining-drill"][drillName].se_allow_in_space = true
 	end
-	data.raw.beacon["tiberium-beacon-node"].se_allow_in_space = true
+	data.raw.beacon["tiberium-control-node"].se_allow_in_space = true
 	data.raw["furnace"]["tiberium-growth-accelerator"].se_allow_in_space = true
 	data.raw["electric-energy-interface"]["tiberium-sonic-emitter"].se_allow_in_space = true
 	data.raw["electric-energy-interface"]["tiberium-sonic-emitter-blue"].se_allow_in_space = true
