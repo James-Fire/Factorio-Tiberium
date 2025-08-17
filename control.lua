@@ -90,7 +90,7 @@ end
 
 script.on_init(function()
 	helpers.check_prototype_translations()
-	register_with_picker()
+	register_with_interfaces()
 	storage.tibGrowthNodeListIndex = 0  --[[@as uint]]
 	storage.tibGrowthNodeList = {}  --[=[@as LuaEntity[]]=]
 	storage.tibDrills = {}  --[=[@as tibDrill[]]=]
@@ -285,19 +285,19 @@ function initializeForce(force)
 end
 
 script.on_load(function()
-	register_with_picker()
+	register_with_interfaces()
 end)
 
----Compatibility with Picker Dollies
-function register_with_picker()
-	--register to PickerExtended
+function register_with_interfaces()
+	-- Register to PickerExtended
 	if remote.interfaces["picker"] and remote.interfaces["picker"]["dolly_moved_entity_id"] then
 		script.on_event(remote.call("picker", "dolly_moved_entity_id"), OnEntityMoved)
 	end
-	--register to PickerDollies
+	-- Register to PickerDollies
 	if remote.interfaces["PickerDollies"] and remote.interfaces["PickerDollies"]["dolly_moved_entity_id"] then
 		script.on_event(remote.call("PickerDollies", "dolly_moved_entity_id"), OnEntityMoved)
 	end
+	-- Blacklist hybrid entities
 	if remote.interfaces["PickerDollies"] and remote.interfaces["PickerDollies"]["add_blacklist_name"] then
 		for _, name in pairs(tiberiumNodeStructures) do
 			remote.call("PickerDollies", "add_blacklist_name", name)
@@ -305,6 +305,11 @@ function register_with_picker()
 		remote.call("PickerDollies", "add_blacklist_name", "tiberium-srf-wall")
 		remote.call("PickerDollies", "add_blacklist_name", "tiberium-srf-connector")
 		remote.call("PickerDollies", "add_blacklist_name", "tiberium-srf-power-pole")
+	end
+	-- Exempt from beacon exclusion mod
+	if remote.interfaces["wr-beacon-rebalance"] then
+		remote.call("wr-beacon-rebalance", "add_whitelisted_beacon", "tiberium-control-node")
+		remote.call("wr-beacon-rebalance", "add_whitelisted_beacon", "tiberium-control-node-hidden-beacon")
 	end
 end
 
@@ -429,6 +434,12 @@ function doUpgradeConversions(data)
 		-- Initialize new globals
 		storage.tiberiumPoweredPlayers = {}
 		storage.tiberiumPoweredEntities = {}
+	end
+
+	if upgradingToVersion(data, tiberiumInternalName, "2.0.13") then
+		if mods["wret-beacon-rebalance-mod"] then
+			remote.call("wr-beacon-rebalance", "reset_beacons")
+		end
 	end
 
 	if (data["mod_changes"]["Factorio-Tiberium"] and data["mod_changes"]["Factorio-Tiberium"]["new_version"]) and

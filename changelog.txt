@@ -10,6 +10,7 @@ Version: 2.0.13
     - Added dynamic tooltip to Seed Rockets to reflect how changing settings impacts Blossom Tree spawning
   Features:
     - Added compatibility for Picker Dollies
+    - Added compatibility for wretlaw120's Beacon Rebalance
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.12
   Bugfixes:
