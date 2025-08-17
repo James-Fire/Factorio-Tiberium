@@ -2,10 +2,12 @@
 Version: 2.0.13
   Bugfixes:
     - Fixed crash from variable name conflicts with other mods (Rubia)
+    - Fixed crash when player dies to Tiberium Ore (Thanks to DoubleThoughtTheProgrammer for the report and PR)
   Changes:
     - Node Harvesters, AOE Node Harvesters, and Tiberium Network Node will now output stacked ore onto belts
     - Changed Growth Acceleration Improvement to give productivity instead of crafting speed
     - Rescaled and renamed Growth Accleration Improvement to match vanilla recipe productivity technologies
+    - Added dynamic tooltip to Seed Rockets to reflect how changing settings impacts Blossom Tree spawning
   Features:
     - Added compatibility for Picker Dollies
 ---------------------------------------------------------------------------------------------------

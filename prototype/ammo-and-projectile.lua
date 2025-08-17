@@ -506,10 +506,13 @@ tibSeedProjectile.action = {
 	}
 }
 
+local MaxOrePerTile = tostring(settings.startup["tiberium-growth"].value * 100)
+local MinimumTreeRadius = tostring(math.ceil(0.8 * settings.startup["tiberium-radius"].value))
 data:extend{tibSeedProjectile,
 	{
 		type = "ammo",
 		name = "tiberium-seed",
+		localised_description = {"item-description.tiberium-seed", MaxOrePerTile, MinimumTreeRadius},
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-seed-rocket.png",
 		icon_size = 64,
 		ammo_category = "rocket",
@@ -555,6 +558,7 @@ data:extend{tibSeedBlueProjectile,
 	{
 		type = "ammo",
 		name = "tiberium-seed-blue",
+		localised_description = {"item-description.tiberium-seed-blue", MaxOrePerTile, MinimumTreeRadius},
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-seed-rocket-blue.png",
 		icon_size = 64,
 		ammo_category = "rocket",
