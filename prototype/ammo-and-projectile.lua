@@ -37,7 +37,7 @@ data:extend{
 	}
 }
 if data.raw.ammo["uranium-rounds-magazine"] then
-	data.raw.ammo["tiberium-rounds-magazine"].icons = nil
+	data.raw.ammo["tiberium-rounds-magazine"].icons = util.copy(data.raw.ammo["uranium-rounds-magazine"].icons)
 	data.raw.ammo["tiberium-rounds-magazine"].icon = data.raw.ammo["uranium-rounds-magazine"].icon
 	data.raw.ammo["tiberium-rounds-magazine"].icon_size = data.raw.ammo["uranium-rounds-magazine"].icon_size
 	data.raw.ammo["tiberium-rounds-magazine"].pictures = data.raw.ammo["uranium-rounds-magazine"].pictures
