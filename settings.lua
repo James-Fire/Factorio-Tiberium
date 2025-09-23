@@ -194,6 +194,13 @@ data:extend{
 	},
 	--Centrifuging recipe settings
 	{
+		type = "bool-setting",
+		name = "tiberium-force-vanilla-centrifuging",
+		setting_type = "startup",
+		default_value = false,
+		order = "e[centrifuging]0",
+	},
+	{
 		type = "string-setting",
 		name = "tiberium-recipe-category-exclusions",
 		setting_type = "startup",

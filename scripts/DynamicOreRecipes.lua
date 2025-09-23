@@ -7,6 +7,7 @@ local flib_data_util = require("__flib__.data-util")
 local flib_locale = require("__flib__.locale")
 local debugText = settings.startup["tiberium-debug-text-startup"].value
 local easyMode = settings.startup["tiberium-easy-recipes"].value
+local forceVanilla = settings.startup["tiberium-force-vanilla-centrifuging"].value
 local surfaceRestrictTransmute = settings.startup["tiberium-direct-surface-condition"].value and mods["space-age"]
 local planetTechs = settings.startup["tiberium-direct-planet-techs"].value and mods["space-age"]
 local allowAlienOres = settings.startup["tiberium-centrifuge-alien-ores"].value and mods["space-age"]
@@ -985,17 +986,30 @@ function fugeTierSetup()
 end
 
 function fugeRecipeTier(tier)
-	-- Return the raw resources needed for the packs or use the override from settings
-	local resourceList = fugeRawResources(tier)
-	-- Fall back to equal bits of everything
-	if not next(resourceList) then
-		local dummyResourceList = {}
-		for resource in pairs(rawResources) do
-			if resource ~= "tiberium-ore" then
-				dummyResourceList[resource] = 1 / (oreMult[resource] and oreMult[resource] > 0 and oreMult[resource] or 1)
-			end
+	local resourceList = {}
+	if forceVanilla then
+		if tier == 0 then
+			resourceList = {["copper-ore"] = 3, ["iron-ore"] = 9, ["coal"] = 1, ["stone"] = 3}
+		elseif tier == 1 then
+			resourceList = {["copper-ore"] = 5, ["iron-ore"] = 18, ["coal"] = 3, ["stone"] = 6}
+		elseif tier == 2 then
+			resourceList = {["copper-ore"] = 17, ["iron-ore"] = 21, ["coal"] = 2, ["crude-oil"] = 86, ["stone"] = 3}
+		elseif tier == 3 then
+			resourceList = {["copper-ore"] = 30, ["iron-ore"] = 44, ["coal"] = 5, ["crude-oil"] = 168, ["stone"] = 7}
 		end
-		resourceList = fugeScaleResources(dummyResourceList, tier)
+	else
+		-- Return the raw resources needed for the packs or use the override from settings
+		resourceList = fugeRawResources(tier)
+		-- Fall back to equal bits of everything
+		if not next(resourceList) then
+			local dummyResourceList = {}
+			for resource in pairs(rawResources) do
+				if resource ~= "tiberium-ore" then
+					dummyResourceList[resource] = 1 / (oreMult[resource] and oreMult[resource] > 0 and oreMult[resource] or 1)
+				end
+			end
+			resourceList = fugeScaleResources(dummyResourceList, tier)
+		end
 	end
 
 	-- Check number of fluids

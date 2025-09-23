@@ -12,6 +12,7 @@ Version: 2.0.13
   Features:
     - Added compatibility for Picker Dollies
     - Added compatibility for wretlaw120's Beacon Rebalance
+    - Added "Use Vanilla Tiberium Centrifuging Recipes" setting to disable dynamic centrifuging recipe outputs with a single checkbox
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.12
   Bugfixes:
