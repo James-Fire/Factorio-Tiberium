@@ -442,7 +442,7 @@ if common.whichPlanet ~= "nauvis" then
 	}
 
 	if data.raw["simple-entity"]["huge-rock"] then
-		data.raw["simple-entity"]["tiberium-tiber-rock"].pictures = data.raw["simple-entity"]["huge-rock"].pictures
+		data.raw["simple-entity"]["tiberium-tiber-rock"].pictures = util.copy(data.raw["simple-entity"]["huge-rock"].pictures)
 	end
 	for _,picture in pairs(data.raw["simple-entity"]["tiberium-tiber-rock"].pictures) do
 		picture.tint = {r = 0.7, g = 0.9, b = 0.6, a = 1}
