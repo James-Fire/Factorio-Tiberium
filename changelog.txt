@@ -1,6 +1,7 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.13
   Bugfixes:
+    - Fixed compatibility for Space Exploration 2.0
     - Fixed crash from variable name conflicts with other mods (Rubia)
     - Fixed crash when player dies to Tiberium Ore (Thanks to DoubleThoughtTheProgrammer for the report and PR)
     - Fixed crash with Artisanal Reskins

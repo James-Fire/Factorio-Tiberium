@@ -145,9 +145,12 @@ if data.raw.resource["uranium-ore"] then
 	data.raw.resource["tiberium-ore-blue"].driving_sound = data.raw.resource["uranium-ore"].driving_sound
 end
 
+local autoplaceName = "tibGrowthNode"
+if mods["space-age"] then
+	autoplaceName = common.whichPlanet == "nauvis" and "nauvis_tibGrowthNode" or common.whichPlanet == "pure-nauvis" and "nauvis_tibGrowthNode" or "tiber_tibGrowthNode"
+end
 local resource_autoplace = require("resource-autoplace")
-resource_autoplace.initialize_patch_set("tibGrowthNode", common.TiberiumInStartingArea)  -- TODO
-local autoplaceName = common.whichPlanet == "nauvis" and "nauvis_tibGrowthNode" or common.whichPlanet == "pure-nauvis" and "nauvis_tibGrowthNode" or "tiber_tibGrowthNode"
+resource_autoplace.initialize_patch_set(autoplaceName, common.TiberiumInStartingArea)  -- TODO
 
 local oriented_cliff_dummy = {
 	collision_bounding_box = {{-0.4, -0.4}, {0.4, 0.4}},
@@ -273,7 +276,7 @@ if common.whichPlanet ~= "nauvis" then
 	data:extend{
 		{
 			type = "autoplace-control",
-			name = "tiber-rocks",
+			name = "tiberium-tiber-rock",
 			category = "terrain",
 			order = "c-y2"
 		},
@@ -281,7 +284,7 @@ if common.whichPlanet ~= "nauvis" then
 			type = "simple-entity",
 			name = "tiberium-tiber-rock",
 			autoplace = {
-				control = "tiber-rocks",
+				control = "tiberium-tiber-rock",
 				local_expressions = {
 					control = "control:rocks:size",
 					multiplier = 0.1,

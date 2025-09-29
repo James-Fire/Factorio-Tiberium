@@ -96,8 +96,18 @@ if mods["space-exploration"] then
 	common.applyTiberiumValue("se-holmium-ore", 32)
 	common.applyTiberiumValue("se-iridium-ore", 32)
 	common.applyTiberiumValue("se-naquium-ore", 32)
-	se_resources["tibGrowthNode"] = {}
-	se_resources["tibGrowthNode"].has_starting_area_placement = common.TiberiumInStartingArea
+	local tibOnly = common.whichPlanet ~= "nauvis"
+	se_resources["tibGrowthNode"] = {
+			base_density = 3.0,
+			base_spots_per_km2 = tibOnly and 12 or 1.8,
+			random_probability = tibOnly and 1 / 36 or 1 / 48,
+			random_spot_size_minimum = 1,
+			random_spot_size_maximum = 1, -- don't randomize spot size
+			additional_richness = 200000, -- this increases the total everywhere, so base_density needs to be decreased to compensate
+			has_starting_area_placement = common.TiberiumInStartingArea,
+			regular_rq_factor_multiplier = 1,
+			starting_rq_factor_multiplier = 1.1
+	}
 
 	-- These do nothing other than tiberium-growth-accelerator and tiberium-srf-connector, but I like to pretend
 	for _, drillName in pairs({"tiberium-network-node", "tiberium-node-harvester", "tiberium-aoe-node-harvester", "tiberium-detonation-charge", "tiberium-growth-accelerator-node", "tiberium-spike"}) do
@@ -219,17 +229,18 @@ for name,planet in pairs(data.raw.planet) do
 			or (name == "nauvis" and (common.whichPlanet == "nauvis" or common.whichPlanet == "pure-nauvis"))
 			or (settings.startup["tiberium-on-"..name] and settings.startup["tiberium-on-"..name].value)
 			or (not settings.startup["tiberium-on-"..name] and settings.startup["tiberium-on-all-other-planets"].value)) then
+		local autoplaceName = mods["space-age"] and name.."_tibGrowthNode" or "tibGrowthNode"
 		data:extend{
 			{
 				type = "autoplace-control",
-				name = name.."_tibGrowthNode",
+				name = autoplaceName,
 				richness = true,
 				order = string.sub(planet.order or "z",1,1).."-g",  --After Nauvis uranium
 				category = "resource",
 				localised_name = {"autoplace-control-names.tibGrowthNode"},
 			}
 		}
-		planet.map_gen_settings.autoplace_controls[name.."_tibGrowthNode"] = {}
+		planet.map_gen_settings.autoplace_controls[autoplaceName] = {}
 		planet.map_gen_settings.autoplace_settings.entity.settings["tibGrowthNode"] = {}
 	end
 end
@@ -285,9 +296,10 @@ if common.whichPlanet == "pure-nauvis" then
 		data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings["tiberium-tiber-rock"] = {}
 	end
 	if data.raw.planet.nauvis and data.raw.planet.nauvis.map_gen_settings and data.raw.planet.nauvis.map_gen_settings.autoplace_controls then
-		data.raw.planet.nauvis.map_gen_settings.autoplace_controls["tiber-rocks"] = {}
+		data.raw.planet.nauvis.map_gen_settings.autoplace_controls["tiberium-tiber-rock"] = {}
 		local autoplaceExceptions = {
 			["nauvis_tibGrowthNode"] = true,
+			["tibGrowthNode"] = true,
 			["trees"] = true,
 			["enemy-base"] = true,
 			["lithia-water"] = true,
@@ -298,6 +310,7 @@ if common.whichPlanet == "pure-nauvis" then
 					and data.raw["autoplace-control"][autoplace].category == "resource" then
 				data.raw.planet.nauvis.map_gen_settings.autoplace_controls[autoplace] = nil
 				data.raw.planet.nauvis.map_gen_settings.autoplace_settings.entity.settings[autoplace] = nil
+				log("disabling autoplace "..autoplace)
 				local autoplaceInUse = false
 				for planetName,planetData in pairs(data.raw.planet) do
 					if planetName ~= "nauvis" then
@@ -317,13 +330,16 @@ if common.whichPlanet == "pure-nauvis" then
 							data.raw.fluid[itemName].tiberium_resource_planet = "nauvis"
 						end
 					end
-					-- Delete autoplace
-					data.raw["autoplace-control"][autoplace] = nil
-					-- Remove autoplace from map gen presets so we don't crash
-					for _,mgpCatData in pairs(data.raw["map-gen-presets"]) do
-						for _,mgpData in pairs(mgpCatData) do
-							if mgpData.basic_settings and mgpData.basic_settings.autoplace_controls then
-								mgpData.basic_settings.autoplace_controls[autoplace] = nil
+					log("deleting autoplace "..autoplace)
+					if not mods["space-exploration"] then
+						-- Delete autoplace
+						data.raw["autoplace-control"][autoplace] = nil
+						-- Remove autoplace from map gen presets so we don't crash
+						for _,mgpCatData in pairs(data.raw["map-gen-presets"]) do
+							for _,mgpData in pairs(mgpCatData) do
+								if mgpData.basic_settings and mgpData.basic_settings.autoplace_controls then
+									mgpData.basic_settings.autoplace_controls[autoplace] = nil
+								end
 							end
 						end
 					end

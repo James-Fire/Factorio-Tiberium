@@ -6,7 +6,7 @@ tiberiumNodeHarvester.graphics_set = data.raw["mining-drill"]["pumpjack"].graphi
 tiberiumNodeHarvester.mining_speed = 10
 tiberiumNodeHarvester.subgroup = "a-buildings"
 tiberiumNodeHarvester.order = "l"
-tiberiumNodeHarvester.drops_full_belt_stacks = true
+tiberiumNodeHarvester.drops_full_belt_stacks = mods["space-age"] ~= nil  -- Drops stacks of ore if Space Age is enabled
 tiberiumNodeHarvester.energy_usage = "25000kW"
 tiberiumNodeHarvester.resource_categories = {}
 tiberiumNodeHarvester.resource_searching_radius = math.floor(common.TiberiumRadius * 0.8) + 0.49

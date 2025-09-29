@@ -9,5 +9,8 @@
   "entity": [
     ["tiberium-beacon-node", "tiberium-control-node"],
     ["TCN-node", "tiberium-control-node-hidden-beacon"]
+  ],
+  "autoplace-control": [
+    ["tiber-rocks", "tiberium-tiber-rock"]
   ]
 }

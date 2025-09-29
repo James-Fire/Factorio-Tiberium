@@ -8,7 +8,7 @@ tiberiumNodeHarvester.mining_speed = 5
 tiberiumNodeHarvester.subgroup = "a-buildings"
 tiberiumNodeHarvester.order = "e"
 tiberiumNodeHarvester.energy_usage = "5000kW"
-tiberiumNodeHarvester.drops_full_belt_stacks = true
+tiberiumNodeHarvester.drops_full_belt_stacks = mods["space-age"] ~= nil  -- Drops stacks of ore if Space Age is enabled
 tiberiumNodeHarvester.resource_categories = {}
 tiberiumNodeHarvester.resource_searching_radius = 0.49
 tiberiumNodeHarvester.collision_mask = common.makeCollisionMask({"water_tile", "player"})
