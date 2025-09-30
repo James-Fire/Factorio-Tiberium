@@ -458,8 +458,13 @@ function allTechCosts()
 						elseif max_level == "infinite" then
 							max_level = level + 3  -- idk how I should deal with ones that start with high base costs
 						end
-						for i = level, max_level do
-							count = count + evaluateFormula(tech.unit.count_formula, level)
+						-- Protected call for other mods that haven't formatted their count_formulas
+						if pcall(helpers.evaluate_expression, tech.unit.count_formula, {L = level, l = level}) then
+							for i = level, max_level do
+								count = count + helpers.evaluate_expression(tech.unit.count_formula, {L = i, l = i})
+							end
+						elseif debugText then
+							log("Incorrectly formatted technology cost for tech "..techName..": "..tostring(tech.unit.count_formula))
 						end
 					end
 					packDict = makeScaledList(packDict, count)
@@ -469,23 +474,6 @@ function allTechCosts()
 		end
 	end
 	if debugText then log("techCosts: "..serpent.block(techCosts)) end
-end
-
-function evaluateFormula(formula, value)
-	-- Make formula Lua-readable
-	formula = string.gsub(string.upper(formula), " ", "")  -- Strip spaces and force uppercase
-	local pattern1 = "[%a%)][%a%d%(]" -- Multiplication because L or ) followed by L, #, or (
-	local pattern2 = "%d[%a%(]" -- Multiplication because # followed by L or (
-	local i = string.find(formula, pattern1) or string.find(formula, pattern2)
-	while i do  -- Make implicit multiplication explicit
-		formula = string.sub(formula, 1, i).."*"..string.sub(formula, i + 1, -1)
-		i = string.find(formula, pattern1) or string.find(formula, pattern2)
-	end
-
-	local funcString = "function count_formula(L) return "..formula.." end"
-	assert(load(funcString))()  -- Define this function and wrap in assert for debugging, I guess
----@diagnostic disable-next-line: undefined-global
-	return count_formula(value)
 end
 
 --Modifies: availableRecipes, fakeRecipes, tibComboPacks, recipeUnlockTracker
