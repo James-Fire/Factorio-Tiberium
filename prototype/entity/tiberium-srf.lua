@@ -173,6 +173,7 @@ data:extend{
 		fluid_box = {
 			filter = "fluid-unknown",
 			volume = 1,
+			max_pipeline_extent = 999999,
 			pipe_connections = {
 				{
 					direction = defines.direction.south,

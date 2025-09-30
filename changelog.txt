@@ -7,6 +7,7 @@ Version: 2.0.13
     - Fixed crash with Artisanal Reskins
     - Fixed Huge Rocks turning green on Nauvis
     - Fixed crash from trying to load incorrectly formatted technology costs from other mods
+    - Fixed SRF emitters giving "Pipeline overextended" warnings
   Changes:
     - Node Harvesters, AOE Node Harvesters, and Tiberium Network Node will now output stacked ore onto belts
     - Changed Growth Acceleration Improvement to give productivity instead of crafting speed
