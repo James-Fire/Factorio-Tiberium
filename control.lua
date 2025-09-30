@@ -40,12 +40,12 @@ local TCN_affected_entities = {"tiberium-aoe-node-harvester", "tiberium-spike", 
 local tiberiumNodeNames = {"tibGrowthNode", "tibGrowthNode_infinite"}
 local tiberiumNodeStructures = {"tibNode_tree", "tiberium-node-harvester", "tiberium-spike", "tiberium-growth-accelerator", "tiberium-detonation-charge", "tiberium-monoculture-green", "tiberium-monoculture-blue"}
 
-local TiberiumDamage = settings.global["tiberium-damage"].value
+local whichPlanet = settings.startup["tiberium-on"].value
+local TiberiumDamage = settings.global["tiberium-damage"].value * (whichPlanet == "tiber" and 2 or 1)
 local TiberiumGrowth = settings.startup["tiberium-growth"].value * 10
 local TiberiumMaxPerTile = settings.startup["tiberium-growth"].value * 100 --Force 10:1 ratio with growth
 local TiberiumRadius = settings.startup["tiberium-radius"].value  --[[@as uint]]
 local TiberiumSpreadNodes = settings.global["tiberium-spread-nodes"].value
-local whichPlanet = settings.startup["tiberium-on"].value
 local BlueTargetEvo = settings.global["tiberium-blue-target-evo"].value
 local BlueTiberiumSaturation = settings.global["tiberium-blue-saturation-point"].value / 100
 local BlueTiberiumSaturationGrowth = settings.global["tiberium-blue-saturation-slowdown"].value / 100
@@ -377,7 +377,7 @@ script.on_event(defines.events.on_runtime_mod_setting_changed, function(data)
 	elseif data.setting == "tiberium-spread-nodes" then
 		TiberiumSpreadNodes = settings.global["tiberium-spread-nodes"].value
 	elseif data.setting == "tiberium-damage" then
-		TiberiumDamage = settings.global["tiberium-damage"].value
+		TiberiumDamage = settings.global["tiberium-damage"].value * (2 and whichPlanet == "tiber" or 1)
 	elseif data.setting == "tiberium-blue-saturation-point" then
 		BlueTiberiumSaturation = settings.global["tiberium-blue-saturation-point"].value / 100
 	elseif data.setting == "tiberium-blue-saturation-slowdown" then

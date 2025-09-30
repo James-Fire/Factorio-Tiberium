@@ -11,6 +11,7 @@ Version: 2.0.13
     - Changed Growth Acceleration Improvement to give productivity instead of crafting speed
     - Rescaled and renamed Growth Accleration Improvement to match vanilla recipe productivity technologies
     - Added dynamic tooltip to Seed Rockets to reflect how changing settings impacts Blossom Tree spawning
+    - Doubled environmental damage from Tiberium on Tiber to better match player progression
   Features:
     - Added compatibility for Picker Dollies
     - Added compatibility for wretlaw120's Beacon Rebalance
