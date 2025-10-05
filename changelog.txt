@@ -15,6 +15,7 @@ Version: 2.0.13
     - Added dynamic tooltip to Seed Rockets to reflect how changing settings impacts Blossom Tree spawning
     - Doubled environmental damage from Tiberium on Tiber to better match player progression
   Features:
+    - Added 12 new achievements
     - Added compatibility for Picker Dollies
     - Added compatibility for wretlaw120's Beacon Rebalance
     - Added "Use Vanilla Tiberium Centrifuging Recipes" setting to disable dynamic centrifuging recipe outputs with a single checkbox

@@ -586,7 +586,7 @@ function AddOre(surface, position, amount, oreName, cascaded)
 			if entity.type == "tree" then
 				safeDamage(entity, 9999)
 			else
-				safeDamage(entity, TiberiumDamage * 4)
+				safeDamage(entity, TiberiumDamage * 4, oreEntity)
 			end
 		end
 	end
@@ -833,6 +833,13 @@ function TiberiumSeedMissile(surface, position, amount, oreName, ignoreNode)
 	local oreEntity = surface.find_entity(oreName, center)
 	if oreEntity and (oreEntity.amount >= TiberiumMaxPerTile) then
 		CreateNode(surface, center, true)
+		if amount == 4 * TiberiumMaxPerTile then
+			for _, player in pairs(game.connected_players) do
+				if player.valid then
+					player.unlock_achievement("tiberium-seed-node")
+				end
+			end
+		end
 	end
 end
 
@@ -1270,16 +1277,21 @@ script.on_nth_tick(20, function(event) --Player damage 3 times per second
 		if player.valid and player.character and player.character.valid then
 			--MARV ore deletion
 			if player.physical_vehicle and (player.physical_vehicle.name == "tiberium-marv") and (player.physical_vehicle.get_driver() == player.character) then
-				marvHarvestOre(player.physical_vehicle  --[[@as LuaEntity]])  -- Need override because API thinks physical_vehicle is a MapPosition
+				if marvHarvestOre(player.physical_vehicle  --[[@as LuaEntity]]) > 0 then  -- Need override because API thinks physical_vehicle is a MapPosition
+					player.unlock_achievement("tiberium-marv")
+				end
 			end
 			--MARV remote driving
 			if player.vehicle and (player.vehicle.name == "tiberium-marv") and (player.vehicle.get_driver() == player) then
-				marvHarvestOre(player.vehicle)
+				if marvHarvestOre(player.vehicle) > 0 then
+					player.unlock_achievement("tiberium-marv")
+				end
 			end
 			--Damage players that are standing on Tiberium Ore and not in vehicles
 			local nearby_ore_count = player.physical_surface.count_entities_filtered{name = storage.oreTypes, position = player.physical_position, radius = 1.5}
 			if nearby_ore_count > 0 and not player.character.vehicle and not player.character.driving and player.character.name ~= "jetpack-flying" then
-				safeDamage(player, nearby_ore_count * TiberiumDamage * 0.2) -- If the character is destroyed by this damage, then player.character will be nil from now on.
+				local closest_ore = player.physical_surface.find_entities_filtered{name = storage.oreTypes, position = player.physical_position, radius = 1.5}[1]
+				safeDamage(player, nearby_ore_count * TiberiumDamage * 0.2, closest_ore) -- If the character is destroyed by this damage, then player.character will be nil from now on.
 			end
 			if player.character and player.character.valid and player.character.grid then
 				if nearby_ore_count > 0 then
@@ -1287,6 +1299,7 @@ script.on_nth_tick(20, function(event) --Player damage 3 times per second
 						--Play powerup sound for player
 						player.play_sound({path = "tiberium-generator-on"})
 						storage.tiberiumPoweredPlayers[player.index] = true
+						player.unlock_achievement("tiberium-generator")
 					end
 				elseif storage.tiberiumPoweredPlayers[player.index] then
 					if swapEquipment(player.character.grid, "tiberium-generator-equipment-on", "tiberium-generator-equipment") then
@@ -1306,6 +1319,7 @@ script.on_nth_tick(20, function(event) --Player damage 3 times per second
 				end
 			end
 			if damagingItems > 0 then
+				player.unlock_achievement("tiberium-hot-potato")
 				if ItemDamageScale then
 					safeDamage(player, math.ceil(damagingItems / 50) * TiberiumDamage * 0.6)
 				else
@@ -1333,7 +1347,9 @@ end)
 
 ---Harvest Tiberium Ore around MARV
 ---@param vehicleEntity LuaEntity
+---@return uint ore_harvested
 function marvHarvestOre(vehicleEntity)
+	local total_harvest = 0
 	for _, oreName in pairs(storage.oreTypes) do
 		local deleted_ore = vehicleEntity.surface.find_entities_filtered{name = oreName, position = vehicleEntity.position, radius = 4}
 		local harvested_amount = 0
@@ -1342,9 +1358,11 @@ function marvHarvestOre(vehicleEntity)
 			ore.destroy()
 		end
 		if harvested_amount >= 1 then
+			total_harvest = total_harvest + harvested_amount
 			vehicleEntity.insert{name = oreName, count = math.floor(harvested_amount)}
 		end
 	end
+	return total_harvest
 end
 
 ---comment
@@ -1367,7 +1385,8 @@ end
 ---Deal tiberium damage to entity or player without crashes because we finally fixed all of those
 ---@param entityOrPlayer LuaPlayer|LuaEntity
 ---@param damageAmount number
-function safeDamage(entityOrPlayer, damageAmount)
+---@param source? LuaEntity
+function safeDamage(entityOrPlayer, damageAmount, source)
 	if damageAmount <= 0 then return end
 	if not entityOrPlayer or not entityOrPlayer.valid then return end
 	local damageMulti = 1
@@ -1379,10 +1398,13 @@ function safeDamage(entityOrPlayer, damageAmount)
 		damageMulti = storage.tiberiumDamageTakenMulti[entity.force.name] or 1
 		if (damageMulti == 0) and not entity.grid then  -- Immunity requires power armor
 			damageMulti = 0.25
+			if player then
+				player.unlock_achievement("tiberium-forgot-armor")
+			end
 		end
 
 		if damageMulti > 0 then
-			entity.damage(damageAmount * damageMulti, game.forces.tiberium, "tiberium")
+			entity.damage(damageAmount * damageMulti, game.forces.tiberium, "tiberium", source)
 			-- Alert player about Tiberium damage
 			if player and entity.valid then
 				player.add_custom_alert(
@@ -1817,6 +1839,17 @@ function on_pre_mined(event)
 		if blueTibOre > 0 then
 			debugPrint("Created "..tostring(blueTibOre).." blue Tiberium ore")
 			TiberiumSeedMissile(entity.surface, entity.position, blueTibOre, "tiberium-ore-blue")
+		end
+		if greenTibOre > 0 or blueTibOre > 0 then
+			if event.player_index then
+				game.players[event.player_index].unlock_achievement("tiberium-spill")
+			else
+				for _, player in pairs(game.connected_players) do
+					if player.valid then
+						player.unlock_achievement("tiberium-spill")
+					end
+				end
+			end
 		end
 	end
 end
