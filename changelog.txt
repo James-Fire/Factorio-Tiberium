@@ -8,6 +8,8 @@ Version: 2.0.13
     - Fixed Huge Rocks turning green on Nauvis
     - Fixed crash from trying to load incorrectly formatted technology costs from other mods
     - Fixed SRF emitters giving "Pipeline overextended" warnings
+    - Fixed centrifuging recipes failing to resolve circular dependencies
+    - Fixed centrifuging recipes using planet-specific recipes when "Include Non-Nauvis Ores in Centrifuging" was disabled
   Changes:
     - Node Harvesters, AOE Node Harvesters, and Tiberium Network Node will now output stacked ore onto belts
     - Changed Growth Acceleration Improvement to give productivity instead of crafting speed

@@ -14,6 +14,17 @@ local allowAlienOres = settings.startup["tiberium-centrifuge-alien-ores"].value 
 local free = {}
 local excludedCrafting = {["transport-drone-request"] = true, ["auto-fabricator"] = true, ["borehole-pump"] = true} --Rigorous way to do this?
 
+if mods["Voidcraft"] then
+	excludedCrafting["voidcrafting"] = true
+	excludedCrafting["voidcrafting-advanced"] = true
+	excludedCrafting["voidcrafting-inverse"] = true
+end
+if mods["Age-of-Production"] then
+	excludedCrafting["advanced-centrifuging"] = true
+	excludedCrafting["advanced-metallurgy"] = true
+	excludedCrafting["scrubbing"] = true
+end
+
 --Debugging for findRecipe
 local unreachable = {}
 local multipleRecipes = {}
@@ -26,6 +37,7 @@ local resourceExclusions = {}
 local resourceInclusions = {}
 local tibComboPacks = {}
 local techCosts = {}
+local techPacks = {}
 local catalyst = {}
 local ingredientIndex = {}
 local resultIndex = {}
@@ -105,6 +117,31 @@ local function findItemPrototype(name)
 	return nil, nil
 end
 
+---Check whether a recipe/entity with surface conditions can be used on a given planet 
+---@param surfaceCondition SurfaceCondition[] Which conditions to check
+---@param planet string Name of planet to check against
+---@return boolean
+local function worksOnPlanet(surfaceCondition, planet)
+	local planetConditions = {}
+	if planet and data.raw.planet[planet] then
+		planetConditions = data.raw.planet[planet].surface_properties or {}
+	else
+		if debugText then log("Could not find planet called "..planet) end
+		return false
+	end
+	for _, condition in pairs(surfaceCondition or {}) do
+		local property = condition.property
+		if property and data.raw["surface-property"][property] then
+			local testValue = planetConditions[property] or  data.raw["surface-property"][property].default_value
+			if condition.min and testValue < condition.min then return false end
+			if condition.max and testValue > condition.max then return false end
+		else
+			log("Prototype includes invalid surface property: "..property)
+		end
+	end
+	return true
+end
+
 if mods["space-exploration"] then
 	for itemName, item in pairs(data.raw.item) do
 		if item.subgroup == "core-fragments" then
@@ -151,6 +188,38 @@ function giantSetupFunction()
 		local delim = ","
 		for category in string.gmatch(excludeRecipes, "[^"..delim.."]+") do  -- Loop over comma-delimited substrings
 			excludedCrafting[category] = true
+		end
+	end
+
+	-- Restrict recipe categories that cannot be used on Nauvis
+	if not allowAlienOres then
+		local nauvisCategories = {}
+		for _, assembler in pairs(data.raw["assembling-machine"]) do
+			if not assembler.fixed_recipe and worksOnPlanet(assembler.surface_conditions, "nauvis") then
+				for _, cat in pairs(assembler.crafting_categories) do
+					nauvisCategories[cat] = true
+				end
+			end
+		end
+		for _, silo in pairs(data.raw["rocket-silo"]) do
+			if not silo.fixed_recipe and worksOnPlanet(silo.surface_conditions, "nauvis") then
+				for _, cat in pairs(silo.crafting_categories) do
+					nauvisCategories[cat] = true
+				end
+			end
+		end
+		for _, furnace in pairs(data.raw["furnace"]) do
+			if worksOnPlanet(furnace.surface_conditions, "nauvis") then
+				for _, cat in pairs(furnace.crafting_categories) do
+					nauvisCategories[cat] = true
+				end
+			end
+		end
+		for category in pairs(data.raw["recipe-category"]) do
+			if not nauvisCategories[category] then
+				excludedCrafting[category] = true
+				if debugText then log("Could not find a Nauvis structure for recipe category "..category) end
+			end
 		end
 	end
 
@@ -224,7 +293,7 @@ function giantSetupFunction()
 		if flib_table.find(labData.inputs, "tiberium-science") and (labName ~= "creative-mod_creative-lab") then
 			for _, pack in pairs(labData.inputs or {}) do
 				if (pack ~= "tiberium-science") and data.raw.tool[pack] then
-					tibComboPacks[pack] = {}
+					tibComboPacks[pack] = true
 				end
 			end
 		end
@@ -474,6 +543,57 @@ function allTechCosts()
 		end
 	end
 	if debugText then log("techCosts: "..serpent.block(techCosts)) end
+
+	-- Also cache the packs required to unlock every tech for later lookup
+	local locked_prereqs = {}
+	local prereq_unlocks = {}
+	local new_additions = {}
+	for techName, tech in pairs(data.raw.technology) do
+		techPacks[techName] = {}
+		if tech.unit then
+			for _, ingredient in pairs(tech.unit.ingredients) do
+				local pack = ingredient[1]
+				techPacks[techName][pack] = ""
+			end
+		end
+		if tableSize(tech.prerequisites) > 0 then
+			locked_prereqs[techName] = {}
+			for _, prereq in pairs(tech.prerequisites) do
+				locked_prereqs[techName][prereq] = ""
+				if not prereq_unlocks[prereq] then
+					prereq_unlocks[prereq] = {}
+				end
+				prereq_unlocks[prereq][techName] = ""
+
+			end
+		else
+			if debugText then log("Starting tech "..techName) end
+			new_additions[techName] = ""
+		end
+	end
+	local loop_num = 0
+	local next_additions = {}
+	while tableSize(locked_prereqs) > 0 and tableSize(new_additions) > 0 and loop_num < 500 do  -- Only check 500 tech layers so we don't get stuck
+		if debugText then log("Loop #"..loop_num.." with "..tableSize(new_additions).." new techs unlocked and "..tableSize(locked_prereqs).." remaining") end
+		loop_num = loop_num + 1
+		for parent_tech in pairs(new_additions) do
+			for child_tech in pairs(prereq_unlocks[parent_tech] or {}) do
+				if debugText then log("Checking "..child_tech.." unlocked by "..parent_tech) end
+				for pack in pairs(techPacks[parent_tech] or {}) do
+					techPacks[child_tech][pack] = ""
+				end
+				if locked_prereqs[child_tech] then
+					locked_prereqs[child_tech][parent_tech] = nil
+				end
+				if tableSize(locked_prereqs[child_tech]) == 0 then
+					locked_prereqs[child_tech] = nil
+					next_additions[child_tech] = ""
+				end
+			end
+		end
+		new_additions = util.copy(next_additions)
+		next_additions = {}
+	end
 end
 
 --Modifies: availableRecipes, fakeRecipes, tibComboPacks, recipeUnlockTracker
@@ -484,29 +604,38 @@ function allAvailableRecipes()
 	-- Recipes unlocked by default
 	for recipe, recipeData in pairs(data.raw.recipe) do
 		if (recipeData.enabled ~= false) and (recipeData.hidden ~= true) then  -- Enabled and not hidden
-			availableRecipes[recipe] = true
-			recipeUnlockTracker["default"][recipe] = ""
+			if allowAlienOres or worksOnPlanet(recipeData.surface_conditions, "nauvis") then
+				availableRecipes[recipe] = true
+				recipeUnlockTracker["default"][recipe] = ""
+			end
 		end
 	end
 	-- Recipes enabled but only at a specific structure
 	for _, assembler in pairs(data.raw["assembling-machine"]) do
 		if assembler.fixed_recipe and data.raw.recipe[assembler.fixed_recipe] and (data.raw.recipe[assembler.fixed_recipe].enabled ~= false) then
-			availableRecipes[assembler.fixed_recipe] = true
-			recipeUnlockTracker["fixed_recipe"][assembler.fixed_recipe] = assembler.name
+			if allowAlienOres or worksOnPlanet(assembler.surface_conditions, "nauvis") then
+				availableRecipes[assembler.fixed_recipe] = true
+				recipeUnlockTracker["fixed_recipe"][assembler.fixed_recipe] = assembler.name
+			end
 		end
 	end
 	-- Recipes unlocked by a technology
 	for tech, techData in pairs(data.raw.technology) do
 		if (techData.enabled == nil) or (techData.enabled == true) then  -- Only use enabled technologies
 			for _, effect in pairs(techData.effects or {}) do
-				if effect.recipe then
+				if effect.type == "unlock-recipe" and effect.recipe then
 					if data.raw.recipe[effect.recipe] then
-						--log("~~~ Recipe "..effect.recipe.." unlocked by "..tech)
-						availableRecipes[effect.recipe] = true
-						recipeUnlockTracker["technology"][effect.recipe] = tech
-						for _, product in pairs(data.raw.recipe[effect.recipe].results or {}) do
-							if product.name and tibComboPacks[product.name] and techData.unit then --TODO handle trigger techs
-								tibComboPacks[product.name] = techData.unit.ingredients  --save for later
+						if allowAlienOres or worksOnPlanet(data.raw.recipe[effect.recipe].surface_conditions, "nauvis") then
+							--log("~~~ Recipe "..effect.recipe.." unlocked by "..tech)
+							availableRecipes[effect.recipe] = true
+							recipeUnlockTracker["technology"][effect.recipe] = tech
+							for product in pairs(common.recipeResultsTable(effect.recipe)) do
+								if tibComboPacks[product] then
+									local prereqPacks = packForTech(tech)
+									if not prereqPacks[product] then
+										tibComboPacks[product] = prereqPacks --save for later
+									end
+								end
 							end
 						end
 					else
@@ -547,8 +676,10 @@ function allAvailableRecipes()
 	-- Dummy recipes for boilers
 	for name, boiler in pairs(data.raw["boiler"]) do
 		if boiler.fluid_box.filter and boiler.output_fluid_box.filter then
-			availableRecipes["dummy-recipe-boiler-"..name] = {ingredient = {[boiler.fluid_box.filter] = 1}, result = {[boiler.output_fluid_box.filter] = 1}}
-			fakeRecipes["dummy-recipe-boiler-"..name] = true
+			if allowAlienOres or worksOnPlanet(boiler.surface_conditions, "nauvis") then
+				availableRecipes["dummy-recipe-boiler-"..name] = {ingredient = {[boiler.fluid_box.filter] = 1}, result = {[boiler.output_fluid_box.filter] = 1}}
+				fakeRecipes["dummy-recipe-boiler-"..name] = true
+			end
 		end
 	end
 	-- Avoid Tiberium recipes
@@ -661,7 +792,7 @@ function markBadRecipe(recipe)
 	-- Check whether we need to keep it because there are no other ways to get an item
 	for result in pairs(availableRecipes[recipe]["result"]) do
 		-- Not considering free items to avoid permanently marking a recipe as bad based on inaccurate lists of free items
-		if not rawResources[result] and (tableSize(resultIndex[result]) == 1) then
+		if not rawResources[result] and (tableSize(resultIndex[result]) == 1) and not free[result] then
 			if debugText then log("Can't mark "..recipe.." as bad because we need it for "..result) end
 			return false
 		end
@@ -693,9 +824,25 @@ function packHierarchy()
 			log(recipe.." is the only recipe for "..pack)
 			if fakeRecipes[recipe] then log(serpent.block(fakeRecipes[recipe])) end
 			recipeForPack[pack] = recipe
-		else
+		elseif tableSize(resultIndex[pack]) > 1 then
 			log("Multiple recipes for "..pack.." "..serpent.block(resultIndex[pack]))
-			-- todo: add something for choosing lowest recipe, but determining "lowest" recipe seems like it would be dependent on the rest of this, idk
+			local remaining_options = util.copy(resultIndex[pack])
+			local sorted = {}
+			for recipe in pairs(remaining_options) do
+				--Check recipe unlock requirement tech
+				table.insert(sorted, {recipe = recipe, size = tableSize(packForTech(recipeUnlockTracker["technology"][recipe]))})
+			end
+			table.sort(sorted, function(a,b) return (a.size == b.size) and (a.recipe < b.recipe) or (a.size < b.size) end)
+			recipeForPack[pack] = sorted[1].recipe
+			if debugText then
+				for _, v in pairs(sorted) do
+					log("hmmm what about "..tostring(recipeUnlockTracker["technology"][v.recipe]))
+					log(v.recipe.." requires "..serpent.block(packForTech(recipeUnlockTracker["technology"][v.recipe])))
+				end
+				log("Opting for recipe "..sorted[1].recipe)
+			end
+		else
+			log("No reachable recipes for "..pack)
 		end
 		-- Packs unlocked by default are tier 0
 		if recipeUnlockTracker["default"][recipeForPack[pack]] then
@@ -739,18 +886,23 @@ function packHierarchy()
 end
 
 -- Returns a list of packs required for a given tech (not counting prerequisites)
-function packForTech(techName)
+function packForTech(techName, depth)
+	if techPacks[techName] then
+		return techPacks[techName]  -- Use cache if available
+	end
+	depth = depth and depth + 1 or 1
+	if not data.raw.technology[techName] or depth > 20 then return {} end
 	local packList = {}
 	if data.raw.technology[techName] and data.raw.technology[techName].unit then
 		for _, ingredient in pairs(data.raw.technology[techName].unit.ingredients) do
 			local pack = ingredient[1]
 			packList[pack] = ""
 		end
-	elseif data.raw.technology[techName] and data.raw.technology[techName].research_trigger then
-		for _,prereq in pairs(data.raw.technology[techName].prerequisites or {}) do
-			for pack in pairs(packForTech(prereq)) do
-				packList[pack] = ""
-			end
+	end
+	for _, prereq in pairs(data.raw.technology[techName].prerequisites or {}) do
+		-- Recursive could cause issues but caching and depth limit handle this for all mods I've test with
+		for pack in pairs(packForTech(prereq, depth)) do
+			packList[pack] = ""
 		end
 	end
 	return packList
@@ -765,8 +917,12 @@ function findRecipe(item, itemList)
 		-- Score the recipes so we can choose the best
 		local penalty = 0
 		local ingredientList = normalIngredients(recipeName)
+		local usesFluids = false
 		for ingredient in pairs(ingredientList) do
 			if (ingredient ~= item) and not free[ingredient] then
+				if data.raw.fluid[ingredient] then
+					usesFluids = true
+				end
 				-- Less bad if it uses something we already have extra of?
 				if itemList and itemList[ingredient] and itemList[ingredient] > 0 then
 					penalty = penalty - 8
@@ -774,6 +930,9 @@ function findRecipe(item, itemList)
 					penalty = penalty + 10
 				end
 			end
+		end
+		if usesFluids then
+			penalty = penalty + 25
 		end
 		if penalty > 0 then -- Only penalize byproducts if recipe isn't free
 			for result in pairs(resultList) do
@@ -928,6 +1087,7 @@ function fugeTierSetup()
 			for ingredient in pairs(allPacks[pack]) do
 				if data.raw["fluid"][ingredient] then
 					tier1 = false
+					if debugText then log(pack.." is not tier 1 because it has liquid ingredient "..ingredient) end
 					break
 				end
 			end
@@ -941,12 +1101,11 @@ function fugeTierSetup()
 	repeat
 		local somethingNew = false
 		for pack in pairs(science[1]) do
-			for _, ingredient in pairs(tibComboPacks[pack]) do
-				local required = ingredient[1] or ingredient.name
-				if not science[1][required] then
+			for prereq in pairs(type(tibComboPacks[pack]) == "table" and tibComboPacks[pack] or {}) do
+				if not science[1][prereq] then
 					science[1][pack] = nil
 					somethingNew = true
-					if debugText then log("Removed "..pack.." from tier 1 because it requires non-T1 "..required) end
+					if debugText then log("Removed "..pack.." from tier 1 because it requires non-T1 "..prereq) end
 				end
 			end
 		end
@@ -1042,6 +1201,8 @@ function fugeRecipeTier(tier)
 		data.raw.recipe[sludgeFugeRecipeName].icons = nil
 		common.technology.addRecipeUnlock("tiberium-"..material.."-centrifuging", sludgeFugeRecipeName)  -- First argument is the technology name
 		recipeAddResult(sludgeFugeRecipeName, "tiberium-sludge", sludge, "fluid")
+	else
+		data.raw.recipe[sludgeFugeRecipeName].hidden = true  -- Hide these unused recipes
 	end
 	if sludge > 0 then  -- Add sludge items after duplicating bc LSlib change result doesn't support changing result types
 		for resource, amount in pairs(sludgeDict) do
