@@ -47,3 +47,12 @@ end
 
 require("scripts.DynamicOreRecipes")
 require("scripts.compatibility.pumpmod")
+
+if mods["space-exploration"] and data.raw["recipe-category"]["space-crafting"] then
+	for _, ore in pairs({"beryllium-ore", "cryonite", "holmium-ore", "iridium-ore", "methane-ice", "naquium-ore", "vitamelange", "vulcanite", "water-ice"}) do
+		if data.raw.recipe["tiberium-transmutation-to-se-"..ore] then
+			data.raw.recipe["tiberium-transmutation-to-se-"..ore].category = "space-crafting"
+			common.recipe.addIngredient("tiberium-transmutation-to-se-"..ore, "tiberium-primed-reactant-blue", 1)
+		end
+	end
+end

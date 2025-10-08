@@ -333,7 +333,7 @@ common.recipe.addIngredient = function(recipeName, ingredientName, ingredientAmo
 		end
 		if not alreadyPresent then
 			table.insert(data.raw["recipe"][recipeName].ingredients, {
-				["type"] = ingredientType,
+				["type"] = ingredientType or "item",
 				["name"] = ingredientName,
 				["amount"] = ingredientAmount or 1,
 			})

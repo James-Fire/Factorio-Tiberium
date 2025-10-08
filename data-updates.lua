@@ -119,6 +119,10 @@ if mods["space-exploration"] then
 	data.raw["electric-energy-interface"]["tiberium-sonic-emitter-blue"].se_allow_in_space = true
 	data.raw["pipe-to-ground"]["tiberium-srf-connector"].se_allow_in_space = true
 	data.raw["electric-energy-interface"]["tiberium-srf-emitter"].se_allow_in_space = true
+
+	se_delivery_cannon_recipes = se_delivery_cannon_recipes or {}
+	se_delivery_cannon_recipes["tiberium-ore"] = {name="tiberium-ore"}
+	se_delivery_cannon_recipes["tiberium-ore-blue"] = {name="tiberium-ore-blue"}
 end
 
 if mods["RampantResources"] then
