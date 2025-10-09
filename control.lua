@@ -437,7 +437,7 @@ function doUpgradeConversions(data)
 	end
 
 	if upgradingToVersion(data, tiberiumInternalName, "2.0.13") then
-		if mods["wret-beacon-rebalance-mod"] then
+		if script.active_mods["wret-beacon-rebalance-mod"] then
 			remote.call("wr-beacon-rebalance", "reset_beacons")
 		end
 	end
