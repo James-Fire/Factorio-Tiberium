@@ -1450,6 +1450,45 @@ data:extend{
 	},
 }
 
+-- Silly easter egg
+if mods["quality"] and mods["space-age"] then
+	local seeds = {}
+	for _, item in pairs(data.raw.item) do
+		if item.plant_result then
+			seeds[item.name] = ""
+		end
+	end
+	local recycling = require("__quality__.prototypes.recycling")
+	for _, recipeName in pairs({"tiberium-seed", "tiberium-seed-blue"}) do
+		data.raw["recipe"][recipeName].auto_recycle = false
+		local recipe = {
+			type = "recipe",
+			name = recipeName.."-recycling",
+			localised_name = {"recipe-name.recycling", "item-name."..recipeName},
+			icon = nil,
+			---@diagnostic disable-next-line: undefined-global  -- This is a function from quality.prototypes.recycling from above
+			icons = generate_recycling_recipe_icons_from_item(data.raw.ammo[recipeName]),
+			category = "recycling",
+			subgroup = "a-items",
+			hidden = true,
+			hidden_in_factoriopedia = true,
+			allow_decomposition = false,
+			unlock_results = false,
+			ingredients = {{type = "item", name = recipeName, amount = 1}},
+			results = {},
+			energy_required = 3.125,
+		}
+		log(serpent.block(recipe.icons))
+		data.extend{recipe}
+		if data.raw["recipe"][recipeName.."-recycling"] then
+			log(serpent.block(data.raw["recipe"][recipeName.."-recycling"]))
+			for seed in pairs(seeds) do
+				common.recipe.addResult(recipeName.."-recycling", seed, 1, "item")
+			end
+		end
+	end
+end
+
 local TibProductivity = {
 	"tiberium-science-mechanical",
 	"tiberium-science-thermal",

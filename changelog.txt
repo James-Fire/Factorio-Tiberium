@@ -17,6 +17,7 @@ Version: 2.0.13
     - Added dynamic tooltip to Seed Rockets to reflect how changing settings impacts Blossom Tree spawning
     - Doubled environmental damage from Tiberium on Tiber to better match player progression
     - Made some transmutation recipes more difficult when Space Exploration is active
+    - Added easter egg
   Features:
     - Added 12 new achievements
     - Added compatibility for Picker Dollies
