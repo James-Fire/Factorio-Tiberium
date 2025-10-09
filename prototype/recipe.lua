@@ -487,6 +487,7 @@ data:extend{
 		allow_as_intermediate = false,
 		allow_decomposition = false,
 		always_show_made_in = true,
+		auto_recycle = false,
 		order = "z-3"
 	},
 	{
@@ -526,6 +527,7 @@ data:extend{
 		allow_as_intermediate = false,
 		allow_decomposition = false,
 		always_show_made_in = true,
+		auto_recycle = false,
 		order = "z"
 	},
 	{
