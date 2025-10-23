@@ -1543,10 +1543,12 @@ function on_new_entity(event)
 	if (new_entity.name == "tiberium-srf-connector") then
 		new_entity.destructible = false
 		-- Place actual EEI entity on top of underground pipes
+		local quality = new_entity.quality
 		surface.create_entity{
 			name = "tiberium-srf-emitter",
 			position = position,
 			force = force,
+			quality = quality,
 			raise_built = true
 		}
 	elseif (new_entity.name == "tiberium-srf-emitter") then
@@ -1621,11 +1623,13 @@ function on_new_entity(event)
 		--Place Beacon for Tiberium Control Network
 		ManageTCNBeacon(surface, position, force)
 	elseif (new_entity.name == "tiberium-growth-accelerator-node") then
+		local quality = new_entity.quality
 		new_entity.destroy()
 		surface.create_entity{
 			name = "tiberium-growth-accelerator",
 			position = position,
 			force = force,
+			quality = quality,
 			raise_built = true
 		}
 	elseif (new_entity.name == "tiberium-growth-accelerator") then
@@ -1633,11 +1637,13 @@ function on_new_entity(event)
 		--Remove tree entity when node is covered
 		removeBlossomTree(surface, position)
 	elseif (new_entity.name == "tiberium-monoculture-green-node") then
+		local quality = new_entity.quality
 		new_entity.destroy()
 		surface.create_entity{
 			name = "tiberium-monoculture-green",
 			position = position,
 			force = force,
+			quality = quality,
 			raise_built = true
 		}
 	elseif (new_entity.name == "tiberium-monoculture-green") then
@@ -1646,11 +1652,13 @@ function on_new_entity(event)
 		--Remove tree entity when node is covered
 		removeBlossomTree(surface, position)
 	elseif (new_entity.name == "tiberium-monoculture-blue-node") then
+		local quality = new_entity.quality
 		new_entity.destroy()
 		surface.create_entity{
 			name = "tiberium-monoculture-blue",
 			position = position,
 			force = force,
+			quality = quality,
 			raise_built = true
 		}
 	elseif (new_entity.name == "tiberium-monoculture-blue") then

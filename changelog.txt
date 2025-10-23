@@ -2,6 +2,7 @@
 Version: 2.0.14
   Bugfixes:
     - Fixed Tiberium Blossom Tree placement being inconsistent when RSO is active
+    - Fixed quality not working on Growth Accelerator and Monoculture structures
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.13
   Bugfixes:
