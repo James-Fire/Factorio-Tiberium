@@ -354,7 +354,7 @@ script.on_configuration_changed(function(data)
 				local map_gen_settings = planet.surface.map_gen_settings  --[[@as MapGenSettings]]
 				if map_gen_settings.autoplace_settings.entity.settings["tibGrowthNode"] == nil then
 					---@diagnostic disable-next-line: missing-fields
-					map_gen_settings.autoplace_controls[name.."_tibGrowthNode"] = {}
+					map_gen_settings.autoplace_controls[script.active_mods["space-age"] and name.."_tibGrowthNode" or "tibGrowthNode"] = {}
 					---@diagnostic disable-next-line: missing-fields
 					map_gen_settings.autoplace_settings.entity.settings["tibGrowthNode"] = {}
 					planet.surface.map_gen_settings = map_gen_settings
@@ -1157,7 +1157,7 @@ commands.add_command("tibShareStats",
 		end
 		helpers.write_file(fileName, str, true, game.player.index)
 		game.player.print("Saved stats to %AppData%/Roaming/Factorio/script-output/"..fileName)
-		game.player.print("You can share your stats with Tiberium mods here: https://discord.gg/ed4pNP3KrH")
+		game.player.print("You can share your stats with Tiberium devs here: https://discord.gg/ed4pNP3KrH")
 	end
 )
 commands.add_command("tibFastForward",

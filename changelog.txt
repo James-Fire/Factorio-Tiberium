@@ -4,6 +4,7 @@ Version: 2.0.14
     - Fixed Tiberium Blossom Tree placement being inconsistent when RSO is active
     - Fixed quality not working on Growth Accelerator and Monoculture structures
     - Fixed missing autoplace name
+    - Fixed crash when adding mod to existing save without Space Age active
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.13
   Bugfixes:
