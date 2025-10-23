@@ -131,6 +131,15 @@ if mods["RampantResources"] then
 	end
 end
 
+if mods["rso-mod"] then
+	data.rso_ignore_resource_entities = data.rso_ignore_resource_entities or {}
+	data.rso_ignore_resource_entities["tibGrowthNode"] = true
+	if common.whichPlanet == "tiber-start" or "nauvis" then
+		data.rso_ignore_planets = data.rso_ignore_planets or {}
+		data.rso_ignore_planets['tiber'] = true
+	end
+end
+
 if mods["deadlock-beltboxes-loaders"] then
 	local Items = {
 		{"tiberium-ore", "item", "stacked-tiberium-ore", 64, 4},

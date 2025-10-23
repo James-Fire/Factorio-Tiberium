@@ -1,4 +1,8 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.14
+  Bugfixes:
+    - Fixed Tiberium Blossom Tree placement being inconsistent when RSO is active
+---------------------------------------------------------------------------------------------------
 Version: 2.0.13
   Bugfixes:
     - Fixed compatibility for Space Exploration 2.0

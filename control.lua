@@ -239,6 +239,10 @@ script.on_init(function()
 		storage.surface.request_to_generate_chunks({0, 0}, 3)
 		storage.surface.force_generate_chunk_requests()
 	end
+
+	if remote.interfaces["RSO"] and (whichPlanet == "tiber-start" or whichPlanet == "nauvis") then
+		remote.call("RSO", "ignoreSurface", "tiber")
+	end
 end)
 
 ---Lock/unlock space locations based on settings and technologies
