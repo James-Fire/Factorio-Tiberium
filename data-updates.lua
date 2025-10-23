@@ -123,6 +123,9 @@ if mods["space-exploration"] then
 	se_delivery_cannon_recipes = se_delivery_cannon_recipes or {}
 	se_delivery_cannon_recipes["tiberium-ore"] = {name="tiberium-ore"}
 	se_delivery_cannon_recipes["tiberium-ore-blue"] = {name="tiberium-ore-blue"}
+
+	data.raw.generator["tiberium-power-plant"].effectivity = 1
+	data.raw.fluid["liquid-tiberium"].fuel_value = "25MJ"
 end
 
 if mods["RampantResources"] then
