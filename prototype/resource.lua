@@ -277,6 +277,7 @@ if common.whichPlanet ~= "nauvis" then
 		{
 			type = "autoplace-control",
 			name = "tiberium-tiber-rock",
+			localised_name = {"autoplace-control-names.tiber-rocks"},
 			category = "terrain",
 			order = "c-y2"
 		},
