@@ -6,6 +6,7 @@ Version: 2.0.14
     - Fixed missing autoplace name
     - Fixed crash when adding mod to existing save without Space Age active
     - Fixed Tiberium Power Plant having halved power output when Space Exploration was active
+    - Fixed Blue Tiberium Recycling recipe
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.13
   Bugfixes:

@@ -192,6 +192,7 @@ data:extend{
 		icon = tiberiumInternalName.."/graphics/icons/tiberium-farming.png",
 		icon_size = 64,
 		allow_decomposition = false,
+		auto_recycle = false,
 		subgroup = "a-mixed-science",
 		order = "a"
 	}
@@ -274,6 +275,7 @@ data:extend{
 		icons = common.layeredIcons(tiberiumInternalName.."/graphics/icons/tiberium-ore-blue-75%.png", 64,
 			tiberiumInternalName.."/graphics/icons/growth-credit.png", 64, "ne"),
 		allow_decomposition = false,
+		auto_recycle = false,
 		subgroup = "a-mixed-science",
 		order = "z-1"
 	},
