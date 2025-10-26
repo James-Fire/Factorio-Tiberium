@@ -7,6 +7,7 @@ Version: 2.0.14
     - Fixed crash when adding mod to existing save without Space Age active
     - Fixed Tiberium Power Plant having halved power output when Space Exploration was active
     - Fixed Blue Tiberium Recycling recipe
+    - Fixed AAI miners being damaged by Tiberium
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.13
   Bugfixes:
