@@ -8,6 +8,8 @@ Version: 2.0.14
     - Fixed Tiberium Power Plant having halved power output when Space Exploration was active
     - Fixed Blue Tiberium Recycling recipe
     - Fixed AAI miners being damaged by Tiberium
+    - Fixed some settings missing or listing incorrect default values
+    - Added templating to simplify translations and keep translations up to date with changes to default values
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.13
   Bugfixes:

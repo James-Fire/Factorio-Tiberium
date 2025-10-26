@@ -368,3 +368,20 @@ if not mods["space-age"] then
 
 	data.raw["bool-setting"]["tiberium-centrifuge-alien-ores"].hidden = true
 end
+
+for _, type in pairs({"int-setting", "bool-setting", "double-setting"}) do
+	for name, setting in pairs(data.raw[type]) do
+		if string.sub(name, 1, 8) == "tiberium" then
+			local default = setting.default_value
+			if default == true then  -- Because true/false looks ugly
+				default = {"mod-setting-description.tiberium-description-enabled"}
+			elseif default == false then
+				default = {"mod-setting-description.tiberium-description-disabled"}
+			else
+				default = tostring(default)
+			end
+			setting.localised_description = {"mod-setting-description.tiberium-description-template",
+					{"mod-setting-description."..name}, {"mod-setting-description.tiberium-description-default"}, default}
+		end
+	end
+end
