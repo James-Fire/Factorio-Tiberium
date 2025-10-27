@@ -28,12 +28,14 @@ common.blankIcons = {
 
 common.TiberiumRadius = settings.startup["tiberium-radius"].value  --[[@as int]]
 
-common.TiberiumInStartingArea = settings.startup["tiberium-starting-area"].value or (settings.startup["tiberium-on"].value ~= "nauvis") or false  --[[@as boolean]]
+common.whichPlanet = (mods["any-planet-start"] and settings.startup["aps-planet"].value == "tiber") and "tiber-start"
+		or (mods["any-planet-start"] and settings.startup["aps-planet"].value ~= "none" and settings.startup["tiberium-on"].value == "tiber-start") and "tiber"
+		or settings.startup["tiberium-on"].value  --[[@as string]]
 
-common.whichPlanet = settings.startup["tiberium-on"].value  --[[@as string]]
+common.TiberiumInStartingArea = settings.startup["tiberium-starting-area"].value or (common.whichPlanet ~= "nauvis") or false  --[[@as boolean]]
 
 --Need to force burner tier for tiberium only starts to avoid softlocks
-common.tierZero = settings.startup["tiberium-tier-zero"].value or (settings.startup["tiberium-on"].value == "pure-nauvis") or (settings.startup["tiberium-on"].value == "tiber-start")  --[[@as boolean]]
+common.tierZero = settings.startup["tiberium-tier-zero"].value or (common.whichPlanet == "pure-nauvis") or (common.whichPlanet == "tiber-start")  --[[@as boolean]]
 
 common.hit_effects = require("__base__.prototypes.entity.hit-effects")
 

@@ -72,7 +72,7 @@ if settings.startup["tiberium-technology-triggers"].value then
 	end
 end
 
-if common.whichPlanet == "tiber" then
+if common.whichPlanet == "tiber" or (mods["any-planet-start"] and common.whichPlanet == "tiber-start") then
 	-- Lock planet behind tech
 	data:extend{{
 		type = "technology",

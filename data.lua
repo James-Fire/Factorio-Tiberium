@@ -84,3 +84,7 @@ require("prototype.sound")
 require("prototype.achievement")
 if mods["informatron"] then require("scripts.informatron.informatron") end
 if mods["rusty-locale"] then require("scripts.localised_description") end
+if mods["any-planet-start"] and APS and (common.whichPlanet == "tiber" or common.whichPlanet == "tiber-start") then 
+	APS.add_planet{name = "tiber", filename = tiberiumInternalName.."/prototype/planet.lua", technology = "planet-discovery-tiber"}
+	if common.whichPlanet == "tiber-start" then settings.startup["aps-planet"].value = "tiber" end
+end

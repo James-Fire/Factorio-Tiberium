@@ -1482,10 +1482,8 @@ if mods["quality"] and mods["space-age"] then
 			results = {},
 			energy_required = 3.125,
 		}
-		log(serpent.block(recipe.icons))
 		data.extend{recipe}
 		if data.raw["recipe"][recipeName.."-recycling"] then
-			log(serpent.block(data.raw["recipe"][recipeName.."-recycling"]))
 			for seed in pairs(seeds) do
 				common.recipe.addResult(recipeName.."-recycling", seed, 1, "item")
 			end

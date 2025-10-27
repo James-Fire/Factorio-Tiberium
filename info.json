@@ -19,6 +19,7 @@
 		"? angelsindustries",
 		"? angelsrefining",
 		"? angelspetrochem",
+		"? any-planet-start >= 1.1.0",
 		"? bobmining >= 1.0.0",
 		"? bobores >= 1.0.0",
 		"? bobrevamp >= 1.0.0",

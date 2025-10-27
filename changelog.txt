@@ -10,6 +10,7 @@ Version: 2.0.14
     - Fixed AAI miners being damaged by Tiberium
     - Fixed some settings missing or listing incorrect default values
     - Added templating to simplify translations and keep translations up to date with changes to default values
+    - Fixed compatibility for Any Planet Start
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.13
   Bugfixes:

@@ -40,7 +40,9 @@ local TCN_affected_entities = {"tiberium-aoe-node-harvester", "tiberium-spike", 
 local tiberiumNodeNames = {"tibGrowthNode", "tibGrowthNode_infinite"}
 local tiberiumNodeStructures = {"tibNode_tree", "tiberium-node-harvester", "tiberium-spike", "tiberium-growth-accelerator", "tiberium-detonation-charge", "tiberium-monoculture-green", "tiberium-monoculture-blue"}
 
-local whichPlanet = settings.startup["tiberium-on"].value
+local whichPlanet = (script.active_mods["any-planet-start"] and settings.startup["aps-planet"].value == "tiber") and "tiber-start"
+		or (script.active_mods["any-planet-start"] and settings.startup["aps-planet"].value ~= "none" and settings.startup["tiberium-on"].value == "tiber-start") and "tiber"
+		or settings.startup["tiberium-on"].value  --[[@as string]]
 local TiberiumDamage = settings.global["tiberium-damage"].value * (whichPlanet == "tiber" and 2 or 1)
 local TiberiumGrowth = settings.startup["tiberium-growth"].value * 10
 local TiberiumMaxPerTile = settings.startup["tiberium-growth"].value * 100 --Force 10:1 ratio with growth
@@ -191,6 +193,10 @@ script.on_init(function()
 		remote.call("freeplay", "set_created_items", freeplayStartItems)
 	end
 
+	if script.active_mods["any-planet-start"] and remote.interfaces["APS"] and whichPlanet == "tiber-start" then
+		remote.call("APS", "override_planet", "tiber")
+	end
+
 	-- CnC SonicWalls Init
 	CnC_SonicWall_OnInit()
 
@@ -221,7 +227,7 @@ script.on_init(function()
 		remote.call("DiscoScience", "setIngredientColor", "tiberium-science", {r = 0.0, g = 1.0, b = 0.0})
 	end
 
-	if whichPlanet == "tiber-start" then
+	if whichPlanet == "tiber-start" and not script.active_mods["any-planet-start"] then
 		if game.tick > 0 then
 			storage.init = true
 			game.print{"", {"tiberium-strings.tiber-restart-notice"}}
@@ -230,6 +236,7 @@ script.on_init(function()
 
 		if remote.interfaces.freeplay then
 			storage.disable_crashsite = remote.call("freeplay", "get_disable_crashsite")
+			storage.skip_intro = remote.call("freeplay", "get_skip_intro")
 
 			remote.call("freeplay", "set_disable_crashsite", true)
 			remote.call("freeplay", "set_skip_intro", true)
@@ -338,7 +345,7 @@ script.on_configuration_changed(function(data)
 		doUpgradeConversions(data)
 	end
 
-	if whichPlanet == "tiber-start" then
+	if whichPlanet == "tiber-start" and not script.active_mods["any-planet-start"] then
 		correct_space_locations()
 	end
 	-- Apply new settings
@@ -1953,7 +1960,7 @@ end
 script.on_event({defines.events.on_technology_effects_reset, defines.events.on_forces_merged, defines.events.on_force_reset}, function(event)
 	updateBeacons(event.force or event.destination)
 	updateResistanceLevel(event.force or event.destination)
-	if whichPlanet == "tiber-start" then
+	if whichPlanet == "tiber-start" and not script.active_mods["any-planet-start"] then
 		correct_space_locations()
 	end
 end)
@@ -2026,7 +2033,7 @@ script.on_event(defines.events.on_force_created, function(event)
 end)
 
 script.on_event(defines.events.on_player_changed_surface, function(event)
-	if whichPlanet == "tiber-start" then
+	if whichPlanet == "tiber-start" and not script.active_mods["any-planet-start"] then
 		local player = game.get_player(event.player_index) --[[@as LuaPlayer]]
 		if player.surface.name == "nauvis" then
 			storage.nauvis_visited = true
@@ -2059,7 +2066,7 @@ function show_intro_message(player)
 end
 
 script.on_event(defines.events.on_cutscene_waypoint_reached, function(event)
-	if whichPlanet == "tiber-start" then
+	if whichPlanet == "tiber-start" and not script.active_mods["any-planet-start"] then
 		if not storage.crash_site_cutscene_active then return end
 		if not crash_site.is_crash_site_cutscene(event) then return end
 
@@ -2073,7 +2080,7 @@ end)
 ---Custom input event added by \base\prototypes\entity\crash-site.lua
 ---@param event EventData.CustomInputEvent
 script.on_event("crash-site-skip-cutscene", function(event)
-	if whichPlanet == "tiber-start" then
+	if whichPlanet == "tiber-start" and not script.active_mods["any-planet-start"] then
 		if not storage.crash_site_cutscene_active then return end
 		if event.player_index ~= 1 then return end
 		local player = game.get_player(event.player_index) --[[@as LuaPlayer]]
@@ -2084,7 +2091,7 @@ script.on_event("crash-site-skip-cutscene", function(event)
 end)
 
 script.on_event(defines.events.on_cutscene_cancelled, function(event)
-	if whichPlanet == "tiber-start" then
+	if whichPlanet == "tiber-start" and not script.active_mods["any-planet-start"] then
 		if not storage.crash_site_cutscene_active then return end
 		if event.player_index ~= 1 then return end
 		storage.crash_site_cutscene_active = nil
@@ -2118,7 +2125,7 @@ script.on_event(defines.events.on_player_created, function(event)
 			UnlockTechnologyAndPrereqs(player.force --[[@as LuaForce]], "tiberium-easy-transmutation-tech")
 		end
 	end
-	if whichPlanet == "tiber-start" then
+	if whichPlanet == "tiber-start" and not script.active_mods["any-planet-start"] then
 		local surface = storage.surface
 		player.teleport(surface.find_non_colliding_position("character", {0, 0}, 0, 1) --[[@as MapPosition]], "tiber")
 
@@ -2147,7 +2154,6 @@ script.on_event(defines.events.on_player_created, function(event)
 			crash_site.create_crash_site(surface, {-5,-6}, util.copy(storage.crashed_ship_items), util.copy(storage.crashed_debris_items), util.copy(storage.crashed_ship_parts))
 			util.remove_safe(player.character, storage.crashed_ship_items)
 			util.remove_safe(player.character, storage.crashed_debris_items)
-			player.get_main_inventory().sort_and_merge()
 			if player.character then
 				player.character.destructible = false
 			end
@@ -2155,6 +2161,19 @@ script.on_event(defines.events.on_player_created, function(event)
 			crash_site.create_cutscene(player, {-5, -4})
 
 			chart_starting_area()
+		end
+	elseif whichPlanet == "tiber-start" and script.active_mods["any-planet-start"] then
+		if not storage.init then
+			storage.init = true
+			storage.crashed_ship_parts = remote.call("freeplay", "get_ship_parts")
+			table.insert(storage.crashed_ship_parts, { --I still need these rocks
+				name = "tiberium-tiber-rock",
+				max_distance = 40,
+				angle_deviation = 0.2,
+				min_separation = 2,
+				repeat_count = 3,
+			})
+			remote.call("freeplay", "set_ship_parts", storage.crashed_ship_parts)
 		end
 	elseif whichPlanet == "pure-nauvis" then
 		storage.crashed_ship_parts = remote.call("freeplay", "get_ship_parts")

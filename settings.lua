@@ -346,9 +346,11 @@ data:extend{--Runtime settings
 if mods["space-exploration"] then
 	data.raw["double-setting"]["tiberium-blue-target-evo"].default_value = 0.3
 end
-if mods["any-planet-start"] then
-	table.insert(data.raw["string-setting"]["aps-planet"].allowed_values, "tiber")
+
+if mods["any-planet-start"] and APS then
+	APS.add_choice("tiber")
 end
+
 if not mods["space-age"] then
 	data.raw["string-setting"]["tiberium-on"].allowed_values = {"nauvis", "pure-nauvis"}
 	data.raw["string-setting"]["tiberium-on"].default_value = "nauvis"
