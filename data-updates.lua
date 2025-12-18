@@ -186,7 +186,7 @@ end
 table.insert(data.raw.character.character.mining_categories, "basic-solid-tiberium")
 
 for _, drill in pairs(data.raw["mining-drill"]) do
-	if flib_table.find(drill.resource_categories, "basic-solid") then
+	if flib_table.find(drill.resource_categories or {}, "basic-solid") then
 		table.insert(drill.resource_categories, "basic-solid-tiberium")
 	end
 end
@@ -281,7 +281,7 @@ if settings.startup["tiberium-advanced-start"].value or common.whichPlanet == "t
 	for techName, tech in pairs(data.raw.technology) do
 		if tech.research_trigger and tech.research_trigger.type == "mine-entity" then
 			local resource = tech.research_trigger.entity  --[[@as string]]
-			if not string.find(resource, "tiberium") and minableResorces[resource] then
+			if not string.find(resource or {}, "tiberium") and minableResorces[resource] then
 				-- Change the unlock to science pack and copy cost from prereq
 				local ingredientCount = 0
 				local copyFrom = nil

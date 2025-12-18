@@ -110,9 +110,9 @@ if common.whichPlanet == "tiber" or (mods["any-planet-start"] and common.whichPl
 	}}
 	-- Lock tech behind planet
 	common.technology.addPrerequisite("planet-discovery-aquilo", "planet-discovery-tiber")  -- There should be some final tech to unlock Aquilo instead of just the initial
-	for technolgyName in pairs(data.raw.technology) do
-		if string.find(technolgyName, "tiberium") == 1 then
-			common.technology.addPrerequisite(technolgyName, "planet-discovery-tiber")
+	for technologyName in pairs(data.raw.technology) do
+		if string.find(technologyName, "tiberium") == 1 then
+			common.technology.addPrerequisite(technologyName, "planet-discovery-tiber")
 		end
 	end
 	-- Remove uranium requirement for Tiberium Nuclear Research (we'll figure out something permanent later)

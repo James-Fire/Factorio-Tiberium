@@ -290,7 +290,7 @@ function giantSetupFunction()
 
 	-- Find all science packs used with tib science in labs
 	for labName, labData in pairs(data.raw.lab) do
-		if flib_table.find(labData.inputs, "tiberium-science") and (labName ~= "creative-mod_creative-lab") then
+		if flib_table.find(labData.inputs or {}, "tiberium-science") and (labName ~= "creative-mod_creative-lab") then
 			for _, pack in pairs(labData.inputs or {}) do
 				if (pack ~= "tiberium-science") and data.raw.tool[pack] then
 					tibComboPacks[pack] = true
