@@ -114,6 +114,13 @@ data:extend{
 		maximum_value = 100,
 		order = "b[growth]2",
 	},
+	{
+		type = "bool-setting",
+		name = "tiberium-grow-on-landfill",
+		setting_type = "startup",
+		default_value = true,
+		order = "b[growth]3",
+	},
 	--Refining Recipe Settings
 	{
 		type = "int-setting",

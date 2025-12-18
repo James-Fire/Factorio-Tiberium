@@ -2,6 +2,8 @@
 Version: 2.0.15
   Bugfixes:
     - Fixed crash with Canal Excavator and other modded mining drills
+  Features:
+    - Added setting to allow Tiberium grow on Landfill (It already did most of the time but now you can force the option for all mod combinations or disable it)
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.14
   Bugfixes:
