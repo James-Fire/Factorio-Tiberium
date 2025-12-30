@@ -1845,22 +1845,11 @@ script.on_event(defines.events.on_object_destroyed, on_object_destroyed)
 function on_pre_mined(event)
 	local entity = event.entity
 	if entity and entity.fluidbox then
-		local greenTibOre = 0
 		local fluidContents = entity.get_fluid_contents()
-		local oreValueMulti = 10 / settings.startup["tiberium-value"].value
-		greenTibOre = greenTibOre + (fluidContents["tiberium-slurry"] or 0)
-		greenTibOre = greenTibOre + 2 * (fluidContents["molten-tiberium"] or 0)
-		greenTibOre = greenTibOre + 4 * (fluidContents["liquid-tiberium"] or 0)
-		greenTibOre = greenTibOre * oreValueMulti
-		if greenTibOre > 0 then
-			debugPrint("Created "..tostring(greenTibOre).." green Tiberium ore")
-			TiberiumSeedMissile(entity.surface, entity.position, greenTibOre)
-		end
 		local blueTibOre = (fluidContents["tiberium-slurry-blue"] or 0)
-		if blueTibOre > 0 then
-			debugPrint("Created "..tostring(blueTibOre).." blue Tiberium ore")
-			TiberiumSeedMissile(entity.surface, entity.position, blueTibOre, "tiberium-ore-blue")
-		end
+		local greenTibOre = (fluidContents["tiberium-slurry"] or 0) + 2 * (fluidContents["molten-tiberium"] or 0) + 4 * (fluidContents["liquid-tiberium"] or 0)
+		local oreValueMulti = 10 / settings.startup["tiberium-value"].value
+		greenTibOre = greenTibOre * oreValueMulti
 		if greenTibOre > 0 or blueTibOre > 0 then
 			if event.player_index then
 				game.players[event.player_index].unlock_achievement("tiberium-spill")
@@ -1870,6 +1859,15 @@ function on_pre_mined(event)
 						player.unlock_achievement("tiberium-spill")
 					end
 				end
+			end
+			entity.destructible = false
+			if greenTibOre > 0 then
+				debugPrint("Created "..tostring(greenTibOre).." green Tiberium ore")
+				TiberiumSeedMissile(entity.surface, entity.position, greenTibOre)
+			end
+			if blueTibOre > 0 then
+				debugPrint("Created "..tostring(blueTibOre).." blue Tiberium ore")
+				TiberiumSeedMissile(entity.surface, entity.position, blueTibOre, "tiberium-ore-blue")
 			end
 		end
 	end
