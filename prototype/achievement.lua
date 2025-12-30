@@ -33,6 +33,12 @@ data:extend{
 	},
 	{
 		type = "achievement",
+		name = "tiberium-blue-spawn",
+		icon = tiberiumInternalName.."/graphics/technology/tiberium-tech.png",
+		icon_size = 128
+	},
+	{
+		type = "achievement",
 		name = "tiberium-seed-node",
 		icon = tiberiumInternalName.."/graphics/technology/tiberium-tech.png",
 		icon_size = 128

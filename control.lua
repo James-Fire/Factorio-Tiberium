@@ -811,6 +811,7 @@ function CreateNode(surface, position, displayError)
 		end
 		surface.destroy_decoratives{area = area}
 		-- Actual node creation
+		--Testing performance
 		surface.create_entity{name = "tibGrowthNode", position = position, amount = 15000, raise_built = true}
 	end
 end
@@ -845,8 +846,7 @@ function TiberiumSeedMissile(surface, position, amount, oreName, ignoreNode)
 	local center = {x = math.floor(position.x) + 0.5, y = math.floor(position.y) + 0.5}
 	local oreEntity = surface.find_entity(oreName, center)
 	if oreEntity and (oreEntity.amount >= TiberiumMaxPerTile) then
-		CreateNode(surface, center, true)
-		if amount == 4 * TiberiumMaxPerTile then
+		local success = CreateNode(surface, center, true)
 			for _, player in pairs(game.connected_players) do
 				if player.valid then
 					player.unlock_achievement("tiberium-seed-node")
@@ -894,9 +894,11 @@ end
 script.on_event(defines.events.on_script_trigger_effect, function(event)
 	--Liquid Seed trigger
 	if event.effect_id == "seed-launch" then
-		TiberiumSeedMissile(game.surfaces[event.surface_index], event.target_position, 4 * TiberiumMaxPerTile)
+		TiberiumSeedMissile(game.surfaces[event.surface_index], event.target_position, 4.1 * TiberiumMaxPerTile)
+		game.print(event.source_entity or "source_entity missing")
+		game.print(event.cause_entity or "cause_entity missing")
 	elseif event.effect_id == "seed-launch-blue" then
-		TiberiumSeedMissile(game.surfaces[event.surface_index], event.target_position, 4 * TiberiumMaxPerTile, "tiberium-ore-blue")
+		TiberiumSeedMissile(game.surfaces[event.surface_index], event.target_position, 4.1 * TiberiumMaxPerTile, "tiberium-ore-blue")
 	elseif event.effect_id == "ore-destruction-sonic-emitter" then
 		TiberiumDestructionMissile(game.surfaces[event.surface_index], event.target_position, 1.5, {"tiberium-ore", "tiberium-ore-blue"})
 	elseif event.effect_id == "ore-destruction-blue" then
