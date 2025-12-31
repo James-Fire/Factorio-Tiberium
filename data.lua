@@ -88,3 +88,5 @@ if mods["any-planet-start"] and APS and (common.whichPlanet == "tiber" or common
 	APS.add_planet{name = "tiber", filename = tiberiumInternalName.."/prototype/planet.lua", technology = "planet-discovery-tiber"}
 	if common.whichPlanet == "tiber-start" then settings.startup["aps-planet"].value = "tiber" end
 end
+
+if mods["canal-excavator"] then require("prototype/compatibility/canal-excavator") end
