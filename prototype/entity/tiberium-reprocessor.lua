@@ -71,5 +71,6 @@ data:extend{
 		energy_usage = "1MW",
 		module_slots = 4,
 		allowed_effects = {"consumption", "speed", "productivity", "pollution"},
+		cant_insert_at_source_message_key = "tiberium-strings.reprocessor-input-error",
 	}
 }

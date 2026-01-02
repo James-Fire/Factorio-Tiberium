@@ -4,7 +4,8 @@ Version: 2.0.15
     - Fixed crash with Canal Excavator and other modded mining drills
     - Fixed crash when desconstructing structures containing multiple types of Tiberium
     - Fixed the deconstructed structure being damaged by it's own Tiberium spill
-    - Fixed Blue Tiberium spawning event sometimes unlocking the wrong achievement 
+    - Fixed Blue Tiberium spawning event sometimes unlocking the wrong achievement
+    - Fixed error messages from Tiberium Reprocessor and Growth Accelerator referencing smelting
   Features:
     - Added setting to allow Tiberium grow on Landfill (It already did most of the time but now you can force the option for all mod combinations or disable it)
     - Added new achievement for Blue Tiberium spawning
