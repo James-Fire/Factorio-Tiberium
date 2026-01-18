@@ -1,5 +1,6 @@
 flib = require("__flib__.data-util")
 flib_table = require("__flib__.table")
+flib_locale = require("__flib__.locale")
 common = require("prototype.common")
 
 require("scripts.compatibility.bobsmods")
@@ -389,4 +390,47 @@ for labName, labData in pairs(data.raw.lab) do
 		end
 	end
 	if addTib then table.insert(data.raw.lab[labName].inputs, "tiberium-science") end
+end
+
+-- Add sludge recipes for modded stone recipes
+local sludgeRecipeCounter = 0
+for name, recipe in pairs(data.raw.recipe) do
+	if string.sub(name, 1, 9) ~= "tiberium-" and 
+			(recipe.category == "crafting" or recipe.category == "smelting" or recipe.category == "kr-crushing" or not recipe.category) then
+		local ingredients = common.recipeIngredientsTable(name)
+		local results = common.recipeResultsTable(name)
+		if flib_table.size(ingredients) == 1 and ingredients["stone"] and flib_table.size(results) == 1 then
+			local resultName = next(results) or ""
+			if resultName ~= "landfill" and resultName ~= "stone-brick" and resultName ~= "concrete" then
+				sludgeRecipeCounter = sludgeRecipeCounter + 1
+				local sludgeRecipeName = "tiberium-sludge"..sludgeRecipeCounter.."-to-"..name
+				local ingredientAmount = ingredients["stone"]/math.min(ingredients["stone"], results[resultName])
+				local resultAmount = 2*results[resultName]/math.min(ingredients["stone"], results[resultName])
+				data:extend{
+					{
+						type = "recipe",
+						name = sludgeRecipeName,
+						localised_name = data.raw.fluid[resultName] and {"fluid-name."..resultName} or flib_locale.of("item", resultName),
+						category = "crafting-with-fluid",
+						energy_required = ingredientAmount*(recipe.energy_required or 1)/(ingredients["stone"] or 1),
+						ingredients = {
+							{type = "fluid", name = "tiberium-sludge", amount = ingredientAmount}
+						},
+						results = {},
+						main_result = resultName,
+						icon = util.copy(recipe.icon),
+						icon_size = util.copy(recipe.icon_size),
+						icons = util.copy(recipe.icons),
+						subgroup = "a-direct",
+						allow_as_intermediate = false,
+						allow_decomposition = false,
+						always_show_made_in = true,
+						order = "x-"..sludgeRecipeCounter
+					}
+				}
+				common.technology.addRecipeUnlock("tiberium-sludge-processing", sludgeRecipeName)
+				common.recipe.addResult(sludgeRecipeName, resultName, math.ceil(resultAmount))
+			end
+		end
+	end
 end

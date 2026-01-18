@@ -483,8 +483,6 @@ data:extend{
 				shift = { 6, -6 }
 			},
 		},
-		icon = tiberiumInternalName .. "/graphics/icons/tiberium-sludge-to-stone-brick.png",
-		icon_size = 32,
 		subgroup = "a-direct",
 		allow_as_intermediate = false,
 		allow_decomposition = false,

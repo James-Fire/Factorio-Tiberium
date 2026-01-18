@@ -383,7 +383,7 @@ end
 ---@param recipeName data.RecipeID
 ---@param resultName data.ItemID|data.FluidID
 ---@param resultAmount int
----@param resultType "item"|"fluid"
+---@param resultType? "item"|"fluid"
 common.recipe.addResult = function(recipeName, resultName, resultAmount, resultType)
 	if not data.raw["recipe"][recipeName] then return end
 
@@ -397,6 +397,9 @@ common.recipe.addResult = function(recipeName, resultName, resultAmount, resultT
 			end
 		end
 		if not alreadyPresent then
+			if not resultType then
+				resultType = data.raw.fluid[resultName] and "fluid" or "item"
+			end
 			table.insert(data.raw["recipe"][recipeName].results, {
 				["type"] = resultType,
 				["name"] = resultName,

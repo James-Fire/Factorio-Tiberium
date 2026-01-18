@@ -9,6 +9,7 @@ Version: 2.0.15
   Features:
     - Added setting to allow Tiberium grow on Landfill (It already did most of the time but now you can force the option for all mod combinations or disable it)
     - Added new achievement for Blue Tiberium spawning
+    - Added automatic recipes for turning Tiberium Sludge into modded Stone products (e.g. sand in Krastorio 2)
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.14
   Bugfixes:
