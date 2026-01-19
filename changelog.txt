@@ -8,7 +8,7 @@ Version: 2.0.15
     - Fixed error messages from Tiberium Reprocessor and Growth Accelerator referencing smelting
   Features:
     - Added setting to allow Tiberium grow on Landfill (It already did most of the time but now you can force the option for all mod combinations or disable it)
-    - Added new achievement for Blue Tiberium spawning
+    - Added 4 new achievements
     - Added automatic recipes for turning Tiberium Sludge into modded Stone products (e.g. sand in Krastorio 2)
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.14

@@ -497,6 +497,14 @@ interface.add_tiberium_immunity_prototype = function(prototype_name) if prototyp
 
 remote.add_interface("Tiberium", interface)
 
+function everyoneGetsAchievement(achievementName)
+	for _, player in pairs(game.connected_players) do
+		if player.valid then
+			player.unlock_achievement(achievementName)
+		end
+	end
+end
+
 ---Determine probability for green tiberium ore to turn blue based on settings and evo factor
 ---@param evoFactor double
 ---@return double Probability 
@@ -532,6 +540,7 @@ function AddOre(surface, position, amount, oreName, cascaded)
 						force.recipes["tiberium-unlock-blue-filter"].enabled = true  -- Hidden recipe to add Blue Tiberium to filter selections
 					end
 				end
+				everyoneGetsAchievement("tiberium-blue-spawn")
 				return nil -- We'll just say that this event can't spawn
 			end
 		elseif surface.count_entities_filtered{area = areaAroundPosition(position, 1), name = "tiberium-ore-blue"} > 0 and
@@ -694,6 +703,7 @@ function PlaceOre(node, howMany)
 		-- Divide by tibPerformanceMultiplier to keep ore per credit constant
 		local extraAcceleratorOre = math.floor(accelerator.products_finished / storage.tibPerformanceMultiplier)
 		if extraAcceleratorOre > 0 then
+			everyoneGetsAchievement("tiberium-use-growth-accelerator")
 			howMany = howMany + extraAcceleratorOre
 			for _, player in pairs(game.connected_players) do
 				if player.surface == surface then
@@ -762,6 +772,7 @@ end
 ---@param surface LuaSurface
 ---@param position MapPosition
 ---@param displayError boolean?
+---@return boolean success
 function CreateNode(surface, position, displayError)
 	-- Enforce minimum distance between nodes
 	if surface.count_entities_filtered{position = position, radius = TiberiumRadius * 0.8, name = tiberiumNodeNames} > 0 then
@@ -778,7 +789,7 @@ function CreateNode(surface, position, displayError)
 				end
 			end
 		end
-		return
+		return false
 	end
 
 	-- Avoid overlapping with other nodes
@@ -792,7 +803,7 @@ function CreateNode(surface, position, displayError)
 				break
 			end
 		end
-		if blocked then return end
+		if blocked then return false end
 
 		-- Clear other resources
 		for _, entity in pairs(surface.find_entities_filtered{area = area, type = {"resource", "tree"}}) do
@@ -814,6 +825,7 @@ function CreateNode(surface, position, displayError)
 		--Testing performance
 		surface.create_entity{name = "tibGrowthNode", position = position, amount = 15000, raise_built = true}
 	end
+	return true
 end
 
 ---Create a circle of tiberium ore
@@ -847,11 +859,8 @@ function TiberiumSeedMissile(surface, position, amount, oreName, ignoreNode)
 	local oreEntity = surface.find_entity(oreName, center)
 	if oreEntity and (oreEntity.amount >= TiberiumMaxPerTile) then
 		local success = CreateNode(surface, center, true)
-			for _, player in pairs(game.connected_players) do
-				if player.valid then
-					player.unlock_achievement("tiberium-seed-node")
-				end
-			end
+		if success and (amount == 4.1 * TiberiumMaxPerTile) then
+			everyoneGetsAchievement("tiberium-seed-node")
 		end
 	end
 end
@@ -895,8 +904,6 @@ script.on_event(defines.events.on_script_trigger_effect, function(event)
 	--Liquid Seed trigger
 	if event.effect_id == "seed-launch" then
 		TiberiumSeedMissile(game.surfaces[event.surface_index], event.target_position, 4.1 * TiberiumMaxPerTile)
-		game.print(event.source_entity or "source_entity missing")
-		game.print(event.cause_entity or "cause_entity missing")
 	elseif event.effect_id == "seed-launch-blue" then
 		TiberiumSeedMissile(game.surfaces[event.surface_index], event.target_position, 4.1 * TiberiumMaxPerTile, "tiberium-ore-blue")
 	elseif event.effect_id == "ore-destruction-sonic-emitter" then
@@ -1856,11 +1863,7 @@ function on_pre_mined(event)
 			if event.player_index then
 				game.players[event.player_index].unlock_achievement("tiberium-spill")
 			else
-				for _, player in pairs(game.connected_players) do
-					if player.valid then
-						player.unlock_achievement("tiberium-spill")
-					end
-				end
+				everyoneGetsAchievement("tiberium-spill")
 			end
 			entity.destructible = false
 			if greenTibOre > 0 then

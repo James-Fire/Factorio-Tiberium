@@ -44,10 +44,32 @@ data:extend{
 		icon_size = 128
 	},
 	{
+		type = "produce-achievement",
+		name = "tiberium-substrate",
+		icon = tiberiumInternalName.."/graphics/technology/tiberium-tech.png",
+		icon_size = 128,
+		amount = 1,
+		limited_to_one_game = true,
+		item_product = "tiberium-growth-credit"
+	},
+	{
+		type = "achievement",
+		name = "tiberium-use-growth-accelerator",
+		icon = tiberiumInternalName.."/graphics/technology/tiberium-tech.png",
+		icon_size = 128
+	},
+	{
 		type = "achievement",
 		name = "tiberium-spill",
 		icon = tiberiumInternalName.."/graphics/technology/tiberium-tech.png",
 		icon_size = 128
+	},
+	{
+		type = "use-entity-in-energy-production-achievement",
+		name = "tiberium-power-plant",
+		icon = tiberiumInternalName.."/graphics/technology/tiberium-tech.png",
+		icon_size = 128,
+		entity = "tiberium-power-plant"
 	},
 	{
 		type = "achievement",
