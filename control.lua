@@ -361,6 +361,12 @@ script.on_configuration_changed(function(data)
 					or (settings.startup["tiberium-on-"..name] and settings.startup["tiberium-on-"..name].value)
 					or (not settings.startup["tiberium-on-"..name] and settings.startup["tiberium-on-all-other-planets"].value)) then
 				local map_gen_settings = planet.surface.map_gen_settings  --[[@as MapGenSettings]]
+				if not map_gen_settings.autoplace_settings.entity then
+					map_gen_settings.autoplace_settings.entity = {}
+				end
+				if not map_gen_settings.autoplace_settings.entity.settings then
+					map_gen_settings.autoplace_settings.entity.settings = {}
+				end
 				if map_gen_settings.autoplace_settings.entity.settings["tibGrowthNode"] == nil then
 					---@diagnostic disable-next-line: missing-fields
 					map_gen_settings.autoplace_controls[script.active_mods["space-age"] and name.."_tibGrowthNode" or "tibGrowthNode"] = {}
