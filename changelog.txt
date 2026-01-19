@@ -6,6 +6,7 @@ Version: 2.0.15
     - Fixed the deconstructed structure being damaged by it's own Tiberium spill
     - Fixed Blue Tiberium spawning event sometimes unlocking the wrong achievement
     - Fixed error messages from Tiberium Reprocessor and Growth Accelerator referencing smelting
+    - Fixed Li-Quarry startup crash
   Features:
     - Added setting to allow Tiberium grow on Landfill (It already did most of the time but now you can force the option for all mod combinations or disable it)
     - Added 4 new achievements

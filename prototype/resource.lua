@@ -201,6 +201,8 @@ data:extend{
 		type = "resource",
 		name = "tibGrowthNode",
 		icons = common.blankIcons,
+		icon = "__core__/graphics/empty.png",
+		icon_size = 1,
 		flags = {"placeable-neutral"},
 		category = "advanced-solid-tiberium",
 		order="a-b-a",
