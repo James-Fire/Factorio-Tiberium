@@ -8,6 +8,7 @@ Version: 2.0.15
     - Fixed error messages from Tiberium Reprocessor and Growth Accelerator referencing smelting
     - Fixed Li-Quarry startup crash
     - Fixed crash when adding mod to existing save that contained surfaces without autoplace_settings
+    - Fixed players not being damaged by quality Tiberium Ores in their inventory
   Features:
     - Added setting to allow Tiberium grow on Landfill (It already did most of the time but now you can force the option for all mod combinations or disable it)
     - Added 4 new achievements

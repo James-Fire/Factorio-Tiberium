@@ -1342,7 +1342,7 @@ script.on_nth_tick(20, function(event) --Player damage 3 times per second
 			for _, inventory in pairs({player.get_inventory(defines.inventory.character_main), player.get_inventory(defines.inventory.character_trash)}) do
 				if inventory and inventory.valid then
 					for _, dangerousItem in pairs(storage.tiberiumProducts) do
-						damagingItems = damagingItems + inventory.get_item_count(dangerousItem)
+						damagingItems = damagingItems + inventory.get_item_count_filtered({name = dangerousItem})
 					end
 				end
 			end
