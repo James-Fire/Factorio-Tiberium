@@ -9,6 +9,7 @@ Version: 2.0.15
     - Fixed Li-Quarry startup crash
     - Fixed crash when adding mod to existing save that contained surfaces without autoplace_settings
     - Fixed players not being damaged by quality Tiberium Ores in their inventory
+    - Fixed Tiberium Advanced Start setting sometimes unlocking too much of the tech tree
   Features:
     - Added setting to allow Tiberium grow on Landfill (It already did most of the time but now you can force the option for all mod combinations or disable it)
     - Added 4 new achievements

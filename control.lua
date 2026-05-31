@@ -2123,15 +2123,18 @@ script.on_event(defines.events.on_player_created, function(event)
 				player.insert{name = name, count = count}
 			end
 		end
-		if burnerTier then
-			UnlockTechnologyAndPrereqs(player.force --[[@as LuaForce]], "tiberium-ore-centrifuging")
-			UnlockRecipePrereqs(player.force --[[@as LuaForce]], "tiberium-centrifuge-0")
-		else
-			UnlockTechnologyAndPrereqs(player.force --[[@as LuaForce]], "tiberium-mechanical-research")
-			UnlockTechnologyAndPrereqs(player.force --[[@as LuaForce]], "tiberium-slurry-centrifuging")
-		end
-		if easyMode then
-			UnlockTechnologyAndPrereqs(player.force --[[@as LuaForce]], "tiberium-easy-transmutation-tech")
+		if not prototypes.technology["planet-discovery-tiber"]
+				or (prototypes.technology["planet-discovery-tiber"] and prototypes.technology["planet-discovery-tiber"].hidden) then -- Only unlock prereqs if they don't unlock the entire Nauvis tree
+			if burnerTier then
+				player.force.technologies["tiberium-ore-centrifuging"].research_recursive()
+				UnlockRecipePrereqs(player.force --[[@as LuaForce]], "tiberium-centrifuge-0")
+			else
+				player.force.technologies["tiberium-mechanical-research"].research_recursive()
+				player.force.technologies["tiberium-slurry-centrifuging"].research_recursive()
+			end
+			if easyMode then
+				player.force.technologies["tiberium-easy-transmutation-tech"].research_recursive()
+			end
 		end
 	end
 	if whichPlanet == "tiber-start" and not script.active_mods["any-planet-start"] then
@@ -2199,18 +2202,6 @@ script.on_event(defines.events.on_player_created, function(event)
 		player.print({"tiberium-strings.informatron-reminder"})
 	end
 end)
-
----Recursively unlock tech and prerequisites for tech
----@param force LuaForce
----@param techName string TechnologyID
-function UnlockTechnologyAndPrereqs(force, techName)
-	if not force.technologies[techName].researched then
-		force.technologies[techName].researched = true
-		for techPrereq in pairs(prototypes.technology[techName].prerequisites) do
-			UnlockTechnologyAndPrereqs(force, techPrereq)
-		end
-	end
-end
 
 ---Recursively generate table of all tech prerequisites 
 ---@param force LuaForce
@@ -2281,7 +2272,7 @@ function UnlockRecipePrereqs(force, targetRecipeName)
 			end
 		end
 		if unlockTech then
-			UnlockTechnologyAndPrereqs(force, unlockTech)
+			force.technologies[unlockTech].research_recursive()
 		end
 		debugPrint("Unlocking "..tostring(best).." technologies to allow access to "..tostring(ingredient))
 	end
