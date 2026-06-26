@@ -274,8 +274,8 @@ end
 
 ---Scale how often Tiberium Nodes get checked for growth based on settings and number of nodes present
 function updateGrowthInterval()
-	if performanceMode and #storage.tibGrowthNodeList and #storage.tibGrowthNodeList > 50 then
-		storage.tibPerformanceMultiplier = #storage.tibGrowthNodeList / 50
+	if performanceMode and #storage.tibGrowthNodeList and #storage.tibGrowthNodeList > 10 then
+		storage.tibPerformanceMultiplier = #storage.tibGrowthNodeList / 10
 	end
 	local performanceInterval = math.max(storage.tibPerformanceMultiplier / 10, 1)  -- For performance multis over 10, space out the growth ticks more
 	storage.intervalBetweenNodeUpdates = math.max(math.floor(18000 * performanceInterval / (#storage.tibGrowthNodeList or 1) / storage.tibFastForward), storage.minUpdateInterval)
@@ -405,6 +405,7 @@ script.on_event(defines.events.on_runtime_mod_setting_changed, function(data)
 		environmentalDamage = settings.global["tiberium-enemies-take-environmental-damage"].value
 	elseif data.setting == "tiberium-auto-scale-performance" then
 		performanceMode = settings.global["tiberium-auto-scale-performance"].value
+		updateGrowthInterval()
 	elseif data.setting == "tiberium-blue-target-evo" then
 		BlueTargetEvo = settings.global["tiberium-blue-target-evo"].value
 	elseif data.setting == "tiberium-debug-text" then
@@ -564,6 +565,7 @@ function AddOre(surface, position, amount, oreName, cascaded)
 	if oreEntity and (oreEntity.name == oreName or (oreEntity.name == "tiberium-ore-blue" and not overrideOre)) then
 		-- Grow existing tib except for the case where it needs to be replaced instead of growing it
 		if oreEntity.amount < TiberiumMaxPerTile then --Don't reduce overgrown ore patch amounts
+			--Testing performance
 			oreEntity.amount = math.min(oreEntity.amount + growthRate, TiberiumMaxPerTile)
 		end
 	elseif surface.count_entities_filtered{area = area, name = tiberiumNodeNames} > 0 then
@@ -591,6 +593,7 @@ function AddOre(surface, position, amount, oreName, cascaded)
 		if TiberiumSpreadNodes and (surface.count_entities_filtered{area = area, type = "tree"} > 0) and (math.random() < 0.05) then
 			CreateNode(surface, position)  -- Rarely turn trees into blossom trees
 		else
+			--Testing performance
 			oreEntity = surface.create_entity{name = oreName, amount = growthRate, position = position, enable_cliff_removal = false}
 			if storage.tiberiumTerrain and surface.platform == nil then
 				surface.set_tiles({{name = storage.tiberiumTerrain, position = position}}, true, false)
@@ -731,7 +734,7 @@ function PlaceOre(node, howMany)
 	if growthRate > TiberiumMaxPerTile then
 		howMany = math.floor(howMany * growthRate / TiberiumMaxPerTile)
 	end
-
+	--TODO scan for several nearby growth nodes and mark this node dormant?
 	for n = 1, howMany do
 		--Use polar coordinates to find a random angle and radius
 		local angle = math.random() * 2 * math.pi
@@ -1730,6 +1733,7 @@ function entity_removed_cleanup(entity, tick, position)
 	position = position or entity.position  --[[@as MapPosition]]
 	local force = entity.force  --[[@as LuaForce]]
 	if (entity.type == "mining-drill") then
+		--TODO add some aoe search to ping nodes to wakeup from self-growth slumber
 		for i, drill in pairs(storage.tibDrills) do
 			if flib_table.deep_compare(drill.position, position) and (drill.name == entity.name) then
 				table.remove(storage.tibDrills, i)

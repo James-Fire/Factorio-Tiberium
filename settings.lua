@@ -288,7 +288,7 @@ data:extend{--Runtime settings
 		type = "bool-setting",
 		name = "tiberium-auto-scale-performance",
 		setting_type = "runtime-global",
-		default_value = false,
+		default_value = true,
 		order = "a[growth]2",
 	},
 	{

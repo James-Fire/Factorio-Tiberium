@@ -10,6 +10,9 @@ Version: 2.0.15
     - Fixed crash when adding mod to existing save that contained surfaces without autoplace_settings
     - Fixed players not being damaged by quality Tiberium Ores in their inventory
     - Fixed Tiberium Advanced Start setting sometimes unlocking too much of the tech tree
+  Changes:
+    - Performance mode is now opt-out instead of opt-in. This is a major UPS improvement for mid- to late-game maps and multiplayer maps
+    - Performance mode now kicks in earlier and is more aggressive about simplifying growth calculations, reducing calculation time by ~70% compared to the previous version
   Features:
     - Added setting to allow Tiberium grow on Landfill (It already did most of the time but now you can force the option for all mod combinations or disable it)
     - Added 4 new achievements
