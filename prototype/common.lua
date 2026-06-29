@@ -1,4 +1,5 @@
 flib_table = require("__flib__.table")
+flib_array = require("__flib__.array")
 
 local common = {}
 common.technology = {}
@@ -56,6 +57,15 @@ common.tibCraftingBlueTint = {
 }  --[[@as data.RecipeTints]]
 
 common.pollutionMulti = settings.startup["tiberium-pollution-multiplier"].value  --[[@as double]]
+
+---Wrapper for flib_array.contains so we don't have to confirm type each time we call it
+---@param array table
+---@param element string
+---@return boolean
+common.contains = function(array, element)
+	if type(array) ~= "table" then return false end
+	return flib_array.contains(array, element)
+end
 
 ---@param scaling number Why am I multiplying by pollutionMulti and then dividing by 4
 ---@param base? number Default pollution amount or 1
@@ -128,13 +138,13 @@ end
 ---@param targetSize? int What size the top layer should be scaled to
 ---@return data.IconData[] Icons Table to be used with prototypes.icons
 common.layeredIcons = function(baseImg, baseSize, layerImg, layerSize, corner, targetSize)
-	baseSize = baseSize or defines.default_icon_size  --[[@as int]]
-	layerSize = layerSize or defines.default_icon_size  --[[@as int]]
-	targetSize = targetSize or math.floor(defines.default_icon_size * 3 / 8)  --[[@as int]]
+	baseSize = baseSize or defines.constant.default_icon_size  --[[@as int]]
+	layerSize = layerSize or defines.constant.default_icon_size  --[[@as int]]
+	targetSize = targetSize or math.floor(defines.constant.default_icon_size * 3 / 8)  --[[@as int]]
 	local base = {
 		icon = baseImg,
 		icon_size = baseSize,
-		scale = defines.default_icon_size / baseSize,
+		scale = defines.constant.default_icon_size / baseSize,
 	}
 	local corners = {ne = {x = 1, y = -1}, se = {x = 1, y = 1}, sw = {x = -1, y = 1}, nw = {x = -1, y = -1}}
 	local offset = {}
@@ -217,7 +227,7 @@ common.itemPrototypesFromTable = function(prototypeTable)
 				local max = tonumber(item.amount_max) or 1
 				amount = (min + math.max(min, max)) / 2
 			end
-			local probability = tonumber(item.probability)
+			local probability = tonumber(item.independent_probability)
 			if probability then
 				probability = math.max(0, math.min(1, probability))  -- Clamp to actual 0 to 1 range
 				amount = amount * probability
@@ -450,10 +460,25 @@ common.recipe.setResultProbability = function(recipeName, resultName, resultProb
 	if data.raw["recipe"][recipeName].results then
 		for _, result in pairs(data.raw["recipe"][recipeName].results) do
 			if result.name == resultName then
-				result.probability = resultProbability
+				result.independent_probability = resultProbability
 				break
 			end
 		end
+	end
+end
+
+---Prototype script to set or remove result probability
+---@param recipeName data.RecipeID
+---@param category data.RecipeCategoryID
+common.recipe.addCategory = function(recipeName, category)
+	if not data.raw["recipe"][recipeName] then return end
+
+	if data.raw["recipe"][recipeName].categories then
+		if not flib_array.contains(data.raw["recipe"][recipeName].categories, category) then
+			table.insert(data.raw["recipe"][recipeName].categories, category)
+		end
+	else
+		data.raw["recipe"][recipeName].categories = {category}
 	end
 end
 

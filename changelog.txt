@@ -1,4 +1,8 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.16
+  Features:
+    - Added support for Factorio major version 2.1, these changes are not backwards compatible with Factorio 2.0 or earlier, so stick to 2.0.15 if you are still using Factorio 2.0
+---------------------------------------------------------------------------------------------------
 Version: 2.0.15
   Bugfixes:
     - Fixed crash with Canal Excavator and other modded mining drills

@@ -59,7 +59,7 @@ if common.tierZero then
 			type = "recipe",
 			name = "tiberium-ore-centrifuging",
 			localised_name = {"recipe-name.tiberium-centrifuging", {"item-name.tiberium-ore"}},
-			category = "tiberium-centrifuge-0",
+			categories = {"tiberium-centrifuge-0"},
 			subgroup = "a-centrifuging",
 			energy_required = 4,
 			enabled = false,
@@ -79,7 +79,7 @@ if common.tierZero then
 			type = "recipe",
 			name = "tiberium-ore-sludge-centrifuging",
 			--localised_name set by DynamicOreRecipes
-			category = "tiberium-centrifuge-0",
+			categories = {"tiberium-centrifuge-0"},
 			subgroup = "a-centrifuging",
 			energy_required = 4,
 			enabled = false,

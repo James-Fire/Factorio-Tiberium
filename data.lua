@@ -59,6 +59,7 @@ end
 
 flib = require("__flib__.data-util")
 flib_table = require("__flib__.table")
+flib_array = require("__flib__.array")
 common = require("prototype.common")
 
 require("prototype.item-groups")

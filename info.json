@@ -7,8 +7,8 @@
 	"contact": "",
 	"homepage": "https://discord.gg/freXKz5",
 
-	"version": "2.0.15",
-	"factorio_version": "2.0",
+	"version": "2.1.16",
+	"factorio_version": "2.1",
 	"dependencies": [
 		"base",
 		"flib >= 0.15.0",

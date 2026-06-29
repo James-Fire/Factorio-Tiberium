@@ -292,7 +292,7 @@ function giantSetupFunction()
 	for labName, labData in pairs(data.raw.lab) do
 		if flib_table.find(labData.inputs or {}, "tiberium-science") and (labName ~= "creative-mod_creative-lab") then
 			for _, pack in pairs(labData.inputs or {}) do
-				if (pack ~= "tiberium-science") and data.raw.tool[pack] then
+				if (pack ~= "tiberium-science") and data.raw.item[pack] then
 					tibComboPacks[pack] = true
 				end
 			end
@@ -323,10 +323,10 @@ function giantSetupFunction()
 				resultIndex[result][recipe] = true
 			end
 			if data.raw.recipe[recipe] and not fakeRecipes[recipe] then
-				local category = data.raw.recipe[recipe].category
-				availableRecipes[recipe].category = category
-				if category or data.raw.recipe[recipe].subgroup then
-					availableRecipes[recipe].fullCategory = (category or "").."|"..(data.raw.recipe[recipe].subgroup or "")
+				local category = data.raw.recipe[recipe].categories or {"crafting"}
+				availableRecipes[recipe].category = category[1]
+				if category[1] or data.raw.recipe[recipe].subgroup then
+					availableRecipes[recipe].fullCategory = (category[1] or "").."|"..(data.raw.recipe[recipe].subgroup or "")
 				end
 			end
 		end
@@ -1360,7 +1360,7 @@ function addDirectRecipe(ore, easy)
 	local oreAmount = 64 / (oreMult[ore] or 1)
 	local addSeed = settings.startup["tiberium-direct-catalyst"].value
 	local itemOrFluid = data.raw.fluid[ore] and "fluid" or "item"
-	local surfaceRestriction = (data.raw[itemOrFluid][ore] and data.raw[itemOrFluid][ore].tiberium_surface) or (data.raw.tool[ore] and data.raw.tool[ore].tiberium_surface)
+	local surfaceRestriction = (data.raw[itemOrFluid][ore] and data.raw[itemOrFluid][ore].tiberium_surface) or (data.raw.tool and data.raw.tool[ore] and data.raw.tool[ore].tiberium_surface)
 	local tech = easy and "tiberium-easy-transmutation-tech" or data.raw.fluid[ore] and "tiberium-molten-centrifuging" or "tiberium-transmutation-tech"
 	local category = "chemistry" --data.raw.fluid[ore] and "chemistry" or "tiberium-transmutation"
 	local energy = 12
@@ -1379,7 +1379,7 @@ function addDirectRecipe(ore, easy)
 		enabled = false,
 		subgroup = subgroup,
 		always_show_made_in = true,
-		category = category,
+		categories = {category},
 		crafting_machine_tint = common.tibCraftingTint,
 		allow_as_intermediate = false,
 		allow_decomposition = false,
@@ -1480,7 +1480,7 @@ function addCreditRecipe(ore)
 		enabled = false,
 		subgroup = "a-growth-credits",
 		always_show_made_in = true,
-		category = "chemistry",
+		categories = {"chemistry"},
 		crafting_machine_tint = common.tibCraftingTint,
 		allow_decomposition = false,
 	}}
@@ -1496,7 +1496,7 @@ function addCreditRecipe(ore)
 			ingredients = {{type = "item", name = ore, amount = 1}},
 			results = {},
 			energy_required = energy / oreAmount,  -- Preserve the energy-per-input-ore from the other recipe
-			category = "tiberium-reprocessing",
+			categories = {"tiberium-reprocessing"},
 			crafting_machine_tint = common.tibCraftingTint,
 			allow_decomposition = false,
 			hide_from_player_crafting = true,

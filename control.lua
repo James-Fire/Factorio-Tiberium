@@ -29,7 +29,6 @@ storage = {}
 
 local crash_site = require("crash-site")
 local util = require("util")
-local migration = require("__flib__.migration")
 local flib_table = require("__flib__.table")
 require("scripts.CnC_Walls") --Note, to make SonicWalls work / be passable
 require("scripts.informatron.informatron_remote_interface")
@@ -488,10 +487,7 @@ function upgradingToVersion(data, modName, version)
 				(data["mod_changes"][otherModName] and data["mod_changes"][otherModName]["old_version"])
 		if not oldVersion then return false end
 		local newVersion = data["mod_changes"][modName]["new_version"]
-		oldVersion = migration.format_version(oldVersion, "%04d")
-		newVersion = migration.format_version(newVersion, "%04d")
-		version = migration.format_version(version, "%04d")
-		return (oldVersion < version) and (newVersion >= version)
+		return (helpers.compare_versions(oldVersion, version) == -1) and (helpers.compare_versions(newVersion, version) >= 0)  -- Ensure versions are valid
 	end
 	return false
 end
@@ -2253,7 +2249,7 @@ function UnlockRecipePrereqs(force, targetRecipeName)
 		for _, product in pairs(recipe.products) do
 			if ingredientTechs[product.name] then
 				-- I'm not bothering with checking all structures' crafting categories but this should work most of the time
-				if recipe.enabled and (recipe.category == "crafting" or recipe.category == "smelting") and not recipe.hidden then
+				if recipe.enabled and (common.contains(recipe.categories, "crafting") or common.contains(recipe.categories, "smelting")) and not recipe.hidden then
 					ingredientTechs[product.name] = nil
 				else
 					local tech = FindRecipeTech(force, recipeName)
@@ -2268,7 +2264,7 @@ function UnlockRecipePrereqs(force, targetRecipeName)
 		local best = math.huge
 		local unlockTech = nil
 		for _, tech in pairs(techs) do
-			local score = flib_table.size(TechPrereqList(force, tech))
+			local score = table_size(TechPrereqList(force, tech))
 			debugPrint(tech.." requires "..tostring(score).." prereqs to provide us with "..ingredient)
 			if score < best then
 				best = score

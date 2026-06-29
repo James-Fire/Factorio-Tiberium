@@ -60,8 +60,6 @@ prototypes["item"] = {
 	"tiberium-data-chemical",
 	"tiberium-data-nuclear",
 	"tiberium-data-EM",
-}
-prototypes["tool"] = {
 	"tiberium-science",
 }
 prototypes["assembling-machine"] = {

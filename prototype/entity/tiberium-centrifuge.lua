@@ -32,7 +32,7 @@ data:extend{
 		fluid_boxes = {
 			{
 				production_type = "output",
-				pipe_picture = assembler2pipepictures(),
+				pipe_picture = require("__base__.prototypes.entity.assembler-pictures").assembler2pipepictures,
 				pipe_covers = pipecoverspictures(),
 				base_area = 10,
 				base_level = 1,
@@ -45,7 +45,7 @@ data:extend{
 			},
 			{
 				production_type = "output",
-				pipe_picture = assembler2pipepictures(),
+				pipe_picture = require("__base__.prototypes.entity.assembler-pictures").assembler2pipepictures,
 				pipe_covers = pipecoverspictures(),
 				base_area = 10,
 				base_level = 1,
@@ -58,7 +58,7 @@ data:extend{
 			},
 			{
 				production_type = "output",
-				pipe_picture = assembler2pipepictures(),
+				pipe_picture = require("__base__.prototypes.entity.assembler-pictures").assembler2pipepictures,
 				pipe_covers = pipecoverspictures(),
 				base_area = 10,
 				base_level = 1,
@@ -71,7 +71,7 @@ data:extend{
 			},
 			{
 				production_type = "input",
-				pipe_picture = assembler2pipepictures(),
+				pipe_picture = require("__base__.prototypes.entity.assembler-pictures").assembler2pipepictures,
 				pipe_covers = pipecoverspictures(),
 				base_area = 10,
 				base_level = -1,

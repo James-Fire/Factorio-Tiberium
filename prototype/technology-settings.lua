@@ -55,7 +55,7 @@ end
 
 if settings.startup["tiberium-technology-triggers"].value then
 	data.raw.technology["tiberium-mechanical-research"].unit = nil
-	data.raw.technology["tiberium-mechanical-research"].research_trigger = {type = "mine-entity", entity = "tiberium-ore"}
+	data.raw.technology["tiberium-mechanical-research"].research_trigger = {type = "mine-entity", entities = {"tiberium-ore"}}
 
 	data.raw.technology["tiberium-slurry-centrifuging"].unit = nil
 	data.raw.technology["tiberium-slurry-centrifuging"].research_trigger = {type = "craft-fluid", fluid = "tiberium-slurry"}
@@ -68,7 +68,7 @@ if settings.startup["tiberium-technology-triggers"].value then
 
 	if common.tierZero and common.whichPlanet ~= "nauvis" then
 		data.raw.technology["tiberium-ore-centrifuging"].unit = nil
-		data.raw.technology["tiberium-ore-centrifuging"].research_trigger = {type = "mine-entity", entity = "tiberium-tiber-rock"}
+		data.raw.technology["tiberium-ore-centrifuging"].research_trigger = {type = "mine-entity", entities = {"tiberium-tiber-rock"}}
 	end
 end
 
