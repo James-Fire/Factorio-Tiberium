@@ -30,6 +30,7 @@ storage = {}
 local crash_site = require("crash-site")
 local util = require("util")
 local flib_table = require("__flib__.table")
+local flib_array = require("__flib__.array")
 require("scripts.CnC_Walls") --Note, to make SonicWalls work / be passable
 require("scripts.informatron.informatron_remote_interface")
 
@@ -60,6 +61,14 @@ local function debugPrint(message)
 	if debugText then
 		game.print(message or "")
 	end
+end
+---Wrapper for flib_array.contains so we don't have to confirm type each time we call it
+---@param array table
+---@param element string
+---@return boolean
+local function contains(array, element)
+	if type(array) ~= "table" then return false end
+	return flib_array.contains(array, element)
 end
 -- Starting items, if the option is ticked.
 local tiberium_start = {
@@ -2249,7 +2258,7 @@ function UnlockRecipePrereqs(force, targetRecipeName)
 		for _, product in pairs(recipe.products) do
 			if ingredientTechs[product.name] then
 				-- I'm not bothering with checking all structures' crafting categories but this should work most of the time
-				if recipe.enabled and (common.contains(recipe.categories, "crafting") or common.contains(recipe.categories, "smelting")) and not recipe.hidden then
+				if recipe.enabled and (contains(recipe.categories, "crafting") or contains(recipe.categories, "smelting")) and not recipe.hidden then
 					ingredientTechs[product.name] = nil
 				else
 					local tech = FindRecipeTech(force, recipeName)

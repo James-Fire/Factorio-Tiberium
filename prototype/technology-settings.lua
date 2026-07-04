@@ -171,7 +171,7 @@ end
 if common.tierZero and (common.whichPlanet == "pure-nauvis" or common.whichPlanet == "tiber-start") then
 	-- Do this for tiberium-only starts to make progression clearer
 	data.raw.technology["tiberium-ore-centrifuging"].unit = nil
-	data.raw.technology["tiberium-ore-centrifuging"].research_trigger = {type = "mine-entity", entity = "tiberium-tiber-rock"}
+	data.raw.technology["tiberium-ore-centrifuging"].research_trigger = {type = "mine-entity", entities = {"tiberium-tiber-rock"}}
 	common.technology.addPrerequisite("electronics", "tiberium-ore-centrifuging")
 	common.technology.addPrerequisite("steam-power", "tiberium-ore-centrifuging")
 end
