@@ -28,7 +28,7 @@ end
 if not openRefinery then
 	for _, recipe in pairs({"tiberium-molten-processing", "tiberium-advanced-molten-processing", "tiberium-liquid-processing", "tiberium-liquid-processing-hot"}) do
 		if data.raw.recipe[recipe] then
-			data.raw.recipe[recipe].category = "tiberium-centrifuge-1"
+			common.recipe.addCategory(recipe, "tiberium-centrifuge-1")
 			-- Rebalance from refinery to centrifuge to preserve power/pollution amounts
 			data.raw.recipe[recipe].emissions_multiplier = (data.raw.recipe[recipe].emissions_multiplier or 1) * 0.75
 			data.raw.recipe[recipe].energy_required = (data.raw.recipe[recipe].energy_required or 1) * 2
@@ -40,8 +40,7 @@ end
 -- Temporary bugfix for issue with LSlib issue #9
 for _, ingredient in pairs(data.raw.recipe["tiberium-liquid-processing-hot"].ingredients) do
 	if ingredient.name == "steam" then
-		ingredient.minimum_temperature = 500
-		ingredient.maximum_temperature = 1000
+		ingredient.temperature = 500
 	end
 end
 
@@ -51,7 +50,7 @@ require("scripts.compatibility.pumpmod")
 if mods["space-exploration"] and data.raw["recipe-category"]["space-crafting"] then
 	for _, ore in pairs({"beryllium-ore", "cryonite", "holmium-ore", "iridium-ore", "methane-ice", "naquium-ore", "vitamelange", "vulcanite", "water-ice"}) do
 		if data.raw.recipe["tiberium-transmutation-to-se-"..ore] then
-			data.raw.recipe["tiberium-transmutation-to-se-"..ore].category = "space-crafting"
+			common.recipe.addCategory("tiberium-transmutation-to-se-"..ore, "space-crafting")
 			common.recipe.addIngredient("tiberium-transmutation-to-se-"..ore, "tiberium-primed-reactant-blue", 1)
 		end
 	end

@@ -632,8 +632,10 @@ function allAvailableRecipes()
 							for product in pairs(common.recipeResultsTable(effect.recipe)) do
 								if tibComboPacks[product] then
 									local prereqPacks = packForTech(tech)
-									if not prereqPacks[product] then
-										tibComboPacks[product] = prereqPacks --save for later
+									if not prereqPacks[product] then  -- Wait for a better tech if the pack is required to unlock itself
+										if type(tibComboPacks[product]) == "boolean" or tableSize(prereqPacks) < tableSize(tibComboPacks[product]) then -- Choose the tech that requires fewest
+											tibComboPacks[product] = prereqPacks --save for later
+										end
 									end
 								end
 							end

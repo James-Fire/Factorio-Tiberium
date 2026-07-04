@@ -390,7 +390,7 @@ data:extend{
 		enabled = false,
 		ingredients = {
 			{type = "fluid", name = "molten-tiberium", amount = 16},
-			{type = "fluid", name = "steam", amount = 100, minimum_temperature = 500, maximum_temperature = 1000},
+			{type = "fluid", name = "steam", amount = 100, temperature = 500},
 		},
 		results = {
 			{type = "fluid", name = "liquid-tiberium", amount = 10},
@@ -570,7 +570,6 @@ data:extend{
 		allow_as_intermediate = false,
 		allow_decomposition = false,
 		always_show_made_in = true,
-		always_show_products = true,
 		order = "a[fluid-chemistry]-f[heavy-oil-cracking]"
 	},
 	{
@@ -590,7 +589,6 @@ data:extend{
 		allow_as_intermediate = false,
 		allow_decomposition = false,
 		always_show_made_in = true,
-		always_show_products = true,
 		order = "b[fluid-chemistry]-f[heavy-oil-cracking]"
 	},
 	{
@@ -610,7 +608,6 @@ data:extend{
 		allow_as_intermediate = false,
 		allow_decomposition = false,
 		always_show_made_in = true,
-		always_show_products = true,
 		order = "c[fluid-chemistry]-f[heavy-oil-cracking]"
 	},
 	{
@@ -630,7 +627,6 @@ data:extend{
 		allow_as_intermediate = false,
 		allow_decomposition = false,
 		always_show_made_in = true,
-		always_show_products = true,
 		order = "d"
 	},
 	{
@@ -650,7 +646,6 @@ data:extend{
 		allow_as_intermediate = false,
 		allow_decomposition = false,
 		always_show_made_in = true,
-		always_show_products = true,
 		order = "e"
 	},
 	{
@@ -670,7 +665,6 @@ data:extend{
 		allow_as_intermediate = false,
 		allow_decomposition = false,
 		always_show_made_in = true,
-		always_show_products = true,
 		order = "f"
 	},
 }
@@ -1455,14 +1449,14 @@ data:extend{
 }
 
 -- Silly easter egg
-if mods["quality"] and mods["space-age"] then
+if mods["recycler"] and mods["space-age"] then
 	local seeds = {}
 	for _, item in pairs(data.raw.item) do
 		if item.plant_result then
 			seeds[item.name] = ""
 		end
 	end
-	local recycling = require("__quality__.prototypes.recycling")
+	local recycling = require("__recycler__.recycling")
 	for _, recipeName in pairs({"tiberium-seed", "tiberium-seed-blue"}) do
 		data.raw["recipe"][recipeName].auto_recycle = false
 		local recipe = {
@@ -1470,7 +1464,7 @@ if mods["quality"] and mods["space-age"] then
 			name = recipeName.."-recycling",
 			localised_name = {"recipe-name.recycling", "item-name."..recipeName},
 			icon = nil,
-			---@diagnostic disable-next-line: undefined-global  -- This is a function from quality.prototypes.recycling from above
+			---@diagnostic disable-next-line: undefined-global  -- This is a function from recycler.recycling from above
 			icons = generate_recycling_recipe_icons_from_item(data.raw.ammo[recipeName]),
 			categories = {"recycling"},
 			subgroup = "a-items",

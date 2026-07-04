@@ -1,3 +1,9 @@
+local generatorAnimation = {
+	filename = tiberiumInternalName.."/graphics/entity/tiberium-power-plant/power-plant-256.png",
+	width = 256,
+	height = 256,
+	scale = 0.70,
+}
 data:extend{
 	{
 		type = "generator",
@@ -21,17 +27,11 @@ data:extend{
 			type = "electric",
 			usage_priority = "secondary-output",
 		},
-		horizontal_animation = {
-			filename = tiberiumInternalName.."/graphics/entity/tiberium-power-plant/power-plant-256.png",
-			width = 256,
-			height = 256,
-			scale = 0.70,
-		},
-		vertical_animation = {
-			filename = tiberiumInternalName.."/graphics/entity/tiberium-power-plant/power-plant-256.png",
-			width = 256,
-			height = 256,
-			scale = 0.70,
+		pictures = {
+			east  = {animation = generatorAnimation},
+			north = {animation = generatorAnimation},
+			south = {animation = generatorAnimation},
+			west  = {animation = generatorAnimation}
 		},
 		impact_category = "metal-large",
 		working_sound = {

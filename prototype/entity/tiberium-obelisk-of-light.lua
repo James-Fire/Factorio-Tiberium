@@ -13,6 +13,7 @@ data:extend{
 		rotation_speed = 0.01,
 		dying_explosion = "medium-explosion",
 		corpse = "laser-turret-remnants",
+		leave_attacking_if_shoot_fails = false,
 		folding_speed = 0.05,
 		energy_source = {
 			type = "electric",

@@ -2,6 +2,13 @@
 Version: 2.1.16
   Features:
     - Added support for Factorio major version 2.1, these changes are not backwards compatible with Factorio 2.0 or earlier, so stick to 2.0.15 if you are still using Factorio 2.0
+  Bugfixes:
+    - Fixed Obelisk of Light repeatedly playing attack sound while unpowered
+    - Fixed multiple recipes for a science pack rarely causing resources to be missing from tier 1 centrifuging recipes
+  Changes:
+    - Reduced Tiberium Centrifuge stack size from 20 to 10 to match the change to vanilla Centrifuges
+    - Reduced the volume of the power-down sound effect for Tiberium Radiation Absorption Generator
+    - Changed Informatron to be a recommended dependency instead of an optional dependency
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.15
   Bugfixes:

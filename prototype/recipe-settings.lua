@@ -72,7 +72,6 @@ if common.tierZero then
 			allow_as_intermediate = false,
 			allow_decomposition = false,
 			always_show_made_in = true,
-			always_show_products = true,
 			order = "a[fluid-chemistry]-f[heavy-oil-cracking]"
 		},
 		{
@@ -92,7 +91,6 @@ if common.tierZero then
 			allow_as_intermediate = false,
 			allow_decomposition = false,
 			always_show_made_in = true,
-			always_show_products = true,
 			order = "d"
 		},
 		{

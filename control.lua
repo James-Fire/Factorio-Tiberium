@@ -486,7 +486,7 @@ function upgradingToVersion(data, modName, version)
 		local oldVersion = data["mod_changes"][modName]["old_version"] or
 				(data["mod_changes"][otherModName] and data["mod_changes"][otherModName]["old_version"])
 		if not oldVersion then return false end
-		local newVersion = data["mod_changes"][modName]["new_version"]
+		local newVersion = data["mod_changes"][modName]["new_version"]  --[[@as string]]
 		return (helpers.compare_versions(oldVersion, version) == -1) and (helpers.compare_versions(newVersion, version) >= 0)  -- Ensure versions are valid
 	end
 	return false
@@ -682,7 +682,7 @@ end
 ---@param howMany any
 function PlaceOre(node, howMany)
 	if not node.valid then return end
-	local timer = debugText and game.create_profiler() or 0
+	local timer = debugText and helpers.create_profiler() or 0
 
 	howMany = howMany and math.max(math.floor(howMany / storage.tibPerformanceMultiplier), 1) or 1
 	local surface = node.surface
@@ -978,7 +978,7 @@ commands.add_command("tibRebuildLists",
 commands.add_command("tibGrowAllNodes",
 	"Forces multiple immediate Tiberium ore growth cycles at every node",
 	function(invocationdata)
-		local timer = game.create_profiler()
+		local timer = helpers.create_profiler()
 		local placements = tonumber(invocationdata["parameter"]) or math.ceil(300 / storage.tibPerformanceMultiplier)
 		game.player.print("There are " .. #storage.tibGrowthNodeList .. " nodes in the list")
 		for i = 1, #storage.tibGrowthNodeList, 1 do
@@ -1026,7 +1026,7 @@ commands.add_command("tibDeleteOre2",
 	"Deletes all the Tiberium ore on the map. May take a long time on maps with large amounts of Tiberium. Parameter is the max number of entity updates (10,000 by default)",
 	function(invocationdata)
 		local oreLimit = tonumber(invocationdata["parameter"]) or 10000
-		local timer = game.create_profiler()
+		local timer = helpers.create_profiler()
 		for _, surface in pairs(game.surfaces) do
 			-- Also destroy nodes if they aren't on valid terrain
 			for _, node in pairs(surface.find_entities_filtered{name = tiberiumNodeNames}) do
@@ -1331,7 +1331,7 @@ script.on_nth_tick(20, function(event) --Player damage 3 times per second
 				elseif storage.tiberiumPoweredPlayers[player.index] then
 					if swapEquipment(player.character.grid, "tiberium-generator-equipment-on", "tiberium-generator-equipment") then
 						--Play powerdown sound for player
-						player.play_sound({path = "tiberium-generator-off"})
+						player.play_sound({path = "tiberium-generator-off", volume_modifier = 0.6})
 						storage.tiberiumPoweredPlayers[player.index] = nil
 					end
 				end
@@ -1859,7 +1859,7 @@ script.on_event(defines.events.on_object_destroyed, on_object_destroyed)
 ---@param event EventData.on_pre_player_mined_item|EventData.on_robot_pre_mined
 function on_pre_mined(event)
 	local entity = event.entity
-	if entity and entity.fluidbox then
+	if entity then
 		local fluidContents = entity.get_fluid_contents()
 		local blueTibOre = (fluidContents["tiberium-slurry-blue"] or 0)
 		local greenTibOre = (fluidContents["tiberium-slurry"] or 0) + 2 * (fluidContents["molten-tiberium"] or 0) + 4 * (fluidContents["liquid-tiberium"] or 0)
@@ -1920,7 +1920,7 @@ function ManageTCNBeacon(surface, position, force)
 					local newHiddenBeacon = surface.create_entity{name = TCN_Beacon_Name, position = position, force = force}
 					if newHiddenBeacon then
 						newHiddenBeacon.destructible = false
-						newHiddenBeacon.minable = false
+						newHiddenBeacon.minable_flag = false
 						TCNModules(newHiddenBeacon, tcnCount)
 					end
 				end

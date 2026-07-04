@@ -105,7 +105,7 @@ data:extend{
 		subgroup = "a-buildings",
 		order = "a[tiberium-centrifuge]-1",
 		place_result = "tiberium-centrifuge-1",
-		stack_size = 20
+		stack_size = 10
 	},
 	{
 		type = "item",
@@ -126,7 +126,7 @@ data:extend{
 		subgroup = "a-buildings",
 		order = "a[tiberium-centrifuge]-2",
 		place_result = "tiberium-centrifuge-2",
-		stack_size = 20
+		stack_size = 10
 	},
 	{
 		type = "item",
@@ -147,7 +147,7 @@ data:extend{
 		subgroup = "a-buildings",
 		order = "a[tiberium-centrifuge]-3",
 		place_result = "tiberium-centrifuge-3",
-		stack_size = 20
+		stack_size = 10
 	},
 	{
 		type = "item",

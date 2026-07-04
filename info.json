@@ -13,7 +13,7 @@
 		"base",
 		"flib >= 0.15.0",
 		"? space-age",
-		"? informatron",
+		"+ informatron",
 		"? 5dim_battlefield >= 1.0.4",
 		"? alien-biomes",
 		"? angelsindustries",
