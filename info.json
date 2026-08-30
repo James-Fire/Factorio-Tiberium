@@ -39,6 +39,7 @@
 		"? RampantResources >= 1.2.0",
 		"? rso-mod >= 7.0.15",
 		"? space-exploration",
-		"? space-exploration-postprocess >= 0.6.18"
+		"? space-exploration-postprocess >= 0.6.18",
+		"? canal-excavator >= 1.12"
 	]
 }
