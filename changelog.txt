@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.17
+  Bugfixes:
+    - Fixed fuel_categories crash for base versions 2.1.20 and later
+    - Fixed Tiberium Centrifuge not being able to be flipped
+    - Fixed Tiber start softlock from Oil Processing trigger technology
+  Changes:
+    - Renamed Tiberium Chemistry Testing to Chemical Tiberium Testing to match the other Tiberium Testing technologies
+---------------------------------------------------------------------------------------------------
 Version: 2.1.16
   Features:
     - Added support for Factorio major version 2.1, these changes are not backwards compatible with Factorio 2.0 or earlier, so stick to 2.0.15 if you are still using Factorio 2.0

@@ -84,6 +84,7 @@ data:extend{
 			},
 		},
 		graphics_set = data.raw["assembling-machine"]["centrifuge"] and util.copy(data.raw["assembling-machine"]["centrifuge"].graphics_set) or {},
+		use_mirroring = true,
 		open_sound = {filename = "__base__/sound/machine-open.ogg", volume = 0.6},
 		close_sound = {filename = "__base__/sound/machine-close.ogg", volume = 0.6},
 		impact_category = "metal-large",
