@@ -315,6 +315,15 @@ data:extend{--Runtime settings
 		order = "b[damage]3",
 	},
 	{
+		type = "string-setting",
+		name = "tiberium-damage-exempt-prototypes",
+		setting_type = "runtime-global",
+		default_value = "mining-drill,transport-belt,underground-belt,splitter,wall,pipe,pipe-to-ground,electric-pole,inserter,legacy-straight-rail,legacy-curved-rail,straight-rail,curved-rail-a,curved-rail-b,half-diagonal-rail,rail-ramp,elevated-straight-rail,elevated-curved-rail-a,elevated-curved-rail-b,elevated-half-diagonal-rail,rail-chain-signal,rail-signal,rail-support,unit-spawner,turret",
+		allow_blank = true,
+		auto_trim = true,	
+		order = "b[damage]4",
+	},
+	{
 		type = "double-setting",
 		name = "tiberium-blue-target-evo",
 		setting_type = "runtime-global",

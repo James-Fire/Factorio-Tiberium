@@ -1,5 +1,7 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.17
+  Features:
+    - Added setting to change which entity prototypes are immune to Tiberium growth damage 
   Bugfixes:
     - Fixed fuel_categories crash for base versions 2.1.20 and later
     - Fixed Tiberium Centrifuge not being able to be flipped

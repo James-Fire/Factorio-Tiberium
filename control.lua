@@ -130,33 +130,11 @@ script.on_init(function()
 		game.create_force(storage.damageForceName)
 	end
 
-	storage.exemptDamagePrototypes = {  -- List of prototypes that should not be damaged by growing Tiberium
-		["mining-drill"] = true,
-		["transport-belt"] = true,
-		["underground-belt"] = true,
-		["splitter"] = true,
-		["wall"] = true,
-		["pipe"] = true,
-		["pipe-to-ground"] = true,
-		["electric-pole"] = true,
-		["inserter"] = true,
-		["legacy-straight-rail"] = true,
-		["legacy-curved-rail"] = true,
-		["straight-rail"] = true,
-		["curved-rail-a"] = true,
-		["curved-rail-b"] = true,
-		["half-diagonal-rail"] = true,
-		["rail-ramp"] = true,
-		["elevated-straight-rail"] = true,
-		["elevated-curved-rail-a"] = true,
-		["elevated-curved-rail-b"] = true,
-		["elevated-half-diagonal-rail"] = true,
-		["rail-chain-signal"] = true,
-		["rail-signal"] = true,
-		["rail-support"] = true,
-		["unit-spawner"] = true,  --Biters immune until both performance and evo factor are fixed
-		["turret"] = true
-	}
+	storage.exemptDamagePrototypes = {}
+	for prototype in string.gmatch(settings.global["tiberium-damage-exempt-prototypes"].value, "([^,]+)") do
+		storage.exemptDamagePrototypes[prototype] = true
+	end
+
 	-- Immunity for Mining Drones
 	storage.exemptDamageNames = {
 		["mining-depot"] = true,
@@ -405,6 +383,11 @@ script.on_event(defines.events.on_runtime_mod_setting_changed, function(data)
 		TiberiumSpreadNodes = settings.global["tiberium-spread-nodes"].value
 	elseif data.setting == "tiberium-damage" then
 		TiberiumDamage = settings.global["tiberium-damage"].value * (2 and whichPlanet == "tiber" or 1)
+	elseif data.setting == "tiberium-damage-exempt-prototypes" then
+		storage.exemptDamagePrototypes = {}
+		for prototype in string.gmatch(settings.global["tiberium-damage-exempt-prototypes"].value, "([^,]+)") do
+			storage.exemptDamagePrototypes[prototype] = true
+		end
 	elseif data.setting == "tiberium-blue-saturation-point" then
 		BlueTiberiumSaturation = settings.global["tiberium-blue-saturation-point"].value / 100
 	elseif data.setting == "tiberium-blue-saturation-slowdown" then
