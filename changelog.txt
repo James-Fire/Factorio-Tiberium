@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.18
+  Changes:
+    - Added a shadow to the Tiber planet discovery technology icon, matching vanilla planet discovery icons.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.17
   Features:
     - Added setting to change which entity prototypes are immune to Tiberium growth damage 

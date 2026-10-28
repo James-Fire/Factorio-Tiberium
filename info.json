@@ -7,11 +7,12 @@
 	"contact": "",
 	"homepage": "https://discord.gg/freXKz5",
 
-	"version": "2.1.17",
+	"version": "2.1.18",
 	"factorio_version": "2.1",
 	"dependencies": [
 		"base",
 		"flib >= 0.15.0",
+		"PlanetsLib >= 1.10.7",
 		"? space-age",
 		"+ informatron",
 		"? 5dim_battlefield >= 1.0.4",

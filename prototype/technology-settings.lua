@@ -74,22 +74,12 @@ end
 
 if common.whichPlanet == "tiber" or (mods["any-planet-start"] and common.whichPlanet == "tiber-start") then
 	-- Lock planet behind tech
+	local tiber_discovery_icons = PlanetsLib.technology_icon_planet(
+		tiberiumInternalName.."/graphics/icons/tiber-planet.png", 512, 0.92)
 	data:extend{{
 		type = "technology",
 		name = "planet-discovery-tiber",
-		icons = {
-			{
-				icon = tiberiumInternalName.."/graphics/icons/tiber-planet.png",
-				icon_size = 512,
-				scale = 0.5,
-			},
-			{
-				icon = "__core__/graphics/icons/technology/constants/constant-planet.png",
-				icon_size = 128,
-				scale = 1,
-				shift = {100, 100}
-			}
-		},
+		icons = tiber_discovery_icons,
 		essential = true,
 		effects = {{
 			type = "unlock-space-location",
